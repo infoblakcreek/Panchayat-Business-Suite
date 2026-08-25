@@ -52,6 +52,9 @@ if (loginButton) {
         "click",
         async function () {
 
+
+            console.log("LOGIN BUTTON CLICKED");
+            
             const email =
                 loginEmail.value.trim();
 
