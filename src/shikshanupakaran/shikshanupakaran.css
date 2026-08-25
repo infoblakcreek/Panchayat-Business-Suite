@@ -4059,6 +4059,8 @@ body.dark-theme .shikshanupakaranTable tbody tr:nth-child(even) td,
 
     max-width: 200px;
 
+    text-align: left;
+
 }
 
 
@@ -5674,6 +5676,7 @@ TABLE TOP INFORMATION ROW
 
         width: 155px;
         min-width: 155px;
+        text-align: left;
 
     }
 

@@ -4341,6 +4341,32 @@ function clearShikshanupakaranRows(){
 
 }
 
+function roundGeneratedValueToFivePaise(value) {
+
+    const number =
+        Number(value) || 0;
+
+
+    /*
+        Round UP to nearest 0.05
+
+        2.23  → 2.25
+        4.54  → 4.55
+        756.56 → 756.60
+    */
+
+    const rounded =
+        Math.ceil(
+            (number - 1e-10) / 0.05
+        ) * 0.05;
+
+
+    return Number(
+        rounded.toFixed(2)
+    );
+
+}
+
 /* ============================================================
    CREATE SHIKSHANUPAKARAN FROM TALAPATRAK
 ============================================================ */
@@ -4466,6 +4492,7 @@ async function createShikshanupakaranFromTalapatrak(
             await shikshanupakaranRef.get();
 
 
+      
         /* ========================================================
            CARD DOES NOT EXIST
 
@@ -4592,93 +4619,171 @@ async function createShikshanupakaranFromTalapatrak(
 
 
         /* ========================================================
-           BUILD SHIKSHANUPAKARAN ROWS
-
-           IMPORTANT:
-
-           DO NOT USE EXISTING SHIKSHANUPAKARAN ROWS.
-
-           Talapatrak is the SOURCE OF TRUTH.
-
-           The synchronized Shikshanupakaran row count
-           MUST EXACTLY MATCH the Talapatrak row count.
-
-           Talapatrak B → Shikshanupakaran B
-        ======================================================== */
-
-        const synchronizedRows =
-            talapatrakRows.map(
-                function(
-                    tRow,
-                    index
-                ){
-
-                    return {
-
-                        A:
-                            index + 1,
-
-                        B:
-                            tRow?.B || "",
-
-                        C:
-                            "",
-
-                        D:
-                            "",
-
-                        E:
-                            "",
-
-                        F:
-                            "",
-
-                        G:
-                            "0.00",
-
-                        H:
-                            "",
-
-                        I:
-                            "",
-
-                        J:
-                            "",
-
-                        K:
-                            "",
-
-                        L:
-                            "",
-
-                        M:
-                            "0.00",
-
-                        N:
-                            "0.00",
-
-                        O:
-                            "0.00",
-
-                        P:
-                            "0.00",
-
-                        Q:
-                            "",
-
-                        R:
-                            "0.00",
-
-                        S:
-                            "0.00",
-
-                        T:
-                            ""
-
-                    };
-
-                }
-            );
+             BUILD SHIKSHANUPAKARAN ROWS
+          
+             TALAPATRAK → SHIKSHANUPAKARAN
+          
+             SYNC:
+                 Talapatrak A → Shikshanupakaran A
+                 Talapatrak B → Shikshanupakaran B
+          
+             IMPORTANT:
+                 Preserve all other existing Shikshanupakaran
+                 columns.
+          
+             Row mapping is by exact row position:
+          
+                 Talapatrak row 0 → Shik row 0
+                 Talapatrak row 1 → Shik row 1
+                 etc.
+          ======================================================== */
+          
+          const existingShikshanupakaran =
+              snapshot.exists
+                  ? snapshot.data() || {}
+                  : {};
+          
+          
+          const existingShikRows =
+              Array.isArray(
+                  existingShikshanupakaran.rows
+              )
+                  ? existingShikshanupakaran.rows
+                  : [];
+          
+          
+          const synchronizedRows =
+              talapatrakRows.map(
+                  function(
+                      talapatrakRow,
+                      index
+                  ){
+          
+                      const existingShikRow =
+                          existingShikRows[index] || {};
+          
+          
+                      /* ====================================================
+                         TALAPATRAK VALUES
+                      ==================================================== */
+          
+                      const talapatrakD =
+                          Number(
+                              talapatrakRow?.D
+                          ) || 0;
+          
+          
+                      const talapatrakE =
+                          Number(
+                              talapatrakRow?.E
+                          ) || 0;
+          
+          
+                      /* ====================================================
+                         SHIKSHANUPAKARAN E
+          
+                         E = 20% of (Talapatrak D + Talapatrak E)
+                      ==================================================== */
+          
+                      const shikshanupakaranE =
+                            roundGeneratedValueToFivePaise(
+                                (
+                                    talapatrakD +
+                                    talapatrakE
+                                ) * 0.20
+                            );
+          
+          
+                      /* ====================================================
+                         CREATE SYNCED ROW
+                      ==================================================== */
+          
+                      const syncedRow = {
+          
+                          /*
+                              Preserve existing Shikshanupakaran data
+                          */
+                          ...existingShikRow,
+          
+          
+                          /*
+                              ================================================
+                              A SYNC
+                              Talapatrak A → Shik A
+                              ================================================
+                          */
+          
+                          A:
+                              talapatrakRow?.A ??
+                              "",
+          
+          
+                          /*
+                              ================================================
+                              B SYNC
+                              Talapatrak B → Shik B
+                              ================================================
+                          */
+          
+                          B:
+                              talapatrakRow?.B ??
+                              "",
+          
+          
+                          /*
+                              ================================================
+                              E CALCULATION
+                              20% of Talapatrak D + E
+                              ================================================
+                          */
+          
+                          E:
+                              shikshanupakaranE
+                                  .toFixed(2)
+          
+                      };
+          
+          
+                      console.log(
+                          "TALAPATRAK → SHIK CALCULATION:",
+                          {
+                              row:
+                                  index,
+          
+                              talapatrakD:
+                                  talapatrakD,
+          
+                              talapatrakE:
+                                  talapatrakE,
+          
+                              shikshanupakaranE:
+                                  shikshanupakaranE
+                                      .toFixed(2)
+                          }
+                      );
+          
+          
+                      return syncedRow;
+          
+                  }
+              );
+          
+          
+          console.log(
+              "SYNC → TALAPATRAK A/B → SHIKSHANUPAKARAN"
+          );
+          
+          
+          console.log(
+              "SYNC → FIRST TALAPATRAK ROW:",
+              talapatrakRows[0]
+          );
+          
+          
+          console.log(
+              "SYNC → FIRST SHIKSHANUPAKARAN ROW:",
+              synchronizedRows[0]
+          );
 
 
         console.log(
@@ -7463,6 +7568,8 @@ function autoFillNextSerialNumber(row){
 
 }
 
+
+
 function setupShikshanupakaranRowEvents(row){
 
     const inputs =
@@ -7473,33 +7580,69 @@ function setupShikshanupakaranRowEvents(row){
 
     inputs.forEach(function(input){
 
+
+        /* ========================================================
+           LIVE CALCULATION
+        ======================================================== */
+
         input.addEventListener(
             "input",
             function(){
-        
+
                 calculateShikshanupakaranRow(
                     row
                 );
-        
-        
-                /*
-                    Existing generated total is now stale.
-                */
-        
+
+
                 window.shikshanupakaranTotalGenerated =
                     false;
-        
+
                 window.shikshanupakaranTotals =
                     null;
-        
-        
+
+
                 renderShikshanupakaranTotal();
-        
+
+            }
+        );
+
+
+        /* ========================================================
+           FORMAT AFTER TYPING
+        ======================================================== */
+
+        input.addEventListener(
+            "blur",
+            function(){
+
+                formatShikshanupakaranInput(
+                    this
+                );
+
+
+                calculateShikshanupakaranRow(
+                    row
+                );
+
+
+                window.shikshanupakaranTotalGenerated =
+                    false;
+
+                window.shikshanupakaranTotals =
+                    null;
+
+
+                renderShikshanupakaranTotal();
+
             }
         );
 
     });
 
+
+    /* ============================================================
+       SERIAL NUMBER
+    ============================================================ */
 
     const serialInput =
         row.querySelector(
@@ -7513,15 +7656,18 @@ function setupShikshanupakaranRowEvents(row){
             "change",
             function(){
 
-                autoFillNextSerialNumber(row);
+                autoFillNextSerialNumber(
+                    row
+                );
 
             }
         );
 
     }
 
-    
 }
+
+
 
 /* ============================================================
    ADD ROW AFTER CURRENT ROW
@@ -8091,13 +8237,16 @@ function renumberShikshanupakaranRows(){
 }
 
 
-function calculateShikshanupakaranRow(row){
+function calculateShikshanupakaranRow(row) {
+
+    if (!row) return;
+
 
     /* ============================================================
        GET NUMERIC VALUE
     ============================================================ */
 
-    function get(col){
+    function get(col) {
 
         const el =
             row.querySelector(
@@ -8114,98 +8263,65 @@ function calculateShikshanupakaranRow(row){
     /* ============================================================
        SET CALCULATED VALUE
        ------------------------------------------------------------
-       All calculated numeric values → 0.00
+       Calculated values are always displayed as 0.00
     ============================================================ */
 
     function set(
-        col,
-        value
-    ){
-
-        const el =
-            row.querySelector(
-                `[data-column="${col}"]`
-            );
-
-        if(el){
-
-            el.value =
-                Number(
-                    value || 0
-                ).toFixed(2);
-
-        }
-
-    }
+          col,
+          value
+      ) {
+      
+          const el =
+              row.querySelector(
+                  `[data-column="${col}"]`
+              );
+      
+          if (el) {
+      
+              el.value =
+                  roundGeneratedValueToFivePaise(
+                      value
+                  ).toFixed(2);
+      
+          }
+      
+      }
 
 
     /* ============================================================
-       FORMAT EDITABLE NUMERIC INPUTS
+       READ USER INPUT
        ------------------------------------------------------------
-       A = Khata/serial number → untouched
-       B = text → untouched
-       C-F, J-L → 0.00
+       IMPORTANT:
+       Do NOT format C-F or J-L here.
+
+       The user must be able to type:
+       3.34
+       12.50
+       0.25
+
+       without the value being changed while typing.
     ============================================================ */
 
-    function formatInput(col){
+    const C =
+        get("C");
 
-        const el =
-            row.querySelector(
-                `[data-column="${col}"]`
-            );
+    const D =
+        get("D");
 
-        if(
-            el &&
-            el.value !== ""
-        ){
+    const E =
+        get("E");
 
-            const number =
-                Number(
-                    el.value
-                );
+    const F =
+        get("F");
 
-            if(
-                Number.isFinite(
-                    number
-                )
-            ){
+    const J =
+        get("J");
 
-                el.value =
-                    number.toFixed(2);
+    const K =
+        get("K");
 
-            }
-
-        }
-
-    }
-
-
-    /* ============================================================
-       FORMAT USER-ENTERED NUMBERS
-    ============================================================ */
-
-    formatInput("C");
-    formatInput("D");
-    formatInput("E");
-    formatInput("F");
-
-    formatInput("J");
-    formatInput("K");
-    formatInput("L");
-
-
-    /* ============================================================
-       READ INPUT VALUES
-    ============================================================ */
-
-    const C = get("C");
-    const D = get("D");
-    const E = get("E");
-    const F = get("F");
-
-    const J = get("J");
-    const K = get("K");
-    const L = get("L");
+    const L =
+        get("L");
 
 
     /* ============================================================
@@ -8310,6 +8426,92 @@ function calculateShikshanupakaranRow(row){
     );
 
 }
+
+
+function formatShikshanupakaranInput(input){
+
+    if(!input) return;
+
+
+    const column =
+        input.dataset.column;
+
+
+    /* ========================================================
+       A / H → INTEGER
+    ======================================================== */
+
+    if(
+        ["A", "H"].includes(column)
+    ){
+
+        if(input.value !== ""){
+
+            const value =
+                Number(
+                    input.value
+                );
+
+            if(
+                Number.isFinite(value)
+            ){
+
+                input.value =
+                    Math.trunc(value);
+
+            }
+
+        }
+
+        return;
+
+    }
+
+
+    /* ========================================================
+       DECIMAL INPUTS
+    ======================================================== */
+
+    if(
+        [
+            "C",
+            "D",
+            "E",
+            "F",
+            "J",
+            "K",
+            "L"
+        ].includes(column)
+    ){
+
+        if(
+            input.value === ""
+        ){
+
+            return;
+
+        }
+
+
+        const value =
+            Number(
+                input.value
+            );
+
+
+        if(
+            Number.isFinite(value)
+        ){
+
+            input.value =
+                value.toFixed(2);
+
+        }
+
+    }
+
+}
+
 
 
 function getNextShikshanupakaranSerial(){
@@ -11829,35 +12031,37 @@ async function syncShikshanupakaranToTalapatrak(
     shikshanupakaranData
 ){
 
-  console.log(
-    "###############################"
-);
+    console.log(
+        "###############################"
+    );
 
-console.log(
-    "SHIKSHANUPAKARAN → TALAPATRAK SYNC CALL"
-);
+    console.log(
+        "SHIKSHANUPAKARAN → TALAPATRAK SYNC CALL"
+    );
 
-console.log(
-    "MOJE:",
-    shikshanupakaranData?.moje
-);
+    console.log(
+        "MOJE:",
+        shikshanupakaranData?.moje
+    );
 
-console.log(
-    "YEAR:",
-    shikshanupakaranData?.year
-);
-
-console.log(
-    "DOCUMENT ID WILL BE:",
-    getTalapatrakDocumentId(
-        shikshanupakaranData?.moje,
+    console.log(
+        "YEAR:",
         shikshanupakaranData?.year
-    )
-);
+    );
 
-console.log(
-    "###############################"
-);
+    console.log(
+        "DOCUMENT ID WILL BE:",
+        getTalapatrakDocumentId(
+            shikshanupakaranData?.moje,
+            shikshanupakaranData?.year
+        )
+    );
+
+    console.log(
+        "###############################"
+    );
+
+
     console.log(
         "================================================"
     );
@@ -11872,18 +12076,17 @@ console.log(
     );
 
 
-    try{
+    try {
 
-        /*
-            ========================================================
-            CHECK LOGIN
-            ========================================================
-        */
 
-        if(
+        /* ========================================================
+           CHECK LOGIN
+        ======================================================== */
+
+        if (
             !auth ||
             !auth.currentUser
-        ){
+        ) {
 
             console.warn(
                 "SHIKSHANUPAKARAN → TALAPATRAK SYNC → NO USER"
@@ -11894,15 +12097,13 @@ console.log(
         }
 
 
-        /*
-            ========================================================
-            VALIDATE DATA
-            ========================================================
-        */
+        /* ========================================================
+           VALIDATE DATA
+        ======================================================== */
 
-        if(
+        if (
             !shikshanupakaranData
-        ){
+        ) {
 
             console.error(
                 "SYNC FAILED → NO SHIKSHANUPAKARAN DATA"
@@ -11913,11 +12114,9 @@ console.log(
         }
 
 
-        /*
-            ========================================================
-            GET EXACT SHIKSHANUPAKARAN VALUES
-            ========================================================
-        */
+        /* ========================================================
+           GET EXACT SHIKSHANUPAKARAN VALUES
+        ======================================================== */
 
         const moje =
             String(
@@ -11955,15 +12154,13 @@ console.log(
                 : [];
 
 
-        /*
-            ========================================================
-            REQUIRED VALUES
-            ========================================================
-        */
+        /* ========================================================
+           REQUIRED VALUES
+        ======================================================== */
 
-        if(
+        if (
             !moje
-        ){
+        ) {
 
             console.error(
                 "SYNC FAILED → MOJE MISSING"
@@ -11974,9 +12171,9 @@ console.log(
         }
 
 
-        if(
+        if (
             !year
-        ){
+        ) {
 
             console.error(
                 "SYNC FAILED → YEAR MISSING"
@@ -12000,20 +12197,12 @@ console.log(
         );
 
 
-        /*
-            ========================================================
-            TALAPATRAK DOCUMENT ID
-           
-            IMPORTANT:
-            USE THE EXACT SHIKSHANUPAKARAN YEAR.
-           
-            DO NOT USE:
-            getCurrentTalapatrakYear()
-           
-            DO NOT USE:
-            currently selected Talapatrak year.
-            ========================================================
-        */
+        /* ========================================================
+           TALAPATRAK DOCUMENT ID
+
+           IMPORTANT:
+           Use EXACT Shikshanupakaran year.
+        ======================================================== */
 
         const talapatrakDocumentId =
             getTalapatrakDocumentId(
@@ -12028,11 +12217,9 @@ console.log(
         );
 
 
-        /*
-            ========================================================
-            CHECK WHETHER TALAPATRAK ALREADY EXISTS
-            ========================================================
-        */
+        /* ========================================================
+           GET TALAPATRAK REFERENCE
+        ======================================================== */
 
         const talapatrakRef =
             db
@@ -12044,22 +12231,21 @@ console.log(
                 );
 
 
+        /* ========================================================
+           CHECK WHETHER TALAPATRAK EXISTS
+        ======================================================== */
+
         const talapatrakSnapshot =
             await talapatrakRef.get();
 
 
-        /*
-            ========================================================
-            EXISTING TALAPATRAK
-           
-            If it already exists, sync directly.
-            No "create new Talapatrak" question is necessary.
-            ========================================================
-        */
+        /* ========================================================
+           EXISTING TALAPATRAK
+        ======================================================== */
 
-        if(
+        if (
             talapatrakSnapshot.exists
-        ){
+        ) {
 
             console.log(
                 "TALAPATRAK ALREADY EXISTS:",
@@ -12079,24 +12265,14 @@ console.log(
                     : [];
 
 
-            /*
-                ----------------------------------------------------
-                EXACT ROW POSITION MAPPING
-               
-                Shikshanupakaran row 0
-                    →
-                Talapatrak row 0
-               
-                Shikshanupakaran row 1
-                    →
-                Talapatrak row 1
-               
-                etc.
-               
-                Only copy column B.
-                Preserve all other Talapatrak columns.
-                ----------------------------------------------------
-            */
+            /* ====================================================
+               SYNC A + B
+
+               Shikshanupakaran A → Talapatrak A
+               Shikshanupakaran B → Talapatrak B
+
+               ALL OTHER TALAPATRAK COLUMNS ARE PRESERVED.
+            ==================================================== */
 
             const syncedRows =
                 existingRows.map(
@@ -12109,18 +12285,35 @@ console.log(
                             rows[index];
 
 
-                        if(
+                        /*
+                            No corresponding
+                            Shikshanupakaran row.
+                        */
+
+                        if (
                             !shikRow
-                        ){
+                        ) {
 
                             return talapatrakRow;
 
                         }
 
 
+                        /*
+                            IMPORTANT:
+                            Preserve the complete
+                            existing Talapatrak row.
+
+                            Only replace A and B.
+                        */
+
                         return {
 
                             ...talapatrakRow,
+
+                            A:
+                                shikRow.A ??
+                                "",
 
                             B:
                                 shikRow.B ??
@@ -12132,19 +12325,19 @@ console.log(
                 );
 
 
-            /*
-                ----------------------------------------------------
-                If Shikshanupakaran has MORE rows than Talapatrak,
-                create the missing Talapatrak rows.
-                ----------------------------------------------------
-            */
+            /* ====================================================
+               SHIKSHANUPAKARAN HAS MORE ROWS
 
-            if(
+               Create missing Talapatrak rows
+               with A + B.
+            ==================================================== */
+
+            if (
                 rows.length >
                 existingRows.length
-            ){
+            ) {
 
-                for(
+                for (
                     let index =
                         existingRows.length;
 
@@ -12152,13 +12345,17 @@ console.log(
                         rows.length;
 
                     index++
-                ){
+                ) {
 
                     const shikRow =
                         rows[index];
 
 
                     syncedRows.push({
+
+                        A:
+                            shikRow?.A ??
+                            "",
 
                         B:
                             shikRow?.B ??
@@ -12170,6 +12367,10 @@ console.log(
 
             }
 
+
+            /* ====================================================
+               SAVE UPDATED TALAPATRAK
+            ==================================================== */
 
             await talapatrakRef.set({
 
@@ -12211,8 +12412,31 @@ console.log(
 
 
             console.log(
-                "SHIKSHANUPAKARAN → TALAPATRAK SYNC SUCCESS:",
-                talapatrakDocumentId
+                "================================================"
+            );
+
+            console.log(
+                "A + B SYNC SUCCESS"
+            );
+
+            console.log(
+                "SHIKSHANUPAKARAN A → TALAPATRAK A"
+            );
+
+            console.log(
+                "SHIKSHANUPAKARAN B → TALAPATRAK B"
+            );
+
+            console.log(
+                "Rows synced:",
+                Math.min(
+                    rows.length,
+                    existingRows.length
+                )
+            );
+
+            console.log(
+                "================================================"
             );
 
 
@@ -12221,40 +12445,26 @@ console.log(
         }
 
 
-        /*
-            ========================================================
-            TALAPATRAK DOES NOT EXIST
-           
-            ASK THE USER THE CORRECT QUESTION.
-           
-            THIS IS THE IMPORTANT FIX.
-            ========================================================
-        */
+        /* ========================================================
+           TALAPATRAK DOES NOT EXIST
+        ======================================================== */
 
-        /* ============================================================
-           CHECK WHETHER USER HAS ALREADY ANSWERED
-        ============================================================ */
-        
         const previousDecision =
             getTalapatrakSyncDecision(
                 moje,
                 year
             );
-        
-        
-        /*
-            ========================================================
-            USER ALREADY SAID NO
-            ========================================================
-        
-            Do NOT ask again.
-        */
-        
-        if(
+
+
+        /* ========================================================
+           USER PREVIOUSLY SAID NO
+        ======================================================== */
+
+        if (
             previousDecision ===
             "no"
-        ){
-        
+        ) {
+
             console.log(
                 "TALAPATRAK SYNC → USER PREVIOUSLY SAID NO:",
                 {
@@ -12262,32 +12472,25 @@ console.log(
                     year
                 }
             );
-        
-        
+
             return false;
-        
+
         }
-        
-        
-        /*
-            ========================================================
-            USER ALREADY SAID YES
-            ========================================================
-        
-            Normally the Talapatrak document should already exist.
-        
-            But if it was deleted somehow, recreate it without asking.
-        */
-        
+
+
+        /* ========================================================
+           DETERMINE WHETHER TO CREATE
+        ======================================================== */
+
         let shouldCreateTalapatrak =
             false;
-        
-        
-        if(
+
+
+        if (
             previousDecision ===
             "yes"
-        ){
-        
+        ) {
+
             console.log(
                 "TALAPATRAK SYNC → USER PREVIOUSLY SAID YES:",
                 {
@@ -12295,34 +12498,30 @@ console.log(
                     year
                 }
             );
-        
-        
+
+
             shouldCreateTalapatrak =
                 true;
-        
+
         }
-        else{
-        
-            /*
-                ====================================================
-                FIRST TIME FOR THIS MOJE + YEAR
-                ASK USER
-                ====================================================
-            */
-        
+        else {
+
+
+            /* ====================================================
+               FIRST TIME → ASK USER
+            ==================================================== */
+
             shouldCreateTalapatrak =
                 await showShikshanupakaranCreateModal(
                     moje,
                     year
                 );
-                    
-        
-            /*
-                ====================================================
-                REMEMBER ANSWER
-                ====================================================
-            */
-        
+
+
+            /* ====================================================
+               REMEMBER ANSWER
+            ==================================================== */
+
             saveTalapatrakSyncDecision(
                 moje,
                 year,
@@ -12330,39 +12529,34 @@ console.log(
                     ? "yes"
                     : "no"
             );
-        
+
         }
 
 
-        /*
-            ========================================================
-            USER SAID NO
-            ========================================================
-        */
+        /* ========================================================
+           USER SAID NO
+        ======================================================== */
 
-        if(
+        if (
             !shouldCreateTalapatrak
-        ){
+        ) {
 
             console.log(
                 "SHIKSHANUPAKARAN → TALAPATRAK SYNC CANCELLED BY USER:",
                 talapatrakDocumentId
             );
 
-
             return false;
 
         }
 
 
-        /*
-            ========================================================
-            CREATE TALAPATRAK FROM SHIKSHANUPAKARAN
-           
-            IMPORTANT:
-            Use the SAME selected year.
-            ========================================================
-        */
+        /* ========================================================
+           CREATE TALAPATRAK FROM SHIKSHANUPAKARAN
+
+           IMPORTANT:
+           Copy BOTH A and B.
+        ======================================================== */
 
         const newTalapatrakRows =
             rows.map(
@@ -12371,6 +12565,10 @@ console.log(
                 ){
 
                     return {
+
+                        A:
+                            shikRow?.A ??
+                            "",
 
                         B:
                             shikRow?.B ??
@@ -12381,6 +12579,16 @@ console.log(
                 }
             );
 
+
+        console.log(
+            "NEW TALAPATRAK ROWS:",
+            newTalapatrakRows
+        );
+
+
+        /* ========================================================
+           CREATE TALAPATRAK DATA
+        ======================================================== */
 
         const newTalapatrakData = {
 
@@ -12422,11 +12630,9 @@ console.log(
         };
 
 
-        /*
-            ========================================================
-            SAVE NEW TALAPATRAK
-            ========================================================
-        */
+        /* ========================================================
+           SAVE NEW TALAPATRAK
+        ======================================================== */
 
         await talapatrakRef.set(
             newTalapatrakData
@@ -12438,7 +12644,7 @@ console.log(
         );
 
         console.log(
-            "NEW TALAPATRAK CREATED FROM SHIKSHANUPAKARAN:"
+            "NEW TALAPATRAK CREATED FROM SHIKSHANUPAKARAN"
         );
 
         console.log(
@@ -12462,27 +12668,26 @@ console.log(
         );
 
         console.log(
+            "A + B COPIED SUCCESSFULLY"
+        );
+
+        console.log(
             "================================================"
         );
 
-
-        /*
-            ========================================================
-            SUCCESS
-            ========================================================
-        */
 
         return true;
 
 
     }
-    catch(error){
+    catch (
+        error
+    ) {
 
         console.error(
             "SHIKSHANUPAKARAN → TALAPATRAK SYNC ERROR:",
             error
         );
-
 
         return false;
 

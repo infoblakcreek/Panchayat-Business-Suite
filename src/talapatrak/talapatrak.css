@@ -2686,6 +2686,7 @@ border:
 
 .talapatrakTable .colB {
     width: 110px;
+    text-align: left;
 }
 
 .talapatrakTable .colC,
@@ -3613,6 +3614,7 @@ border:
           width: 120px;
           min-width: 120px;
           max-width: 120px;
+          text-align: left;
       
       }
       
@@ -4297,6 +4299,14 @@ body.dark-theme #talapatrakPageInfo,
 
     }
 
+}
+
+/* ============================================================
+   TALAPATRAK COLUMN B — LEFT ALIGN
+============================================================ */
+
+.talapatrakRow .columnB {
+    text-align: left !important;
 }
 
 

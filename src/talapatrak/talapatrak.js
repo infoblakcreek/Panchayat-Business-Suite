@@ -4352,8 +4352,7 @@ function createTalapatrakRow(
             <input
                 type="number"
                 class="columnA"
-                value="${escapeTalapatrakHTML(khataNumber)}"
-                readonly>
+                value="${escapeTalapatrakHTML(khataNumber)}">
         </td>
 
 
@@ -5428,17 +5427,29 @@ function calculateTalapatrakRow(input) {
     /* ============================================================
        GET NUMERIC VALUE
        ------------------------------------------------------------
-       Used internally for calculations.
-       Display formatting does not affect the calculation.
+       Used only for calculations.
+       DO NOT format the user's input here.
     ============================================================ */
 
     function getValue(column) {
 
-        return Number(
+        const element =
             row.querySelector(
                 "." + column
-            )?.value
-        ) || 0;
+            );
+
+        if (!element) {
+            return 0;
+        }
+
+        const value =
+            Number(
+                element.value
+            );
+
+        return Number.isFinite(value)
+            ? value
+            : 0;
 
     }
 
@@ -5446,93 +5457,44 @@ function calculateTalapatrakRow(input) {
     /* ============================================================
        SET CALCULATED VALUE
        ------------------------------------------------------------
-       ALL CALCULATED NUMBERS → 0.00
+       Calculated columns are always displayed as 0.00
     ============================================================ */
 
     function setValue(
-        column,
-        value
-    ) {
-
-        const element =
-            row.querySelector(
-                "." + column
-            );
-
-        if (element) {
-
-            element.value =
-                Number(
-                    value
-                ).toFixed(2);
-
-        }
-
-    }
+          column,
+          value
+      ) {
+      
+          const element =
+              row.querySelector(
+                  "." + column
+              );
+      
+          if (element) {
+      
+              element.value =
+                  roundGeneratedValueToFivePaise(
+                      value
+                  ).toFixed(2);
+      
+          }
+      
+      }
 
 
     /* ============================================================
-       FORMAT EDITABLE NUMERIC INPUTS
+       READ USER INPUTS
        ------------------------------------------------------------
-       Exceptions:
-       A      → Khata number
-       Pavati → leave unchanged
-       M      → date
-    ============================================================ */
+       IMPORTANT:
+       DO NOT call toFixed() here.
 
-    function formatInput(
-        column
-    ) {
+       This allows the user to type:
+       3
+       3.
+       3.1
+       3.15
 
-        const element =
-            row.querySelector(
-                "." + column
-            );
-
-        if (
-            element &&
-            element.value !== ""
-        ) {
-
-            const number =
-                Number(
-                    element.value
-                );
-
-            if (
-                Number.isFinite(
-                    number
-                )
-            ) {
-
-                element.value =
-                    number.toFixed(2);
-
-            }
-
-        }
-
-    }
-
-
-    /* ============================================================
-       INPUT COLUMNS
-       ------------------------------------------------------------
-       C, D, E, G, K, N, S
-       → 0.00
-    ============================================================ */
-
-    formatInput("columnC");
-    formatInput("columnD");
-    formatInput("columnE");
-    formatInput("columnG");
-    formatInput("columnK");
-    formatInput("columnN");
-    formatInput("columnS");
-
-
-    /* ============================================================
-       READ INPUT VALUES
+       without JavaScript changing the field to 3.00.
     ============================================================ */
 
     const C =
@@ -5540,10 +5502,12 @@ function calculateTalapatrakRow(input) {
             "columnC"
         );
 
+
     const D =
         getValue(
             "columnD"
         );
+
 
     const E =
         getValue(
@@ -5551,14 +5515,33 @@ function calculateTalapatrakRow(input) {
         );
 
 
+    const G =
+        getValue(
+            "columnG"
+        );
+
+
+    const K =
+        getValue(
+            "columnK"
+        );
+
+
+    const N =
+        getValue(
+            "columnN"
+        );
+
+
     /* ============================================================
        F
        ------------------------------------------------------------
-       (D + E) × 3
+       F = (D + E) × 3
     ============================================================ */
 
     const F =
         (D + E) * 3;
+
 
     setValue(
         "columnF",
@@ -5567,23 +5550,18 @@ function calculateTalapatrakRow(input) {
 
 
     /* ============================================================
-       G
-    ============================================================ */
-
-    const G =
-        getValue(
-            "columnG"
-        );
-
-
-    /* ============================================================
        H
        ------------------------------------------------------------
-       C + D + E + F + G
+       H = C + D + E + F + G
     ============================================================ */
 
     const H =
-        C + D + E + F + G;
+        C +
+        D +
+        E +
+        F +
+        G;
+
 
     setValue(
         "columnH",
@@ -5594,11 +5572,12 @@ function calculateTalapatrakRow(input) {
     /* ============================================================
        I
        ------------------------------------------------------------
-       D
+       I = D
     ============================================================ */
 
     const I =
         D;
+
 
     setValue(
         "columnI",
@@ -5609,11 +5588,13 @@ function calculateTalapatrakRow(input) {
     /* ============================================================
        J
        ------------------------------------------------------------
-       H - I
+       J = H - I
     ============================================================ */
 
     const J =
-        H - I;
+        H -
+        I;
+
 
     setValue(
         "columnJ",
@@ -5622,28 +5603,15 @@ function calculateTalapatrakRow(input) {
 
 
     /* ============================================================
-       K + N
-    ============================================================ */
-
-    const K =
-        getValue(
-            "columnK"
-        );
-
-    const N =
-        getValue(
-            "columnN"
-        );
-
-
-    /* ============================================================
        O
        ------------------------------------------------------------
-       K + N
+       O = K + N
     ============================================================ */
 
     const O =
-        K + N;
+        K +
+        N;
+
 
     setValue(
         "columnO",
@@ -5654,11 +5622,14 @@ function calculateTalapatrakRow(input) {
     /* ============================================================
        T
        ------------------------------------------------------------
-       H - I - O
+       T = H - I - O
     ============================================================ */
 
     const T =
-        H - I - O;
+        H -
+        I -
+        O;
+
 
     setValue(
         "columnT",
@@ -5669,13 +5640,14 @@ function calculateTalapatrakRow(input) {
     /* ============================================================
        U
        ------------------------------------------------------------
-       T < O ? T : O
+       U = IF(T < O, T, O)
     ============================================================ */
 
     const U =
-        T < O
+        T < 0
             ? T
-            : O;
+            : 0;
+
 
     setValue(
         "columnU",
@@ -5686,11 +5658,12 @@ function calculateTalapatrakRow(input) {
     /* ============================================================
        R
        ------------------------------------------------------------
-       -U
+       R = -U
     ============================================================ */
 
     const R =
         -U;
+
 
     setValue(
         "columnR",
@@ -5701,11 +5674,13 @@ function calculateTalapatrakRow(input) {
     /* ============================================================
        P
        ------------------------------------------------------------
-       O - R
+       P = O - R
     ============================================================ */
 
     const P =
-        O - R;
+        O -
+        R;
+
 
     setValue(
         "columnP",
@@ -5716,13 +5691,17 @@ function calculateTalapatrakRow(input) {
     /* ============================================================
        Q
        ------------------------------------------------------------
-       T > O ? T : O
+       Q = IF(T > 0, T, 0)
+       
+       IMPORTANT:
+       Q does NOT compare T with O.
     ============================================================ */
 
     const Q =
-        T > O
+        T > 0
             ? T
-            : O;
+            : 0;
+
 
     setValue(
         "columnQ",
@@ -5867,9 +5846,9 @@ function calculateTalapatrakGrandTotals() {
 
 
             const U =
-                T < O
+                T < 0
                     ? T
-                    : O;
+                    : 0;
 
 
             const R =
@@ -5880,10 +5859,10 @@ function calculateTalapatrakGrandTotals() {
                 O - R;
 
 
-            const Q =
-                T > O
+           const Q =
+                T > 0
                     ? T
-                    : O;
+                    : 0;
 
 
             /* ------------------------------------------------
@@ -6038,9 +6017,9 @@ function calculateTalapatrakMemoryTotals() {
 
 
             const U =
-                T < O
+                T < 0
                     ? T
-                    : O;
+                    : 0;
 
 
             const R =
@@ -6052,9 +6031,9 @@ function calculateTalapatrakMemoryTotals() {
 
 
             const Q =
-                T > O
-                    ? T
-                    : O;
+                  T > 0
+                      ? T
+                      : 0;
 
 
             /* ------------------------------------------------
@@ -6736,7 +6715,9 @@ function generateTalapatrakTotalsAndSummary() {
 
 function formatTalapatrakNumberInputs() {
 
-    if (!talapatrakBody) return;
+    if (!talapatrakBody) {
+        return;
+    }
 
 
     talapatrakBody
@@ -6745,10 +6726,6 @@ function formatTalapatrakNumberInputs() {
         )
         .forEach(function(input) {
 
-
-            /* ==================================================
-               DECIMAL FORMATTER
-            ================================================== */
 
             if (
                 !input.dataset
@@ -6773,11 +6750,6 @@ function formatTalapatrakNumberInputs() {
                         }
 
 
-                        /*
-                         * Column L = Receipt Number
-                         * Keep it as a normal integer.
-                         */
-
                         if (
                             this.classList.contains(
                                 "columnL"
@@ -6793,10 +6765,22 @@ function formatTalapatrakNumberInputs() {
 
                         else {
 
-                            this.value =
+                            const number =
                                 Number(
                                     this.value
-                                ).toFixed(2);
+                                );
+
+
+                            if (
+                                Number.isFinite(
+                                    number
+                                )
+                            ) {
+
+                                this.value =
+                                    number.toFixed(2);
+
+                            }
 
                         }
 
@@ -6805,10 +6789,6 @@ function formatTalapatrakNumberInputs() {
 
             }
 
-
-            /* ==================================================
-               LIVE ROW CALCULATION
-            ================================================== */
 
             if (
                 !input.dataset
