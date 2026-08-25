@@ -266,30 +266,112 @@ console.log(
         SIDEBAR CLICK
 ============================================================ */
 
+if (shikshanupakaranNavElement) {
 
-if(shikshanupakaranNavElement){
+    shikshanupakaranNavElement.addEventListener(
+        "click",
+        function(event) {
+
+            event.preventDefault();
 
 
-       shikshanupakaranNav.addEventListener("click", function (event) {
-      
-              event.preventDefault();
-      
-              document.getElementById("dashboardView").style.display = "none";
-              document.getElementById("mainBillsView").style.display = "none";
-              document.getElementById("invoiceView").style.display = "none";
-              document.getElementById("talapatrakView").style.display = "none";
-      
-              document.getElementById("shikshanupakaranView").style.display = "block";
+            /*
+                ====================================================
+                HIDE OTHER VIEWS SAFELY
+                ====================================================
+            */
 
-             console.log(
+            const dashboardView =
+                document.getElementById(
+                    "dashboardView"
+                );
+
+
+            const mainBillsView =
+                document.getElementById(
+                    "mainBillsView"
+                );
+
+
+            const invoiceView =
+                document.getElementById(
+                    "invoiceView"
+                );
+
+
+            const talapatrakView =
+                document.getElementById(
+                    "talapatrakView"
+                );
+
+
+            const shikshanupakaranView =
+                document.getElementById(
+                    "shikshanupakaranView"
+                );
+
+
+            if (dashboardView) {
+
+                dashboardView.style.display =
+                    "none";
+
+            }
+
+
+            if (mainBillsView) {
+
+                mainBillsView.style.display =
+                    "none";
+
+            }
+
+
+            if (invoiceView) {
+
+                invoiceView.style.display =
+                    "none";
+
+            }
+
+
+            if (talapatrakView) {
+
+                talapatrakView.style.display =
+                    "none";
+
+            }
+
+
+            /*
+                ====================================================
+                SHOW SHIKSHANUPAKARAN
+                ====================================================
+            */
+
+            if (shikshanupakaranView) {
+
+                shikshanupakaranView.style.display =
+                    "block";
+
+            }
+
+
+            console.log(
                 "Shikshanupakaran sidebar clicked"
             );
 
 
+            /*
+                ====================================================
+                OPEN MANAGEMENT
+                ====================================================
+            */
+
             openShikshanupakaranManagement();
-      
-          });
-      
+
+        }
+    );
 
 }
 
@@ -1691,7 +1773,7 @@ function setupShikshanupakaranCardMenu(card, record) {
 
                     if(action === "delete") {
 
-                        await deleteShikshanupakaranRecord(
+                        await showShikshanupakaranDeleteModal(
                             record
                         );
 
@@ -2444,59 +2526,61 @@ async function duplicateShikshanupakaranRecord(record) {
    DELETE SHIKSHANUPAKARAN RECORD
 ============================================================ */
 
-async function deleteShikshanupakaranRecord(record) {
+async function permanentlyDeleteShikshanupakaranRecord(record) {
 
-    if(!record || !record.id) {
+    if(
+        !record ||
+        !record.id
+    ){
 
         console.error(
             "Cannot delete Shikshanupakaran: invalid record."
         );
 
-        return;
+        return false;
 
     }
 
 
     const villageName =
-        record.moje || "this village";
+        record.moje ||
+        "this village";
 
 
     const year =
-        record.year || "";
-
-
-    const confirmed =
-        confirm(
-            `Delete ${villageName} Shikshanupakaran for ${year}?\n\nThis action cannot be undone.`
-        );
-
-
-    if(!confirmed) {
-
-        return;
-
-    }
+        record.year ||
+        "";
 
 
     try {
 
+        /* ========================================================
+           CHECK LOGIN
+        ======================================================== */
+
         if(
             !auth ||
             !auth.currentUser
-        ) {
+        ){
 
             alert(
                 "Please login first."
             );
 
-            return;
+            return false;
 
         }
 
 
-        /*
-            Delete exact Firestore document
-        */
+        console.log(
+            "DELETE → FIRESTORE DELETE START:",
+            record.id
+        );
+
+
+        /* ========================================================
+           DELETE EXACT FIRESTORE DOCUMENT
+        ======================================================== */
 
         await db
             .collection(
@@ -2508,15 +2592,22 @@ async function deleteShikshanupakaranRecord(record) {
             .delete();
 
 
-        /*
-            Remove from local management array
-        */
+        console.log(
+            "DELETE → FIRESTORE DELETE COMPLETE:",
+            record.id
+        );
+
+
+        /* ========================================================
+           REMOVE FROM LOCAL ARRAY
+        ======================================================== */
 
         const index =
             shikshanupakaranRecords.findIndex(
                 function(item) {
 
-                    return item.id === record.id;
+                    return item.id ===
+                        record.id;
 
                 }
             );
@@ -2532,18 +2623,18 @@ async function deleteShikshanupakaranRecord(record) {
         }
 
 
-        /*
-            If this record was currently open,
-            clear current state.
-        */
+        /* ========================================================
+           CLEAR CURRENT STATE IF OPEN
+        ======================================================== */
 
         if(
             currentShikshanupakaranDocumentId ===
             record.id
-        ) {
+        ){
 
             currentShikshanupakaranDocumentId =
                 null;
+
 
             currentShikshanupakaranRecord =
                 null;
@@ -2551,16 +2642,16 @@ async function deleteShikshanupakaranRecord(record) {
         }
 
 
-        /*
-            Refresh village cards
-        */
+        /* ========================================================
+           REFRESH CARDS
+        ======================================================== */
 
         renderShikshanupakaranManagement();
 
 
-        /*
-            Activity
-        */
+        /* ========================================================
+           ACTIVITY
+        ======================================================== */
 
         await addShikshanupakaranActivity(
 
@@ -2581,6 +2672,8 @@ async function deleteShikshanupakaranRecord(record) {
         );
 
 
+        return true;
+
     }
     catch(error) {
 
@@ -2593,6 +2686,9 @@ async function deleteShikshanupakaranRecord(record) {
         alert(
             "Unable to delete Shikshanupakaran."
         );
+
+
+        return false;
 
     }
 
@@ -11733,6 +11829,35 @@ async function syncShikshanupakaranToTalapatrak(
     shikshanupakaranData
 ){
 
+  console.log(
+    "###############################"
+);
+
+console.log(
+    "SHIKSHANUPAKARAN → TALAPATRAK SYNC CALL"
+);
+
+console.log(
+    "MOJE:",
+    shikshanupakaranData?.moje
+);
+
+console.log(
+    "YEAR:",
+    shikshanupakaranData?.year
+);
+
+console.log(
+    "DOCUMENT ID WILL BE:",
+    getTalapatrakDocumentId(
+        shikshanupakaranData?.moje,
+        shikshanupakaranData?.year
+    )
+);
+
+console.log(
+    "###############################"
+);
     console.log(
         "================================================"
     );
@@ -13208,3 +13333,385 @@ document.addEventListener(
 
     }
 );
+
+
+
+
+
+
+
+
+
+/* ============================================================
+   SHIKSHANUPAKARAN DELETE MODAL
+============================================================ */
+
+let shikshanupakaranDeleteRecordPending = null;
+
+
+/* ============================================================
+   SHOW DELETE MODAL
+============================================================ */
+
+function showShikshanupakaranDeleteModal(record) {
+
+    return new Promise(function(resolve) {
+
+        console.log(
+            "DELETE MODAL → OPEN REQUEST:",
+            record
+        );
+
+
+        const modal =
+            document.getElementById(
+                "shikshanupakaranDeleteModal"
+            );
+
+
+        const villageNameElement =
+            document.getElementById(
+                "shikshanupakaranDeleteVillageName"
+            );
+
+
+        const yearElement =
+            document.getElementById(
+                "shikshanupakaranDeleteYear"
+            );
+
+
+        const cancelButton =
+            document.getElementById(
+                "shikshanupakaranDeleteCancelButton"
+            );
+
+
+        const confirmButton =
+            document.getElementById(
+                "shikshanupakaranDeleteConfirmButton"
+            );
+
+
+        if(
+            !modal ||
+            !villageNameElement ||
+            !yearElement ||
+            !cancelButton ||
+            !confirmButton
+        ){
+
+            console.error(
+                "DELETE MODAL → REQUIRED ELEMENT MISSING"
+            );
+
+            resolve(false);
+
+            return;
+
+        }
+
+
+        /* ========================================================
+           IMPORTANT:
+           RESET BUTTON EVERY TIME MODAL OPENS
+           
+           This prevents:
+           
+           Card 1 → Delete
+           → spinner
+           
+           Card 2 → opens with old spinner
+           
+           ======================================================== */
+
+        confirmButton.disabled =
+            false;
+
+
+        confirmButton.innerHTML = `
+
+            <i class="fa-solid fa-trash-can"></i>
+
+            Delete Permanently
+
+        `;
+
+
+        /* ========================================================
+           STORE CURRENT RECORD
+        ======================================================== */
+
+        shikshanupakaranDeleteRecordPending =
+            record;
+
+
+        /* ========================================================
+           FILL MODAL
+        ======================================================== */
+
+        villageNameElement.textContent =
+            record.moje ||
+            "this village";
+
+
+        yearElement.textContent =
+            record.year ||
+            "";
+
+
+        /* ========================================================
+           OPEN MODAL
+        ======================================================== */
+
+        modal.classList.add(
+            "open"
+        );
+
+
+        modal.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+
+        console.log(
+            "DELETE MODAL → OPENED:",
+            record.id
+        );
+
+
+        /* ========================================================
+           CANCEL
+        ======================================================== */
+
+        function handleCancel() {
+
+            console.log(
+                "DELETE MODAL → CANCELLED"
+            );
+
+
+            closeModal();
+
+            cleanup();
+
+            resolve(false);
+
+        }
+
+
+        /* ========================================================
+           CONFIRM
+        ======================================================== */
+
+        async function handleConfirm() {
+
+            console.log(
+                "DELETE MODAL → CONFIRM CLICKED:",
+                record.id
+            );
+
+
+            /*
+                Prevent double click
+            */
+
+            if(
+                confirmButton.disabled
+            ){
+
+                return;
+
+            }
+
+
+            confirmButton.disabled =
+                true;
+
+
+            confirmButton.innerHTML = `
+
+                <i class="fa-solid fa-spinner fa-spin"></i>
+
+                Deleting...
+
+            `;
+
+
+            try {
+
+                const success =
+                    await permanentlyDeleteShikshanupakaranRecord(
+                        record
+                    );
+
+
+                console.log(
+                    "DELETE MODAL → DELETE RESULT:",
+                    success
+                );
+
+
+                closeModal();
+
+                cleanup();
+
+                resolve(
+                    success
+                );
+
+            }
+            catch(error) {
+
+                console.error(
+                    "DELETE MODAL → DELETE FAILED:",
+                    error
+                );
+
+
+                /*
+                    Restore button if deletion failed
+                */
+
+                confirmButton.disabled =
+                    false;
+
+
+                confirmButton.innerHTML = `
+
+                    <i class="fa-solid fa-trash-can"></i>
+
+                    Delete Permanently
+
+                `;
+
+
+                resolve(false);
+
+            }
+
+        }
+
+
+        /* ========================================================
+           OVERLAY
+        ======================================================== */
+
+        function handleOverlay(event) {
+
+            if(
+                event.target ===
+                modal
+            ){
+
+                handleCancel();
+
+            }
+
+        }
+
+
+        /* ========================================================
+           ESC
+        ======================================================== */
+
+        function handleEscape(event) {
+
+            if(
+                event.key ===
+                "Escape"
+            ){
+
+                handleCancel();
+
+            }
+
+        }
+
+
+        /* ========================================================
+           ATTACH LISTENERS
+        ======================================================== */
+
+        cancelButton.addEventListener(
+            "click",
+            handleCancel
+        );
+
+
+        confirmButton.addEventListener(
+            "click",
+            handleConfirm
+        );
+
+
+        modal.addEventListener(
+            "click",
+            handleOverlay
+        );
+
+
+        document.addEventListener(
+            "keydown",
+            handleEscape
+        );
+
+
+        /* ========================================================
+           CLEANUP
+        ======================================================== */
+
+        function cleanup() {
+
+            cancelButton.removeEventListener(
+                "click",
+                handleCancel
+            );
+
+
+            confirmButton.removeEventListener(
+                "click",
+                handleConfirm
+            );
+
+
+            modal.removeEventListener(
+                "click",
+                handleOverlay
+            );
+
+
+            document.removeEventListener(
+                "keydown",
+                handleEscape
+            );
+
+
+            shikshanupakaranDeleteRecordPending =
+                null;
+
+        }
+
+
+        /* ========================================================
+           CLOSE
+        ======================================================== */
+
+        function closeModal() {
+
+            modal.classList.remove(
+                "open"
+            );
+
+
+            modal.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
+        }
+
+    });
+
+}

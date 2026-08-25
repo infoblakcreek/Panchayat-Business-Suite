@@ -2737,10 +2737,10 @@ if (
 
 
             /*
-                Delete record
+                Open delete confirmation modal
             */
 
-            await deleteTalapatrakRecord(
+            await showTalapatrakDeleteModal(
                 record
             );
 
@@ -2765,37 +2765,62 @@ if (
         DELETE TALAPATRAK RECORD
 ============================================================ */
 
-async function deleteTalapatrakRecord(record) {
 
-    if (!record || !record.id) {
+async function permanentlyDeleteTalapatrakRecord(record) {
+
+    if(
+        !record ||
+        !record.id
+    ){
 
         console.error(
-            "Talapatrak document ID missing."
+            "Cannot delete Talapatrak: invalid record."
         );
 
-        return;
+        return false;
 
     }
+
 
     const villageName =
         record.moje ||
         "this village";
 
 
-    const confirmed =
-        confirm(
-            `Are you sure you want to delete "${villageName}"?`
-        );
-
-
-    if (!confirmed) {
-
-        return;
-
-    }
+    const year =
+        record.year ||
+        "";
 
 
     try {
+
+        /* ========================================================
+           CHECK LOGIN
+        ======================================================== */
+
+        if(
+            !auth ||
+            !auth.currentUser
+        ){
+
+            alert(
+                "Please login first."
+            );
+
+            return false;
+
+        }
+
+
+        console.log(
+            "TALAPATRAK DELETE → FIRESTORE DELETE START:",
+            record.id
+        );
+
+
+        /* ========================================================
+           DELETE FIRESTORE DOCUMENT
+        ======================================================== */
 
         await db
             .collection(
@@ -2807,62 +2832,107 @@ async function deleteTalapatrakRecord(record) {
             .delete();
 
 
-        talapatrakRecords =
-            talapatrakRecords.filter(
+        console.log(
+            "TALAPATRAK DELETE → FIRESTORE DELETE COMPLETE:",
+            record.id
+        );
 
+
+        /* ========================================================
+           REMOVE FROM LOCAL ARRAY
+        ======================================================== */
+
+        const index =
+            talapatrakRecords.findIndex(
                 function(item) {
 
-                    return item.id !==
+                    return item.id ===
                         record.id;
 
                 }
-
             );
 
 
-        console.log(
-              "BEFORE RENDER MANAGEMENT CALL"
-          );
-          
-          renderTalapatrakManagement();
-          
-          console.log(
-              "AFTER RENDER MANAGEMENT CALL"
-          );
+        if(index >= 0) {
 
-          await loadTalapatrakCount();
+            talapatrakRecords.splice(
+                index,
+                1
+            );
+
+        }
+
+
+        /* ========================================================
+           CLEAR CURRENT STATE
+        ======================================================== */
+
+        if(
+            currentTalapatrakDocumentId ===
+            record.id
+        ){
+
+            currentTalapatrakDocumentId =
+                null;
+
+
+            currentTalapatrakRecord =
+                null;
+
+        }
+
+
+        /* ========================================================
+           REFRESH MANAGEMENT
+        ======================================================== */
+
+        renderTalapatrakManagement();
+
+
+        /* ========================================================
+           ACTIVITY
+        ======================================================== */
 
         await addTalapatrakActivity(
-              "talapatrak_deleted",
-              "Talapatrak deleted",
-              `${villageName} Talapatrak deleted`,
-              villageName
-          );
-      
+
+            "talapatrak_deleted",
+
+            "Talapatrak deleted",
+
+            `${villageName} ${year} Talapatrak deleted`,
+
+            villageName
+
+        );
+
+
         console.log(
             "Talapatrak deleted:",
             record.id
         );
 
 
-    }
+        return true;
 
-    catch (error) {
+    }
+    catch(error) {
 
         console.error(
-            "Error deleting Talapatrak:",
+            "Talapatrak delete error:",
             error
         );
 
 
         alert(
-            "Error deleting Talapatrak. Please try again."
+            "Unable to delete Talapatrak."
         );
+
+
+        return false;
 
     }
 
 }
-
 /* ============================================================
         CLOSE CARD MENUS WHEN CLICKING OUTSIDE
 ============================================================ */
@@ -13688,3 +13758,350 @@ function showTalapatrakAlreadyExistsModal(
 
 }
 
+
+
+
+/* ============================================================
+   TALAPATRAK DELETE MODAL STATE
+============================================================ */
+
+let talapatrakDeleteRecordPending = null;
+
+
+/* ============================================================
+   SHOW TALAPATRAK DELETE MODAL
+============================================================ */
+
+function showTalapatrakDeleteModal(record) {
+
+    return new Promise(function(resolve) {
+
+        console.log(
+            "TALAPATRAK DELETE MODAL → OPEN REQUEST:",
+            record
+        );
+
+
+        const modal =
+            document.getElementById(
+                "talapatrakDeleteModal"
+            );
+
+
+        if(!modal){
+
+            console.error(
+                "TALAPATRAK DELETE MODAL → MODAL NOT FOUND"
+            );
+
+            resolve(false);
+
+            return;
+
+        }
+
+
+        const villageNameElement =
+            document.getElementById(
+                "talapatrakDeleteVillageName"
+            );
+
+
+        const yearElement =
+            document.getElementById(
+                "talapatrakDeleteYear"
+            );
+
+
+        const cancelButton =
+            document.getElementById(
+                "talapatrakDeleteCancelButton"
+            );
+
+
+        const confirmButton =
+            document.getElementById(
+                "talapatrakDeleteConfirmButton"
+            );
+
+
+        if(
+            !villageNameElement ||
+            !yearElement ||
+            !cancelButton ||
+            !confirmButton
+        ){
+
+            console.error(
+                "TALAPATRAK DELETE MODAL → REQUIRED ELEMENT MISSING"
+            );
+
+            resolve(false);
+
+            return;
+
+        }
+
+          /* ========================================================
+             RESET CONFIRM BUTTON STATE
+             IMPORTANT:
+             Every time the modal opens, restore the button.
+          ======================================================== */
+          
+          confirmButton.disabled = false;
+          
+          confirmButton.innerHTML = `
+          
+              <i class="fa-solid fa-trash-can"></i>
+          
+              Delete Permanently
+          
+          `;
+
+
+        talapatrakDeleteRecordPending =
+            record;
+
+
+        villageNameElement.textContent =
+            record.moje ||
+            "this village";
+
+
+        yearElement.textContent =
+            record.year ||
+            "";
+
+
+        modal.classList.add(
+            "open"
+        );
+
+
+        modal.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+
+        console.log(
+            "TALAPATRAK DELETE MODAL → OPENED:",
+            record.id
+        );
+
+
+        /* ========================================================
+           CANCEL
+        ======================================================== */
+
+        function handleCancel() {
+
+            console.log(
+                "TALAPATRAK DELETE MODAL → CANCELLED"
+            );
+
+
+            closeModal();
+
+            cleanup();
+
+            resolve(false);
+
+        }
+
+
+        /* ========================================================
+           CONFIRM
+        ======================================================== */
+
+        async function handleConfirm() {
+
+            console.log(
+                "TALAPATRAK DELETE MODAL → CONFIRM CLICKED:",
+                record.id
+            );
+
+
+            confirmButton.disabled =
+                true;
+
+
+            confirmButton.innerHTML = `
+
+                <i class="fa-solid fa-spinner fa-spin"></i>
+
+                Deleting...
+
+            `;
+
+
+            try {
+
+                const success =
+                    await permanentlyDeleteTalapatrakRecord(
+                        record
+                    );
+
+
+                console.log(
+                    "TALAPATRAK DELETE MODAL → DELETE RESULT:",
+                    success
+                );
+
+
+                closeModal();
+
+                cleanup();
+
+                resolve(success);
+
+            }
+            catch(error) {
+
+                console.error(
+                    "TALAPATRAK DELETE MODAL → DELETE FAILED:",
+                    error
+                );
+
+
+                confirmButton.disabled =
+                    false;
+
+
+                confirmButton.innerHTML = `
+
+                    <i class="fa-solid fa-trash-can"></i>
+
+                    Delete Permanently
+
+                `;
+
+
+                resolve(false);
+
+            }
+
+        }
+
+
+        /* ========================================================
+           OVERLAY
+        ======================================================== */
+
+        function handleOverlay(event) {
+
+            if(
+                event.target ===
+                modal
+            ){
+
+                handleCancel();
+
+            }
+
+        }
+
+
+        /* ========================================================
+           ESC
+        ======================================================== */
+
+        function handleEscape(event) {
+
+            if(
+                event.key ===
+                "Escape"
+            ){
+
+                handleCancel();
+
+            }
+
+        }
+
+
+        /* ========================================================
+           LISTENERS
+        ======================================================== */
+
+        cancelButton.addEventListener(
+            "click",
+            handleCancel
+        );
+
+
+        confirmButton.addEventListener(
+            "click",
+            handleConfirm
+        );
+
+
+        modal.addEventListener(
+            "click",
+            handleOverlay
+        );
+
+
+        document.addEventListener(
+            "keydown",
+            handleEscape
+        );
+
+
+        /* ========================================================
+           CLEANUP
+        ======================================================== */
+
+        function cleanup() {
+
+            cancelButton.removeEventListener(
+                "click",
+                handleCancel
+            );
+
+
+            confirmButton.removeEventListener(
+                "click",
+                handleConfirm
+            );
+
+
+            modal.removeEventListener(
+                "click",
+                handleOverlay
+            );
+
+
+            document.removeEventListener(
+                "keydown",
+                handleEscape
+            );
+
+
+            talapatrakDeleteRecordPending =
+                null;
+
+        }
+
+
+        /* ========================================================
+           CLOSE
+        ======================================================== */
+
+        function closeModal() {
+
+            modal.classList.remove(
+                "open"
+            );
+
+
+            modal.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
+        }
+
+    });
+
+}
