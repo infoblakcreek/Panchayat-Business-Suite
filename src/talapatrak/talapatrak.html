@@ -1233,146 +1233,95 @@
 
 
 
-                    <!-- ============================================================
-                         SHIKSHANUPAKARAN CREATE CONFIRMATION MODAL
-                    ============================================================ -->
-                    
-                    <div
-                        id="talapatrakShikshanupakaranModal"
-                        class="talapatrakShikshanupakaranModal"
-                        aria-hidden="true"
-                    >
-                    
-                        <div
-                            class="talapatrakShikshanupakaranOverlay">
-                        </div>
-                    
-                    
-                        <div
-                            class="talapatrakShikshanupakaranDialog"
-                            role="dialog"
-                            aria-modal="true"
-                            aria-labelledby="talapatrakShikshanupakaranTitle"
-                        >
-                    
-                            <div
-                                class="talapatrakShikshanupakaranIcon">
-                    
-                                <i class="fa-solid fa-table-list"></i>
-                    
-                            </div>
-                    
-                    
-                            <div
-                                class="talapatrakShikshanupakaranContent"
-                            >
-                    
-                                <h3
-                                    id="talapatrakShikshanupakaranTitle"
-                                >
-                                    Create Shikshanupakaran card?
-                                </h3>
-                    
-                    
-                                <p>
-                                    This Talapatrak does not have a
-                                    Shikshanupakaran card yet.
-                                </p>
-                    
-                    
-                                <p
-                                    class="talapatrakShikshanupakaranNote"
-                                >
-                                    Would you like to create one
-                                    automatically?
-                                </p>
-                    
-                            </div>
-                    
-                    
-                            <div
-                                class="talapatrakShikshanupakaranActions"
-                            >
-                    
-                                <button
-                                    type="button"
-                                    id="talapatrakShikshanupakaranCancel"
-                                    class="talapatrakShikshanupakaranCancel"
-                                >
-                                    Not now
-                                </button>
-                    
-                    
-                                <button
-                                    type="button"
-                                    id="talapatrakShikshanupakaranConfirm"
-                                    class="talapatrakShikshanupakaranConfirm"
-                                >
-                    
-                                    <i class="fa-solid fa-plus"></i>
-                    
-                                    Yes, create card
-                    
-                                </button>
-                    
-                            </div>
-                    
-                        </div>
-                    
-                    </div>
-  
-
-
-
 <!-- ============================================================
-     SHIKSHANUPAKARAN → TALAPATRAK SYNC CARD
+     TALAPATRAK → SHIKSHANUPAKARAN CREATE & SYNC MODAL
 ============================================================ -->
 
 <div
-    id="talapatrakSyncOverlay"
-    class="talapatrakSyncOverlay"
-    style="display:none;">
+    id="talapatrakShikshanupakaranCreateModal"
+    class="shikshanupakaranCreateModal"
+    aria-hidden="true"
+>
 
     <div
-        class="talapatrakSyncCard"
+        class="shikshanupakaranCreateOverlay">
+    </div>
+
+
+    <div
+        class="shikshanupakaranCreateDialog"
         role="dialog"
         aria-modal="true"
-        aria-labelledby="talapatrakSyncTitle">
+        aria-labelledby="talapatrakShikshanupakaranCreateTitle"
+    >
 
-        <div class="talapatrakSyncIcon">
-            <i class="fa-solid fa-link"></i>
+        <div
+            class="shikshanupakaranCreateIcon"
+        >
+
+            <i class="fa-solid fa-table-list"></i>
+
         </div>
 
-        <div class="talapatrakSyncContent">
 
-            <h3 id="talapatrakSyncTitle">
-                Talapatrak not found
+        <div
+            class="shikshanupakaranCreateContent"
+        >
+
+            <h3
+                id="talapatrakShikshanupakaranCreateTitle"
+            >
+                Create Shikshanupakaran card?
             </h3>
 
-            <p id="talapatrakSyncMessage">
+
+            <p>
+                No Shikshanupakaran card exists for
+                <strong id="talapatrakShikshanupakaranCreateVillage">
+                    —
+                </strong>
+                <span>
+                    (
+                    <strong id="talapatrakShikshanupakaranCreateYear">
+                        —
+                    </strong>
+                    )
+                </span>.
+            </p>
+
+
+            <p
+                class="shikshanupakaranCreateNote"
+            >
+                Would you like to create a new card
+                and sync it with this Talapatrak?
             </p>
 
         </div>
 
-        <div class="talapatrakSyncActions">
+
+        <div
+            class="shikshanupakaranCreateActions"
+        >
 
             <button
                 type="button"
-                id="talapatrakSyncCancelButton"
-                class="talapatrakSyncButton cancel">
-
+                id="talapatrakShikshanupakaranCreateCancel"
+                class="shikshanupakaranCreateCancel"
+            >
                 Cancel
-
             </button>
 
+
             <button
                 type="button"
-                id="talapatrakSyncConfirmButton"
-                class="talapatrakSyncButton confirm">
+                id="talapatrakShikshanupakaranCreateConfirm"
+                class="shikshanupakaranCreateConfirm"
+            >
 
-                <i class="fa-solid fa-link"></i>
+                <i class="fa-solid fa-plus"></i>
 
-                Sync with Talapatrak
+                Create & Sync
 
             </button>
 
@@ -1381,6 +1330,8 @@
     </div>
 
 </div>
+
+  
 
 
 

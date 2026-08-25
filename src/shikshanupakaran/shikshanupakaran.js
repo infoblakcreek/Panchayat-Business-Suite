@@ -111,6 +111,42 @@ function openShikshanupakaran(){
 
 }
 
+
+
+/* ============================================================
+   SHIKSHANUPAKARAN CREATE DECISION CACHE
+
+   Stores the user's answer for:
+   Village + Year
+
+   true  = create/sync
+   false = do not create/sync
+
+   The user will NOT be asked again for the
+   same Village + Year during this session.
+============================================================ */
+
+const shikshanupakaranCreateDecisions =
+    new Map();
+
+
+function getShikshanupakaranCreateDecisionKey(
+    moje,
+    year
+){
+
+    return (
+        String(moje || "")
+            .trim()
+            .toLowerCase()
+        +
+        "::"
+        +
+        String(year || "")
+            .trim()
+    );
+
+}
 /* ============================================================
         NAVIGATION ACTIVE STATE
 ============================================================ */
@@ -4218,50 +4254,100 @@ async function createShikshanupakaranFromTalapatrak(
     talapatrakData
 ){
 
+    console.log(
+        "================================================"
+    );
+
+    console.log(
+        "TALAPATRAK → SHIKSHANUPAKARAN SYNC"
+    );
+
+    console.log(
+        "================================================"
+    );
+
+
     try{
 
-        if(!auth.currentUser){
+        /* ========================================================
+           LOGIN
+        ======================================================== */
+
+        if(
+            !auth ||
+            !auth.currentUser
+        ){
 
             console.warn(
-                "User not logged in"
+                "SYNC SKIPPED → USER NOT LOGGED IN"
             );
 
-            return;
+            return false;
 
         }
 
 
+        /* ========================================================
+           EXACT TALAPATRAK DATA
+
+           IMPORTANT:
+           NEVER use current year here.
+
+           The Talapatrak's own village + year
+           determines the Shikshanupakaran card.
+        ======================================================== */
+
         const moje =
-            talapatrakData.moje || "";
+            String(
+                talapatrakData?.moje || ""
+            ).trim();
 
 
         const taluka =
-            talapatrakData.taluka || "";
+            String(
+                talapatrakData?.taluka || ""
+            ).trim();
 
 
         const jillo =
-            talapatrakData.jillo || "";
+            String(
+                talapatrakData?.jillo || ""
+            ).trim();
 
 
         const year =
-            talapatrakData.year ||
-            getCurrentShikshanupakaranYear();
+            String(
+                talapatrakData?.year || ""
+            ).trim();
 
 
-        if(!moje){
+        const talapatrakRows =
+            Array.isArray(
+                talapatrakData?.rows
+            )
+                ? talapatrakData.rows
+                : [];
+
+
+        if(
+            !moje ||
+            !year
+        ){
 
             console.warn(
-                "Village name missing"
+                "SYNC SKIPPED → VILLAGE OR YEAR MISSING"
             );
 
-            return;
+            return false;
 
         }
 
 
-        /* ============================================================
-           DOCUMENT
-        ============================================================ */
+        /* ========================================================
+           SHIKSHANUPAKARAN DOCUMENT
+
+           SAME VILLAGE + SAME YEAR
+        ======================================================== */
 
         const documentId =
             getShikshanupakaranDocumentId(
@@ -4280,230 +4366,265 @@ async function createShikshanupakaranFromTalapatrak(
                 );
 
 
-        const existing =
+        let snapshot =
             await shikshanupakaranRef.get();
 
 
-        /* ============================================================
+        /* ========================================================
            CARD DOES NOT EXIST
-           
-           ASK USER BEFORE CREATING IT.
-        ============================================================ */
 
-        if(!existing.exists){
+           ASK ONLY ONCE FOR THIS:
 
-              const createCard =
-                  await showShikshanupakaranCreateModal(
-                      moje,
-                      year
-                  );
+               TALAPATRAK → SHIKSHANUPAKARAN
+               VILLAGE + YEAR
+        ======================================================== */
 
-          
-            if(!createCard){
+        if(
+            !snapshot.exists
+        ){
 
-                console.log(
-                    "TALAPATRAK → SHIKSHANUPAKARAN SYNC CANCELLED BY USER:",
-                    documentId
+            const decisionKey =
+                "talapatrakToShikshanupakaran_" +
+                moje.toLowerCase() +
+                "::" +
+                year;
+
+
+            const previousDecision =
+                localStorage.getItem(
+                    decisionKey
                 );
 
-                return;
+
+            /* ====================================================
+               USER ALREADY APPROVED
+
+               DO NOT ASK AGAIN.
+            ==================================================== */
+
+            if(
+                previousDecision ===
+                "yes"
+            ){
+
+                console.log(
+                    "SYNC CONNECTION ALREADY APPROVED:",
+                    moje,
+                    year
+                );
 
             }
 
 
-            console.log(
-                "USER AGREED → CREATING SHIKSHANUPAKARAN:",
-                documentId
-            );
+            /* ====================================================
+               USER PREVIOUSLY DECLINED
+
+               DO NOT ASK AGAIN.
+            ==================================================== */
+
+            else if(
+                previousDecision ===
+                "no"
+            ){
+
+                console.log(
+                    "SYNC PREVIOUSLY DECLINED:",
+                    moje,
+                    year
+                );
+
+                return false;
+
+            }
+
+
+            /* ====================================================
+               FIRST TIME
+            ==================================================== */
+
+            else{
+
+                const createCard =
+                    await showShikshanupakaranCreateModal(
+                        moje,
+                        year
+                    );
+
+
+                localStorage.setItem(
+                    decisionKey,
+                    createCard
+                        ? "yes"
+                        : "no"
+                );
+
+
+                if(
+                    !createCard
+                ){
+
+                    console.log(
+                        "USER DECLINED SHIKSHANUPAKARAN CREATION:",
+                        moje,
+                        year
+                    );
+
+                    return false;
+
+                }
+
+
+                console.log(
+                    "USER APPROVED SHIKSHANUPAKARAN CONNECTION:",
+                    moje,
+                    year
+                );
+
+            }
 
         }
 
 
-        /* ============================================================
-           EXISTING SHIKSHANUPAKARAN ROWS
-        ============================================================ */
+        /* ========================================================
+           RE-CHECK DOCUMENT
 
-        const existingRows =
-            existing.exists &&
-            Array.isArray(
-                existing.data().rows
-            )
-                ? existing.data().rows
-                : [];
+           Important when user previously approved creation.
+        ======================================================== */
+
+        snapshot =
+            await shikshanupakaranRef.get();
 
 
-        /* ============================================================
-           TALAPATRAK ROWS
-           
+        /* ========================================================
+           BUILD SHIKSHANUPAKARAN ROWS
+
            IMPORTANT:
-           EMPTY ROWS ARE ALSO INCLUDED.
-           
-           We NEVER skip a Talapatrak row.
-        ============================================================ */
 
-        const talapatrakRows =
-            Array.isArray(
-                talapatrakData.rows
-            )
-                ? talapatrakData.rows
-                : [];
+           DO NOT USE EXISTING SHIKSHANUPAKARAN ROWS.
 
+           Talapatrak is the SOURCE OF TRUTH.
 
-        /* ============================================================
-               BUILD SYNCHRONIZED ROWS
-            
-               IMPORTANT:
-            
-               Talapatrak is the source of truth for:
-            
-               A = row number
-               B = name/value
-            
-               Shikshanupakaran uses the EXACT SAME row position.
-            
-               We do NOT match by B.
-            
-               This means:
-            
-               Talapatrak row 1 → Shikshanupakaran row 1
-               Talapatrak row 2 → Shikshanupakaran row 2
-               Talapatrak row 3 → Shikshanupakaran row 3
-            
-               Even when B is empty.
-            
-               Existing Shikshanupakaran data in the
-               corresponding row is preserved.
-            ============================================================ */
-            
-            const synchronizedRows = [];
-            
-            
-            talapatrakRows.forEach(
-                function(tRow, index){
-            
-                    /*
-                        Existing Shikshanupakaran row
-                        at the EXACT SAME position.
-                    */
-            
-                    const existingRow =
-                        existingRows[index];
-            
-            
-                    let shikshanupakaranRow;
-            
-            
-                    /* ====================================================
-                       EXISTING ROW AT SAME POSITION
-                    ==================================================== */
-            
-                    if(
-                        existingRow &&
-                        typeof existingRow === "object"
-                    ){
-            
-                        /*
-                            Preserve ALL existing
-                            Shikshanupakaran columns.
-            
-                            ONLY synchronize:
-            
-                            A = Talapatrak row number
-                            B = Talapatrak B value
-                        */
-            
-                        shikshanupakaranRow = {
-            
-                            ...existingRow,
-            
-                            A:
-                                index + 1,
-            
-                            B:
-                                tRow?.B || ""
-            
-                        };
-            
-            
-                        console.log(
-                            "SHIKSHANUPAKARAN ROW SYNCED:",
-                            `"${tRow?.B || ""}"`,
-                            "→ ROW:",
-                            index + 1
-                        );
-            
-                    }
-            
-            
-                    /* ====================================================
-                       NO EXISTING ROW AT THIS POSITION
-            
-                       Create a brand-new Shikshanupakaran row.
-                    ==================================================== */
-            
-                    else{
-            
-                        shikshanupakaranRow = {
-            
-                            A:
-                                index + 1,
-            
-                            B:
-                                tRow?.B || "",
-            
-                            C:"",
-                            D:"",
-                            E:"",
-                            F:"",
-                            G:"0.00",
-                            H:"",
-                            I:"",
-                            J:"",
-                            K:"",
-                            L:"",
-                            M:"0.00",
-                            N:"0.00",
-                            O:"0.00",
-                            P:"0.00",
-                            Q:"",
-                            R:"0.00",
-                            S:"0.00",
-                            T:""
-            
-                        };
-            
-            
-                        console.log(
-                            tRow?.B
-                                ? "ADDED TO SHIKSHANUPAKARAN FROM TALAPATRAK:"
-                                : "ADDED EMPTY ROW TO SHIKSHANUPAKARAN:",
-                            `"${tRow?.B || ""}"`,
-                            "→ ROW:",
-                            index + 1
-                        );
-            
-                    }
-            
-            
-                    /*
-                        ALWAYS push exactly one row
-                        for every Talapatrak row.
-                    */
-            
-                    synchronizedRows.push(
-                        shikshanupakaranRow
-                    );
-            
+           The synchronized Shikshanupakaran row count
+           MUST EXACTLY MATCH the Talapatrak row count.
+
+           Talapatrak B → Shikshanupakaran B
+        ======================================================== */
+
+        const synchronizedRows =
+            talapatrakRows.map(
+                function(
+                    tRow,
+                    index
+                ){
+
+                    return {
+
+                        A:
+                            index + 1,
+
+                        B:
+                            tRow?.B || "",
+
+                        C:
+                            "",
+
+                        D:
+                            "",
+
+                        E:
+                            "",
+
+                        F:
+                            "",
+
+                        G:
+                            "0.00",
+
+                        H:
+                            "",
+
+                        I:
+                            "",
+
+                        J:
+                            "",
+
+                        K:
+                            "",
+
+                        L:
+                            "",
+
+                        M:
+                            "0.00",
+
+                        N:
+                            "0.00",
+
+                        O:
+                            "0.00",
+
+                        P:
+                            "0.00",
+
+                        Q:
+                            "",
+
+                        R:
+                            "0.00",
+
+                        S:
+                            "0.00",
+
+                        T:
+                            ""
+
+                    };
+
                 }
             );
 
 
+        console.log(
+            "SYNC → TALAPATRAK ROW COUNT:",
+            talapatrakRows.length
+        );
 
-        /* ============================================================
-           SAVE
-        ============================================================ */
 
-        const shikshanupakaranData = {
+        console.log(
+            "SYNC → SHIKSHANUPAKARAN ROW COUNT:",
+            synchronizedRows.length
+        );
+
+
+        /* ========================================================
+           SAFETY CHECK
+
+           These MUST always be identical.
+        ======================================================== */
+
+        if(
+            synchronizedRows.length !==
+            talapatrakRows.length
+        ){
+
+            console.error(
+                "SYNC ABORTED → ROW COUNT MISMATCH"
+            );
+
+            return false;
+
+        }
+
+
+        /* ========================================================
+           SAVE / SYNC SHIKSHANUPAKARAN
+
+           THIS FUNCTION IS ONLY CALLED AFTER
+           TALAPATRAK SAVE.
+        ======================================================== */
+
+        const data = {
 
             type:
                 "shikshanupakaran",
@@ -4540,42 +4661,27 @@ async function createShikshanupakaranFromTalapatrak(
 
 
         await shikshanupakaranRef.set(
-
-            shikshanupakaranData,
-
+            data,
             {
-                merge:true
+                merge:
+                    true
             }
-
         );
 
 
         console.log(
-            "================================================"
-        );
-
-        console.log(
-            "TALAPATRAK → SHIKSHANUPAKARAN SYNC COMPLETE"
-        );
-
-        console.log(
-            "Document:",
+            "TALAPATRAK → SHIKSHANUPAKARAN SYNC COMPLETE:",
             documentId
         );
 
-        console.log(
-            "Talapatrak rows:",
-            talapatrakRows.length
-        );
 
         console.log(
-            "Shikshanupakaran rows:",
+            "SYNC → FINAL ROW COUNT:",
             synchronizedRows.length
         );
 
-        console.log(
-            "================================================"
-        );
+
+        return true;
 
     }
 
@@ -4583,9 +4689,11 @@ async function createShikshanupakaranFromTalapatrak(
     catch(error){
 
         console.error(
-            "Auto Shikshanupakaran synchronization error:",
+            "TALAPATRAK → SHIKSHANUPAKARAN SYNC ERROR:",
             error
         );
+
+        return false;
 
     }
 
@@ -5532,105 +5640,95 @@ async function saveShikshanupakaran(
            MANUAL SAVE ONLY
         ======================================================== */
 
-        if(showMessage){
-
-            console.log(
-                "================================================"
-            );
-
-            console.log(
-                "STARTING SHIKSHANUPAKARAN → TALAPATRAK SYNC"
-            );
-
-
-            const syncResult =
-                await syncShikshanupakaranToTalapatrak({
-
-                    moje:
-                        data.moje,
-
-                    taluka:
-                        data.taluka,
-
-                    jillo:
-                        data.jillo,
-
-                    year:
-                        data.year,
-
-                    rows:
-                        data.rows
-
-                });
-
-
-            if(syncResult){
-
+        if(showMessage === true){
+          
+              console.log(
+                  "================================================"
+              );
+          
+              console.log(
+                  "STARTING SHIKSHANUPAKARAN → TALAPATRAK SYNC"
+              );
+          
+          
+              const syncResult =
+                  await syncShikshanupakaranToTalapatrak({
+          
+                      moje:
+                          data.moje,
+          
+                      taluka:
+                          data.taluka,
+          
+                      jillo:
+                          data.jillo,
+          
+                      year:
+                          data.year,
+          
+                      rows:
+                          data.rows
+          
+                  });
+          
+          
+              if(syncResult){
+          
                   console.log(
                       "SHIKSHANUPAKARAN → TALAPATRAK SYNC SUCCESS"
                   );
-              
-              
-                  /*
-                      ========================================================
-                      IMPORTANT
-              
-                      The new Talapatrak document now exists in Firestore.
-              
-                      Reload Talapatrak management so the new card appears.
-                      ========================================================
-                  */
-              
+          
+          
                   try{
-              
+          
                       if(
                           typeof loadTalapatrakRecords ===
                           "function"
                       ){
-              
+          
                           console.log(
                               "RELOADING TALAPATRAK MANAGEMENT AFTER SYNC"
                           );
-              
-              
+          
+          
                           await loadTalapatrakRecords();
-              
-              
+          
+          
                           console.log(
                               "TALAPATRAK MANAGEMENT RELOADED AFTER SYNC"
                           );
-              
+          
                       }
                       else{
-              
+          
                           console.warn(
                               "loadTalapatrakRecords() NOT FOUND"
                           );
-              
+          
                       }
-              
+          
                   }
                   catch(
                       refreshError
                   ){
-              
+          
                       console.error(
                           "TALAPATRAK REFRESH AFTER SYNC FAILED:",
                           refreshError
                       );
-              
+          
                   }
-              
+          
               }
               else{
-              
+          
                   console.warn(
                       "SHIKSHANUPAKARAN → TALAPATRAK SYNC NOT COMPLETED"
                   );
-              
+          
               }
-
-        }
+          
+          }
 
 
         /* ========================================================
@@ -7140,21 +7238,23 @@ function createShikshanupakaranRow(
           <button
               type="button"
               class="addShikshanupakaranRowAfter printHide"
-              title="Add Row">
-      
+              title="Add Row"
+              onclick="addShikshanupakaranRowAfter(this)">
+          
               <i class="fa-solid fa-plus"></i>
-      
+          
           </button>
-      
+          
           <button
               type="button"
               class="deleteShikshanupakaranRow printHide"
-              title="Delete Row">
-      
+              title="Delete Row"
+              onclick="deleteShikshanupakaranRow(this)">
+          
               <i class="fa-solid fa-trash"></i>
-      
+          
           </button>
-      
+                
       </td>
       
       `;
@@ -7325,599 +7425,548 @@ function setupShikshanupakaranRowEvents(row){
     }
 
     
-      /* ============================================================
-         ADD ROW AFTER CURRENT ROW
-      ============================================================ */
-      
+}
 
-          const addRowButton =
-              row.querySelector(
-                  ".addShikshanupakaranRowAfter"
-              );
-          
-          
-          if(addRowButton){
-          
-              addRowButton.addEventListener(
-                  "click",
-                  function(){
-          
-                     
-          
-                      /*
-                          ====================================================
-                          GET EXACT MEMORY INDEX OF CLICKED ROW
-                         
-                          DO NOT calculate this from visibleIndex.
-                          The row already knows its global index.
-                          ====================================================
-                      */
-          
-                      const memoryIndex =
-                          Number(
-                              row.dataset.memoryIndex
-                          );
-          
-          
-                      if(
-                          !Number.isInteger(
-                              memoryIndex
-                          )
-                      ){
-          
-                          console.error(
-                              "ADD ROW → INVALID MEMORY INDEX:",
-                              row.dataset.memoryIndex
-                          );
-          
-                          return;
-          
-                      }
-          
-          
-                      /*
-                          ====================================================
-                          SAFETY CHECK
-                          ====================================================
-                      */
-          
-                      if(
-                          memoryIndex < 0 ||
-                          memoryIndex >=
-                              window.shikshanupakaranAllRows.length
-                      ){
-          
-                          console.error(
-                              "ADD ROW → MEMORY INDEX OUT OF RANGE:",
-                              memoryIndex
-                          );
-          
-                          return;
-          
-                      }
-          
-          
-                      console.log(
-                          "================================================"
-                      );
-          
-                      console.log(
-                          "SHIKSHANUPAKARAN ADD ROW"
-                      );
-          
-                      console.log(
-                          "Clicked row:",
-                          row
-                      );
-          
-                      console.log(
-                          "Clicked row memory index:",
-                          memoryIndex
-                      );
-          
-          
-                      /*
-                          ====================================================
-                          NEW ROW
-                          ====================================================
-                      */
-          
-                      const newRowData = {
-          
-                          A:
-                              memoryIndex + 2,
-          
-                          B: "",
-                          C: "",
-                          D: "",
-                          E: "",
-                          F: "",
-          
-                          G: "0.00",
-          
-                          H: "",
-                          I: "",
-                          J: "",
-                          K: "",
-                          L: "",
-          
-                          M: "0.00",
-                          N: "0.00",
-                          O: "0.00",
-                          P: "0.00",
-          
-                          Q: "",
-          
-                          R: "0.00",
-                          S: "0.00",
-          
-                          T: ""
-          
-                      };
-          
-          
-                      /*
-                          ====================================================
-                          INSERT IMMEDIATELY AFTER CLICKED ROW
-                          ====================================================
-                      */
-          
-                      window.shikshanupakaranAllRows.splice(
-                          memoryIndex + 1,
-                          0,
-                          newRowData
-                      );
-          
-          
-                      /*
-                          ====================================================
-                          RE-NUMBER ALL ROWS
-                         
-                          Column A = global row number.
-                          ====================================================
-                      */
-          
-                      window.shikshanupakaranAllRows.forEach(
-                          function(
-                              rowData,
-                              index
-                          ){
-          
-                              if(
-                                  rowData &&
-                                  typeof rowData === "object"
-                              ){
-          
-                                  rowData.A =
-                                      index + 1;
-          
-                              }
-          
-                          }
-                      );
-          
-          
-                      console.log(
-                          "NEW ROW INSERTED AT:",
-                          memoryIndex + 1
-                      );
-          
-          
-                      console.log(
-                          "TOTAL ROWS:",
-                          window.shikshanupakaranAllRows.length
-                      );
-          
-          
-                      /*
-                          ====================================================
-                          CURRENT PAGINATION
-                          ====================================================
-                      */
-          
-                      const currentPage =
-                          Number(
-                              window.shikshanupakaranCurrentPage
-                          ) || 1;
-          
-          
-                      const rowsPerPage =
-                          Number(
-                              window.shikshanupakaranRowsPerPage
-                          ) || 20;
-          
-          
-                      /*
-                          ====================================================
-                          RECALCULATE TOTAL PAGES
-                          ====================================================
-                      */
-          
-                      window.shikshanupakaranTotalPages =
-                          Math.max(
-                              1,
-                              Math.ceil(
-                                  window.shikshanupakaranAllRows.length /
-                                  rowsPerPage
-                              )
-                          );
-          
-          
-                      /*
-                          ====================================================
-                          RENDER CURRENT PAGE
-                          ====================================================
-                      */
-          
-                      renderShikshanupakaranPage(
-                          currentPage
-                      );
-          
-          
-                      /*
-                          ====================================================
-                          FIND THE NEW ROW AFTER RENDER
-                         
-                          The inserted row is now at:
-                         
-                              memoryIndex + 1
-                         
-                          Convert that to its position on the
-                          current page.
-                          ====================================================
-                      */
-          
-                      const newMemoryIndex =
-                          memoryIndex + 1;
-          
-          
-                      const pageStartIndex =
-                          (
-                              currentPage - 1
-                          ) *
-                          rowsPerPage;
-          
-          
-                      const newVisibleIndex =
-                          newMemoryIndex -
-                          pageStartIndex;
-          
-          
-                      const rowsAfterRender =
-                          Array.from(
-                              shikshanupakaranBody.querySelectorAll(
-                                  ".shikshanupakaranRow"
-                              )
-                          );
-          
-          
-                      const newRow =
-                          rowsAfterRender[
-                              newVisibleIndex
-                          ];
-          
-          
-                      /*
-                          ====================================================
-                          FOCUS FIRST EDITABLE INPUT
-                          ====================================================
-                      */
-          
-                      const firstInput =
-                          newRow?.querySelector(
-                              "input:not([readonly])"
-                          );
-          
-          
-                      if(firstInput){
-          
-                          firstInput.focus();
-          
-                          firstInput.select();
-          
-                      }
-          
-          
-                      /*
-                          ====================================================
-                          TOTAL IS NOW STALE
-                          ====================================================
-                      */
-          
-                      window.shikshanupakaranTotalGenerated =
-                          false;
-          
-          
-                      window.shikshanupakaranTotals =
-                          null;
-          
-          
-                      renderShikshanupakaranTotal();
-          
-          
-                      /*
-                          ====================================================
-                          AUTOSAVE
-                          ====================================================
-                      */
-          
-                      scheduleShikshanupakaranAutoSave();
-          
-          
-                      console.log(
-                          "ADD ROW → COMPLETE"
-                      );
-          
-                  }
-              );
-          
-          }
+/* ============================================================
+   ADD ROW AFTER CURRENT ROW
+============================================================ */
 
-  
-  
-        /* ============================================================
-           DELETE ROW
-        ============================================================ */
-     
-          
-          const deleteButton =
-              row.querySelector(
-                  ".deleteShikshanupakaranRow"
-              );
-          
-          
-          if(deleteButton){
-          
-              deleteButton.addEventListener(
-                  "click",
-                  function(){
-          
-                      const currentRow =
-                          this.closest(
-                              ".shikshanupakaranRow"
-                          );
-          
-          
-                      if(!currentRow){
-          
-                          console.warn(
-                              "DELETE → CURRENT ROW NOT FOUND"
-                          );
-          
-                          return;
-          
-                      }
-          
-          
-                      /*
-                          ====================================================
-                          GET THE EXACT MEMORY INDEX STORED ON THIS ROW
-                          ====================================================
-                      */
-          
-                      const memoryIndex =
-                          Number(
-                              currentRow.dataset.memoryIndex
-                          );
-          
-          
-                      if(
-                          !Number.isInteger(
-                              memoryIndex
-                          )
-                      ){
-          
-                          console.error(
-                              "DELETE → INVALID MEMORY INDEX:",
-                              currentRow.dataset.memoryIndex
-                          );
-          
-                          return;
-          
-                      }
-          
-          
-                      /*
-                          ====================================================
-                          SAFETY
-                          ====================================================
-                      */
-          
-                      if(
-                          memoryIndex < 0 ||
-                          memoryIndex >=
-                              window.shikshanupakaranAllRows.length
-                      ){
-          
-                          console.error(
-                              "DELETE → MEMORY INDEX OUT OF RANGE:",
-                              memoryIndex
-                          );
-          
-                          return;
-          
-                      }
-          
-          
-                      if(
-                          window.shikshanupakaranAllRows.length <= 1
-                      ){
-          
-                          alert(
-                              "At least one row is required."
-                          );
-          
-                          return;
-          
-                      }
-          
-          
-                      console.log(
-                          "================================================"
-                      );
-          
-                      console.log(
-                          "SHIKSHANUPAKARAN DELETE ROW"
-                      );
-          
-                      console.log(
-                          "Clicked row:",
-                          currentRow
-                      );
-          
-                      console.log(
-                          "Stored memory index:",
-                          memoryIndex
-                      );
-          
-          
-          
-          
-                      /*
-                          ====================================================
-                          SHOW EXACT DATA THAT WILL BE DELETED
-                          ====================================================
-                      */
-          
-                      console.log(
-                          "MEMORY ROW BEFORE DELETE:",
-                          window.shikshanupakaranAllRows[
-                              memoryIndex
-                          ]
-                      );
-          
-          
-                      /*
-                          ====================================================
-                          DELETE EXACT ROW
-                          ====================================================
-                      */
-          
-                      window.shikshanupakaranAllRows.splice(
-                          memoryIndex,
-                          1
-                      );
-          
-          
-                      /*
-                          ====================================================
-                          RE-NUMBER ALL ROWS
-                          ====================================================
-                      */
-          
-                      window.shikshanupakaranAllRows.forEach(
-                          function(rowData, index){
-          
-                              if(
-                                  rowData &&
-                                  typeof rowData === "object"
-                              ){
-          
-                                  rowData.A =
-                                      index + 1;
-          
-                              }
-          
-                          }
-                      );
-          
-          
-                      console.log(
-                          "ROW DELETED AT MEMORY INDEX:",
-                          memoryIndex
-                      );
-          
-                      console.log(
-                          "REMAINING ROWS:",
-                          window.shikshanupakaranAllRows.length
-                      );
-          
-          
-                      /*
-                          ====================================================
-                          RECALCULATE PAGINATION
-                          ====================================================
-                      */
-          
-                      const rowsPerPage =
-                          Number(
-                              window.shikshanupakaranRowsPerPage
-                          ) || 20;
-          
-          
-                      window.shikshanupakaranTotalPages =
-                          Math.max(
-                              1,
-                              Math.ceil(
-                                  window.shikshanupakaranAllRows.length /
-                                  rowsPerPage
-                              )
-                          );
-          
-          
-                      /*
-                          ====================================================
-                          CURRENT PAGE
-                          ====================================================
-                      */
-          
-                      const currentPage =
-                          Number(
-                              window.shikshanupakaranCurrentPage
-                          ) || 1;
-          
-          
-                      const newPage =
-                          Math.min(
-                              currentPage,
-                              window.shikshanupakaranTotalPages
-                          );
-          
-          
-                      /*
-                          ====================================================
-                          RENDER
-                          ====================================================
-                      */
-          
-                      renderShikshanupakaranPage(
-                          newPage
-                      );
-          
-          
-                      /*
-                          ====================================================
-                          TOTALS ARE NOW STALE
-                          ====================================================
-                      */
-          
-                      window.shikshanupakaranTotalGenerated =
-                          false;
-          
-          
-                      window.shikshanupakaranTotals =
-                          null;
-          
-          
-                      renderShikshanupakaranTotal();
-          
-          
-                      /*
-                          ====================================================
-                          AUTOSAVE
-                          ====================================================
-                      */
-          
-                      scheduleShikshanupakaranAutoSave();
-          
-                  }
-              );
-          
-          }
+function addShikshanupakaranRowAfter(button) {
 
-  
+    if (
+        !Array.isArray(
+            window.shikshanupakaranAllRows
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const currentRow =
+        button.closest(
+            ".shikshanupakaranRow"
+        );
+
+
+    if (!currentRow) {
+
+        return;
+
+    }
+
+
+    const visibleRows =
+        Array.from(
+            shikshanupakaranBody.querySelectorAll(
+                ".shikshanupakaranRow"
+            )
+        );
+
+
+    const visibleIndex =
+        visibleRows.indexOf(
+            currentRow
+        );
+
+
+    if (
+        visibleIndex === -1
+    ) {
+
+        return;
+
+    }
+
+
+    const currentPage =
+        Number(
+            window.shikshanupakaranCurrentPage
+        ) || 1;
+
+
+    const rowsPerPage =
+        Number(
+            window.shikshanupakaranRowsPerPage
+        ) || 20;
+
+
+    const memoryIndex =
+        (
+            currentPage - 1
+        ) *
+        rowsPerPage +
+        visibleIndex;
+
+
+    if (
+        memoryIndex < 0 ||
+        memoryIndex >=
+            window.shikshanupakaranAllRows.length
+    ) {
+
+        return;
+
+    }
+
+
+    /* ========================================================
+       DO NOT SYNC
+       
+       DOM contains the user's current unsaved edits.
+       We must preserve those DOM rows.
+    ======================================================== */
+
+
+    /* ========================================================
+       CREATE NEW MASTER ROW
+    ======================================================== */
+
+    const newRowData = {
+
+        A: "",
+
+        B: "",
+        C: "",
+        D: "",
+        E: "",
+        F: "",
+
+        G: "0.00",
+
+        H: "",
+        I: "",
+        J: "",
+        K: "",
+        L: "",
+
+        M: "0.00",
+        N: "0.00",
+        O: "0.00",
+        P: "0.00",
+
+        Q: "",
+
+        R: "0.00",
+        S: "0.00",
+
+        T: ""
+
+    };
+
+
+    /* ========================================================
+       INSERT INTO MASTER MEMORY
+       
+       IMPORTANT:
+       This only changes the row structure.
+       It does NOT replace existing DOM data.
+    ======================================================== */
+
+    window.shikshanupakaranAllRows.splice(
+        memoryIndex + 1,
+        0,
+        newRowData
+    );
+
+
+    /* ========================================================
+       CREATE NEW DOM ROW
+       
+       createShikshanupakaranRow() normally appends.
+       We will move the newly-created row immediately
+       after the clicked row.
+    ======================================================== */
+
+    const newRow =
+        createShikshanupakaranRow(
+            newRowData,
+            memoryIndex + 1
+        );
+
+
+    if (!newRow) {
+
+        return;
+
+    }
+
+
+    /* ========================================================
+       MOVE NEW ROW INTO CORRECT POSITION
+    ======================================================== */
+
+    currentRow.after(
+        newRow
+    );
+
+
+    /* ========================================================
+       UPDATE MEMORY INDEXES
+       
+       The insertion shifted every row after the new row.
+    ======================================================== */
+
+    const updatedRows =
+        Array.from(
+            shikshanupakaranBody.querySelectorAll(
+                ".shikshanupakaranRow"
+            )
+        );
+
+
+    updatedRows.forEach(
+        function(
+            row,
+            index
+        ){
+
+            const globalIndex =
+                (
+                    currentPage - 1
+                ) *
+                rowsPerPage +
+                index;
+
+
+            row.dataset.memoryIndex =
+                String(
+                    globalIndex
+                );
+
+
+            /*
+                Update visible row number.
+            */
+
+            const numberInput =
+                row.querySelector(
+                    ".column-A"
+                );
+
+
+            if(numberInput){
+
+                numberInput.value =
+                    globalIndex + 1;
+
+            }
+
+        }
+    );
+
+
+    /* ========================================================
+       RECALCULATE PAGINATION STATE
+    ======================================================== */
+
+    window.shikshanupakaranTotalPages =
+        Math.max(
+            1,
+            Math.ceil(
+                window.shikshanupakaranAllRows.length /
+                rowsPerPage
+            )
+        );
+
+
+    /*
+        IMPORTANT:
+        Do NOT renderShikshanupakaranPage() here.
+        
+        Rendering would destroy the user's unsaved
+        DOM values.
+    */
+
+
+    /* ========================================================
+       TOTALS ARE STALE
+    ======================================================== */
+
+    window.shikshanupakaranTotalGenerated =
+        false;
+
+
+    window.shikshanupakaranTotals =
+        null;
+
+
+    renderShikshanupakaranTotal();
+
+
+    /* ========================================================
+       FOCUS NEW ROW
+    ======================================================== */
+
+    const firstInput =
+        newRow.querySelector(
+            "input:not([readonly])"
+        );
+
+
+    if(firstInput){
+
+        firstInput.focus();
+
+        firstInput.select();
+
+    }
+
+
+    console.log(
+        "SHIKSHANUPAKARAN ADD → COMPLETE:",
+        {
+            insertedAfter:
+                memoryIndex,
+
+            newMemoryIndex:
+                memoryIndex + 1,
+
+            totalRows:
+                window.shikshanupakaranAllRows.length
+        }
+    );
 
 }
+
+
+/* ============================================================
+   DELETE ROW
+============================================================ */
+
+function deleteShikshanupakaranRow(button) {
+
+    if (
+        !Array.isArray(
+            window.shikshanupakaranAllRows
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const currentRow =
+        button.closest(
+            ".shikshanupakaranRow"
+        );
+
+
+    if (!currentRow) {
+
+        return;
+
+    }
+
+
+    const visibleRows =
+        Array.from(
+            shikshanupakaranBody.querySelectorAll(
+                ".shikshanupakaranRow"
+            )
+        );
+
+
+    const visibleIndex =
+        visibleRows.indexOf(
+            currentRow
+        );
+
+
+    if (
+        visibleIndex === -1
+    ) {
+
+        return;
+
+    }
+
+
+    const currentPage =
+        Number(
+            window.shikshanupakaranCurrentPage
+        ) || 1;
+
+
+    const rowsPerPage =
+        Number(
+            window.shikshanupakaranRowsPerPage
+        ) || 20;
+
+
+    const memoryIndex =
+        (
+            currentPage - 1
+        ) *
+        rowsPerPage +
+        visibleIndex;
+
+
+    if (
+        memoryIndex < 0 ||
+        memoryIndex >=
+            window.shikshanupakaranAllRows.length
+    ) {
+
+        return;
+
+    }
+
+
+    /* ========================================================
+       KEEP AT LEAST ONE ROW
+    ======================================================== */
+
+    if (
+        window.shikshanupakaranAllRows.length <= 1
+    ) {
+
+        alert(
+            "At least one row is required."
+        );
+
+        return;
+
+    }
+
+
+    /* ========================================================
+       DO NOT SYNC
+       
+       We intentionally do NOT call:
+
+       syncCurrentShikshanupakaranPageToMemory();
+
+       because that would save the DOM before delete.
+    ======================================================== */
+
+
+    /* ========================================================
+       REMOVE FROM MASTER MEMORY
+    ======================================================== */
+
+    window.shikshanupakaranAllRows.splice(
+        memoryIndex,
+        1
+    );
+
+
+    /* ========================================================
+       REMOVE ONLY THIS DOM ROW
+       
+       IMPORTANT:
+       We do NOT re-render the entire table.
+    ======================================================== */
+
+    currentRow.remove();
+
+
+    /* ========================================================
+       UPDATE REMAINING DOM ROW MEMORY INDEXES
+    ======================================================== */
+
+    const remainingRows =
+        Array.from(
+            shikshanupakaranBody.querySelectorAll(
+                ".shikshanupakaranRow"
+            )
+        );
+
+
+    remainingRows.forEach(
+        function(
+            row,
+            index
+        ){
+
+            const globalIndex =
+                (
+                    currentPage - 1
+                ) *
+                rowsPerPage +
+                index;
+
+
+            row.dataset.memoryIndex =
+                String(
+                    globalIndex
+                );
+
+
+            /*
+                Update visible row number.
+            */
+
+            const numberInput =
+                row.querySelector(
+                    ".column-A"
+                );
+
+
+            if(numberInput){
+
+                numberInput.value =
+                    globalIndex + 1;
+
+            }
+
+        }
+    );
+
+
+    /* ========================================================
+       RECALCULATE PAGINATION
+    ======================================================== */
+
+    window.shikshanupakaranTotalPages =
+        Math.max(
+            1,
+            Math.ceil(
+                window.shikshanupakaranAllRows.length /
+                rowsPerPage
+            )
+        );
+
+
+    /*
+        IMPORTANT:
+        No renderShikshanupakaranPage().
+        
+        Existing DOM rows remain untouched,
+        so their unsaved data remains.
+    */
+
+
+    /* ========================================================
+       TOTALS ARE STALE
+    ======================================================== */
+
+    window.shikshanupakaranTotalGenerated =
+        false;
+
+
+    window.shikshanupakaranTotals =
+        null;
+
+
+    renderShikshanupakaranTotal();
+
+
+    console.log(
+        "SHIKSHANUPAKARAN DELETE → COMPLETE:",
+        {
+            deletedMemoryIndex:
+                memoryIndex,
+
+            remainingRows:
+                window.shikshanupakaranAllRows.length
+        }
+    );
+
+}
+
 
 
 
@@ -10036,8 +10085,7 @@ function syncCurrentShikshanupakaranPageToMemory(){
 ============================================================ */
 
 function renderShikshanupakaranPage(
-    pageNumber = 1,
-    skipSync = false
+    pageNumber = 1
 ){
 
     /* ============================================================
@@ -10051,29 +10099,6 @@ function renderShikshanupakaranPage(
     ){
 
         window.shikshanupakaranAllRows = [];
-
-    }
-
-
-    /* ============================================================
-       SAVE CURRENT PAGE BEFORE CHANGING PAGE
-       
-       IMPORTANT:
-       DO NOT SYNC WHEN RENDERING AFTER DELETE.
-       
-       Otherwise the old DOM rows are copied back into memory
-       and the deleted row returns.
-    ============================================================ */
-
-    if(
-        !skipSync &&
-        typeof syncCurrentShikshanupakaranPageToMemory ===
-            "function" &&
-        shikshanupakaranBody &&
-        shikshanupakaranBody.children.length > 0
-    ){
-
-        syncCurrentShikshanupakaranPageToMemory();
 
     }
 
@@ -10097,11 +10122,15 @@ function renderShikshanupakaranPage(
     ============================================================ */
 
     pageNumber =
-        Number(pageNumber);
+        Number(
+            pageNumber
+        );
 
 
     if(
-        !Number.isFinite(pageNumber)
+        !Number.isFinite(
+            pageNumber
+        )
     ){
 
         pageNumber = 1;
@@ -10110,7 +10139,9 @@ function renderShikshanupakaranPage(
 
 
     pageNumber =
-        Math.floor(pageNumber);
+        Math.floor(
+            pageNumber
+        );
 
 
     /* ============================================================
@@ -10132,7 +10163,7 @@ function renderShikshanupakaranPage(
 
 
     /* ============================================================
-       CALCULATE TOTAL PAGES
+       TOTAL PAGES
     ============================================================ */
 
     const totalPages =
@@ -10168,7 +10199,7 @@ function renderShikshanupakaranPage(
 
 
     /* ============================================================
-       CALCULATE CURRENT PAGE RANGE
+       CURRENT PAGE RANGE
     ============================================================ */
 
     const startIndex =
@@ -10187,9 +10218,7 @@ function renderShikshanupakaranPage(
 
 
     /* ============================================================
-       CLEAR ONLY DOM
-       
-       NEVER clear shikshanupakaranAllRows.
+       CLEAR DOM ONLY
     ============================================================ */
 
     if(
@@ -10203,9 +10232,10 @@ function renderShikshanupakaranPage(
 
 
     /* ============================================================
-       RENDER CURRENT PAGE
+       RENDER FROM MASTER MEMORY
        
-       PASS THE GLOBAL MEMORY INDEX.
+       IMPORTANT:
+       Rendering NEVER syncs DOM back to memory.
     ============================================================ */
 
     for(
@@ -10268,10 +10298,7 @@ function renderShikshanupakaranPage(
                 endIndex,
 
             visibleRows:
-                endIndex - startIndex,
-
-            skipSync:
-                skipSync
+                endIndex - startIndex
         }
     );
 
@@ -11595,6 +11622,113 @@ function showTalapatrakSyncCard(
 }
 
 
+/* ============================================================
+   TALAPATRAK SYNC ASK-ONCE MEMORY
+============================================================ */
+
+function getTalapatrakSyncDecisionKey(
+    moje,
+    year
+){
+
+    if(
+        !auth ||
+        !auth.currentUser
+    ){
+
+        return null;
+
+    }
+
+
+    return (
+        "talapatrakSyncDecision_" +
+        auth.currentUser.uid +
+        "_" +
+        String(moje).trim() +
+        "_" +
+        String(year).trim()
+    );
+
+}
+
+
+/* ============================================================
+   GET PREVIOUS USER DECISION
+============================================================ */
+
+function getTalapatrakSyncDecision(
+    moje,
+    year
+){
+
+    const key =
+        getTalapatrakSyncDecisionKey(
+            moje,
+            year
+        );
+
+
+    if(
+        !key
+    ){
+
+        return null;
+
+    }
+
+
+    return localStorage.getItem(
+        key
+    );
+
+}
+
+
+/* ============================================================
+   SAVE USER DECISION
+============================================================ */
+
+function saveTalapatrakSyncDecision(
+    moje,
+    year,
+    decision
+){
+
+    const key =
+        getTalapatrakSyncDecisionKey(
+            moje,
+            year
+        );
+
+
+    if(
+        !key
+    ){
+
+        return;
+
+    }
+
+
+    localStorage.setItem(
+        key,
+        decision
+    );
+
+
+    console.log(
+        "TALAPATRAK SYNC DECISION SAVED:",
+        {
+            moje,
+            year,
+            decision
+        }
+    );
+
+}
+
+
 async function syncShikshanupakaranToTalapatrak(
     shikshanupakaranData
 ){
@@ -11972,11 +12106,107 @@ async function syncShikshanupakaranToTalapatrak(
             ========================================================
         */
 
-        const shouldCreateTalapatrak =
-              await showTalapatrakSyncCard(
-                  moje,
-                  year
-              );
+        /* ============================================================
+           CHECK WHETHER USER HAS ALREADY ANSWERED
+        ============================================================ */
+        
+        const previousDecision =
+            getTalapatrakSyncDecision(
+                moje,
+                year
+            );
+        
+        
+        /*
+            ========================================================
+            USER ALREADY SAID NO
+            ========================================================
+        
+            Do NOT ask again.
+        */
+        
+        if(
+            previousDecision ===
+            "no"
+        ){
+        
+            console.log(
+                "TALAPATRAK SYNC → USER PREVIOUSLY SAID NO:",
+                {
+                    moje,
+                    year
+                }
+            );
+        
+        
+            return false;
+        
+        }
+        
+        
+        /*
+            ========================================================
+            USER ALREADY SAID YES
+            ========================================================
+        
+            Normally the Talapatrak document should already exist.
+        
+            But if it was deleted somehow, recreate it without asking.
+        */
+        
+        let shouldCreateTalapatrak =
+            false;
+        
+        
+        if(
+            previousDecision ===
+            "yes"
+        ){
+        
+            console.log(
+                "TALAPATRAK SYNC → USER PREVIOUSLY SAID YES:",
+                {
+                    moje,
+                    year
+                }
+            );
+        
+        
+            shouldCreateTalapatrak =
+                true;
+        
+        }
+        else{
+        
+            /*
+                ====================================================
+                FIRST TIME FOR THIS MOJE + YEAR
+                ASK USER
+                ====================================================
+            */
+        
+            shouldCreateTalapatrak =
+                await showShikshanupakaranCreateModal(
+                    moje,
+                    year
+                );
+                    
+        
+            /*
+                ====================================================
+                REMEMBER ANSWER
+                ====================================================
+            */
+        
+            saveTalapatrakSyncDecision(
+                moje,
+                year,
+                shouldCreateTalapatrak
+                    ? "yes"
+                    : "no"
+            );
+        
+        }
 
 
         /*
@@ -12144,19 +12374,59 @@ async function syncShikshanupakaranToTalapatrak(
 function showShikshanupakaranCreateModal(
     moje,
     year
-) {
+){
 
-    return new Promise(function(resolve) {
+    return new Promise(function(resolve){
+
+        const key =
+            getShikshanupakaranCreateDecisionKey(
+                moje,
+                year
+            );
+
+
+        if(
+            shikshanupakaranCreateDecisions.has(
+                key
+            )
+        ){
+
+            const previousDecision =
+                shikshanupakaranCreateDecisions.get(
+                    key
+                );
+
+
+            console.log(
+                "SHIKSHANUPAKARAN CREATE DECISION ALREADY KNOWN:",
+                {
+                    moje,
+                    year,
+                    decision:
+                        previousDecision
+                }
+            );
+
+
+            resolve(
+                previousDecision
+            );
+
+            return;
+
+        }
+
 
         const modal =
             document.getElementById(
                 "shikshanupakaranCreateModal"
             );
 
-        if (!modal) {
+
+        if(!modal){
 
             console.error(
-                "Shikshanupakaran create modal not found."
+                "SHIKSHANUPAKARAN CREATE MODAL NOT FOUND"
             );
 
             resolve(false);
@@ -12171,34 +12441,11 @@ function showShikshanupakaranCreateModal(
                 "shikshanupakaranCreateVillage"
             );
 
+
         const yearText =
             document.getElementById(
                 "shikshanupakaranCreateYear"
             );
-
-
-        if (villageText) {
-
-            villageText.textContent =
-                moje || "Unnamed Village";
-
-        }
-
-
-        if (yearText) {
-
-            yearText.textContent =
-                year || "";
-
-        }
-
-
-        modal.classList.add("open");
-
-        modal.setAttribute(
-            "aria-hidden",
-            "false"
-        );
 
 
         const cancelButton =
@@ -12206,24 +12453,104 @@ function showShikshanupakaranCreateModal(
                 "shikshanupakaranCreateCancel"
             );
 
+
         const confirmButton =
             document.getElementById(
                 "shikshanupakaranCreateConfirm"
             );
 
 
+        if(villageText){
+
+            villageText.textContent =
+                moje || "Unnamed Village";
+
+        }
+
+
+        if(yearText){
+
+            yearText.textContent =
+                year || "";
+
+        }
+
+
+        modal.classList.add(
+            "open"
+        );
+
+
+        modal.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+
+        let finished =
+            false;
+
+
         function closeModal(
             result
-        ) {
+        ){
+
+            if(finished){
+
+                return;
+
+            }
+
+
+            finished = true;
+
+
+            shikshanupakaranCreateDecisions.set(
+                key,
+                result
+            );
+
+
+            console.log(
+                "SHIKSHANUPAKARAN CREATE DECISION SAVED:",
+                {
+                    key,
+                    moje,
+                    year,
+                    result
+                }
+            );
+
 
             modal.classList.remove(
                 "open"
             );
 
+
             modal.setAttribute(
                 "aria-hidden",
                 "true"
             );
+
+
+            if(cancelButton){
+
+                cancelButton.onclick =
+                    null;
+
+            }
+
+
+            if(confirmButton){
+
+                confirmButton.onclick =
+                    null;
+
+            }
+
+
+            modal.onclick =
+                null;
 
 
             document.removeEventListener(
@@ -12232,16 +12559,21 @@ function showShikshanupakaranCreateModal(
             );
 
 
-            resolve(result);
+            resolve(
+                result
+            );
 
         }
 
 
-        function handleEscape(event) {
+        function handleEscape(
+            event
+        ){
 
-            if (
-                event.key === "Escape"
-            ) {
+            if(
+                event.key ===
+                "Escape"
+            ){
 
                 closeModal(false);
 
@@ -12250,10 +12582,14 @@ function showShikshanupakaranCreateModal(
         }
 
 
-        if (cancelButton) {
+        if(cancelButton){
 
             cancelButton.onclick =
-                function() {
+                function(event){
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
 
                     closeModal(false);
 
@@ -12262,10 +12598,14 @@ function showShikshanupakaranCreateModal(
         }
 
 
-        if (confirmButton) {
+        if(confirmButton){
 
             confirmButton.onclick =
-                function() {
+                function(event){
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
 
                     closeModal(true);
 
@@ -12274,20 +12614,14 @@ function showShikshanupakaranCreateModal(
         }
 
 
-        /*
-        ========================================================
-            CLICK OUTSIDE MODAL
-        ========================================================
-        */
-
         modal.onclick =
-            function(event) {
+            function(event){
 
-                if (
+                if(
                     event.target.classList.contains(
                         "shikshanupakaranCreateOverlay"
                     )
-                ) {
+                ){
 
                     closeModal(false);
 
@@ -12302,16 +12636,10 @@ function showShikshanupakaranCreateModal(
         );
 
 
-        /*
-        ========================================================
-            FOCUS CONFIRM BUTTON
-        ========================================================
-        */
-
         setTimeout(
-            function() {
+            function(){
 
-                if (confirmButton) {
+                if(confirmButton){
 
                     confirmButton.focus();
 
