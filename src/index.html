@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Panchayat Business Suite</title>
+
+
+    <!-- Google Fonts -->
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+
+    <!-- Font Awesome -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+
+    <link
+        rel="stylesheet"
+        href="style.css">
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+   
+      
+</head>
+
+
+<body>
+  
+      <div id="loginScreen">
+
+          <div class="loginCard">
+      
+              <div class="loginBrand">
+      
+                  <div class="loginLogo">
+                      🧾
+                  </div>
+      
+                  <h1>
+                      GramSetu
+                  </h1>
+      
+                  <p>
+                      Professional Billing Management System
+                  </p>
+      
+              </div>
+      
+      
+              <h2>
+                  Welcome Back
+              </h2>
+      
+      
+              <div class="loginFormGroup">
+      
+                  <label>
+                      Email Address
+                  </label>
+      
+                  <input
+                      type="email"
+                      id="loginEmail"
+                      placeholder="Enter your email">
+      
+              </div>
+      
+      
+              <div class="loginFormGroup">
+
+                    <label>
+                        Password
+                    </label>
+                
+                    <div class="passwordInputWrapper">
+                
+                        <input
+                            type="password"
+                            id="loginPassword"
+                            placeholder="Enter your password">
+                
+                        <button
+                            type="button"
+                            id="togglePassword"
+                            class="passwordEyeButton"
+                            aria-label="Show password">
+                            👁️
+                        </button>
+                
+                    </div>
+                
+                </div>
+      
+      
+              <button
+                  id="loginButton"
+                  type="button">
+      
+                  Login to Dashboard
+      
+              </button>
+      
+      
+              <div id="loginMessage"></div>
+      
+      
+              <div class="loginFooter">
+      
+                  Secure access to your billing dashboard
+      
+              </div>
+      
+          </div>
+      
+      </div>
+
+    <!-- ==================================================
+                        APP LAYOUT
+    =================================================== -->
+
+    <div class="appLayout">
+
+
+        <!-- ==================================================
+                            SIDEBAR
+        =================================================== -->
+
+        <aside class="sidebar">
+
+
+            <!-- BRAND -->
+
+            <div class="brand">
+
+                <div class="brandIcon">
+                    <i class="fa-solid fa-file-invoice"></i>
+                </div>
+
+
+                <div class="brandText">
+
+                    <strong>
+                        GramSetu
+                    </strong>
+
+                    <span>
+                        Business Suite
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- USER PROFILE -->
+
+            <div class="userProfile">
+
+                <div
+                    class="profileAvatar"
+                    id="profileAvatar">
+            
+                    BP
+            
+                </div>
+            
+            
+                <div class="profileInfo">
+            
+                    <strong
+                        id="profileName">
+            
+                        Bipin Patel
+            
+                    </strong>
+            
+            
+                    <span
+                        id="profileRole">
+            
+                        Administrator
+            
+                    </span>
+            
+                </div>
+            
+            
+                <button
+                    class="profileMenu"
+                    type="button">
+            
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+            
+                </button>
+            
+            </div>
+
+
+            <!-- NAVIGATION -->
+
+            <nav class="sidebarNav">
+
+
+                <div class="navSectionTitle">
+                    MAIN MENU
+                </div>
+
+
+                <a
+                      href="#"
+                      id="dashboardNav"
+                      class="navItem active">
+                  
+                      <i class="fa-solid fa-grid-2"></i>
+                  
+                      <span>
+                          Dashboard
+                      </span>
+                  
+                  </a>
+
+
+                <div class="navSectionTitle">
+                    BILLING SYSTEMS
+                </div>
+
+
+                <!-- MAIN BILL -->
+
+                  <a
+                      href="#"
+                      id="mainBillNav"
+                      class="navItem billNavItem">
+                  
+                      <span class="navIcon orange">
+                          <i class="fa-solid fa-receipt"></i>
+                      </span>
+                  
+                      <span>
+                          Main Bill
+                      </span>
+                  
+                      <i class="fa-solid fa-chevron-right navArrow"></i>
+                  
+                  </a>
+
+
+                <!-- INVOICE -->
+
+                <a
+                    href="#"
+                    class="navItem billNavItem">
+
+                    <span class="navIcon blue">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                    </span>
+
+                    <span>
+                        Invoice
+                    </span>
+
+                    <i class="fa-solid fa-chevron-right navArrow"></i>
+
+                </a>
+
+
+
+                 <!-- TALAPATRAK -->
+
+                  <a
+                      href="#"
+                      id="talapatrakNav"
+                      class="navItem billNavItem">
+                  
+                  
+                      <span
+                          class="navIcon purple">
+                  
+                  
+                          <i
+                              class="fa-solid fa-table-list">
+                          </i>
+                  
+                  
+                      </span>
+                  
+                  
+                      <span>
+                          તાળાપત્રક
+                      </span>
+                  
+                  
+                      <i
+                          class="fa-solid fa-chevron-right navArrow">
+                      </i>
+                  
+                  
+                  </a>
+
+
+                <!-- FUTURE BILL 4 -->
+
+                <a
+                    href="#"
+                    id="shikshanupakaranNav"
+                    class="navItem billNavItem">
+                  
+                    <span class="navIcon green">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </span>
+                
+                    <span>
+                        શિક્ષણ ઉપકર
+                    </span>
+                
+                    <i class="fa-solid fa-chevron-right navArrow"></i>
+                
+                </a>
+
+
+                <div class="navSectionTitle">
+                    MANAGEMENT
+                </div>
+
+
+                <a
+                    href="#"
+                    class="navItem">
+
+                    <i class="fa-solid fa-list-check"></i>
+
+                    <span>
+                        All Bills
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="#"
+                    class="navItem">
+
+                    <i class="fa-solid fa-chart-simple"></i>
+
+                    <span>
+                        Reports
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="#"
+                    class="navItem">
+
+                    <i class="fa-solid fa-gear"></i>
+
+                    <span>
+                        Settings
+                    </span>
+
+                </a>
+
+
+            </nav>
+
+
+            <!-- SIDEBAR BOTTOM -->
+
+            <div class="sidebarBottom">
+              
+                  <!-- HELP CARD -->
+              
+                  <div class="helpCard">
+              
+                      <div class="helpIcon">
+                          ?
+                      </div>
+              
+                      <div>
+              
+                          <strong>
+                              Need Help?
+                          </strong>
+              
+                          <span>
+                              View documentation
+                          </span>
+              
+                      </div>
+              
+                  </div>
+              
+              
+                  <!-- THEME SWITCHER -->
+              
+                  <div class="themeSwitcher">
+              
+                      <button
+                          class="themeButton active"
+                          data-theme="light">
+              
+                          <i class="fa-solid fa-sun"></i>
+              
+                          Light
+              
+                      </button>
+              
+              
+                      <button
+                          class="themeButton"
+                          data-theme="dark">
+              
+                          <i class="fa-solid fa-moon"></i>
+              
+                          Dark
+              
+                      </button>
+              
+                  </div>
+              
+              
+                  <!-- LOGOUT BUTTON -->
+              
+                  <button
+                      id="logoutButton"
+                      class="logoutButton"
+                      type="button">
+              
+                      <i class="fa-solid fa-arrow-right-from-bracket"></i>
+              
+                      <span>
+                          Logout
+                      </span>
+              
+                  </button>
+              
+              </div>
+
+        </aside>
+
+
+        <!-- ==================================================
+                        MAIN CONTENT
+        =================================================== -->
+
+        <main class="mainContent" id="mainContent">
+
+            
+            <!-- TOP BAR -->
+
+          <header class="topBar">
+
+
+                <div class="searchBox">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input
+                        type="text"
+                        placeholder="Search anything...">
+
+                </div>
+
+
+                <div class="topActions">
+
+
+                    <button class="notificationButton">
+
+                        <i class="fa-regular fa-bell"></i>
+
+                        <span class="notificationDot"></span>
+
+                    </button>
+
+
+                    <button id="createBillButton" class="createButton">
+
+                        <i class="fa-solid fa-plus"></i>
+
+                        Create Bill
+
+                    </button>
+
+                </div>
+
+            </header>
+             
+        
+            <!-- DASHBOARD -->
+
+            <section id="dashboardView" class="dashboard">
+
+                <!-- WELCOME -->
+
+                <div class="welcomeSection">
+
+
+                    <div>
+
+                        <span
+                            class="welcomeLabel"
+                            id="currentDate">
+                        </span>
+                    
+                    
+                        <h1
+                            id="welcomeMessage">
+                        </h1>
+                    
+                    
+                        <p
+                            id="welcomeSubtitle">
+                        </p>
+                    
+                    </div>
+
+
+                    <button
+                          class="dateButton"
+                          id="dateFilterButton">
+                      
+                          <i class="fa-regular fa-calendar"></i>
+                      
+                          <span id="currentMonth">
+                              This Month
+                          </span>
+                      
+                          <i class="fa-solid fa-chevron-down"></i>
+                      
+                      </button>
+
+                </div>
+
+
+                <!-- STAT CARDS -->
+
+              <div class="statsGrid">
+
+                
+                    <!-- TOTAL BILLS -->
+                
+                    <div class="statCard orangeCard">
+                
+                        <div class="statCardTop">
+                
+                            <div class="statIcon">
+                                <i class="fa-solid fa-file-invoice"></i>
+                            </div>
+                
+                            <span
+                                class="statGrowth positive"
+                                id="totalBillsGrowth">
+                                --
+                            </span>
+                
+                        </div>
+                
+                
+                        <span class="statLabel">
+                            Total Bills
+                        </span>
+                
+                
+                        <strong
+                            class="statNumber"
+                            id="totalBillsCount">
+                            0
+                        </strong>
+                
+                
+                        <span class="statFooter">
+                            Compared to last month
+                        </span>
+                
+                    </div>
+                
+                
+                    <!-- THIS MONTH -->
+                
+                    <div class="statCard blueCard">
+                
+                        <div class="statCardTop">
+                
+                            <div class="statIcon">
+                                <i class="fa-solid fa-calendar-days"></i>
+                            </div>
+                
+                
+                            <span
+                                class="statGrowth positive"
+                                id="monthlyBillsGrowth">
+                                --
+                            </span>
+                
+                        </div>
+                
+                
+                        <span class="statLabel">
+                            This Month
+                        </span>
+                
+                
+                        <strong
+                            class="statNumber"
+                            id="monthlyBillsCount">
+                            0
+                        </strong>
+                
+                
+                        <span class="statFooter">
+                            Bills created this month
+                        </span>
+                
+                    </div>
+                
+                
+                    <!-- TOTAL AMOUNT -->
+                
+                    <div class="statCard purpleCard">
+                
+                        <div class="statCardTop">
+                
+                            <div class="statIcon">
+                                <i class="fa-solid fa-indian-rupee-sign"></i>
+                            </div>
+                
+                
+                            <span
+                                class="statGrowth positive"
+                                id="totalAmountGrowth">
+                                --
+                            </span>
+                
+                        </div>
+                
+                
+                        <span class="statLabel">
+                            Total Amount
+                        </span>
+                
+                
+                        <strong
+                            class="statNumber"
+                            id="totalAmount">
+                            ₹ 0
+                        </strong>
+                
+                
+                        <span class="statFooter">
+                            Total billed amount
+                        </span>
+                
+                    </div>
+                
+                
+                    <!-- SAVED TODAY -->
+                
+                    <div class="statCard greenCard">
+                
+                        <div class="statCardTop">
+                
+                            <div class="statIcon">
+                                <i class="fa-solid fa-circle-check"></i>
+                            </div>
+                
+                
+                            <span
+                                class="statGrowth positive"
+                                id="savedTodayLabel">
+                                Today
+                            </span>
+                
+                        </div>
+                
+                
+                        <span class="statLabel">
+                            Saved Today
+                        </span>
+                
+                
+                        <strong
+                            class="statNumber"
+                            id="savedTodayCount">
+                            0
+                        </strong>
+                
+                
+                        <span class="statFooter">
+                            Bills saved today
+                        </span>
+                
+                    </div>
+                
+                </div>
+
+
+                <!-- MAIN GRID -->
+
+                <div class="dashboardGrid">
+
+
+                    <!-- BILLING SYSTEMS -->
+
+                    <section class="dashboardCard systemsCard">
+
+
+                        <div class="cardHeader">
+
+                            <div>
+
+                                <h2>
+                                    Your Billing Systems
+                                </h2>
+
+                                <p>
+                                    Choose a system to get started
+                                </p>
+
+                            </div>
+
+
+                            <button class="viewAllButton">
+                                View All
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+
+                        </div>
+
+
+                        <div class="billingSystemsGrid">
+
+
+                            <!-- MAIN BILL -->
+
+                            <div
+                                class="systemCard orangeSystem"
+                                id="mainBillSystemCard">
+
+                                <div class="systemIcon">
+                                    <i class="fa-solid fa-receipt"></i>
+                                </div>
+
+
+                                <div class="systemContent">
+
+                                    <h3>
+                                        Main Bill
+                                    </h3>
+
+                                    <p>
+                                        Panchayat receipt management
+                                    </p>
+
+                                    <span id="mainBillCount">
+                                        0 bills
+                                    </span>
+
+                                </div>
+
+
+                                <button class="systemArrow">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                </button>
+
+                            </div>
+
+
+                            <!-- INVOICE -->
+
+                            <div class="systemCard blueSystem">
+
+                                <div class="systemIcon">
+                                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                                </div>
+
+
+                                <div class="systemContent">
+
+                                    <h3>
+                                        Invoice
+                                    </h3>
+
+                                    <p>
+                                        Create and manage invoices
+                                    </p>
+
+                                    <span>
+                                        42 invoices
+                                    </span>
+
+                                </div>
+
+
+                                <button class="systemArrow">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                </button>
+
+                            </div>
+
+
+                          
+                          <!-- TALAPATRAK -->
+                          
+                          <div
+                              class="systemCard purpleSystem"
+                              id="talapatrakSystemCard">
+                          
+                              <div class="systemIcon">
+                                  <i class="fa-solid fa-file-lines"></i>
+                              </div>
+                          
+                          
+                              <div class="systemContent">
+                          
+                                  <h3>
+                                      તાળાપત્રક
+                                  </h3>
+                          
+                                  <p>
+                                      Talapatrak management
+                                  </p>
+                          
+                                  <span id="talapatrakRecordCount">0</span>
+                          
+                              </div>
+                          
+                          
+                              <button
+                                  class="systemArrow"
+                                  type="button">
+                          
+                                  <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                          
+                              </button>
+                          
+                          </div>
+
+
+                            <!-- FUTURE SYSTEM -->
+
+                            <div 
+                                class="systemCard greenSystem"
+                                id="sikshanPatraSystemCard">
+                            
+                                <div class="systemIcon">
+                                    <i class="fa-solid fa-folder-open"></i>
+                                </div>
+                            
+                            
+                                <div class="systemContent">
+                            
+                                    <h3>
+                                        શિક્ષણ ઉપકર
+                                    </h3>
+                            
+                                    <p>
+                                        Shikshanupakaran management
+                                    </p>
+                            
+                                    <span id="shikshanupakaranRecordCount">
+                                        0
+                                    </span>
+                            
+                                </div>
+                            
+                            
+                                <button 
+                                    class="systemArrow"
+                                    type="button">
+                            
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            
+                                </button>
+                            
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- RECENT ACTIVITY -->
+
+                    <section class="dashboardCard activityCard">
+
+
+                        <div class="cardHeader">
+
+                            <div>
+
+                                <h2>
+                                    Recent Activity
+                                </h2>
+
+                                <p>
+                                    Your latest activity
+                                </p>
+
+                            </div>
+
+
+                            <button
+                                  class="moreButton"
+                                  id="activityMoreButton"
+                                  type="button"
+                                  aria-label="Recent activity options"
+                                  aria-expanded="false">
+                              
+                                  <i class="fa-solid fa-ellipsis"></i>
+                              
+                              </button>
+
+                        </div>
+
+
+                        <div class="activityList" id="recentActivityList">
+                       
+                              <div class="activityLoading">
+                          
+                                  Loading recent activity...
+                          
+                              </div>
+                          
+                          </div>
+
+                    </section>
+
+                </div>
+
+
+                <!-- RECENT BILLS -->
+
+                <section class="dashboardCard recentBillsCard">
+
+
+                    <div class="cardHeader">
+
+                        <div>
+
+                            <h2>
+                                Recent Bills
+                            </h2>
+
+                            <p>
+                                Your latest saved bills
+                            </p>
+
+                        </div>
+
+
+                        <button 
+                              id="viewAllBillsButton"
+                              class="viewAllButton">
+
+                            View All
+
+                            <i class="fa-solid fa-arrow-right"></i>
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="recentBillsTableWrapper">
+
+
+                        <table class="recentBillsTable">
+
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Bill Number
+                                    </th>
+
+                                    <th>
+                                        Type
+                                    </th>
+
+                                    <th>
+                                        Customer
+                                    </th>
+
+                                    <th>
+                                        Date
+                                    </th>
+
+                                    <th>
+                                        Amount
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="recentBillsBody">
+
+                              <tr>
+                          
+                                  <td colspan="6" class="loadingBills">
+                          
+                                      Loading recent bills...
+                          
+                                  </td>
+                          
+                              </tr>
+                          
+                          </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+
+
+            </section>
+
+
+
+            <div id="mainBillContainer"></div>
+
+            <div id="shikshanupakaranContainer"></div>
+
+            <div id="talapatrakContainer"></div>
+
+                
+
+
+        </main>
+
+    </div>
+
+      <!-- ============================================================
+           KHATA SCAN PROGRESS OVERLAY
+      ============================================================ -->
+      
+       <div
+    id="khataScanProgressOverlay"
+    class="khataScanProgressOverlay"
+    style="display:none;"
+>
+
+    <div class="khataScanProgressCard">
+
+        <div class="khataScanProgressIcon">
+
+            <i class="fa-solid fa-file-circle-check"></i>
+
+        </div>
+
+
+        <h3 id="khataScanProgressTitle">
+
+            Scanning Khata File
+
+        </h3>
+
+
+        <p id="khataScanProgressStatus">
+
+            Preparing file...
+
+        </p>
+
+
+        <div class="khataProgressBar">
+
+            <div
+                id="khataScanProgressFill"
+                class="khataProgressFill"
+                style="width:0%;"
+            ></div>
+
+        </div>
+
+
+        <strong id="khataScanProgressPercent">
+
+            0%
+
+        </strong>
+
+
+        <span id="khataScanProgressPage">
+
+        </span>
+
+
+        <!-- ==================================================
+             CANCEL BUTTON
+        ================================================== -->
+
+        <button
+            type="button"
+            id="khataScanCancelButton"
+            class="khataScanCancelButton"
+        >
+
+            <i class="fa-solid fa-xmark"></i>
+
+            Cancel Import
+
+        </button>
+
+    </div>
+
+</div>
+
+  
+</body>
+
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+      <!-- ==================================================
+                 KHATA IMPORT SYSTEM
+    =================================================== -->
+    
+  <script src="khata-import/khataLoader.js"></script>
+  
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+  
+  
+  <!-- ==================================================
+                      DYNAMIC SYSTEM LOADERS
+  ================================================== -->
+  
+  <script src="mainbill/mainbill-loader.js"></script>
+  
+  <script src="shikshanupakaran/shikshanupakaran-loader.js"></script>
+  
+  <script src="talapatrak/talapatrak-loader.js"></script>
+  
+  
+  <!-- ==================================================
+                      MAIN APPLICATION
+  ================================================== -->
+  
+  <script src="script.js"></script>
+
+</html>

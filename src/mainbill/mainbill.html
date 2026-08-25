@@ -1,0 +1,1718 @@
+<!-- ==================================================
+                        MAIN BILLS DATABASE VIEW
+                ================================================== -->
+                
+                <section
+                    id="mainBillsView"
+                    class="mainBillsView"
+                    style="display: none;">
+                
+                   
+                
+                
+                    <section class="dashboardCard allBillsCard">
+                
+                        <div class="cardHeader">
+                
+                            <div>
+                
+                                <h2>
+                                    All Main Bills
+                                </h2>
+                
+                                <p>
+                                    View, edit and manage all saved bills
+                                </p>
+                
+                            </div>
+                
+                
+                            <div class="billSearchBox">
+                
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                
+                                <input
+                                    type="text"
+                                    id="mainBillSearch"
+                                    placeholder="Search bill number or customer...">
+                
+                            </div>
+                
+                        </div>
+                
+                
+                          <div class="mainBillsTableWrapper">
+
+                                <table class="recentBillsTable mainBillsTable">
+                
+                
+                                <thead>
+                
+                                    <tr>
+                
+                                        <th>
+                                            Bill Number
+                                        </th>
+                
+                                        <th>
+                                            Customer
+                                        </th>
+                
+                                        <th>
+                                            Village
+                                        </th>
+                
+                                        <th>
+                                            Date
+                                        </th>
+                
+                                        <th>
+                                            Amount
+                                        </th>
+                
+                                        <th>
+                                            Actions
+                                        </th>
+                
+                                    </tr>
+                
+                                </thead>
+                
+                
+                                <tbody id="mainBillsBody">
+                
+                                    <tr>
+                
+                                        <td
+                                            colspan="6"
+                                            class="loadingBills">
+                
+                                            Loading bills...
+                
+                                        </td>
+                
+                                    </tr>
+                
+                                </tbody>
+                
+                            </table>
+                
+                        </div>
+                
+                    </section>
+                
+                </section>
+
+                
+
+              <!-- ==================================================
+                              INVOICE / BILL VIEW
+              ================================================== -->
+              
+              <section
+                  id="invoiceView"
+                  class="invoiceView"
+                  style="display: none;" >
+              
+                    <div class="page" id="formPage">
+                        
+                            <div class="mainBillWrapper">
+                        
+                                <section class="billContainer">
+                        
+                                    <!-- ==============================
+                                            INVOICE TITLE
+                                    =============================== -->
+                        
+                                    <div class="billHeader">
+                        
+                                        <div class="invoiceTitle">
+                                            BILL / INVOICE
+                                        </div>
+                        
+                                    </div>
+                        
+                        
+                                    <!-- ==============================
+                                            CUSTOMER DETAILS
+                                    =============================== -->
+                        
+                                    <div class="customerCard">
+
+                                        <table class="customerTable">
+                                    
+                                            <!-- CUSTOMER NAME -->
+                                            <tr>
+                                    
+                                                <td colspan="2">
+                                    
+                                                    <div class="formField fullField">
+                                    
+                                                        <label>
+                                                            શ્રીમાન,
+                                                        </label>
+                                    
+                                                        <input
+                                                            type="text"
+                                                            id="customerName">
+                                    
+                                                    </div>
+                                    
+                                                </td>
+                                    
+                                            </tr>
+                                    
+                                    
+                                            <!-- ADDRESS -->
+                                            <tr>
+                                    
+                                                <td colspan="2">
+                                    
+                                                    <div class="formField fullField">
+                                    
+                                                        <label>
+                                                            સરનામું:
+                                                        </label>
+                                    
+                                                        <input
+                                                            type="text"
+                                                            id="village">
+                                    
+                                                        <span class="panchayatLabel">
+                                                            ગ્રામ પંચાયત
+                                                        </span>
+                                    
+                                                    </div>
+                                    
+                                                </td>
+                                    
+                                            </tr>
+                                    
+                                    
+                                            <!-- TALUKA -->
+                                            <tr>
+                                    
+                                                <td colspan="2">
+                                    
+                                                    <div class="formField">
+                                    
+                                                        <label>
+                                                            તાલુકો:
+                                                        </label>
+                                    
+                                                        <input
+                                                            type="text"
+                                                            id="taluka">
+                                    
+                                                    </div>
+                                    
+                                                </td>
+                                    
+                                            </tr>
+                                    
+                                    
+                                            <!-- DISTRICT -->
+                                            <tr>
+                                    
+                                                <td colspan="2">
+                                    
+                                                    <div class="formField">
+                                    
+                                                        <label>
+                                                            જિલ્લો:
+                                                        </label>
+                                    
+                                                        <input
+                                                            type="text"
+                                                            id="district">
+                                    
+                                                    </div>
+                                    
+                                                </td>
+                                    
+                                            </tr>
+                                    
+                                    
+                                            <!-- MOBILE -->
+                                            <tr>
+                                    
+                                                <td colspan="2">
+                                    
+                                                    <div class="formField">
+                                    
+                                                        <label>
+                                                            મોબાઇલ નંબર:
+                                                        </label>
+                                    
+                                                        <input
+                                                            type="tel"
+                                                            id="mobileNumber"
+                                                            inputmode="numeric"
+                                                            maxlength="10">
+                                    
+                                                    </div>
+                                    
+                                                </td>
+                                    
+                                            </tr>
+                                    
+                                    
+                                            <!-- BILL NUMBER + DATE -->
+                                            <tr>
+                                    
+                                                <td>
+                                    
+                                                    <div class="formField">
+                                    
+                                                        <label>
+                                                            બિલ નંબર:
+                                                        </label>
+                                    
+                                                        <input
+                                                            type="text"
+                                                            id="billNo"
+                                                            readonly>
+                                    
+                                                    </div>
+                                    
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                    
+                                                <td>
+                                    
+                                                    <div class="formField">
+                                    
+                                                        <label>
+                                                            તારીખ:
+                                                        </label>
+                                    
+                                                        <input
+                                                            type="date"
+                                                            id="billDate">
+                                    
+                                                    </div>
+                                    
+                                                </td>
+                                    
+                                            </tr>
+                                    
+                                        </table>
+                                    
+                                    </div>
+                        
+                        
+                                    <!-- ==============================
+                                            ITEMS TABLE
+                                    ============================== -->
+                        
+                                    <div class="tableCard">
+                        
+                                        <table id="billTable">
+                        
+                                            <thead>
+                        
+                                                <tr>
+                        
+                                                    <th width="10%">ક્રમ</th>
+                        
+                                                    <th width="43%">વિગત</th>
+                        
+                                                    <th width="12%">પાનાં</th>
+                        
+                                                    <th width="15%">ભાવ (₹)</th>
+                        
+                                                    <th width="15%">રકમ (₹)</th>
+                        
+                                                    <th width="5%"></th>
+                        
+                                                </tr>
+                        
+                                            </thead>
+                        
+                        
+                                            <tbody id="itemBody">
+                        
+                                                <tr
+                                                    class="data-row"
+                                                    style="height:auto;">
+                        
+                                                    <td>
+                        
+                                                        <input
+                                                            class="table-input srno"
+                                                            type="number"
+                                                            value="1">
+                        
+                                                    </td>
+                        
+                        
+                                                    <td>
+                        
+                                                        <textarea
+                                                          class="description"
+                                                          rows="1"
+                                                          oninput="autoGrow(this)">
+                                                      </textarea>
+                        
+                                                    </td>
+                        
+                        
+                                                    <td>
+                        
+                                                        <input
+                                                            class="table-input pages"
+                                                            type="number"
+                                                            oninput="calculateRow(this)">
+                        
+                                                    </td>
+                        
+                        
+                                                    <td>
+                        
+                                                        <input
+                                                            class="table-input price"
+                                                            type="number"
+                                                            step="0.01"
+                                                            oninput="calculateRow(this)">
+                        
+                                                    </td>
+                        
+                        
+                                                    <td>
+                        
+                                                        <input
+                                                            class="table-input total"
+                                                            type="number">
+                        
+                                                    </td>
+                        
+                        
+                                                    <td>
+                        
+                                                        <button
+                                                            class="delete-btn"
+                                                            onclick="deleteCurrentRow(this)">
+                        
+                                                            🗑
+                        
+                                                        </button>
+                        
+                                                    </td>
+                        
+                                                </tr>
+                        
+                                            </tbody>
+                        
+                                        </table>
+                        
+                        
+                                        <div class="addItemArea">
+                        
+                                            <button
+                                                id="addRow"
+                                                type="button">
+                        
+                                                + Add Next Row
+                        
+                                            </button>
+                        
+                                        </div>
+                        
+                        
+                                        <table class="summaryTable">
+                        
+                                            <tr>
+                        
+                                                <td width="70%">
+                        
+                                                    <label>
+                                                        રકમ શબ્દોમાં
+                                                    </label>
+                        
+                                                    <textarea
+                                                        id="numberToGujaratiWords"
+                                                        placeholder="રકમ શબ્દોમાં">
+                                                    </textarea>
+                        
+                                                </td>
+                        
+                        
+                                                <td width="30%">
+                        
+                                                    <label>
+                                                        કુલ રકમ
+                                                    </label>
+                        
+                                                    <input
+                                                        type="text"
+                                                        id="grandTotal">
+                        
+                                                </td>
+                        
+                                            </tr>
+                        
+                                        </table>
+                        
+                                    </div>
+                        
+                        
+                                    <!-- ==============================
+                                            PAYMENT DETAILS
+                                    ============================== -->
+                        
+                                    <section class="signatureSection">
+                        
+                                        <div class="paymentDetailsForm">
+                        
+                                            <label for="paymentDetails">
+                        
+                                                બેંક / ચેકની વિગત:
+                        
+                                            </label>
+                        
+                        
+                                            <textarea
+                                                id="paymentDetails"
+                                                rows="2"
+                                                placeholder="બેંકનું નામ / ચેક નંબર / અન્ય ચુકવણીની વિગત">
+                                            </textarea>
+                        
+                        
+                                            <div class="generateReceiptArea">
+                        
+                                                <button
+                                                    id="generateReceiptBtn"
+                                                    type="button">
+                        
+                                                    🧾
+                        
+                                                    <span>
+                                                        Generate Receipt
+                                                    </span>
+                        
+                                                </button>
+                        
+                                            </div>
+                        
+                                        </div>
+                        
+                                    </section>
+                        
+                                </section>
+                        
+                            </div>
+                        
+                        </div>
+
+                                  
+                        <!-- ==================================================
+                                GENERATED RECEIPT VIEW
+                         ================================================== -->
+        
+                           <div  id="printableBills" class="generatedReceiptPage" hidden>
+                    
+                        <!-- ==========================================
+                                MAIN BILL
+                        =========================================== -->
+                    
+                        <section
+                            id="generatedMainBill">
+                    
+                            <table class="printBillTable">
+                    
+                                <!-- HEADER -->
+                    
+                                <tr class="printHeaderRow">
+        
+                                      <!-- LEFT SIDE: MAIN HEADER -->
+                                      <td colspan="4">
+                                  
+                                          <div class="printGanesh">
+                                              શ્રી ગણેશાય નમઃ
+                                          </div>
+                                  
+                                          <h1>
+                                              બીપીનભાઈ ઈશ્વરલાલ પટેલ
+                                          </h1>
+                                  
+                                          <h2>
+                                              BIPINBHAI ISHVARLAL PATEL
+                                          </h2>
+                                  
+                                          <p>
+                                              ૧૧૪/ નાના પ્લોટ, વિનાયક ટ્રેડિંગ કંપની ની બાજુ માં,
+                                              નવા ગંજ બજાર, પાટણ -૩૮૪૨૬૫
+                                          </p>
+                                  
+                                          <p>
+                                              પંચાયત તથા રેવન્યુનું કોમ્પ્યુટરાઇઝ્ડ કામકાજ કરી આપનાર
+                                          </p>
+                                  
+                                      </td>
+                                  
+                                  
+                                      <!-- RIGHT SIDE: PHONE -->
+                                      <td class="printPhone">
+                              
+                                      <strong>મો.</strong><br>
+                              
+                                      99980 10986
+                              
+                                  </td>
+                              
+                              </tr>
+                    
+                      <!-- ==========================================
+                               CUSTOMER DETAILS
+                          ========================================== -->
+                          
+                          <tr class="printCustomerRow">
+                          
+                              <td colspan="6">
+                          
+                                  <table class="printCustomerDetails">
+                          
+                                      <!-- CUSTOMER NAME -->
+                          
+                                      <tr>
+                          
+                                          <td colspan="6">
+                          
+                                              <label>શ્રીમાન,</label>
+                          
+                                              <span id="pCustomerName"></span>
+                          
+                                          </td>
+                          
+                                      </tr>
+                          
+                          
+                                      <!-- ADDRESS -->
+                          
+                                      <tr>
+                          
+                                          <td colspan="2">
+                          
+                                              <label>સરનામું:</label>
+                          
+                                              <span id="pVillage"></span>
+                          
+                                              <span class="panchayatText">
+                                                  ગ્રામ પંચાયત
+                                              </span>
+                          
+                                          </td>
+                          
+                          
+                                          <td colspan="2">
+                          
+                                              <label>તાલુકો:</label>
+                          
+                                              <span id="pTaluka"></span>
+                          
+                                          </td>
+                          
+                          
+                                          <td colspan="2">
+                          
+                                              <label>જિલ્લો:</label>
+                          
+                                              <span id="pDistrict"></span>
+                          
+                                          </td>
+                          
+                                      </tr>
+                          
+                          
+                                      <!-- MOBILE NUMBER -->
+                          
+                                      <tr>
+                          
+                                          <td colspan="3">
+                          
+                                              <label>મોબાઇલ નંબર:</label>
+                          
+                                              <span id="pMobileNumber"></span>
+                          
+                                          </td>
+                          
+                          
+                                          <td colspan="3"></td>
+                          
+                                      </tr>
+                          
+                          
+                                      <!-- BILL NUMBER + DATE -->
+                          
+                                      <tr>
+                          
+                                          <td colspan="3">
+                          
+                                              <label>બિલ નંબર:</label>
+                          
+                                              <span id="pBillNo"></span>
+                          
+                                          </td>
+                          
+                          
+                                          <td colspan="3">
+                          
+                                              <label>તારીખ:</label>
+                          
+                                              <span id="pBillDate"></span>
+                          
+                                          </td>
+                          
+                                      </tr>
+                          
+                                  </table>
+                          
+                              </td>
+                          
+                          </tr>
+        
+                                <tr class="itemTableSpace">
+                                    <td colspan="5">
+                                
+                                        <table class="innerItemTable">
+                                
+                                            <tr class="printItemHeader">
+                                                <th>ક્રમ</th>
+                                                <th>વિગત</th>
+                                                <th>પાનાં</th>
+                                                <th>ભાવ (₹)</th>
+                                                <th>રકમ (₹)</th>
+                                            </tr>
+                                
+                                            <tbody id="printMainItems"></tbody>
+                                
+                                        </table>
+                                
+                                    </td>
+                                </tr>
+                    
+                                <!-- SUMMARY -->
+                    
+                                <!-- TOTAL ROW -->
+        
+                                <tr class="printSummaryRow">
+                                  
+                                      <td width="70%"colspan="3">
+                                          <label>રકમ શબ્દોમાં:</label>
+                                          <span id="pAmountWords"></span>
+                                      </td>
+                                      
+                                      <td width="30%" colspan="2">
+                                          <label>કુલ રકમ:</label>
+                                          <span id="pGrandTotal">₹</span>
+                                      </td>
+                                  
+                               </tr>
+                    
+                    
+                                <!-- PAYMENT DETAILS -->
+                    
+                                <tr>
+        
+                                    <td colspan="6" class="printPaymentDetails">
+        
+                                        <strong> બેંક / ચેકની વિગત:</strong>
+                                    
+                                        <span id="pPaymentDetails"></span>
+                                    
+                                    </td>
+                                
+                                </tr>
+                    
+                    
+                                <!-- FOOTER -->
+                    
+                                <tr class="printFooter">
+                    
+                                    <td colspan="3">
+                    
+                                        બાકી / રોકડા
+                    
+                                    </td>
+                    
+                                    <td colspan="3">
+                    
+                                        ફોર : બીપીનભાઈ ઈશ્વરલાલ પટેલ
+                    
+                                    </td>
+                    
+                                </tr>
+                    
+                            </table>
+                    
+                        </section>
+        
+                     
+                     <!--==================================================
+                                          CUT LINE
+                      ===================================================-->
+                  
+                          <div class="cutLine">
+                  
+                              <span>✂ અહીંથી કાપો ✂</span>
+                  
+                          </div>
+                  
+                           <!--=================================================
+                                    DUPLICATE RECEIPT
+                            =================================================-->
+                
+                          <section class="duplicateReceipt" id="duplicateReceipt">
+                
+                              
+                              
+                                      <!-- DUPLICATE HEADER -->
+                                <div class="duplicateHeader">
+                            
+                                    <div class="duplicateCompany">
+                            
+                                        <h4>બીપીનભાઈ ઈશ્વરલાલ પટેલ</h4>
+                            
+                                        <p>
+                                              ૧૧૪/ નાના પ્લોટ, વિનાયક ટ્રેડિંગ કંપની ની બાજુ માં,
+                                              નવા ગંજ બજાર, પાટણ -૩૮૪૨૬૫
+                                          </p>
+                                  
+                                          <p>
+                                              પંચાયત તથા રેવન્યુનું કોમ્પ્યુટરાઇઝ્ડ કામકાજ કરી આપનાર
+                                          </p>
+                            
+                                    </div>
+                            
+                                    <div class="duplicatePhone">
+                                        📞 9998010986
+                                    </div>
+                            
+                                </div>
+                            
+                            
+                                <!-- RECEIPT TITLE -->
+                                <div class="receiptTitle">
+                                    પાવતી
+                                </div>
+                            
+                            
+                                <!-- RECEIPT NUMBER AND DATE -->
+                                <div class="duplicateReceiptHeader">
+                            
+                                      <div>
+                                  
+                                          <label>પાવતી નંબર:</label>
+                            
+                                        <input
+                                                type="text"
+                                                id="dPavtiNo"
+                                                readonly>
+                                        
+                                      </div>
+                                  
+                                      <div>
+                                  
+                                          <label>તારીખ:</label>
+                            
+                                          <input
+                                              type="text"
+                                              id="dPavtiDate"
+                                              readonly>
+                                          
+                                      </div>
+                            
+                                </div>
+                            
+                                        <div class="duplicateCustomer">
+                            
+                                <div class="fullWidth">
+                            
+                                    <label>શ્રીમાન, </label>
+                            
+                                    <span id="dCustomerName"></span>
+                            
+                                </div>
+                            
+                            </div>
+                            
+                                <!-- CUSTOMER NAME -->
+                                <div class="duplicateCustomer">
+                            
+                                <div class="duplicateAddressCell">
+                            
+                                    <label>સરનામું:</label>
+                            
+                                    <span id="dVillage"></span>
+                            
+                                    <label class="panchayatLabel">
+                                        ગ્રામ પંચાયત
+                                    </label>
+                            
+                                </div>
+                            
+                            
+                                <div>
+                            
+                                    <label>તાલુકો:</label>
+                            
+                                    <span id="dTaluka"></span>
+                            
+                                </div>
+                            
+                            
+                                <div>
+                            
+                                    <label>જિલ્લો:</label>
+                            
+                                    <span id="dDistrict"></span>
+                            
+                                </div>
+                            
+                            </div>
+                            
+                                <!-- RECEIPT BODY -->
+                                <div class="receiptBody">
+                            
+                                    <p>
+                                        આપના તરફથી મળેલ રકમ
+                                        <strong>
+                                            <span id="dGrandTotal"></span>
+                                        </strong>
+                                        (અંકે)
+                                    </p>
+                            
+                            
+                                    <div class="amountWordsReceipt">
+                            
+                                        <label>રકમ શબ્દોમાં</label>
+                            
+                                        <span id="dAmountWords"></span>
+                            
+                                    </div>
+                            
+                            
+                                    <div class="paymentDetails">
+                            
+                                        <div>
+                                            <label>બાકી</label>
+                                            <span id="dBaki"></span>
+                                        </div>
+                            
+                                        <div>
+                                            <label>રોકડા</label>
+                                            <span id="dRokada"></span>
+                                        </div>
+                            
+                                    </div>
+                            
+                                      <div class="paymentDetails bankDetailsRow">
+                            
+                                          <label>
+                                              બેંક / ચેકની વિગત:
+                                          </label>
+                                      
+                                          <span id="dPaymentDetails"></span>
+                                      
+                                      </div>
+                                    
+                            
+                                </div>
+                            
+                            
+                                <!-- DUPLICATE FOOTER -->
+                                <div class="duplicateFooter">
+                            
+                                    <div>
+                                        ગ્રાહકની સહી
+                                    </div>
+                            
+                                    <div>
+                                        ફોર : બીપીનભાઈ ઈશ્વરલાલ પટેલ
+                                    </div>
+                            
+                                </div>
+                
+                        </section>
+                
+                      <!-- ===================================
+                              RECEIPT ACTION BUTTONS
+                      ========================================= -->
+                            
+                        <div class="receiptActionButtons">
+                                      
+                            <button
+                                id="backToEditBtn"
+                                type="button">
+                        
+                                ✏️
+                                <span>
+                                    ← Edit Bill
+                                </span>
+                        
+                            </button>
+                        
+                        
+                            <button
+                                id="saveBillBtn"
+                                type="button">
+                        
+                                💾
+                                <span>
+                                    Save Bill
+                                </span>
+                        
+                            </button>
+                        
+                        
+                            <button
+                                id="printBillBtn"
+                                type="button">
+                        
+                                🖨️
+                                <span>
+                                    Print Bill
+                                </span>
+                        
+                            </button>
+                        
+                        </div>
+                                         
+                  </div>
+                                    
+              </section>
+
+
+<style data-mainbill-print>
+
+/* ============================================================
+   MAIN BILL PRINT CSS
+   ISOLATED FROM TALAPATRAK / SHIKSHANUPAKARAN
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   MAIN BILL PRINT PAGE
+------------------------------------------------------------ */
+
+@page mainbill {
+    size: A4 portrait;
+    margin: 0;
+}
+
+
+/* ------------------------------------------------------------
+   PRINT MODE
+------------------------------------------------------------ */
+
+@media print {
+
+    /* ========================================================
+       MAIN BILL PRINT PAGE ASSIGNMENT
+    ======================================================== */
+
+    #printableBills {
+        page: mainbill !important;
+    }
+
+
+    /* ========================================================
+       MAIN BILL PAGE
+    ======================================================== */
+
+    .generatedReceiptPage {
+        page: mainbill !important;
+
+        display: block !important;
+
+        width: 210mm !important;
+        height: 297mm !important;
+        min-height: 297mm !important;
+
+        margin: 0 !important;
+
+        padding:
+            5mm
+            5mm
+            5mm
+            50px !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+
+        background: #ffffff !important;
+    }
+
+
+    /* ========================================================
+       MAIN BILL PRINT CONTAINER
+    ======================================================== */
+
+    #printableBills {
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        justify-content: flex-start !important;
+
+        width: 100% !important;
+        height: 100% !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+    }
+
+
+    /* ========================================================
+       HIDE MAIN APPLICATION UI
+       SCOPED TO MAIN BILL PRINT
+    ======================================================== */
+
+    body:has(#printableBills) #loginScreen,
+    body:has(#printableBills) .topBar,
+    body:has(#printableBills) .sidebar,
+    body:has(#printableBills) .dashboardView,
+    body:has(#printableBills) #formPage,
+    body:has(#printableBills) .receiptActionButtons,
+    body:has(#printableBills) .generateReceiptArea,
+    body:has(#printableBills) .searchModalOverlay {
+
+        display: none !important;
+    }
+
+
+    /* ========================================================
+       HIDE BUTTONS INSIDE MAIN BILL PRINT AREA
+    ======================================================== */
+
+    #printableBills button {
+        display: none !important;
+    }
+
+
+    /* ========================================================
+       MAIN BILL VISIBILITY
+    ======================================================== */
+
+    #printableBills {
+        visibility: visible !important;
+    }
+
+    #printableBills * {
+        visibility: visible !important;
+    }
+
+
+    /* ========================================================
+       MAIN BILL
+    ======================================================== */
+
+    #generatedMainBill {
+
+        width: 100% !important;
+
+        max-width: none !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+
+        border: 2px solid var(--bill-ink) !important;
+
+        border-radius: 6px;
+
+        box-sizing: border-box !important;
+
+        background: #ffffff !important;
+
+        overflow: hidden !important;
+
+        flex-shrink: 0 !important;
+
+        break-inside: avoid !important;
+
+        page-break-inside: avoid !important;
+    }
+
+
+    /* ========================================================
+       MAIN HEADER
+    ======================================================== */
+
+    #generatedMainBill .printHeaderRow td {
+
+        padding: 17px 20px 15px !important;
+
+        text-align: center !important;
+
+        vertical-align: middle !important;
+    }
+
+
+    #generatedMainBill .printGanesh {
+
+        margin-bottom: 3px;
+
+        font-size: 15px !important;
+
+        line-height: 1.4;
+
+        text-align: center;
+    }
+
+
+    #generatedMainBill .printHeaderRow h1 {
+
+        margin: 6px 0 4px !important;
+
+        font-size: 29px !important;
+
+        line-height: 1.4;
+
+        text-align: center;
+    }
+
+
+    #generatedMainBill .printHeaderRow h2 {
+
+        margin: 0 0 7px !important;
+
+        font-size: 17px !important;
+
+        line-height: 1.4;
+
+        text-align: center;
+    }
+
+
+    #generatedMainBill .printHeaderRow p {
+
+        margin: 3px 0 !important;
+
+        font-size: 13px !important;
+
+        line-height: 1.7;
+
+        text-align: center;
+    }
+
+
+    #generatedMainBill .printPhone {
+
+        font-size: 14px !important;
+
+        text-align: center;
+    }
+
+
+    /* ========================================================
+       CUSTOMER DETAILS
+    ======================================================== */
+
+    #generatedMainBill .printCustomerDetails td {
+
+        padding: 10px 10px !important;
+
+        font-size: 13px !important;
+    }
+
+
+    #generatedMainBill .printCustomerDetails label,
+    #generatedMainBill .printCustomerDetails strong {
+
+        font-size: 13px !important;
+    }
+
+
+    /* ADDRESS / TALUKA / DISTRICT */
+
+    #generatedMainBill .printCustomerDetails tr:nth-child(2) {
+
+        white-space: nowrap !important;
+    }
+
+
+    #generatedMainBill .printCustomerDetails tr:nth-child(2) td {
+
+        padding-left: 8px !important;
+
+        padding-right: 8px !important;
+    }
+
+
+    #generatedMainBill .printCustomerDetails tr:nth-child(2) span {
+
+        min-width: 0 !important;
+
+        padding: 3px 4px !important;
+
+        font-size: 12px !important;
+    }
+
+
+    #generatedMainBill .panchayatText {
+
+        margin-left: 4px !important;
+
+        font-size: 11px !important;
+    }
+
+
+    /* ========================================================
+       MAIN ITEM TABLE
+    ======================================================== */
+
+    #generatedMainBill .itemTableSpace > td {
+
+        padding: 11px 12px 7px !important;
+    }
+
+
+    #generatedMainBill .innerItemTable {
+
+        margin: 0 !important;
+    }
+
+
+    #generatedMainBill .innerItemTable th {
+
+        padding: 11px 7px !important;
+
+        font-size: 13px !important;
+    }
+
+
+    #generatedMainBill .innerItemTable td {
+
+        padding: 10px 7px !important;
+
+        font-size: 12px !important;
+
+        line-height: 1.5;
+    }
+
+
+    #generatedMainBill #printMainItems td:nth-child(2) {
+
+        padding-left: 12px !important;
+
+        padding-right: 12px !important;
+    }
+
+
+    /* ========================================================
+       SUMMARY
+    ======================================================== */
+
+    #generatedMainBill .printSummaryRow td {
+
+        padding: 10px 13px !important;
+
+        font-size: 13px !important;
+    }
+
+
+    /* ========================================================
+       AMOUNT IN WORDS
+    ======================================================== */
+
+    #generatedMainBill #pAmountWords {
+
+        display: inline-block;
+
+        min-width: 70%;
+
+        min-height: 34px;
+
+        padding: 8px 11px !important;
+
+        border: 1px solid #999;
+
+        border-radius: 4px;
+
+        background: #ffffff;
+
+        font-size: 13px !important;
+
+        line-height: 1.5;
+    }
+
+
+    #generatedMainBill #pAmountWords::after {
+
+        display: none;
+    }
+
+
+    /* ========================================================
+       GRAND TOTAL
+    ======================================================== */
+
+    #generatedMainBill #pGrandTotal {
+
+        display: inline-block;
+
+        min-width: 155px;
+
+        min-height: 52px;
+
+        padding: 10px 17px !important;
+
+        border: 2px solid var(--bill-ink);
+
+        border-radius: 5px;
+
+        background: #ffffff;
+
+        font-size: 22px !important;
+
+        line-height: 1.4;
+
+        font-weight: 700;
+
+        text-align: right;
+    }
+
+
+    /* ========================================================
+       MAIN PAYMENT DETAILS
+    ======================================================== */
+
+    #generatedMainBill .printPaymentDetails {
+
+        padding: 9px 13px !important;
+
+        font-size: 12px !important;
+    }
+
+
+    /* ========================================================
+       MAIN FOOTER
+    ======================================================== */
+
+    #generatedMainBill .printFooter td {
+
+        padding: 11px 14px !important;
+
+        font-size: 13px !important;
+    }
+
+
+    /* ========================================================
+       CUT LINE
+    ======================================================== */
+
+    #printableBills .cutLine {
+
+        width: 100% !important;
+
+        margin: 8px 0 !important;
+
+        border-top: 2px dashed #777 !important;
+
+        flex-shrink: 0 !important;
+    }
+
+
+    #printableBills .cutLine span {
+
+        top: -11px;
+
+        padding: 0 9px;
+
+        font-size: 10px !important;
+
+        background: #ffffff;
+    }
+
+
+    /* ========================================================
+       DUPLICATE RECEIPT
+    ======================================================== */
+
+    #printableBills #duplicateReceipt,
+    #printableBills .duplicateReceipt {
+
+        width: 100% !important;
+
+        height: auto !important;
+
+        min-height: 0 !important;
+
+        max-width: none !important;
+
+        margin: 0 !important;
+
+        padding: 8px 14px !important;
+
+        border: 2px solid var(--bill-ink) !important;
+
+        border-radius: 6px;
+
+        box-sizing: border-box !important;
+
+        background: #ffffff !important;
+
+        overflow: hidden !important;
+
+        flex-shrink: 1 !important;
+
+        break-inside: avoid !important;
+
+        page-break-inside: avoid !important;
+    }
+
+
+    /* ========================================================
+       DUPLICATE HEADER
+    ======================================================== */
+
+    #printableBills #duplicateReceipt .duplicateHeader,
+    #printableBills .duplicateReceipt .duplicateHeader {
+
+        display: grid !important;
+
+        grid-template-columns: 1fr auto !important;
+
+        align-items: center !important;
+
+        gap: 20px !important;
+
+        padding: 0 0 5px !important;
+
+        text-align: left !important;
+    }
+
+
+    #printableBills #duplicateReceipt .duplicateCompany,
+    #printableBills .duplicateReceipt .duplicateCompany {
+
+        width: auto !important;
+
+        min-width: 0 !important;
+
+        text-align: left !important;
+    }
+
+
+    #printableBills #duplicateReceipt .duplicateCompany h4,
+    #printableBills .duplicateReceipt .duplicateCompany h4 {
+
+        margin: 0 0 2px !important;
+
+        font-size: 18px !important;
+
+        line-height: 1.3 !important;
+    }
+
+
+    #printableBills #duplicateReceipt .duplicateCompany p,
+    #printableBills .duplicateReceipt .duplicateCompany p {
+
+        margin: 1px 0 !important;
+
+        font-size: 10px !important;
+
+        line-height: 1.3 !important;
+    }
+
+
+    #printableBills #duplicateReceipt .duplicatePhone,
+    #printableBills .duplicateReceipt .duplicatePhone {
+
+        margin: 0 !important;
+
+        font-size: 12px !important;
+
+        white-space: nowrap !important;
+
+        text-align: right !important;
+    }
+
+
+    /* ========================================================
+       RECEIPT TITLE
+    ======================================================== */
+
+    #printableBills #duplicateReceipt .receiptTitle,
+    #printableBills .duplicateReceipt .receiptTitle {
+
+        margin: 4px 0 !important;
+
+        font-size: 18px !important;
+
+        line-height: 1.3 !important;
+
+        text-align: center;
+    }
+
+
+    /* ========================================================
+       NUMBER + DATE
+    ======================================================== */
+
+    #printableBills #duplicateReceipt .duplicateReceiptHeader,
+    #printableBills .duplicateReceipt .duplicateReceiptHeader {
+
+        display: grid !important;
+
+        grid-template-columns: 1fr 1fr !important;
+
+        gap: 12px !important;
+
+        margin-bottom: 4px !important;
+    }
+
+
+    #printableBills #duplicateReceipt .duplicateReceiptHeader label,
+    #printableBills .duplicateReceipt .duplicateReceiptHeader label {
+
+        font-size: 11px !important;
+    }
+
+
+    #printableBills #duplicateReceipt .duplicateReceiptHeader input,
+    #printableBills .duplicateReceipt .duplicateReceiptHeader input {
+
+        padding: 3px 6px !important;
+
+        font-size: 11px !important;
+    }
+
+
+    #printableBills #dPavtiNo,
+    #printableBills #dPavtiDate {
+
+        width: 100% !important;
+
+        font-size: 11px !important;
+    }
+
+
+    /* ========================================================
+       DUPLICATE CUSTOMER
+    ======================================================== */
+
+    #printableBills #duplicateReceipt .duplicateCustomer,
+    #printableBills .duplicateReceipt .duplicateCustomer {
+
+        gap: 5px !important;
+
+        margin-bottom: 4px !important;
+    }
+
+
+    #printableBills #duplicateReceipt .duplicateCustomer label,
+    #printableBills #duplicateReceipt .duplicateCustomer span,
+    #printableBills .duplicateReceipt .duplicateCustomer label,
+    #printableBills .duplicateReceipt .duplicateCustomer span {
+
+        font-size: 11px !important;
+    }
+
+
+    /* ========================================================
+       RECEIPT BODY
+    ======================================================== */
+
+    #printableBills #duplicateReceipt .receiptBody,
+    #printableBills .duplicateReceipt .receiptBody {
+
+        margin-top: 3px !important;
+
+        padding: 5px 0 !important;
+    }
+
+
+    #printableBills #duplicateReceipt .receiptBody p,
+    #printableBills .duplicateReceipt .receiptBody p {
+
+        margin: 3px 0 4px !important;
+
+        font-size: 11px !important;
+
+        line-height: 1.5 !important;
+    }
+
+
+    #printableBills #duplicateReceipt .receiptBody strong,
+    #printableBills .duplicateReceipt .receiptBody strong {
+
+        font-size: 13px !important;
+    }
+
+
+    /* ========================================================
+       AMOUNT IN WORDS
+    ======================================================== */
+
+    #printableBills #duplicateReceipt .amountWordsReceipt,
+    #printableBills .duplicateReceipt .amountWordsReceipt {
+
+        gap: 7px !important;
+
+        margin-bottom: 4px !important;
+    }
+
+
+    #printableBills #duplicateReceipt .amountWordsReceipt label,
+    #printableBills #duplicateReceipt .amountWordsReceipt span,
+    #printableBills .duplicateReceipt .amountWordsReceipt label,
+    #printableBills .duplicateReceipt .amountWordsReceipt span {
+
+        font-size: 11px !important;
+    }
+
+
+    #printableBills #duplicateReceipt .amountWordsReceipt span,
+    #printableBills .duplicateReceipt .amountWordsReceipt span {
+
+        min-width: 78% !important;
+
+        min-height: 18px !important;
+    }
+
+
+    /* ========================================================
+       PAYMENT DETAILS
+    ======================================================== */
+
+    #printableBills #duplicateReceipt .paymentDetails,
+    #printableBills .duplicateReceipt .paymentDetails {
+
+        gap: 15px !important;
+
+        margin-top: 3px !important;
+    }
+
+
+    #printableBills #duplicateReceipt .paymentDetails label,
+    #printableBills #duplicateReceipt .paymentDetails span,
+    #printableBills .duplicateReceipt .paymentDetails label,
+    #printableBills .duplicateReceipt .paymentDetails span {
+
+        font-size: 11px !important;
+    }
+
+
+    /* ========================================================
+       DUPLICATE FOOTER
+    ======================================================== */
+
+    #printableBills #duplicateReceipt .duplicateFooter,
+    #printableBills .duplicateReceipt .duplicateFooter {
+
+        margin-top: 5px !important;
+
+        font-size: 11px !important;
+    }
+
+}
+
+</style>

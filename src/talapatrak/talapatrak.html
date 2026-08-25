@@ -1,0 +1,2385 @@
+               <!-- ==========================================
+                          TALAPATRAK MANAGEMENT VIEW
+                 ================================================ -->
+                          
+               <section
+                    id="talapatrakView"
+                    class="talapatrakView"
+                    style="display:none;">
+                
+                
+                    <!-- ==========================================
+                            TOP BAR
+                    =========================================== -->
+                
+                    <div class="talapatrakManagementTopBar">
+                
+                
+                        <!-- SEARCH + ADD -->
+                
+                        <div class="talapatrakManagementTopActions">
+                
+                
+                            <!-- SEARCH -->
+                
+                            <div class="talapatrakSearchBox">
+                
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                
+                                <input
+                                    type="search"
+                                    id="talapatrakSearchInput"
+                                    placeholder="Search village...">
+                
+                            </div>
+                
+                
+                            <!-- ADD TALAPATRAK -->
+                
+                            <button
+                                type="button"
+                                id="addTalapatrakButton"
+                                class="talapatrakAddButton">
+                
+                                <i class="fa-solid fa-plus"></i>
+                
+                                <span>
+                                    Add Talapatrak
+                                </span>
+                
+                            </button>
+                
+                
+                        </div>
+                
+                    </div>
+                
+                
+                    <!-- ==========================================
+                            MANAGEMENT CONTENT
+                    =========================================== -->
+                
+                    <main
+                        class="talapatrakManagementContent">
+                
+
+                      <!-- ======================================
+                              PAGE HEADER
+                      ======================================= -->
+                      
+                      <div class="talapatrakManagementHeader">
+                      
+                          <div>
+                      
+                              <h1>
+                                  Talapatrak
+                              </h1>
+                      
+                              <p>
+                                  Manage village records and yearly Talapatrak data
+                              </p>
+                      
+                          </div>
+                      
+                      </div>
+                      
+                      
+                      <!-- ======================================
+                              RECORDS TOOLBAR
+                      ======================================= -->
+                      
+                      <div class="talapatrakRecordsToolbar">
+                      
+                      
+                          <!-- TOTAL VILLAGES -->
+                      
+                          <div
+                              id="talapatrakSearchSummary"
+                              class="talapatrakSearchSummary">
+                      
+                              <span>
+                      
+                                  <strong id="talapatrakRecordCountDisplay">
+                                      0
+                                  </strong>
+                      
+                                  villages
+                      
+                              </span>
+                      
+                          </div>
+                      
+                      
+                          <!-- VIEW CONTROLS -->
+                      
+                          <div class="talapatrakViewControls">
+                      
+                      
+                              <!-- SORT -->
+                      
+                              <div class="talapatrakSortWrapper">
+                      
+                                  <button
+                                      type="button"
+                                      id="talapatrakSortButton"
+                                      class="talapatrakControlButton">
+                      
+                                      <i class="fa-solid fa-arrow-down-wide-short"></i>
+                      
+                                      <span id="talapatrakSortLabel">
+                                          Recent
+                                      </span>
+                      
+                                      <i class="fa-solid fa-chevron-down"></i>
+                      
+                                  </button>
+                      
+                      
+                                  <div
+                                      id="talapatrakSortMenu"
+                                      class="talapatrakSortMenu">
+                      
+                                      <button
+                                          type="button"
+                                          class="talapatrakSortOption active"
+                                          data-sort="recent">
+                      
+                                          <i class="fa-solid fa-clock"></i>
+                      
+                                          Recent
+                      
+                                      </button>
+                      
+                      
+                                      <button
+                                          type="button"
+                                          class="talapatrakSortOption"
+                                          data-sort="oldest">
+                      
+                                          <i class="fa-solid fa-clock-rotate-left"></i>
+                      
+                                          Oldest
+                      
+                                      </button>
+                      
+                      
+                                      <button
+                                          type="button"
+                                          class="talapatrakSortOption"
+                                          data-sort="az">
+                      
+                                          <i class="fa-solid fa-arrow-down-a-z"></i>
+                      
+                                          A–Z
+                      
+                                      </button>
+                      
+                      
+                                      <button
+                                          type="button"
+                                          class="talapatrakSortOption"
+                                          data-sort="za">
+                      
+                                          <i class="fa-solid fa-arrow-down-z-a"></i>
+                      
+                                          Z–A
+                      
+                                      </button>
+                      
+                                  </div>
+                      
+                              </div>
+                      
+                      
+                              <!-- GRID -->
+                      
+                              <button
+                                  type="button"
+                                  id="talapatrakGridViewButton"
+                                  class="talapatrakIconButton active">
+                      
+                                  <i class="fa-solid fa-grip"></i>
+                      
+                              </button>
+                      
+                      
+                              <!-- LIST -->
+                      
+                              <button
+                                  type="button"
+                                  id="talapatrakListViewButton"
+                                  class="talapatrakIconButton">
+                      
+                                  <i class="fa-solid fa-list"></i>
+                      
+                              </button>
+                      
+                      
+                          </div>
+                      
+                      </div>
+                
+                        <!-- ======================================
+                                EMPTY STATE
+                        ======================================= -->
+                
+                        <div
+                            id="talapatrakEmptyState"
+                            class="talapatrakEmptyState">
+                        </div>
+                        
+                        
+                        <div
+                            id="talapatrakVillageGrid"
+                            class="talapatrakVillageGrid">
+                        </div>
+                
+                
+                    </main>
+                
+                
+                </section>   
+
+                <!-- ===========================================
+                        TALAPATRAK EDITOR VIEW
+                ============================================== -->
+                
+                <section
+                      id="talapatrakEditorView"
+                      class="talapatrakEditorView talapatrakPrintArea">
+
+                  
+                      <!-- ============================================================
+                           FULL VIEW — SHRINK / EXIT BUTTON
+                      ============================================================ -->
+                      
+                      <button
+                          type="button"
+                          id="talapatrakShrinkViewButton"
+                          class="talapatrakShrinkViewButton"
+                          title="Exit Full View"
+                          aria-label="Exit Full View">
+                      
+                          <i class="fa-solid fa-compress"></i>
+                      
+                          <span>
+                              Exit Full View
+                          </span>
+                      
+                      </button>
+            
+                      <!-- ====================================================
+                           EDITOR TOP BAR
+                      ====================================================== -->
+                  
+                        <div class="talapatrakEditorTopBar">
+                    
+                            <!-- BACK -->
+                    
+                            <button
+                                type="button"
+                                id="backToTalapatrakManagement"
+                                class="talapatrakTopButton back">
+                    
+                                <i class="fa-solid fa-arrow-left"></i>
+                    
+                                <span>
+                                    Talapatrak
+                                </span>
+                    
+                            </button>
+
+                          
+                    
+                    
+                            <!-- TITLE -->
+                    
+                            <div class="talapatrakEditorTitle">
+                    
+                                <div class="talapatrakEditorTitleIcon">
+                    
+                                    <i class="fa-solid fa-table-list"></i>
+                    
+                                </div>
+                    
+                                <div class="talapatrakEditorTitleText">
+                    
+                                    <h2 id="talapatrakEditorVillageName">
+                                        New Talapatrak
+                                    </h2>
+                    
+                                    <span id="talapatrakEditorYear">
+                                        
+                                    </span>
+                    
+                                </div>
+                    
+                            </div>
+                    
+                    
+                          
+                            <!-- ACTIONS -->
+                            
+                            <div class="talapatrakEditorActions">
+                            
+                                <!-- UPLOAD KHATA DATA -->
+                            
+                                <button
+                                    type="button"
+                                    id="talapatrakKhataUploadButton"
+                                    class="talapatrakTopButton upload">
+                            
+                                    <i class="fa-solid fa-upload"></i>
+                            
+                                    <span>
+                                        Upload
+                                    </span>
+                            
+                                </button>
+
+                                <input
+                                    type="file"
+                                    id="khataFileInput"
+                                    accept=".pdf,image/jpeg,image/png,image/webp"
+                                    hidden
+                                >
+                            
+                                <!-- SAVE -->
+                            
+                                <button
+                                    type="button"
+                                    id="saveTalapatrakButton"
+                                    class="talapatrakTopButton save">
+                            
+                                    <i class="fa-solid fa-floppy-disk"></i>
+                            
+                                    <span>
+                                        Save
+                                    </span>
+                            
+                                </button>
+                            
+                                <button
+                                    type="button"
+                                    id="printTalapatrakButton"
+                                    class="talapatrakTopButton print">
+                            
+                                    <i class="fa-solid fa-print"></i>
+                            
+                                    <span>
+                                        Print
+                                    </span>
+                            
+                                </button>
+
+
+                                <!-- FULL VIEW -->
+
+                                <button
+                                    type="button"
+                                    id="talapatrakFullViewButton"
+                                    class="talapatrakTopButton fullView"
+                                    title="Full View"
+                                    aria-label="Full View">
+                                
+                                    <i class="fa-solid fa-expand"></i>
+                                
+                                </button>
+                            
+                            </div>
+                            
+                       </div>
+                    
+                      
+                  
+                      <!-- ====================================================
+                           EDITOR CONTENT
+                      ===================================================== -->
+                  
+                      <div class="talapatrakEditorContent">
+                  
+                          <div class="talapatrakPage">
+                  
+                  
+                              <!-- ============================================
+                                   TALAPATRAK INFORMATION
+                              ========================================== -->
+                  
+                              <div class="talapatrakInfoPanel">
+                  
+                  
+                                  <!-- MOJE -->
+                  
+                                  <div class="talapatrakInfoField">
+                  
+                                      <label>
+                                          મોજે :
+                                      </label>
+                  
+                                      <textarea
+                                          id="talapatrakMoje"
+                                          class="talapatrakInfoInput"
+                                          rows="1"
+                                          placeholder="ગામનું નામ">
+                                      </textarea>
+                  
+                                  </div>
+                  
+                  
+                                  <!-- TALUKA -->
+                  
+                                  <div class="talapatrakInfoField">
+                  
+                                      <label>
+                                          તાલુકા :
+                                      </label>
+                  
+                                      <textarea
+                                          id="talapatrakTaluka"
+                                          class="talapatrakInfoInput"
+                                          rows="1">
+                                      </textarea>
+                  
+                                  </div>
+                  
+                  
+                                  <!-- DISTRICT -->
+                  
+                                  <div class="talapatrakInfoField">
+                  
+                                      <label>
+                                          જિલ્લો :
+                                      </label>
+                  
+                                      <textarea
+                                          id="talapatrakJillo"
+                                          class="talapatrakInfoInput"
+                                          rows="1">
+                                      </textarea>
+                  
+                                  </div>
+                  
+                  
+                                  <!-- FORM NUMBER -->
+                  
+                                  <div class="talapatrakInfoField staticField">
+                  
+                                      <label>
+                                          ગામના નમૂના નંબર-૧૧ :
+                                      </label>
+                  
+                                      <span class="talapatrakInfoStatic">
+                  
+                                          તાળાપત્રક
+                  
+                                      </span>
+                  
+                                  </div>
+                  
+                  
+                                  <!-- YEAR -->
+                  
+                                  <div class="talapatrakInfoField yearField">
+
+                                      <label>
+                                          વર્ષ :
+                                      </label>
+                                  
+                                      <select
+                                          id="talapatrakYear"
+                                          class="talapatrakInfoInput talapatrakYearSelect">
+                                      </select>
+                                  
+                                  </div>
+                  
+                  
+                              </div>
+                  
+                  
+                              <!-- ========================================
+                                   TABLE
+                              ========================================== -->
+                  
+                              <div class="talapatrakTableWrapper">
+                  
+                                  <table
+                                      id="talapatrakTable"
+                                      class="talapatrakTable">
+                  
+                  
+                                      <colgroup>
+                  
+                                          <col class="colA">
+                                          <col class="colB">
+                  
+                                          <col class="colC">
+                                          <col class="colD">
+                                          <col class="colE">
+                                          <col class="colF">
+                                          <col class="colG">
+                                          <col class="colH">
+                  
+                                          <col class="colI">
+                                          <col class="colJ">
+                                          <col class="colK">
+                  
+                                          <col class="colL">
+                                          <col class="colM">
+                                          <col class="colN">
+                                          <col class="colO">
+                  
+                                          <col class="colP">
+                                          <col class="colQ">
+                                          <col class="colR">
+                                          <col class="colS">
+                                          <col class="colT printHide">
+                                          <col class="colU printHide">
+                                          <col class="colV printHide">
+                  
+                                          <col class="colAction printHide">
+                  
+                                      </colgroup>
+                  
+                  
+                                      <thead>
+                  
+                  
+                                          <!-- ================================
+                                               INFORMATION ROW
+                                          =============================== -->
+                  
+                                          <tr class="talapatrakInfoRow">
+                  
+                                              <th colspan="19">
+                  
+                                                  <div class="talapatrakInfo">
+                  
+                                                        <strong>
+                                                          ગામના નમૂના નંબર-૧૧
+                                                      </strong>
+                  
+                                                      <span>
+                                                          તાળાપત્રક
+                                                      </span>
+                  
+                                                  </div>
+                  
+                                              </th>
+                  
+                                          </tr>
+                  
+                  
+                                    <!-- ===============================
+                                               GROUP HEADER
+                                          =============================== -->
+                  
+                                          <tr>
+                  
+                  
+                                              <th rowspan="2">
+                                                  ખાતા <br>
+                                                  નંબર
+                                              </th>
+                  
+                  
+                                              <th rowspan="2">
+                                                  ખાતેદારનું નામ
+                                              </th>
+                  
+                  
+                                              <th colspan="6">
+                                                  માંગણું
+                                              </th>
+                  
+                  
+                                             <th rowspan="2">
+                                                  છૂટની<br>
+                                                  રકમ
+                                              </th>
+                                              
+                                              <th rowspan="2">
+                                                  ચોખ્ખું<br>
+                                                  લેવા પાત્ર<br>
+                                                  માંગણું
+                                              </th>
+                                              
+                                              <th rowspan="2">
+                                                  ગત સાલનું<br>
+                                                  જાદે
+                                              </th>
+
+                                             <th colspan="4">
+                                                  વસૂલાત
+                                              </th>
+                                              
+                                              <th rowspan="2">
+                                                  ખરેખર <br>
+                                                  વસૂલ
+                                              </th>
+                                              
+                                              <th rowspan="2">
+                                                  બિન હુકમી<br>
+                                                  બાકી
+                                              </th>
+                  
+                  
+                                              <th rowspan="2">
+                                                  જાદે <br>
+                                                  વસૂલ
+                                              </th>
+                  
+                  
+                                              <th rowspan="2">
+                                                  શેરો
+                                              </th>
+                  
+                  
+                                              <th rowspan="2" class="printHide">
+                                                  બાકી
+                                              </th>
+                                              
+                                              <th rowspan="2" class="printHide">
+                                                  ફાજલ
+                                              </th>
+                                              
+                                              <th rowspan="2" class="printHide">
+                                                  ક્રિયા
+                                              </th>
+                  
+                                          </tr>
+                  
+                  
+                                          <!-- ==============================
+                                               SUB HEADER
+                                          ================================= -->
+                  
+                                          <tr>
+                  
+                                              <th>
+                                                  બિન <br>
+                                                  હુકમી<br>
+                                                  બાકી
+                                              </th>
+                  
+                                              <th>
+                                                  સરકારી
+                                              </th>
+                  
+                                              <th>
+                                                  ખેતી <br>
+                                                  સિવાય
+                                              </th>
+                  
+                                              <th>
+                                                  કાયમનું <br>
+                                                  લોકલ <br>
+                                                  ફંડ
+                                              </th>
+                  
+                                              <th>
+                                                  ફરતી
+                                              </th>
+                  
+                                              <th>
+                                                  કુલ એકંદર <br>
+                                                  માંગણું
+                                              </th>
+                  
+                                              <th>
+                                                  પાવતી <br>
+                                                  નંબર
+                                              </th>
+                  
+                                              <th>
+                                                  તારીખ
+                                              </th>
+                  
+                                              <th>
+                                                  પાવતી <br>
+                                                  મુજબ <br>
+                                                  વસૂલ
+                                              </th>
+                  
+                                              <th>
+                                                  કુલ
+                                              </th>
+                  
+                                          </tr>
+
+                  
+                                      </thead>
+                  
+                  
+                                      <!-- =================================
+                                           BODY
+                                      ==================================== -->
+                  
+                                      <tbody id="talapatrakBody">
+                  
+                                          <!-- ROWS CREATED BY JAVASCRIPT -->
+                  
+                                      </tbody>
+                  
+                  
+                                  </table>
+                  
+                              </div>
+                  
+                     
+                                     
+                                      <!-- ============================================================
+                                           TALAPATRAK PAGINATION
+                                      ============================================================ -->
+                                      
+                                      <div
+                                          id="talapatrakPagination"
+                                          class="talapatrakPagination printHide">
+                                      
+                                      
+                                          <!-- FIRST PAGE -->
+                                      
+                                          <button
+                                              type="button"
+                                              id="talapatrakFirstPage"
+                                              title="First Page"
+                                              aria-label="First Page">
+                                      
+                                              <i class="fa-solid fa-angles-left"></i>
+                                      
+                                          </button>
+                                      
+                                      
+                                          <!-- PREVIOUS PAGE -->
+                                      
+                                          <button
+                                              type="button"
+                                              id="talapatrakPreviousPage"
+                                              title="Previous Page"
+                                              aria-label="Previous Page">
+                                      
+                                              <i class="fa-solid fa-chevron-left"></i>
+                                      
+                                          </button>
+                                      
+                                      
+                                          <!-- PAGE INPUT -->
+                                      
+                                          <div class="talapatrakPageJump">
+                                      
+                                              <span>
+                                                  Page
+                                              </span>
+                                      
+                                              <input
+                                                  type="number"
+                                                  id="talapatrakPageInput"
+                                                  min="1"
+                                                  value="1"
+                                                  aria-label="Page number">
+                                      
+                                              <span>
+                                                  of
+                                              </span>
+                                      
+                                              <strong id="talapatrakTotalPages">
+                                                  1
+                                              </strong>
+                                      
+                                          </div>
+                                      
+                                      
+                                          <!-- NEXT PAGE -->
+                                      
+                                          <button
+                                              type="button"
+                                              id="talapatrakNextPage"
+                                              title="Next Page"
+                                              aria-label="Next Page">
+                                      
+                                              <i class="fa-solid fa-chevron-right"></i>
+                                      
+                                          </button>
+                                      
+                                      
+                                          <!-- LAST PAGE -->
+                                      
+                                          <button
+                                              type="button"
+                                              id="talapatrakLastPage"
+                                              title="Last Page"
+                                              aria-label="Last Page">
+                                      
+                                              <i class="fa-solid fa-angles-right"></i>
+                                      
+                                          </button>
+                                      
+                                      
+                                          <!-- ROW INFORMATION -->
+                                      
+                                          <span
+                                              id="talapatrakPageInfo"
+                                              class="talapatrakPageInfo">
+                                      
+                                              Rows 0–0 of 0
+                                      
+                                          </span>
+                                      
+                                      
+                                      </div>
+                                      
+                                      
+                                      <!-- ============================================
+                                           TABLE ACTIONS
+                                      ============================================== -->
+                                      
+                                      <div class="talapatrakActions printHide">
+                                      
+                                          <!-- ADD ROW -->
+                                      
+                                          <button
+                                              type="button"
+                                              id="addTalapatrakRow"
+                                              class="talapatrakTableAction addRow">
+                                      
+                                              <i class="fa-solid fa-plus"></i>
+                                      
+                                              <span>
+                                                  Add Row
+                                              </span>
+                                      
+                                          </button>
+                                      
+                                      
+                                          <!-- GENERATE TOTAL -->
+                                      
+                                          <button
+                                              type="button"
+                                              id="generateTalapatrakTotalButton"
+                                              class="talapatrakTableAction generateTotal">
+                                      
+                                              <i class="fa-solid fa-calculator"></i>
+                                      
+                                              <span>
+                                                  Generate Total
+                                              </span>
+                                      
+                                          </button>
+                                      
+                                      </div>
+                  
+                  
+                          </div>
+
+                         
+                          
+                          <!-- ============================================================
+                                 GENERIC SUMMARY / DOCUMENT EDITOR
+                                 
+                                 IMPORTANT:
+                                 - Independent of Talapatrak
+                                 - Independent of Shikshanupakaran
+                                 - Do NOT put module-specific tables here
+                                 - JavaScript will create pages, tables, rows, columns and cells
+                                 - Modules explicitly initialize this editor when required
+                            ============================================================ -->
+                            
+                            <section
+                                id="summaryEditor"
+                                class="summaryEditor"
+                                hidden>
+                            
+                                <!-- ========================================================
+                                     EDITOR TOOLBAR
+                                ========================================================= -->
+                            
+                                <div class="summaryEditorToolbar no-print">
+                            
+                                    <div class="summaryEditorToolbarLeft">
+                            
+                                        <button
+                                            type="button"
+                                            id="summaryAddTableBtn"
+                                            class="summaryEditorBtn">
+                                            + Add Table
+                                        </button>
+                            
+                                        <button
+                                            type="button"
+                                            id="summaryAddTextBtn"
+                                            class="summaryEditorBtn">
+                                            + Add Text
+                                        </button>
+                            
+                                        <button
+                                            type="button"
+                                            id="summaryAddPageBtn"
+                                            class="summaryEditorBtn">
+                                            + Add Page
+                                        </button>
+                            
+                                    </div>
+                            
+                            
+                                    <div class="summaryEditorToolbarRight">
+                            
+                                        <button
+                                            type="button"
+                                            id="summarySaveBtn"
+                                            class="summaryEditorBtn">
+                                            Save
+                                        </button>
+                            
+                                        <button
+                                            type="button"
+                                            id="summaryPrintBtn"
+                                            class="summaryEditorBtn">
+                                            Print
+                                        </button>
+                            
+                                    </div>
+                            
+                                </div>
+                            
+                            
+                                <!-- ========================================================
+                                     DOCUMENT AREA
+                                     
+                                     JavaScript creates pages here.
+                                     
+                                     Example:
+                                     
+                                     summaryEditorPages
+                                         ├── Page 1
+                                         ├── Page 2
+                                         ├── Page 3
+                                         └── ...
+                                ========================================================= -->
+                            
+                                <div
+                                    id="summaryEditorPages"
+                                    class="summaryEditorPages">
+                            
+                                    <!-- ====================================================
+                                         FIRST BLANK PAGE
+                                         
+                                         This is intentionally blank.
+                                         JavaScript will populate/manipulate it.
+                                    ===================================================== -->
+                            
+                                    <div
+                                        class="summaryEditorPage"
+                                        data-page-number="1">
+                            
+                                        <div
+                                            class="summaryEditorPageCanvas"
+                                            data-page-canvas="1">
+                            
+                                            <!--
+                                                USER CONTENT WILL BE CREATED HERE.
+                            
+                                                Tables
+                                                Text boxes
+                                                Future objects
+                                                etc.
+                                            -->
+                            
+                                        </div>
+                            
+                                    </div>
+                            
+                                </div>
+                            
+                            
+                                <!-- ========================================================
+                                     PAGE NAVIGATION
+                                ========================================================= -->
+                            
+                                <div
+                                    id="summaryEditorNavigation"
+                                    class="summaryEditorNavigation no-print">
+                            
+                                    <button
+                                        type="button"
+                                        id="summaryPreviousPageBtn"
+                                        class="summaryEditorNavBtn">
+                                        ← Previous
+                                    </button>
+                            
+                            
+                                    <div
+                                        id="summaryPageIndicator"
+                                        class="summaryPageIndicator">
+                            
+                                        Page
+                                        <span id="summaryCurrentPageNumber">1</span>
+                                        /
+                                        <span id="summaryTotalPageCount">1</span>
+                            
+                                    </div>
+                            
+                            
+                                    <button
+                                        type="button"
+                                        id="summaryNextPageBtn"
+                                        class="summaryEditorNavBtn">
+                                        Next →
+                                    </button>
+                            
+                                </div>
+                            
+                            
+                                <!-- ========================================================
+                                     EXISTING / GENERAL NAVIGATION
+                                     
+                                     Keep these buttons at the bottom.
+                                     They remain outside the printable document.
+                                ========================================================= -->
+                            
+                                <div
+                                    id="summaryEditorBottomNavigation"
+                                    class="summaryEditorBottomNavigation no-print">
+                            
+                                    <button
+                                        type="button"
+                                        id="summaryBackBtn"
+                                        class="summaryEditorNavBtn">
+                                        ← Back
+                                    </button>
+                            
+                                </div>
+                            
+                            </section>
+
+                        
+                                            
+                       </div>
+  
+  
+                    
+                      </section>
+
+
+               
+                <!-- ============================================================
+                     YEAR CHANGE CONFIRMATION MODAL
+                ============================================================ -->
+                
+                <div
+                    id="talapatrakYearChangeModal"
+                    class="talapatrakYearChangeModal"
+                    aria-hidden="true"
+                >
+                
+                    <div
+                        class="talapatrakYearChangeOverlay">
+                    </div>
+                
+                
+                    <div
+                        class="talapatrakYearChangeDialog"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="talapatrakYearChangeTitle"
+                    >
+                
+                        <div
+                            class="talapatrakYearChangeIcon">
+                
+                            <i class="fa-solid fa-calendar-days"></i>
+                
+                        </div>
+                
+                
+                        <div
+                            class="talapatrakYearChangeContent"
+                        >
+                
+                            <h3
+                                id="talapatrakYearChangeTitle"
+                            >
+                                Change financial year?
+                            </h3>
+                
+                
+                            <p>
+                                You are changing this Talapatrak from
+                                <strong id="talapatrakOldYearText">
+                                    —
+                                </strong>
+                                to
+                                <strong id="talapatrakNewYearText">
+                                    —
+                                </strong>.
+                            </p>
+                
+                
+                            <p class="talapatrakYearChangeNote">
+                                This will update the existing card.
+                                It will not create a separate card.
+                            </p>
+                
+                        </div>
+                
+                
+                        <div
+                            class="talapatrakYearChangeActions"
+                        >
+                
+                            <button
+                                type="button"
+                                id="talapatrakYearChangeCancel"
+                                class="talapatrakYearChangeCancel"
+                            >
+                                Cancel
+                            </button>
+                
+                
+                            <button
+                                type="button"
+                                id="talapatrakYearChangeConfirm"
+                                class="talapatrakYearChangeConfirm"
+                            >
+                                <i class="fa-solid fa-check"></i>
+                                Yes, update year
+                            </button>
+                
+                        </div>
+                
+                    </div>
+                
+                </div>
+
+
+                    <!-- ============================================================
+                         TALAPATRAK ALREADY EXISTS MODAL
+                    ============================================================ -->
+                    
+                    <div
+                        id="talapatrakAlreadyExistsModal"
+                        class="talapatrakAlreadyExistsModal"
+                        aria-hidden="true"
+                    >
+                    
+                        <div
+                            class="talapatrakAlreadyExistsOverlay">
+                        </div>
+                    
+                    
+                        <div
+                            class="talapatrakAlreadyExistsDialog"
+                            role="dialog"
+                            aria-modal="true"
+                            aria-labelledby="talapatrakAlreadyExistsTitle"
+                        >
+                    
+                            <div
+                                class="talapatrakAlreadyExistsIcon">
+                    
+                                <i class="fa-solid fa-copy"></i>
+                    
+                            </div>
+                    
+                    
+                            <div
+                                class="talapatrakAlreadyExistsContent"
+                            >
+                    
+                                <h3
+                                    id="talapatrakAlreadyExistsTitle"
+                                >
+                                    Talapatrak already exists
+                                </h3>
+                    
+                    
+                                <p>
+                                    A Talapatrak for
+                                    <strong id="talapatrakAlreadyExistsVillage">
+                                        —
+                                    </strong>
+                                    already exists for
+                                    <strong id="talapatrakAlreadyExistsYear">
+                                        —
+                                    </strong>.
+                                </p>
+                    
+                    
+                                <p
+                                    class="talapatrakAlreadyExistsNote"
+                                >
+                                    Nothing was overwritten. Your existing
+                                    Talapatrak is safe.
+                                </p>
+                    
+                            </div>
+                    
+                    
+                            <div
+                                class="talapatrakAlreadyExistsActions"
+                            >
+                    
+                                <button
+                                    type="button"
+                                    id="talapatrakAlreadyExistsClose"
+                                    class="talapatrakAlreadyExistsClose"
+                                >
+                                    Okay
+                                </button>
+                    
+                            </div>
+                    
+                        </div>
+                    
+                    </div>
+
+
+
+                    <!-- ============================================================
+                         SHIKSHANUPAKARAN CREATE CONFIRMATION MODAL
+                    ============================================================ -->
+                    
+                    <div
+                        id="talapatrakShikshanupakaranModal"
+                        class="talapatrakShikshanupakaranModal"
+                        aria-hidden="true"
+                    >
+                    
+                        <div
+                            class="talapatrakShikshanupakaranOverlay">
+                        </div>
+                    
+                    
+                        <div
+                            class="talapatrakShikshanupakaranDialog"
+                            role="dialog"
+                            aria-modal="true"
+                            aria-labelledby="talapatrakShikshanupakaranTitle"
+                        >
+                    
+                            <div
+                                class="talapatrakShikshanupakaranIcon">
+                    
+                                <i class="fa-solid fa-table-list"></i>
+                    
+                            </div>
+                    
+                    
+                            <div
+                                class="talapatrakShikshanupakaranContent"
+                            >
+                    
+                                <h3
+                                    id="talapatrakShikshanupakaranTitle"
+                                >
+                                    Create Shikshanupakaran card?
+                                </h3>
+                    
+                    
+                                <p>
+                                    This Talapatrak does not have a
+                                    Shikshanupakaran card yet.
+                                </p>
+                    
+                    
+                                <p
+                                    class="talapatrakShikshanupakaranNote"
+                                >
+                                    Would you like to create one
+                                    automatically?
+                                </p>
+                    
+                            </div>
+                    
+                    
+                            <div
+                                class="talapatrakShikshanupakaranActions"
+                            >
+                    
+                                <button
+                                    type="button"
+                                    id="talapatrakShikshanupakaranCancel"
+                                    class="talapatrakShikshanupakaranCancel"
+                                >
+                                    Not now
+                                </button>
+                    
+                    
+                                <button
+                                    type="button"
+                                    id="talapatrakShikshanupakaranConfirm"
+                                    class="talapatrakShikshanupakaranConfirm"
+                                >
+                    
+                                    <i class="fa-solid fa-plus"></i>
+                    
+                                    Yes, create card
+                    
+                                </button>
+                    
+                            </div>
+                    
+                        </div>
+                    
+                    </div>
+  
+
+
+
+<!-- ============================================================
+     SHIKSHANUPAKARAN → TALAPATRAK SYNC CARD
+============================================================ -->
+
+<div
+    id="talapatrakSyncOverlay"
+    class="talapatrakSyncOverlay"
+    style="display:none;">
+
+    <div
+        class="talapatrakSyncCard"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="talapatrakSyncTitle">
+
+        <div class="talapatrakSyncIcon">
+            <i class="fa-solid fa-link"></i>
+        </div>
+
+        <div class="talapatrakSyncContent">
+
+            <h3 id="talapatrakSyncTitle">
+                Talapatrak not found
+            </h3>
+
+            <p id="talapatrakSyncMessage">
+            </p>
+
+        </div>
+
+        <div class="talapatrakSyncActions">
+
+            <button
+                type="button"
+                id="talapatrakSyncCancelButton"
+                class="talapatrakSyncButton cancel">
+
+                Cancel
+
+            </button>
+
+            <button
+                type="button"
+                id="talapatrakSyncConfirmButton"
+                class="talapatrakSyncButton confirm">
+
+                <i class="fa-solid fa-link"></i>
+
+                Sync with Talapatrak
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+<style data-talapatrak-print>
+
+/* ============================================================
+   TALAPATRAK PRINT CSS
+   A4 LANDSCAPE
+   FULL PAGE
+   20px LEFT + RIGHT INNER SPACE
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   PAGE
+------------------------------------------------------------ */
+
+@page {
+    size: A4 landscape;
+    margin: 8mm;
+}
+
+
+/* ============================================================
+   HIDE PRINT CONTAINER ON SCREEN
+   ============================================================ */
+
+#talapatrakPrintContainer {
+    display: none;
+}
+
+
+/* ============================================================
+   PRINT CONTAINER
+   ============================================================ */
+
+body.printingTalapatrak #talapatrakPrintContainer {
+
+    display: block !important;
+
+    position: absolute !important;
+
+    left: 0 !important;
+    top: 0 !important;
+
+    width: 100% !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    box-sizing: border-box !important;
+}
+
+
+/* ============================================================
+   HIDE NORMAL APPLICATION UI DURING PRINT
+   ============================================================ */
+
+@media print {
+
+    body * {
+        visibility: hidden !important;
+    }
+
+    #talapatrakPrintContainer,
+    #talapatrakPrintContainer * {
+        visibility: visible !important;
+    }
+
+    #talapatrakPrintContainer {
+
+        display: block !important;
+
+        position: absolute !important;
+
+        left: 0 !important;
+        top: 0 !important;
+
+        width: 100% !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        box-sizing: border-box !important;
+    }
+
+}
+
+
+/* ============================================================
+   ONE GENERATED PRINT PAGE
+   ============================================================ */
+
+.talapatrakPrintPage {
+
+    position: relative !important;
+
+    /*
+       A4 landscape printable height:
+       210mm - 8mm top - 8mm bottom
+       = 194mm
+
+       Use 192mm to prevent browser rounding
+       from creating an extra physical page.
+    */
+
+    width: 100% !important;
+
+    height: 192mm !important;
+
+    margin: 0 !important;
+
+    /*
+       IMPORTANT:
+       20px LEFT + RIGHT SPACE
+    */
+
+    padding-left: 40px !important;
+    padding-right: 30px !important;
+
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+
+    box-sizing: border-box !important;
+
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+
+    break-after: page !important;
+    page-break-after: always !important;
+
+    overflow: hidden !important;
+}
+
+
+.talapatrakPrintPage:last-child {
+
+    break-after: auto !important;
+
+    page-break-after: auto !important;
+}
+
+
+/* ============================================================
+   PRINT HEADER
+   20px LEFT + RIGHT SPACE
+   ============================================================ */
+
+.talapatrakPrintHeader {
+
+    display: grid !important;
+
+    grid-template-columns:
+        1.15fr
+        1fr
+        1fr
+        2.2fr
+        0.9fr;
+
+    align-items: center;
+
+    width: 100% !important;
+
+    box-sizing: border-box !important;
+
+    margin: 0 0 6px 0 !important;
+
+    padding: 6px 8px !important;
+
+    border: 1px solid #000 !important;
+
+    color: #000 !important;
+
+    background: #fff !important;
+}
+
+
+/* ============================================================
+   HEADER ITEMS
+   ============================================================ */
+
+.talapatrakPrintHeaderItem {
+
+    display: flex !important;
+
+    align-items: center;
+
+    gap: 3px;
+
+    min-width: 0;
+
+    white-space: nowrap;
+
+    color: #000 !important;
+
+    font-size: 13px !important;
+}
+
+
+/* ============================================================
+   HEADER LABEL
+   ============================================================ */
+
+.talapatrakPrintHeaderItem strong {
+
+    font-size: 13px !important;
+
+    font-weight: 700 !important;
+
+    color: #000 !important;
+
+    white-space: nowrap;
+}
+
+
+/* ============================================================
+   HEADER VALUE
+   ============================================================ */
+
+.talapatrakPrintHeaderItem span {
+
+    font-size: 13px !important;
+
+    font-weight: 400 !important;
+
+    color: #000 !important;
+
+    white-space: nowrap;
+}
+
+
+/* ============================================================
+   CENTER TITLE
+   ============================================================ */
+
+.talapatrakPrintHeaderItem:nth-child(4) {
+
+    justify-content: center;
+
+    text-align: center;
+}
+
+
+/* ============================================================
+   PRINT TABLE
+   ============================================================ */
+
+.talapatrakPrintPage > .talapatrakPrintTable {
+
+    width: 100% !important;
+
+    max-width: 100% !important;
+
+    min-width: 0 !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    table-layout: auto !important;
+
+    border-collapse: collapse !important;
+
+    border-spacing: 0 !important;
+
+    border: 1px solid #000 !important;
+
+    box-sizing: border-box !important;
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+}
+
+
+/* ============================================================
+   NATURAL COLUMN WIDTHS
+   ============================================================ */
+
+.talapatrakPrintTable {
+
+    table-layout: auto !important;
+
+    width: 100% !important;
+
+    max-width: 100% !important;
+
+    min-width: 0 !important;
+}
+
+
+.talapatrakPrintTable th,
+.talapatrakPrintTable td {
+
+    width: auto !important;
+
+    min-width: 0 !important;
+
+    max-width: none !important;
+
+    margin: 0 !important;
+
+    box-sizing: border-box !important;
+
+    border: 1px solid #000 !important;
+
+    color: #000 !important;
+}
+
+
+/* ============================================================
+   TABLE HEADER
+   ============================================================ */
+
+.talapatrakPrintTable thead th {
+
+    border: 1px solid #000 !important;
+
+    padding-top: 5px !important;
+
+    padding-bottom: 5px !important;
+
+    padding-left: 2px !important;
+
+    padding-right: 2px !important;
+
+    font-size: 13px !important;
+
+    font-weight: 700 !important;
+
+    line-height: 1.15 !important;
+
+    text-align: center !important;
+
+    vertical-align: middle !important;
+
+    white-space: normal !important;
+
+    word-break: normal !important;
+
+    overflow-wrap: break-word !important;
+
+    color: #000 !important;
+
+    background: #fff !important;
+
+    box-sizing: border-box !important;
+}
+
+
+/* ============================================================
+   COLUMN B HEADER
+   KEEP ACCOUNT HOLDER HEADER ON ONE LINE
+   ============================================================ */
+
+.talapatrakPrintTable thead th:nth-child(2) {
+
+    white-space: nowrap !important;
+
+    word-break: normal !important;
+
+    overflow-wrap: normal !important;
+}
+
+
+/* ============================================================
+   LONG HEADERS
+   ============================================================ */
+
+.talapatrakPrintTable thead th:nth-child(10),
+.talapatrakPrintTable thead th:nth-child(11) {
+
+    white-space: normal !important;
+
+    word-break: normal !important;
+
+    overflow-wrap: normal !important;
+
+    max-width: none !important;
+}
+
+
+/* ============================================================
+   TABLE BODY
+   ============================================================ */
+
+.talapatrakPrintTable tbody tr {
+
+    border: 1px solid #000 !important;
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+}
+
+
+.talapatrakPrintTable tbody td {
+
+    border: 1px solid #000 !important;
+
+    padding: 3px 2px !important;
+
+    font-size: 12px !important;
+
+    line-height: 1.15 !important;
+
+    vertical-align: middle !important;
+
+    color: #000 !important;
+
+    white-space: normal !important;
+
+    word-break: normal !important;
+
+    overflow-wrap: break-word !important;
+
+    box-sizing: border-box !important;
+}
+
+
+/* ============================================================
+   INPUT / TEXTAREA
+   ============================================================ */
+
+.talapatrakPrintTable input,
+.talapatrakPrintTable textarea {
+
+    width: 100% !important;
+
+    min-width: 0 !important;
+
+    max-width: 100% !important;
+
+    height: auto !important;
+
+    min-height: 0 !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    border: none !important;
+
+    outline: none !important;
+
+    background: transparent !important;
+
+    box-shadow: none !important;
+
+    appearance: none !important;
+
+    resize: none !important;
+
+    color: #000 !important;
+
+    font-family: inherit !important;
+
+    font-size: 12px !important;
+
+    line-height: 1.05 !important;
+
+    box-sizing: border-box !important;
+}
+
+
+/* ============================================================
+   INFORMATION ROW
+   ============================================================ */
+
+.talapatrakPrintTable .talapatrakInfoRow {
+
+    display: none !important;
+}
+
+
+/* ============================================================
+   HIDE NON-PRINT COLUMNS
+   ============================================================ */
+
+.talapatrakPrintTable .printHide {
+
+    display: none !important;
+}
+
+
+/* ============================================================
+   TABLE BREAK PROTECTION
+   ============================================================ */
+
+.talapatrakPrintPage table {
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+}
+
+
+.talapatrakPrintPage tbody tr {
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+}
+
+
+/* ============================================================
+   PAGE FOOTER
+   ============================================================ */
+
+.talapatrakPrintFooter {
+
+    position: absolute !important;
+
+    left: 20px !important;
+
+    right: 20px !important;
+
+    bottom: 2mm !important;
+
+    width: auto !important;
+
+    height: 6mm !important;
+
+    display: flex !important;
+
+    align-items: flex-end !important;
+
+    justify-content: center !important;
+
+    box-sizing: border-box !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+}
+
+
+/* ============================================================
+   PAGE NUMBER
+   ============================================================ */
+
+.talapatrakPrintPageNumber {
+
+    position: static !important;
+
+    width: 100% !important;
+
+    height: 4mm !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    box-sizing: border-box !important;
+
+    text-align: center !important;
+
+    font-size: 11px !important;
+
+    font-weight: 600 !important;
+
+    line-height: 4mm !important;
+
+    color: #000 !important;
+}
+
+
+/* ============================================================
+   PRINT HIDDEN
+   ============================================================ */
+
+@media print {
+
+    .printHide {
+
+        display: none !important;
+    }
+
+    .talapatrakActions {
+
+        display: none !important;
+    }
+}
+
+
+/* ============================================================
+   TALAPATRAK CALCULATION PAGE
+   ============================================================ */
+
+/*
+.talapatrakCalculationPage {
+
+    width: 100% !important;
+
+    min-height: 194mm !important;
+
+    box-sizing: border-box !important;
+
+    padding: 8mm !important;
+
+    background: #fff !important;
+
+    color: #000 !important;
+
+    font-family:
+        Arial,
+        "Noto Sans Gujarati",
+        sans-serif !important;
+
+    break-before: page !important;
+
+    page-break-before: always !important;
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+}
+*/
+
+
+/* ============================================================
+   CALCULATION HEADER
+   ============================================================ */
+
+.talapatrakCalculationHeader {
+
+    border: 1px solid #000;
+
+    margin-bottom: 6mm;
+
+    padding: 5mm 6mm;
+
+    box-sizing: border-box;
+}
+
+
+.talapatrakCalculationHeaderTitle {
+
+    text-align: center;
+
+    margin-bottom: 5mm;
+}
+
+
+.talapatrakCalculationFormNumber {
+
+    font-size: 14px;
+
+    font-weight: 700;
+}
+
+
+.talapatrakCalculationHeader h2 {
+
+    margin: 3px 0 0;
+
+    font-size: 20px;
+
+    font-weight: 700;
+}
+
+
+.talapatrakCalculationMeta {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr 1fr 1fr;
+
+    gap: 4mm;
+
+    border-top: 1px solid #000;
+
+    padding-top: 4mm;
+}
+
+
+.talapatrakCalculationMeta div {
+
+    font-size: 13px;
+}
+
+
+.talapatrakCalculationMeta strong {
+
+    font-weight: 700;
+}
+
+
+/* ============================================================
+   CALCULATION TOP CARDS
+   ============================================================ */
+
+.talapatrakCalculationTopGrid {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 6mm;
+
+    margin-bottom: 6mm;
+}
+
+
+.talapatrakCalculationCard {
+
+    border: 1px solid #000;
+}
+
+
+.talapatrakCalculationCardTitle {
+
+    padding: 3mm;
+
+    text-align: center;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    border-bottom: 1px solid #000;
+}
+
+
+.talapatrakCalculationRows {
+
+    padding: 0;
+}
+
+
+.talapatrakCalculationRow {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 45%;
+
+    align-items: center;
+
+    min-height: 11mm;
+
+    border-bottom: 1px solid #000;
+}
+
+
+.talapatrakCalculationRow:last-child {
+
+    border-bottom: none;
+}
+
+
+.talapatrakCalculationRow span,
+.talapatrakCalculationRow strong {
+
+    padding: 2mm 3mm;
+
+    font-size: 13px;
+}
+
+
+.talapatrakCalculationRow input {
+
+    width: 100%;
+
+    height: 100%;
+
+    min-height: 10mm;
+
+    padding: 2mm;
+
+    border: none;
+
+    border-left: 1px solid #000;
+
+    outline: none;
+
+    background: transparent;
+
+    text-align: right;
+
+    font-size: 13px;
+
+    font-family: inherit;
+
+    box-sizing: border-box;
+}
+
+
+.talapatrakCalculationRow input:focus {
+
+    background: #f3f3f3;
+}
+
+
+.talapatrakCalculationRow.total {
+
+    font-weight: 700;
+
+    border-top: 2px solid #000;
+}
+
+
+/* ============================================================
+   FINAL CALCULATION SECTION
+   ============================================================ */
+
+.talapatrakCalculationFinalSection {
+
+    border: 1px solid #000;
+
+    margin-top: 5mm;
+}
+
+
+.talapatrakCalculationFinalTitle {
+
+    text-align: center;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    padding: 3mm;
+
+    border-bottom: 1px solid #000;
+}
+
+
+.talapatrakCalculationFinalGrid {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+}
+
+
+.talapatrakCalculationFinalItem {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 45%;
+
+    min-height: 14mm;
+
+    align-items: center;
+}
+
+
+.talapatrakCalculationFinalItem +
+.talapatrakCalculationFinalItem {
+
+    border-left: 1px solid #000;
+}
+
+
+.talapatrakCalculationFinalItem span {
+
+    padding: 3mm;
+
+    font-size: 14px;
+}
+
+
+.talapatrakCalculationFinalItem input {
+
+    height: 100%;
+
+    min-height: 13mm;
+
+    border: none;
+
+    border-left: 1px solid #000;
+
+    padding: 3mm;
+
+    text-align: right;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    background: transparent;
+
+    outline: none;
+}
+
+
+/* ============================================================
+   CALCULATION CONTROLS
+   ============================================================ */
+
+.talapatrakCalculationControls {
+
+    margin-top: 5mm;
+
+    display: flex;
+
+    justify-content: flex-end;
+}
+
+
+.talapatrakCalculationRecalculate {
+
+    border: 1px solid #000;
+
+    background: #fff;
+
+    padding: 8px 14px;
+
+    cursor: pointer;
+
+    font-size: 13px;
+}
+
+
+/* ============================================================
+   CALCULATION FOOTER
+   ============================================================ */
+
+.talapatrakCalculationFooter {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr 1fr;
+
+    margin-top: 25mm;
+
+    text-align: center;
+
+    font-size: 13px;
+}
+
+
+.talapatrakCalculationFooter div {
+
+    padding-top: 15mm;
+}
+
+
+/* ============================================================
+   CALCULATION PRINT
+   ============================================================ */
+
+@media print {
+
+    .talapatrakCalculationControls {
+
+        display: none !important;
+    }
+
+    .talapatrakCalculationPage input {
+
+        border: none !important;
+
+        background: transparent !important;
+
+        appearance: none !important;
+
+        color: #000 !important;
+    }
+}
+
+
+/* ============================================================
+   GRAND TOTAL
+   ============================================================ */
+
+.talapatrakPrintGrandTotalRow td {
+
+    font-weight: 700;
+
+    background: #f1f5f9;
+
+    border-top: 2px solid #111;
+
+    border-bottom: 2px solid #111;
+
+    padding: 6px 4px;
+}
+
+
+.talapatrakPrintGrandTotalRow .grandTotalLabel {
+
+    font-weight: 800;
+
+    text-align: center;
+
+    white-space: nowrap;
+}
+
+
+/* ============================================================
+   END
+   ============================================================ */
+
+</style>
