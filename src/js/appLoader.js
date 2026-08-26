@@ -119,6 +119,29 @@ async function loadPanchayatApplication() {
         );
 
 
+         /*
+         * =====================================================
+         * KEYBOARD NAVIGATION
+         * =====================================================
+         *
+         * Shared Excel-like keyboard navigation system.
+         *
+         * Used by:
+         *
+         * - Talapatrak
+         * - Shikshanupakaran
+         * - Future table-based editors
+         *
+         * Must load after common/search utilities and before
+         * the individual editor modules.
+         *
+         */
+
+        await loadAppScript(
+            "utils/keyboardNavigation.js"
+        );
+        
+
         /*
          * =====================================================
          * PAGE LOADER

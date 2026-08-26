@@ -4426,8 +4426,7 @@ function createTalapatrakRow(
                 type="text"
                 inputmode="decimal"
                 class="columnH"
-                value="${escapeTalapatrakHTML(valueH)}"
-                readonly>
+                value="${escapeTalapatrakHTML(valueH)}">
         </td>
 
 
@@ -4438,8 +4437,7 @@ function createTalapatrakRow(
                 type="text"
                 inputmode="decimal"
                 class="columnI"
-                value="${escapeTalapatrakHTML(valueI)}"
-                readonly>
+                value="${escapeTalapatrakHTML(valueI)}">
         </td>
 
 
@@ -4450,8 +4448,7 @@ function createTalapatrakRow(
                 type="text"
                 inputmode="decimal"
                 class="columnJ"
-                value="${escapeTalapatrakHTML(valueJ)}"
-                readonly>
+                value="${escapeTalapatrakHTML(valueJ)}">
         </td>
 
 
@@ -4506,8 +4503,7 @@ function createTalapatrakRow(
                 type="text"
                 inputmode="decimal"
                 class="columnO"
-                value="${escapeTalapatrakHTML(valueO)}"
-                readonly>
+                value="${escapeTalapatrakHTML(valueO)}">
         </td>
 
 
@@ -4518,8 +4514,7 @@ function createTalapatrakRow(
                 type="text"
                 inputmode="decimal"
                 class="columnP"
-                value="${escapeTalapatrakHTML(valueP)}"
-                readonly>
+                value="${escapeTalapatrakHTML(valueP)}">
         </td>
 
 
@@ -4530,8 +4525,7 @@ function createTalapatrakRow(
                 type="text"
                 inputmode="decimal"
                 class="columnQ"
-                value="${escapeTalapatrakHTML(valueQ)}"
-                readonly>
+                value="${escapeTalapatrakHTML(valueQ)}">
         </td>
 
 
@@ -4542,8 +4536,7 @@ function createTalapatrakRow(
                 type="text"
                 inputmode="decimal"
                 class="columnR"
-                value="${escapeTalapatrakHTML(valueR)}"
-                readonly>
+                value="${escapeTalapatrakHTML(valueR)}">
         </td>
 
 
@@ -4566,8 +4559,7 @@ function createTalapatrakRow(
                 type="text"
                 inputmode="decimal"
                 class="columnT"
-                value="${escapeTalapatrakHTML(valueT)}"
-                readonly>
+                value="${escapeTalapatrakHTML(valueT)}">
 
         </td>
 
@@ -4580,8 +4572,7 @@ function createTalapatrakRow(
                 type="text"
                 inputmode="decimal"
                 class="columnU"
-                value="${escapeTalapatrakHTML(valueU)}"
-                readonly>
+                value="${escapeTalapatrakHTML(valueU)}">
 
         </td>
 
@@ -4648,7 +4639,7 @@ function createTalapatrakRow(
       
           const editableInputs =
               row.querySelectorAll(
-                  "input:not([readonly])"
+                  "input"
               );
       
       
@@ -4765,7 +4756,7 @@ function createTalapatrakRow(
       
           const editableInputs =
               row.querySelectorAll(
-                  "input:not([readonly])"
+                  "input"
               );
       
           editableInputs.forEach(
@@ -4967,7 +4958,7 @@ function addTalapatrakRowAfter(button) {
 
         const firstInput =
             newRow.querySelector(
-                "input:not([readonly])"
+                "input"
             );
 
 
@@ -5087,7 +5078,7 @@ function addTalapatrakRow() {
 
             const firstInput =
                 lastRow.querySelector(
-                    "input:not([readonly])"
+                    "input"
                 );
 
 
@@ -5133,12 +5124,10 @@ function addTalapatrakRow() {
 
     formatTalapatrakNumberInputs();
 
-    setupTalapatrakExcelNavigation();
-
 
     const firstInput =
         newRow.querySelector(
-            "input:not([readonly])"
+            "input"
         );
 
 
@@ -6862,255 +6851,6 @@ function formatTalapatrakNumberInputs() {
                 );
 
             }
-
-        });
-
-}
-
-
-/* ============================================================
-        EXCEL STYLE ENTER NAVIGATION
-============================================================ */
-
-function setupTalapatrakExcelNavigation() {
-
-    if (!talapatrakBody) return;
-
-
-    talapatrakBody
-        .querySelectorAll(
-            "input:not([readonly])"
-        )
-        .forEach(function(input) {
-
-
-            if (
-                input.dataset
-                    .enterNavigationAttached
-            ) {
-
-                return;
-
-            }
-
-
-            input.dataset
-                .enterNavigationAttached =
-                "true";
-
-
-            input.addEventListener(
-                "keydown",
-                function(event) {
-
-
-                    /* ==========================================
-                       ONLY HANDLE ENTER
-                    ========================================== */
-
-                    if (
-                        event.key !==
-                        "Enter"
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    event.preventDefault();
-
-
-                    /* ==========================================
-                       CURRENT ROW
-                    ========================================== */
-
-                    const row =
-                        this.closest(
-                            ".talapatrakRow"
-                        );
-
-
-                    if (!row) {
-
-                        return;
-
-                    }
-
-
-                    /* ==========================================
-                       EDITABLE INPUTS IN CURRENT ROW
-                    ========================================== */
-
-                    const editableInputs =
-                        Array.from(
-                            row.querySelectorAll(
-                                "input:not([readonly])"
-                            )
-                        );
-
-
-                    const currentIndex =
-                        editableInputs.indexOf(
-                            this
-                        );
-
-
-                    /* ==========================================
-                       NEXT INPUT IN SAME ROW
-                    ========================================== */
-
-                    const nextInput =
-                        editableInputs[
-                            currentIndex + 1
-                        ];
-
-
-                    if (nextInput) {
-
-                        nextInput.focus();
-
-                        nextInput.select();
-
-                        return;
-
-                    }
-
-
-                    /* ==========================================
-                       LAST INPUT → ADD NEW ROW
-                    ========================================== */
-
-                    const newRow =
-                        addTalapatrakRow();
-
-
-                    if (!newRow) {
-
-                        return;
-
-                    }
-
-
-                    const firstInput =
-                        newRow.querySelector(
-                            "input:not([readonly])"
-                        );
-
-
-                    if (firstInput) {
-
-                        firstInput.focus();
-
-                        firstInput.select();
-
-                    }
-
-                }
-            );
-
-        });
-
-}
-
-
-/* ============================================================
-        EXCEL STYLE ENTER NAVIGATION
-============================================================ */
-
-function setupTalapatrakExcelNavigation() {
-
-    if (!talapatrakBody) return;
-
-    talapatrakBody
-        .querySelectorAll(
-            "input:not([readonly])"
-        )
-        .forEach(function(input) {
-
-            if (
-                input.dataset
-                    .enterNavigationAttached
-            ) {
-
-                return;
-
-            }
-
-            input.dataset
-                .enterNavigationAttached =
-                "true";
-
-            input.addEventListener(
-
-                "keydown",
-
-                function(event) {
-
-                    if (
-                        event.key !==
-                        "Enter"
-                    ) {
-
-                        return;
-
-                    }
-
-                    event.preventDefault();
-
-                    const row =
-                        this.closest(
-                            ".talapatrakRow"
-                        );
-
-                    const editableInputs =
-                        Array.from(
-                            row.querySelectorAll(
-                                "input:not([readonly])"
-                            )
-                        );
-
-                    const currentIndex =
-                        editableInputs.indexOf(
-                            this
-                        );
-
-                    const nextInput =
-                        editableInputs[
-                            currentIndex + 1
-                        ];
-
-                    if (nextInput) {
-
-                        nextInput.focus();
-
-                        nextInput.select();
-
-                        return;
-
-                    }
-
-                    const newRow =
-                        addTalapatrakRow();
-
-                    if (newRow) {
-
-                        const firstInput =
-                            newRow.querySelector(
-                                "input:not([readonly])"
-                            );
-
-                        if (firstInput) {
-
-                            firstInput.focus();
-
-                        }
-
-                    }
-
-                }
-
-            );
 
         });
 
@@ -10520,9 +10260,19 @@ updateTalapatrakYearDisplay();
 
 formatTalapatrakNumberInputs();
 
-setupTalapatrakExcelNavigation();
-
 setupTalapatrakAutoSave();
+
+
+registerKeyboardNavigation(
+    talapatrakBody,
+    {
+        onLastCellEnter: function() {
+
+            return addTalapatrakRow();
+
+        }
+    }
+);
 
 console.log(
     "Dynamic Talapatrak system initialized."

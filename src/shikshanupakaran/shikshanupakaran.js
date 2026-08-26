@@ -5144,7 +5144,7 @@ if (
 
             const firstInput =
                 lastRow?.querySelector(
-                    "input:not([readonly])"
+                    "input"
                 );
 
 
@@ -7443,10 +7443,6 @@ function createShikshanupakaranRow(
         if(autoColumns.includes(col)){
 
 
-            readonly =
-                "readonly";
-
-
             inputClass =
                 "autoColumn";
 
@@ -8084,7 +8080,7 @@ function addShikshanupakaranRowAfter(button) {
 
     const firstInput =
         newRow.querySelector(
-            "input:not([readonly])"
+            "input"
         );
 
 
@@ -9325,7 +9321,20 @@ function formatShikshanupakaranDate(
 
 renderShikshanupakaranManagement();
 
+registerKeyboardNavigation(
+    shikshanupakaranBody,
+    {
+        inputSelector: "input",
 
+        onLastCellEnter:
+            function() {
+
+                return addShikshanupakaranRow();
+
+            }
+
+    }
+);
 
 console.log(
     "Complete Shikshanupakaran system initialized successfully."
