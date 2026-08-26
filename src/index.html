@@ -1151,7 +1151,22 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+
+
+  <!-- ==================================================
+                      COMMON UTILITIES
+      --------------------------------------------------
+      Shared functions used by multiple modules.
   
+      Must load BEFORE module loaders so that:
+      Talapatrak
+      Shikshanupakaran
+      Main Bill
+      can use common.js functions.
+  ================================================== -->
+  
+  <script src="utils/common.js"></script>
   
   <!-- ==================================================
                       DYNAMIC SYSTEM LOADERS

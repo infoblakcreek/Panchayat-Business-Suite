@@ -4341,7 +4341,7 @@ function clearShikshanupakaranRows(){
 
 }
 
-function roundGeneratedValueToFivePaise(value) {
+function roundShikshanupakaranGeneratedValue(value) {
 
     const number =
         Number(value) || 0;
@@ -4686,7 +4686,7 @@ async function createShikshanupakaranFromTalapatrak(
                       ==================================================== */
           
                       const shikshanupakaranE =
-                            roundGeneratedValueToFivePaise(
+                            roundShikshanupakaranGeneratedValue(
                                 (
                                     talapatrakD +
                                     talapatrakE
@@ -7317,7 +7317,34 @@ function createShikshanupakaranRow(
 
 
         let value =
-            rowData[col] || "";
+              rowData[col] || "";
+          
+          
+          /* ============================================================
+             COLUMN A — IMPORTED NUMBER
+             ------------------------------------------------------------
+             Convert imported English digits to Gujarati digits.
+          
+             Example:
+             123 → ૧૨૩
+             456 → ૪૫૬
+          
+             Only Column A is converted here.
+             Other columns keep their existing values.
+          ============================================================ */
+          
+          if (
+              col === "A" &&
+              value !== ""
+          ) {
+          
+              value =
+                  convertToGujaratiDigits(
+                      value
+                  );
+          
+          }
+
 
           const autoColumns = [
               "G",
@@ -7570,6 +7597,7 @@ function autoFillNextSerialNumber(row){
 
 
 
+
 function setupShikshanupakaranRowEvents(row){
 
     const inputs =
@@ -7582,12 +7610,53 @@ function setupShikshanupakaranRowEvents(row){
 
 
         /* ========================================================
-           LIVE CALCULATION
+           LIVE INPUT
+           --------------------------------------------------------
+           Numeric columns are displayed using Gujarati digits.
+
+           Example:
+           123     → ૧૨૩
+           45.67   → ૪૫.૬૭
+
+           Date column I is left untouched.
         ======================================================== */
 
         input.addEventListener(
             "input",
             function(){
+
+                const column =
+                    input.dataset.column;
+
+
+                const numericColumns = [
+                    "A",
+                    "C",
+                    "D",
+                    "E",
+                    "F",
+                    "H",
+                    "J",
+                    "K",
+                    "L"
+                ];
+
+
+                if(
+                    numericColumns.includes(column)
+                ){
+
+                    input.value =
+                        convertToGujaratiDigits(
+                            input.value
+                        );
+
+                }
+
+
+                /* ====================================================
+                   LIVE CALCULATION
+                ==================================================== */
 
                 calculateShikshanupakaranRow(
                     row
@@ -7596,6 +7665,7 @@ function setupShikshanupakaranRowEvents(row){
 
                 window.shikshanupakaranTotalGenerated =
                     false;
+
 
                 window.shikshanupakaranTotals =
                     null;
@@ -7609,6 +7679,10 @@ function setupShikshanupakaranRowEvents(row){
 
         /* ========================================================
            FORMAT AFTER TYPING
+           --------------------------------------------------------
+           Existing formatter handles:
+           A / H  → integer
+           C / D / E / F / J / K / L → 2 decimals
         ======================================================== */
 
         input.addEventListener(
@@ -7628,6 +7702,7 @@ function setupShikshanupakaranRowEvents(row){
                 window.shikshanupakaranTotalGenerated =
                     false;
 
+
                 window.shikshanupakaranTotals =
                     null;
 
@@ -7642,7 +7717,7 @@ function setupShikshanupakaranRowEvents(row){
 
     /* ============================================================
        SERIAL NUMBER
-    ============================================================ */
+       ============================================================ */
 
     const serialInput =
         row.querySelector(
@@ -8244,6 +8319,12 @@ function calculateShikshanupakaranRow(row) {
 
     /* ============================================================
        GET NUMERIC VALUE
+       ------------------------------------------------------------
+       Gujarati digits are converted to English digits before
+       JavaScript performs the calculation.
+
+       Example:
+       ૧૨૩.૪૫ → 123.45
     ============================================================ */
 
     function get(col) {
@@ -8253,8 +8334,20 @@ function calculateShikshanupakaranRow(row) {
                 `[data-column="${col}"]`
             );
 
+
+        if (!el) {
+            return 0;
+        }
+
+
+        const englishValue =
+            convertGujaratiDigitsToEnglish(
+                el.value
+            );
+
+
         return Number(
-            el?.value
+            englishValue
         ) || 0;
 
     }
@@ -8263,43 +8356,51 @@ function calculateShikshanupakaranRow(row) {
     /* ============================================================
        SET CALCULATED VALUE
        ------------------------------------------------------------
-       Calculated values are always displayed as 0.00
+       Calculations happen using normal English numbers.
+
+       Before displaying the result, convert the number to
+       Gujarati digits.
+
+       Example:
+       123.45 → ૧૨૩.૪૫
     ============================================================ */
 
     function set(
-          col,
-          value
-      ) {
-      
-          const el =
-              row.querySelector(
-                  `[data-column="${col}"]`
-              );
-      
-          if (el) {
-      
-              el.value =
-                  roundGeneratedValueToFivePaise(
-                      value
-                  ).toFixed(2);
-      
-          }
-      
-      }
+        col,
+        value
+    ) {
+
+        const el =
+            row.querySelector(
+                `[data-column="${col}"]`
+            );
+
+
+        if (el) {
+
+            const formattedValue =
+                Number(
+                    value || 0
+                ).toFixed(2);
+
+
+            el.value =
+                convertToGujaratiDigits(
+                    formattedValue
+                );
+
+        }
+
+    }
 
 
     /* ============================================================
        READ USER INPUT
        ------------------------------------------------------------
-       IMPORTANT:
-       Do NOT format C-F or J-L here.
+       User input may contain Gujarati digits.
 
-       The user must be able to type:
-       3.34
-       12.50
-       0.25
-
-       without the value being changed while typing.
+       The get() function converts them back to English numbers
+       internally before calculation.
     ============================================================ */
 
     const C =
@@ -8428,6 +8529,7 @@ function calculateShikshanupakaranRow(row) {
 }
 
 
+
 function formatShikshanupakaranInput(input){
 
     if(!input) return;
@@ -8438,26 +8540,41 @@ function formatShikshanupakaranInput(input){
 
 
     /* ========================================================
+       CONVERT GUJARATI → ENGLISH FOR CALCULATION
+       ======================================================== */
+
+    const englishValue =
+        convertGujaratiDigitsToEnglish(
+            input.value
+        );
+
+
+    /* ========================================================
        A / H → INTEGER
-    ======================================================== */
+       ======================================================== */
 
     if(
         ["A", "H"].includes(column)
     ){
 
-        if(input.value !== ""){
+        if(
+            englishValue !== ""
+        ){
 
             const value =
                 Number(
-                    input.value
+                    englishValue
                 );
+
 
             if(
                 Number.isFinite(value)
             ){
 
                 input.value =
-                    Math.trunc(value);
+                    convertToGujaratiDigits(
+                        Math.trunc(value)
+                    );
 
             }
 
@@ -8470,7 +8587,7 @@ function formatShikshanupakaranInput(input){
 
     /* ========================================================
        DECIMAL INPUTS
-    ======================================================== */
+       ======================================================== */
 
     if(
         [
@@ -8485,7 +8602,7 @@ function formatShikshanupakaranInput(input){
     ){
 
         if(
-            input.value === ""
+            englishValue === ""
         ){
 
             return;
@@ -8495,7 +8612,7 @@ function formatShikshanupakaranInput(input){
 
         const value =
             Number(
-                input.value
+                englishValue
             );
 
 
@@ -8504,7 +8621,9 @@ function formatShikshanupakaranInput(input){
         ){
 
             input.value =
-                value.toFixed(2);
+                convertToGujaratiDigits(
+                    value.toFixed(2)
+                );
 
         }
 

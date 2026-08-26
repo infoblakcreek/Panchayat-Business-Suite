@@ -4118,7 +4118,6 @@ function setupIndianDatePicker() {
 
 
 
-
 /* ============================================================
    CREATE TALAPATRAK ROW
 ============================================================ */
@@ -4196,8 +4195,12 @@ function createTalapatrakRow(
     
     const khataNumber =
         hasSavedKhata
-            ? String(rowData.A).trim()
-            : String(rowNumber);
+            ? convertToGujaratiDigits(
+                  String(rowData.A).trim()
+              )
+            : convertToGujaratiDigits(
+                  String(rowNumber)
+              );
     
     console.log(
         "CREATE ROW:",
@@ -4350,7 +4353,8 @@ function createTalapatrakRow(
 
         <td>
             <input
-                type="number"
+                type="text"
+                inputmode="decimal"
                 class="columnA"
                 value="${escapeTalapatrakHTML(khataNumber)}">
         </td>
@@ -4370,7 +4374,8 @@ function createTalapatrakRow(
 
         <td>
             <input
-                type="number"
+                type="text"
+                inputmode="decimal"
                 class="columnC"
                 value="${escapeTalapatrakHTML(valueC)}">
         </td>
@@ -4380,7 +4385,8 @@ function createTalapatrakRow(
 
         <td>
             <input
-                type="number"
+                type="text"
+                inputmode="decimal"
                 class="columnD"
                 value="${escapeTalapatrakHTML(valueD)}">
         </td>
@@ -4390,7 +4396,8 @@ function createTalapatrakRow(
 
         <td>
             <input
-                type="number"
+                type="text"
+                inputmode="decimal"
                 class="columnE"
                 value="${escapeTalapatrakHTML(valueE)}">
         </td>
@@ -4400,7 +4407,8 @@ function createTalapatrakRow(
 
         <td>
             <input
-                type="number"
+                type="text"
+                inputmode="decimal"
                 class="columnF"
                 value="${escapeTalapatrakHTML(valueF)}">
         </td>
@@ -4410,7 +4418,8 @@ function createTalapatrakRow(
 
         <td>
             <input
-                type="number"
+                type="text"
+                inputmode="decimal"
                 class="columnG"
                 value="${escapeTalapatrakHTML(valueG)}">
         </td>
@@ -4420,7 +4429,8 @@ function createTalapatrakRow(
 
         <td>
             <input
-                type="number"
+                type="text"
+                inputmode="decimal"
                 class="columnH"
                 value="${escapeTalapatrakHTML(valueH)}"
                 readonly>
@@ -4431,7 +4441,8 @@ function createTalapatrakRow(
 
         <td>
             <input
-                type="number"
+                type="text"
+                inputmode="decimal"
                 class="columnI"
                 value="${escapeTalapatrakHTML(valueI)}"
                 readonly>
@@ -4442,7 +4453,8 @@ function createTalapatrakRow(
 
         <td>
             <input
-                type="number"
+                type="text"
+                inputmode="decimal"
                 class="columnJ"
                 value="${escapeTalapatrakHTML(valueJ)}"
                 readonly>
@@ -4453,7 +4465,8 @@ function createTalapatrakRow(
 
         <td>
             <input
-                type="number"
+                type="text"
+                inputmode="decimal"
                 class="columnK"
                 value="${escapeTalapatrakHTML(valueK)}">
         </td>
@@ -4463,7 +4476,8 @@ function createTalapatrakRow(
 
         <td>
             <input
-                type="number"
+                type="text"
+                inputmode="decimal"
                 class="columnL"
                 value="${escapeTalapatrakHTML(valueL)}">
         </td>
@@ -4484,7 +4498,8 @@ function createTalapatrakRow(
 
         <td>
             <input
-                type="number"
+                type="text"
+                inputmode="decimal"
                 class="columnN"
                 value="${escapeTalapatrakHTML(valueN)}">
         </td>
@@ -4494,7 +4509,8 @@ function createTalapatrakRow(
 
         <td>
             <input
-                type="number"
+                type="text"
+                inputmode="decimal"
                 class="columnO"
                 value="${escapeTalapatrakHTML(valueO)}"
                 readonly>
@@ -4505,7 +4521,8 @@ function createTalapatrakRow(
 
         <td>
             <input
-                type="number"
+                type="text"
+                inputmode="decimal"
                 class="columnP"
                 value="${escapeTalapatrakHTML(valueP)}"
                 readonly>
@@ -4516,7 +4533,8 @@ function createTalapatrakRow(
 
         <td>
             <input
-                type="number"
+                type="text"
+                inputmode="decimal"
                 class="columnQ"
                 value="${escapeTalapatrakHTML(valueQ)}"
                 readonly>
@@ -4527,7 +4545,8 @@ function createTalapatrakRow(
 
         <td>
             <input
-                type="number"
+                type="text"
+                inputmode="decimal"
                 class="columnR"
                 value="${escapeTalapatrakHTML(valueR)}"
                 readonly>
@@ -4538,7 +4557,8 @@ function createTalapatrakRow(
 
         <td>
             <input
-                type="number"
+                type="text"
+                inputmode="decimal"
                 class="columnS"
                 value="${escapeTalapatrakHTML(valueS)}">
         </td>
@@ -4549,7 +4569,8 @@ function createTalapatrakRow(
         <td class="printHide">
 
             <input
-                type="number"
+                type="text"
+                inputmode="decimal"
                 class="columnT"
                 value="${escapeTalapatrakHTML(valueT)}"
                 readonly>
@@ -4562,7 +4583,8 @@ function createTalapatrakRow(
         <td class="printHide">
 
             <input
-                type="number"
+                type="text"
+                inputmode="decimal"
                 class="columnU"
                 value="${escapeTalapatrakHTML(valueU)}"
                 readonly>
@@ -4756,37 +4778,29 @@ function createTalapatrakRow(
               function(input) {
       
                   input.addEventListener(
-                      "input",
-                      function() {
-      
-                          /*
-                              Recalculate this row immediately.
-                          */
-      
-                          calculateTalapatrakRow(
-                              input
-                          );
-      
-      
-                          /*
-                              Existing page DOM is now newer
-                              than master memory.
-      
-                              Sync the current page so pagination
-                              does not lose the edit.
-                          */
-      
-                          syncCurrentTalapatrakPageToMemory();
-      
-      
-                          /*
-                              Schedule existing autosave.
-                          */
-      
-                          scheduleTalapatrakAutoSave();
-      
-                      }
-                  );
+                        "input",
+                        function() {
+                    
+                            input.value =
+                                convertToGujaratiDigits(
+                                    convertGujaratiDigitsToEnglish(
+                                        input.value
+                                    )
+                                );
+                    
+                    
+                            calculateTalapatrakRow(
+                                input
+                            );
+                    
+                    
+                            syncCurrentTalapatrakPageToMemory();
+                    
+                    
+                            scheduleTalapatrakAutoSave();
+                    
+                        }
+                    );
       
       
                   input.addEventListener(
@@ -5414,6 +5428,7 @@ function renumberTalapatrakRows() {
         CALCULATE ROW
 ============================================================ */
 
+
 function calculateTalapatrakRow(input) {
 
     const row =
@@ -5427,8 +5442,12 @@ function calculateTalapatrakRow(input) {
     /* ============================================================
        GET NUMERIC VALUE
        ------------------------------------------------------------
-       Used only for calculations.
-       DO NOT format the user's input here.
+       User-facing values may contain Gujarati digits.
+
+       Example:
+       ૧૨૩.૪૫ → 123.45
+
+       Calculations always use normal JavaScript numbers.
     ============================================================ */
 
     function getValue(column) {
@@ -5442,10 +5461,18 @@ function calculateTalapatrakRow(input) {
             return 0;
         }
 
-        const value =
-            Number(
+
+        const englishValue =
+            convertGujaratiDigitsToEnglish(
                 element.value
             );
+
+
+        const value =
+            Number(
+                englishValue
+            );
+
 
         return Number.isFinite(value)
             ? value
@@ -5457,44 +5484,69 @@ function calculateTalapatrakRow(input) {
     /* ============================================================
        SET CALCULATED VALUE
        ------------------------------------------------------------
-       Calculated columns are always displayed as 0.00
-    ============================================================ */
+       Calculation:
+       
+       English number
+            ↓
+       Round to nearest 5 paise
+            ↓
+       Keep 2 decimals
+            ↓
+       Convert to Gujarati digits
+            ↓
+       Display
+       
+       Example:
+       2.23 → 2.25 → ૨.૨૫
+       4.54 → 4.55 → ૪.૫૫
+       ============================================================ */
 
     function setValue(
-          column,
-          value
-      ) {
-      
-          const element =
-              row.querySelector(
-                  "." + column
-              );
-      
-          if (element) {
-      
-              element.value =
-                  roundGeneratedValueToFivePaise(
-                      value
-                  ).toFixed(2);
-      
-          }
-      
-      }
+        column,
+        value
+    ) {
+
+        const element =
+            row.querySelector(
+                "." + column
+            );
+
+
+        if (element) {
+
+            const roundedValue =
+                roundGeneratedValueToFivePaise(
+                    value
+                );
+
+
+            const formattedValue =
+                roundedValue.toFixed(2);
+
+
+            element.value =
+                convertToGujaratiDigits(
+                    formattedValue
+                );
+
+        }
+
+    }
 
 
     /* ============================================================
        READ USER INPUTS
        ------------------------------------------------------------
-       IMPORTANT:
-       DO NOT call toFixed() here.
+       Do NOT call toFixed() here.
 
        This allows the user to type:
+
        3
        3.
        3.1
        3.15
 
-       without JavaScript changing the field to 3.00.
+       without changing the field while typing.
     ============================================================ */
 
     const C =
@@ -5640,7 +5692,7 @@ function calculateTalapatrakRow(input) {
     /* ============================================================
        U
        ------------------------------------------------------------
-       U = IF(T < O, T, O)
+       U = IF(T < 0, T, 0)
     ============================================================ */
 
     const U =
@@ -5692,7 +5744,7 @@ function calculateTalapatrakRow(input) {
        Q
        ------------------------------------------------------------
        Q = IF(T > 0, T, 0)
-       
+
        IMPORTANT:
        Q does NOT compare T with O.
     ============================================================ */
