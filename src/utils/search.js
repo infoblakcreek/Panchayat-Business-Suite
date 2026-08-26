@@ -93,7 +93,7 @@ window.panchayatSearchConfig = {
         columns: [
             "A",
             "B",
-            "J"
+            "H"
         ],
 
         renderPage:
