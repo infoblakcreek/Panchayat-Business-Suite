@@ -4,11 +4,11 @@
 
 .commonSearchHighlight {
 
-    outline: 3px solid #f5b400;
+    outline: 3px solid #f2b84b !important;
 
-    outline-offset: -3px;
+    outline-offset: -3px !important;
 
-    background-color: #fff3b0 !important;
+    background-color: #fff7d6 !important;
 
     transition:
         background-color 0.2s ease,
@@ -16,10 +16,6 @@
 
 }
 
-
-
-
-/* ================================================================== */
 
 /* ============================================================
    COMMON EDITOR ROW SEARCH
@@ -36,46 +32,48 @@
 
     width: 100%;
 
-    min-height: 46px;
+    min-height: 48px;
 
     display: flex;
     align-items: center;
 
     box-sizing: border-box;
 
-    margin: 14px 0 16px;
+    margin: 14px 0 17px;
 
-    padding: 5px 8px 5px 15px;
+    padding: 5px 8px 5px 7px;
 
-    background: #f4f9ff;
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff 0%,
+            #f7fbff 100%
+        );
 
-    border: 1px solid #c9def2;
+    border: 1px solid #d4e2ef;
 
     border-radius: 12px;
-
-    box-shadow:
-        0 3px 10px rgba(52, 112, 170, 0.08);
 
     transition:
         border-color 0.2s ease,
         box-shadow 0.2s ease,
-        background 0.2s ease;
+        background 0.2s ease,
+        transform 0.2s ease;
 
 }
 
 
 /* ============================================================
-   SEARCH ICON
+   SEARCH ICON CONTAINER
 ============================================================ */
 
 .shikshanupakaranRowSearch > i,
 .talapatrakRowSearch > i {
 
-    flex: 0 0 auto;
+    flex: 0 0 34px;
 
-    width: 30px;
-
-    height: 30px;
+    width: 34px;
+    height: 34px;
 
     display: flex;
     align-items: center;
@@ -83,13 +81,20 @@
 
     margin-right: 9px;
 
-    border-radius: 8px;
+    border-radius: 9px;
 
-    background: #e2f0ff;
+    background: #edf6ff;
 
-    color: #3b78a9;
+    color: #3576aa;
 
     font-size: 14px;
+
+    box-sizing: border-box;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
 
 }
 
@@ -107,9 +112,9 @@
 
     min-width: 0;
 
-    height: 36px;
+    height: 38px;
 
-    padding: 0 4px;
+    padding: 0 5px;
 
     border: none;
 
@@ -117,13 +122,15 @@
 
     background: transparent;
 
-    color: #29445a;
+    color: #243b53;
 
     font-family: inherit;
 
     font-size: 14px;
 
     font-weight: 500;
+
+    letter-spacing: 0.1px;
 
     box-sizing: border-box;
 
@@ -137,7 +144,7 @@
 .shikshanupakaranRowSearch input::placeholder,
 .talapatrakRowSearch input::placeholder {
 
-    color: #7d9ab1;
+    color: #91a6b8;
 
     opacity: 1;
 
@@ -147,19 +154,35 @@
 
 
 /* ============================================================
-   FOCUS
+   FOCUS STATE
 ============================================================ */
 
 .shikshanupakaranRowSearch:focus-within,
 .talapatrakRowSearch:focus-within {
 
-    background: #f8fcff;
+    background: #ffffff;
 
-    border-color: #74aeda;
+    border-color: #70a9d5;
 
     box-shadow:
-        0 0 0 3px rgba(84, 151, 202, 0.12),
-        0 4px 12px rgba(52, 112, 170, 0.10);
+        0 0 0 3px rgba(76, 142, 196, 0.10),
+        0 8px 22px rgba(36, 72, 104, 0.09);
+
+}
+
+
+/* ============================================================
+   FOCUS — ICON
+============================================================ */
+
+.shikshanupakaranRowSearch:focus-within > i,
+.talapatrakRowSearch:focus-within > i {
+
+    background: #e1f0ff;
+
+    color: #24699e;
+
+    transform: scale(1.03);
 
 }
 
@@ -171,31 +194,30 @@
 .shikshanupakaranRowSearch button,
 .talapatrakRowSearch button {
 
-    flex: 0 0 auto;
+    flex: 0 0 32px;
 
-    width: 31px;
-
-    height: 31px;
+    width: 32px;
+    height: 32px;
 
     display: flex;
-
     align-items: center;
-
     justify-content: center;
 
-    margin-left: 7px;
+    margin-left: 6px;
 
     padding: 0;
 
     border: none;
 
-    border-radius: 50%;
+    border-radius: 8px;
 
     background: transparent;
 
-    color: #7d9ab1;
+    color: #91a6b8;
 
     cursor: pointer;
+
+    box-sizing: border-box;
 
     transition:
         background 0.18s ease,
@@ -205,31 +227,36 @@
 }
 
 
+/* ============================================================
+   CLEAR BUTTON — HOVER
+============================================================ */
+
 .shikshanupakaranRowSearch button:hover,
 .talapatrakRowSearch button:hover {
 
-    background: #dceeff;
+    background: #edf5fb;
 
-    color: #3975a5;
+    color: #416f91;
 
-    transform: scale(1.05);
+    transform: scale(1.04);
 
 }
 
 
+/* ============================================================
+   CLEAR BUTTON — ACTIVE
+============================================================ */
+
 .shikshanupakaranRowSearch button:active,
 .talapatrakRowSearch button:active {
 
-    transform: scale(0.95);
+    transform: scale(0.94);
 
 }
 
 
 /* ============================================================
    FULL VIEW
-   ------------------------------------------------------------
-   Keeps the search visually comfortable when the editor
-   expands to full screen.
 ============================================================ */
 
 .shikshanupakaranEditorView.fullView
@@ -240,13 +267,13 @@
 
     margin-top: 16px;
 
-    margin-bottom: 18px;
+    margin-bottom: 19px;
 
 }
 
 
 /* ============================================================
-   LARGE SCREENS / FULL VIEW
+   LARGE SCREENS
 ============================================================ */
 
 @media (min-width: 1200px) {
@@ -254,10 +281,9 @@
     .shikshanupakaranRowSearch,
     .talapatrakRowSearch {
 
-        min-height: 48px;
+        min-height: 50px;
 
-        padding-left: 16px;
-
+        padding-left: 8px;
         padding-right: 9px;
 
         border-radius: 13px;
@@ -268,9 +294,10 @@
     .shikshanupakaranRowSearch > i,
     .talapatrakRowSearch > i {
 
-        width: 32px;
+        flex-basis: 35px;
 
-        height: 32px;
+        width: 35px;
+        height: 35px;
 
         margin-right: 10px;
 
@@ -282,7 +309,7 @@
     .shikshanupakaranRowSearch input,
     .talapatrakRowSearch input {
 
-        height: 38px;
+        height: 40px;
 
         font-size: 15px;
 
@@ -292,9 +319,10 @@
     .shikshanupakaranRowSearch button,
     .talapatrakRowSearch button {
 
-        width: 32px;
+        flex-basis: 33px;
 
-        height: 32px;
+        width: 33px;
+        height: 33px;
 
     }
 
@@ -310,11 +338,11 @@
     .shikshanupakaranRowSearch,
     .talapatrakRowSearch {
 
-        min-height: 44px;
+        min-height: 45px;
 
-        margin: 11px 0 13px;
+        margin: 11px 0 14px;
 
-        padding-left: 12px;
+        padding-left: 6px;
 
         border-radius: 10px;
 
@@ -324,11 +352,16 @@
     .shikshanupakaranRowSearch > i,
     .talapatrakRowSearch > i {
 
-        width: 29px;
+        flex-basis: 31px;
 
-        height: 29px;
+        width: 31px;
+        height: 31px;
 
         margin-right: 8px;
+
+        border-radius: 8px;
+
+        font-size: 13px;
 
     }
 
@@ -339,6 +372,17 @@
         height: 35px;
 
         font-size: 13px;
+
+    }
+
+
+    .shikshanupakaranRowSearch button,
+    .talapatrakRowSearch button {
+
+        flex-basis: 30px;
+
+        width: 30px;
+        height: 30px;
 
     }
 
@@ -358,7 +402,7 @@
 
         margin: 9px 0 11px;
 
-        padding: 4px 6px 4px 10px;
+        padding: 4px 5px 4px 5px;
 
         border-radius: 9px;
 
@@ -368,15 +412,16 @@
     .shikshanupakaranRowSearch > i,
     .talapatrakRowSearch > i {
 
-        width: 27px;
+        flex-basis: 28px;
 
-        height: 27px;
+        width: 28px;
+        height: 28px;
 
         margin-right: 7px;
 
-        font-size: 13px;
-
         border-radius: 7px;
+
+        font-size: 12px;
 
     }
 
@@ -384,7 +429,9 @@
     .shikshanupakaranRowSearch input,
     .talapatrakRowSearch input {
 
-        height: 34px;
+        height: 33px;
+
+        padding: 0 3px;
 
         font-size: 13px;
 
@@ -394,11 +441,14 @@
     .shikshanupakaranRowSearch button,
     .talapatrakRowSearch button {
 
-        width: 28px;
+        flex-basis: 28px;
 
+        width: 28px;
         height: 28px;
 
-        margin-left: 4px;
+        margin-left: 3px;
+
+        border-radius: 7px;
 
     }
 
@@ -408,7 +458,7 @@
 /* ============================================================
    PRINT
    ------------------------------------------------------------
-   Search should never appear on the printed register.
+   Search bar must never appear on printed registers.
 ============================================================ */
 
 @media print {
