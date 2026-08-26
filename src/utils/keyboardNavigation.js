@@ -5,17 +5,7 @@
 
    Reusable Excel-like keyboard navigation system.
 
-   This file is intentionally editor-independent.
-
-   Editors such as:
-
-   - Shikshanupakaran
-   - Talapatrak
-   - Future table editors
-
-   can register their table/container with this system.
-
-   Supported navigation:
+   Supported:
 
    ↑ / ↓
    ← / →
@@ -24,39 +14,39 @@
    Enter
    Shift + Enter
 
-   Later additions:
-
    Home
+   End
    Ctrl + Home
    Ctrl + End
+
    Page Up
    Page Down
+
+   Future:
+
    F2
    Escape
    Delete
+   Backspace
+   Ctrl + Z
+   Ctrl + Y
+   Ctrl + C
+   Ctrl + X
+   Ctrl + V
    Ctrl + F
 
-   IMPORTANT:
+   IMPORTANT
    ------------------------------------------------------------
-   This is a classic JavaScript file.
-   No ES modules are used.
-   ============================================================ */
+   This file is editor-independent.
+
+   Talapatrak and Shikshanupakaran can register callbacks
+   for pagination-specific behavior.
+============================================================ */
 
 
 /* ============================================================
    GLOBAL STORAGE
 ============================================================ */
-
-/*
- * Stores all registered keyboard-navigation containers.
- *
- * Example:
- *
- * Shikshanupakaran table
- * Talapatrak table
- * Future editor table
- *
- */
 
 const keyboardNavigationContainers = [];
 
@@ -68,18 +58,18 @@ const keyboardNavigationContainers = [];
 /**
  * Register an editor/container for keyboard navigation.
  *
- * @param {HTMLElement} container
- * @param {Object} options
+ * Supported options:
  *
- * Example:
+ * inputSelector
  *
- * registerKeyboardNavigation(
- *     document.getElementById("shikshanupakaranBody"),
- *     {
- *         inputSelector: ".shikshanupakaranInput"
- *     }
- * );
+ * onPageUp
+ * onPageDown
+ * onCtrlHome
+ * onCtrlEnd
  *
+ * These callbacks allow editors with pagination to control
+ * movement across pages without putting editor-specific
+ * logic inside this shared navigation file.
  */
 
 function registerKeyboardNavigation(
@@ -106,7 +96,9 @@ function registerKeyboardNavigation(
         keyboardNavigationContainers.some(
             function(item) {
 
-                return item.container === container;
+                return (
+                    item.container === container
+                );
 
             }
         );
@@ -121,17 +113,33 @@ function registerKeyboardNavigation(
 
     const configuration = {
 
-            container: container,
+        container: container,
 
-            inputSelector:
-                options.inputSelector ||
-                "input",
+        inputSelector:
+            options.inputSelector ||
+            "input",
 
-            onLastCellEnter:
-                options.onLastCellEnter ||
-                null
+        onPageUp:
+            typeof options.onPageUp === "function"
+                ? options.onPageUp
+                : null,
 
-        };
+        onPageDown:
+            typeof options.onPageDown === "function"
+                ? options.onPageDown
+                : null,
+
+        onCtrlHome:
+            typeof options.onCtrlHome === "function"
+                ? options.onCtrlHome
+                : null,
+
+        onCtrlEnd:
+            typeof options.onCtrlEnd === "function"
+                ? options.onCtrlEnd
+                : null
+
+    };
 
 
     keyboardNavigationContainers.push(
@@ -194,17 +202,6 @@ function getKeyboardNavigationContainer(
    GET NAVIGABLE INPUTS
 ============================================================ */
 
-/**
- * Return all visible form controls that participate
- * in keyboard navigation.
- *
- * IMPORTANT:
- * ------------------------------------------------------------
- * readonly and disabled cells are NOT excluded.
- *
- * They are still navigable, just not editable.
- */
-
 function getNavigableInputs(
     configuration
 ) {
@@ -238,7 +235,7 @@ function getNavigableInputs(
 
 
 /* ============================================================
-   FIND CURRENT INPUT INDEX
+   GET CURRENT INPUT INDEX
 ============================================================ */
 
 function getCurrentInputIndex(
@@ -268,20 +265,11 @@ function focusKeyboardInput(
     }
 
 
-    /*
-     * Focus the target cell.
-     */
-
     input.focus();
 
 
     /*
-     * Put cursor at the end of the value.
-     *
-     * We deliberately do NOT select the entire value.
-     *
-     * This makes navigation feel natural when the user
-     * starts typing.
+     * Put cursor at the end.
      */
 
     try {
@@ -300,7 +288,7 @@ function focusKeyboardInput(
     catch(error) {
 
         /*
-         * Some input types may not support
+         * Some input types do not support
          * setSelectionRange.
          */
 
@@ -372,6 +360,42 @@ function getRowNavigableInputs(
 
 
 /* ============================================================
+   GET VISIBLE ROWS
+============================================================ */
+
+function getVisibleKeyboardRows(
+    configuration
+) {
+
+    if (!configuration) {
+
+        return [];
+
+    }
+
+
+    const rows =
+        Array.from(
+            configuration.container.querySelectorAll(
+                "tr"
+            )
+        );
+
+
+    return rows.filter(
+        function(row) {
+
+            return (
+                row.offsetParent !== null
+            );
+
+        }
+    );
+
+}
+
+
+/* ============================================================
    MOVE HORIZONTALLY
 ============================================================ */
 
@@ -407,7 +431,9 @@ function moveKeyboardHorizontal(
         );
 
 
-    if (currentIndex === -1) {
+    if (
+        currentIndex === -1
+    ) {
 
         return;
 
@@ -415,11 +441,12 @@ function moveKeyboardHorizontal(
 
 
     const targetIndex =
-        currentIndex + direction;
+        currentIndex +
+        direction;
 
 
     /*
-     * Stay inside the current row.
+     * Stay inside current row.
      */
 
     if (
@@ -463,21 +490,9 @@ function moveKeyboardVertical(
     }
 
 
-    const allRows =
-        Array.from(
-            configuration.container.querySelectorAll(
-                "tr"
-            )
-        );
-
-
     const visibleRows =
-        allRows.filter(
-            function(row) {
-
-                return row.offsetParent !== null;
-
-            }
+        getVisibleKeyboardRows(
+            configuration
         );
 
 
@@ -487,7 +502,9 @@ function moveKeyboardVertical(
         );
 
 
-    if (currentRowIndex === -1) {
+    if (
+        currentRowIndex === -1
+    ) {
 
         return;
 
@@ -495,11 +512,12 @@ function moveKeyboardVertical(
 
 
     const targetRowIndex =
-        currentRowIndex + direction;
+        currentRowIndex +
+        direction;
 
 
     /*
-     * Stay inside the available rows.
+     * Stay inside available rows.
      */
 
     if (
@@ -513,7 +531,42 @@ function moveKeyboardVertical(
 
 
     const targetRow =
-        visibleRows[targetRowIndex];
+        visibleRows[
+            targetRowIndex
+        ];
+
+
+    const targetRowInputs =
+        getRowNavigableInputs(
+            configuration,
+            targetRow
+        );
+
+
+    if (
+        targetRowInputs.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+     * Enter on last cell:
+     *
+     * first cell of next row.
+     */
+
+    if (firstCell) {
+
+        focusKeyboardInput(
+            targetRowInputs[0]
+        );
+
+        return;
+
+    }
 
 
     const currentRowInputs =
@@ -528,29 +581,6 @@ function moveKeyboardVertical(
             currentInput
         );
 
-        if (firstCell) {
-
-            const targetRowInputs =
-                getRowNavigableInputs(
-                    configuration,
-                    targetRow
-                );
-
-
-            if (
-                targetRowInputs.length > 0
-            ) {
-
-                focusKeyboardInput(
-                    targetRowInputs[0]
-                );
-
-            }
-
-            return;
-
-        }
-
 
     if (
         currentColumnIndex === -1
@@ -561,15 +591,8 @@ function moveKeyboardVertical(
     }
 
 
-    const targetRowInputs =
-        getRowNavigableInputs(
-            configuration,
-            targetRow
-        );
-
-
     /*
-     * Keep the same column whenever possible.
+     * Keep same column.
      */
 
     if (
@@ -589,21 +612,15 @@ function moveKeyboardVertical(
 
 
     /*
-     * If the target row has fewer editable
-     * cells, use its last editable cell.
+     * If target row has fewer cells,
+     * use its last cell.
      */
 
-    if (
-        targetRowInputs.length > 0
-    ) {
-
-        focusKeyboardInput(
-            targetRowInputs[
-                targetRowInputs.length - 1
-            ]
-        );
-
-    }
+    focusKeyboardInput(
+        targetRowInputs[
+            targetRowInputs.length - 1
+        ]
+    );
 
 }
 
@@ -631,7 +648,9 @@ function moveKeyboardTab(
         );
 
 
-    if (currentIndex === -1) {
+    if (
+        currentIndex === -1
+    ) {
 
         return;
 
@@ -639,7 +658,8 @@ function moveKeyboardTab(
 
 
     const targetIndex =
-        currentIndex + direction;
+        currentIndex +
+        direction;
 
 
     if (
@@ -660,6 +680,791 @@ function moveKeyboardTab(
 
 
 /* ============================================================
+   FIND FIRST CELL
+============================================================ */
+
+function focusFirstKeyboardCell(
+    configuration
+) {
+
+    const rows =
+        getVisibleKeyboardRows(
+            configuration
+        );
+
+
+    if (
+        rows.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    const firstRowInputs =
+        getRowNavigableInputs(
+            configuration,
+            rows[0]
+        );
+
+
+    if (
+        firstRowInputs.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    focusKeyboardInput(
+        firstRowInputs[0]
+    );
+
+}
+
+
+/* ============================================================
+   FIND LAST CELL
+============================================================ */
+
+function focusLastKeyboardCell(
+    configuration
+) {
+
+    const rows =
+        getVisibleKeyboardRows(
+            configuration
+        );
+
+
+    if (
+        rows.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    const lastRow =
+        rows[
+            rows.length - 1
+        ];
+
+
+    const lastRowInputs =
+        getRowNavigableInputs(
+            configuration,
+            lastRow
+        );
+
+
+    if (
+        lastRowInputs.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    focusKeyboardInput(
+        lastRowInputs[
+            lastRowInputs.length - 1
+        ]
+    );
+
+}
+
+
+/* ============================================================
+   GET CURRENT COLUMN
+============================================================ */
+
+function getKeyboardColumnIndex(
+    currentInput,
+    configuration
+) {
+
+    const row =
+        getKeyboardRow(
+            currentInput
+        );
+
+
+    if (!row) {
+
+        return -1;
+
+    }
+
+
+    const rowInputs =
+        getRowNavigableInputs(
+            configuration,
+            row
+        );
+
+
+    return rowInputs.indexOf(
+        currentInput
+    );
+
+}
+
+
+/* ============================================================
+   PAGE NAVIGATION FALLBACK
+============================================================ */
+
+/*
+ * This function handles Page Up / Page Down when an editor
+ * has NOT provided its own pagination callback.
+ *
+ * It moves by the number of currently visible rows.
+ */
+
+function moveKeyboardByVisiblePage(
+    currentInput,
+    direction,
+    configuration
+) {
+
+    const currentRow =
+        getKeyboardRow(
+            currentInput
+        );
+
+
+    if (!currentRow) {
+
+        return;
+
+    }
+
+
+    const rows =
+        getVisibleKeyboardRows(
+            configuration
+        );
+
+
+    const currentRowIndex =
+        rows.indexOf(
+            currentRow
+        );
+
+
+    if (
+        currentRowIndex === -1
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+     * Number of rows currently visible.
+     */
+
+    const pageSize =
+        rows.length;
+
+
+    if (
+        pageSize <= 0
+    ) {
+
+        return;
+
+    }
+
+
+    const targetRowIndex =
+        Math.max(
+            0,
+            Math.min(
+                rows.length - 1,
+                currentRowIndex +
+                (
+                    direction *
+                    pageSize
+                )
+            )
+        );
+
+
+    /*
+     * If already at boundary,
+     * do nothing.
+     */
+
+    if (
+        targetRowIndex ===
+        currentRowIndex
+    ) {
+
+        return;
+
+    }
+
+
+    const targetRow =
+        rows[
+            targetRowIndex
+        ];
+
+
+    const targetInputs =
+        getRowNavigableInputs(
+            configuration,
+            targetRow
+        );
+
+
+    if (
+        targetInputs.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    const columnIndex =
+        getKeyboardColumnIndex(
+            currentInput,
+            configuration
+        );
+
+
+    const targetColumn =
+        Math.min(
+            Math.max(
+                columnIndex,
+                0
+            ),
+            targetInputs.length - 1
+        );
+
+
+    focusKeyboardInput(
+        targetInputs[
+            targetColumn
+        ]
+    );
+
+}
+
+
+/* ============================================================
+   HANDLE ENTER
+============================================================ */
+
+function handleKeyboardEnter(
+    event,
+    target,
+    configuration
+) {
+
+    const row =
+        getKeyboardRow(
+            target
+        );
+
+
+    if (!row) {
+
+        return;
+
+    }
+
+
+    const rowInputs =
+        getRowNavigableInputs(
+            configuration,
+            row
+        );
+
+
+    const currentIndex =
+        rowInputs.indexOf(
+            target
+        );
+
+
+    if (
+        currentIndex === -1
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+     * Normal Enter:
+     *
+     * Move to next cell.
+     */
+
+    if (
+        !event.shiftKey &&
+        currentIndex <
+        rowInputs.length - 1
+    ) {
+
+        focusKeyboardInput(
+            rowInputs[
+                currentIndex + 1
+            ]
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * Enter on last cell:
+     *
+     * First cell of next row.
+     *
+     * NEVER create a new row here.
+     */
+
+    if (
+        !event.shiftKey &&
+        currentIndex ===
+        rowInputs.length - 1
+    ) {
+
+        const rows =
+            getVisibleKeyboardRows(
+                configuration
+            );
+
+
+        const currentRowIndex =
+            rows.indexOf(
+                row
+            );
+
+
+        const nextRow =
+            rows[
+                currentRowIndex + 1
+            ];
+
+
+        if (!nextRow) {
+
+            /*
+             * Last visible row.
+             *
+             * Do nothing.
+             *
+             * The editor itself can decide whether
+             * it wants to handle this situation.
+             */
+
+            return;
+
+        }
+
+
+        const nextRowInputs =
+            getRowNavigableInputs(
+                configuration,
+                nextRow
+            );
+
+
+        if (
+            nextRowInputs.length > 0
+        ) {
+
+            focusKeyboardInput(
+                nextRowInputs[0]
+            );
+
+        }
+
+
+        return;
+
+    }
+
+
+    /*
+     * Shift + Enter:
+     *
+     * Previous row, same column.
+     */
+
+    if (
+        event.shiftKey
+    ) {
+
+        moveKeyboardVertical(
+            target,
+            -1,
+            configuration
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   HANDLE HOME
+============================================================ */
+
+function handleKeyboardHome(
+    event,
+    target,
+    configuration
+) {
+
+    /*
+     * Ctrl + Home
+     *
+     * Let the editor handle pagination if
+     * a callback exists.
+     */
+
+    if (
+        event.ctrlKey ||
+        event.metaKey
+    ) {
+
+        if (
+            configuration.onCtrlHome
+        ) {
+
+            const handled =
+                configuration.onCtrlHome(
+                    {
+                        event:
+                            event,
+
+                        target:
+                            target,
+
+                        configuration:
+                            configuration
+                    }
+                );
+
+
+            if (
+                handled !== false
+            ) {
+
+                return;
+
+            }
+
+        }
+
+
+        /*
+         * Fallback:
+         *
+         * first visible row,
+         * first cell.
+         */
+
+        focusFirstKeyboardCell(
+            configuration
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+     * Normal Home:
+     *
+     * first cell of current row.
+     */
+
+    const row =
+        getKeyboardRow(
+            target
+        );
+
+
+    if (!row) {
+
+        return;
+
+    }
+
+
+    const rowInputs =
+        getRowNavigableInputs(
+            configuration,
+            row
+        );
+
+
+    if (
+        rowInputs.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    focusKeyboardInput(
+        rowInputs[0]
+    );
+
+}
+
+
+/* ============================================================
+   HANDLE END
+============================================================ */
+
+function handleKeyboardEnd(
+    event,
+    target,
+    configuration
+) {
+
+    /*
+     * Ctrl + End
+     *
+     * Let editor handle pagination if
+     * callback exists.
+     */
+
+    if (
+        event.ctrlKey ||
+        event.metaKey
+    ) {
+
+        if (
+            configuration.onCtrlEnd
+        ) {
+
+            const handled =
+                configuration.onCtrlEnd(
+                    {
+                        event:
+                            event,
+
+                        target:
+                            target,
+
+                        configuration:
+                            configuration
+                    }
+                );
+
+
+            if (
+                handled !== false
+            ) {
+
+                return;
+
+            }
+
+        }
+
+
+        /*
+         * Fallback:
+         *
+         * last visible row,
+         * last cell.
+         */
+
+        focusLastKeyboardCell(
+            configuration
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+     * Normal End:
+     *
+     * last cell of current row.
+     */
+
+    const row =
+        getKeyboardRow(
+            target
+        );
+
+
+    if (!row) {
+
+        return;
+
+    }
+
+
+    const rowInputs =
+        getRowNavigableInputs(
+            configuration,
+            row
+        );
+
+
+    if (
+        rowInputs.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    focusKeyboardInput(
+        rowInputs[
+            rowInputs.length - 1
+        ]
+    );
+
+}
+
+
+/* ============================================================
+   HANDLE PAGE UP
+============================================================ */
+
+function handleKeyboardPageUp(
+    event,
+    target,
+    configuration
+) {
+
+    /*
+     * If editor provides a callback,
+     * let it handle pagination.
+     */
+
+    if (
+        configuration.onPageUp
+    ) {
+
+        const handled =
+            configuration.onPageUp(
+                {
+                    event:
+                        event,
+
+                    target:
+                        target,
+
+                    configuration:
+                        configuration
+                }
+            );
+
+
+        if (
+            handled !== false
+        ) {
+
+            return;
+
+        }
+
+    }
+
+
+    /*
+     * Fallback:
+     *
+     * move inside visible rows.
+     */
+
+    moveKeyboardByVisiblePage(
+        target,
+        -1,
+        configuration
+    );
+
+}
+
+
+/* ============================================================
+   HANDLE PAGE DOWN
+============================================================ */
+
+function handleKeyboardPageDown(
+    event,
+    target,
+    configuration
+) {
+
+    /*
+     * If editor provides a callback,
+     * let it handle pagination.
+     */
+
+    if (
+        configuration.onPageDown
+    ) {
+
+        const handled =
+            configuration.onPageDown(
+                {
+                    event:
+                        event,
+
+                    target:
+                        target,
+
+                    configuration:
+                        configuration
+                }
+            );
+
+
+        if (
+            handled !== false
+        ) {
+
+            return;
+
+        }
+
+    }
+
+
+    /*
+     * Fallback:
+     *
+     * move inside visible rows.
+     */
+
+    moveKeyboardByVisiblePage(
+        target,
+        1,
+        configuration
+    );
+
+}
+
+
+/* ============================================================
    HANDLE KEYBOARD EVENT
 ============================================================ */
 
@@ -672,15 +1477,13 @@ function handleKeyboardNavigationKeydown(
 
 
     /*
-     * We only care about form controls.
+     * Only form controls.
      */
 
     if (
         !target ||
-        !(
-            target.matches(
-                "input, textarea, select"
-            )
+        !target.matches(
+            "input, textarea, select"
         )
     ) {
 
@@ -702,20 +1505,18 @@ function handleKeyboardNavigationKeydown(
     }
 
 
-    /*
-     * IMPORTANT:
-     *
-     * If the user is typing inside a text input,
-     * ArrowLeft / ArrowRight should continue behaving
-     * normally when the cursor is inside the text.
-     *
-     * We only perform cell navigation when the cursor
-     * is at the appropriate edge of the input.
-     */
+    /* ========================================================
+       ARROW LEFT
+    ======================================================== */
 
     if (
         event.key === "ArrowLeft"
     ) {
+
+        /*
+         * Allow normal cursor movement
+         * inside text.
+         */
 
         if (
             target.selectionStart !== 0
@@ -741,9 +1542,18 @@ function handleKeyboardNavigationKeydown(
     }
 
 
+    /* ========================================================
+       ARROW RIGHT
+    ======================================================== */
+
     if (
         event.key === "ArrowRight"
     ) {
+
+        /*
+         * Allow normal cursor movement
+         * inside text.
+         */
 
         if (
             target.selectionEnd !==
@@ -770,11 +1580,9 @@ function handleKeyboardNavigationKeydown(
     }
 
 
-    /*
-     * Up / Down.
-     *
-     * These move between table cells.
-     */
+    /* ========================================================
+       ARROW UP
+    ======================================================== */
 
     if (
         event.key === "ArrowUp"
@@ -795,6 +1603,10 @@ function handleKeyboardNavigationKeydown(
     }
 
 
+    /* ========================================================
+       ARROW DOWN
+    ======================================================== */
+
     if (
         event.key === "ArrowDown"
     ) {
@@ -814,9 +1626,9 @@ function handleKeyboardNavigationKeydown(
     }
 
 
-    /*
-     * TAB
-     */
+    /* ========================================================
+       TAB
+    ======================================================== */
 
     if (
         event.key === "Tab"
@@ -839,120 +1651,138 @@ function handleKeyboardNavigationKeydown(
     }
 
 
-    /* ============================================================
-        ENTER
-        ============================================================ */
+    /* ========================================================
+       ENTER
+    ======================================================== */
+
+    if (
+        event.key === "Enter"
+    ) {
+
+        /*
+         * Do not hijack:
+         *
+         * Ctrl + Enter
+         * Alt + Enter
+         * Cmd + Enter
+         */
 
         if (
-            event.key === "Enter"
-                ) {
+            event.ctrlKey ||
+            event.altKey ||
+            event.metaKey
+        ) {
 
-                    if (
-                        event.ctrlKey ||
-                        event.altKey ||
-                        event.metaKey
-                    ) {
+            return;
 
-                        return;
-
-                    }
-
-                    event.preventDefault();
+        }
 
 
-                    const row =
-                        getKeyboardRow(
-                            target
-                        );
+        event.preventDefault();
 
 
-                    if (!row) {
-
-                        return;
-
-                    }
-
-
-                    const rowInputs =
-                        getRowNavigableInputs(
-                            configuration,
-                            row
-                        );
+        handleKeyboardEnter(
+            event,
+            target,
+            configuration
+        );
 
 
-                    const currentIndex =
-                        rowInputs.indexOf(
-                            target
-                        );
+        return;
+
+    }
 
 
-                    /*
-                    * NORMAL ENTER
-                    *
-                    * Move to next cell in same row.
-                    */
+    /* ========================================================
+       HOME
+    ======================================================== */
 
-                    if (
-                        !event.shiftKey &&
-                        currentIndex <
-                        rowInputs.length - 1
-                    ) {
+    if (
+        event.key === "Home"
+    ) {
 
-                        focusKeyboardInput(
-                            rowInputs[
-                                currentIndex + 1
-                            ]
-                        );
-
-                        return;
-
-                    }
+        event.preventDefault();
 
 
-                    /*
-                    * ENTER ON LAST CELL
-                    *
-                    * Move to FIRST cell of next row.
-                    */
-
-                    if (
-                        !event.shiftKey &&
-                        currentIndex ===
-                        rowInputs.length - 1
-                    ) {
-
-                        moveKeyboardVertical(
-                            target,
-                            1,
-                            configuration,
-                            true
-                        );
-
-                        return;
-
-                    }
+        handleKeyboardHome(
+            event,
+            target,
+            configuration
+        );
 
 
-                    /*
-                    * SHIFT + ENTER
-                    *
-                    * Move to previous row,
-                    * same column.
-                    */
+        return;
 
-                    if (event.shiftKey) {
+    }
 
-                        moveKeyboardVertical(
-                            target,
-                            -1,
-                            configuration
-                        );
 
-                        return;
+    /* ========================================================
+       END
+    ======================================================== */
 
-                    }
+    if (
+        event.key === "End"
+    ) {
 
-                }
+        event.preventDefault();
+
+
+        handleKeyboardEnd(
+            event,
+            target,
+            configuration
+        );
+
+
+        return;
+
+    }
+
+
+    /* ========================================================
+       PAGE UP
+    ======================================================== */
+
+    if (
+        event.key === "PageUp"
+    ) {
+
+        event.preventDefault();
+
+
+        handleKeyboardPageUp(
+            event,
+            target,
+            configuration
+        );
+
+
+        return;
+
+    }
+
+
+    /* ========================================================
+       PAGE DOWN
+    ======================================================== */
+
+    if (
+        event.key === "PageDown"
+    ) {
+
+        event.preventDefault();
+
+
+        handleKeyboardPageDown(
+            event,
+            target,
+            configuration
+        );
+
+
+        return;
+
+    }
 
 }
 
