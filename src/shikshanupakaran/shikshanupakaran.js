@@ -8540,8 +8540,11 @@ function formatShikshanupakaranInput(input){
 
 
     /* ========================================================
-       CONVERT GUJARATI → ENGLISH FOR CALCULATION
-       ======================================================== */
+       CONVERT GUJARATI → ENGLISH
+       --------------------------------------------------------
+       Calculations and formatting use normal English numbers
+       internally.
+    ======================================================== */
 
     const englishValue =
         convertGujaratiDigitsToEnglish(
@@ -8586,14 +8589,73 @@ function formatShikshanupakaranInput(input){
 
 
     /* ========================================================
-       DECIMAL INPUTS
-       ======================================================== */
+       E → ROUND TO NEAREST 5 PAISE
+       --------------------------------------------------------
+       ONLY COLUMN E gets this special rounding.
+
+       Examples:
+
+       2.24  → 2.25
+       4.54  → 4.55
+       756.56 → 756.60
+
+       Other decimal columns do NOT use this rounding.
+    ======================================================== */
+
+    if(
+        column === "E"
+    ){
+
+        if(
+            englishValue === ""
+        ){
+
+            return;
+
+        }
+
+
+        const value =
+            Number(
+                englishValue
+            );
+
+
+        if(
+            Number.isFinite(value)
+        ){
+
+            const roundedValue =
+                roundGeneratedValueToFivePaise(
+                    value
+                );
+
+
+            input.value =
+                convertToGujaratiDigits(
+                    roundedValue.toFixed(2)
+                );
+
+        }
+
+        return;
+
+    }
+
+
+    /* ========================================================
+       OTHER DECIMAL INPUTS
+       --------------------------------------------------------
+       C, D, F, J, K, L
+
+       Normal 2-decimal formatting only.
+       NO 5-PAISE ROUNDING.
+    ======================================================== */
 
     if(
         [
             "C",
             "D",
-            "E",
             "F",
             "J",
             "K",

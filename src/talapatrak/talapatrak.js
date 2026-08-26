@@ -5514,14 +5514,16 @@ function calculateTalapatrakRow(input) {
 
         if (element) {
 
-            const roundedValue =
-                roundGeneratedValueToFivePaise(
-                    value
-                );
-
-
             const formattedValue =
-                roundedValue.toFixed(2);
+                  Number(
+                      value || 0
+                  ).toFixed(2);
+              
+              
+              element.value =
+                  convertToGujaratiDigits(
+                      formattedValue
+                  );
 
 
             element.value =
