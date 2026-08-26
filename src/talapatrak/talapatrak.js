@@ -8488,6 +8488,68 @@ function initializeTalapatrakGenerateTotalButton() {
 }
 
 
+
+/* ============================================================
+   GO TO TALAPATRAK PAGE
+============================================================ */
+
+function goToTalapatrakPage(pageNumber) {
+
+    if (
+        typeof renderTalapatrakPage !== "function"
+    ) {
+
+        console.warn(
+            "goToTalapatrakPage: renderTalapatrakPage not found."
+        );
+
+        return;
+
+    }
+
+
+    const totalPages =
+        Number(
+            window.talapatrakTotalPages
+        ) || 1;
+
+
+    let targetPage =
+        Number(pageNumber);
+
+
+    if (
+        !Number.isFinite(targetPage)
+    ) {
+
+        targetPage = 1;
+
+    }
+
+
+    targetPage =
+        Math.max(
+            1,
+            Math.min(
+                targetPage,
+                totalPages
+            )
+        );
+
+
+    console.log(
+        "TALAPATRAK GO TO PAGE:",
+        targetPage
+    );
+
+
+    renderTalapatrakPage(
+        targetPage
+    );
+
+}
+
+
   /* ============================================================
    TALAPATRAK PAGINATION UI
 ============================================================ */
@@ -10264,14 +10326,7 @@ setupTalapatrakAutoSave();
 
 
 registerKeyboardNavigation(
-    talapatrakBody,
-    {
-        onLastCellEnter: function() {
-
-            return addTalapatrakRow();
-
-        }
-    }
+    talapatrakBody
 );
 
 console.log(
