@@ -756,33 +756,99 @@ async function loadShikshanupakaranDashboardCount(){
 
 }
 
+
+
 /* ============================================================
-        SEARCH
+   SHIKSHANUPAKARAN SEARCH
+   ------------------------------------------------------------
+   Searches the complete Shikshanupakaran memory by:
+
+   A → ખાતા નંબર
+   B → ખાતેદારનું નામ
+   I → પહોંચ / પાવતી નંબર
+
+   When a match is found:
+   - Moves to the correct page
+   - Renders that page
+   - Highlights the matching row
 ============================================================ */
 
 
-if(
-    shikshanupakaranSearchInputElement
-){
 
+
+if (
+    shikshanupakaranSearchInputElement
+) {
 
     shikshanupakaranSearchInputElement.addEventListener(
 
         "input",
 
-        function(){
-
+        function () {
 
             shikshanupakaranSearchTerm =
-
                 this.value
                     .trim()
                     .toLowerCase();
 
 
+            /* ====================================================
+               EMPTY SEARCH
+            ==================================================== */
 
-            renderShikshanupakaranManagement();
+            if (
+                !shikshanupakaranSearchTerm
+            ) {
 
+                renderShikshanupakaranManagement();
+
+                return;
+
+            }
+
+
+            /* ====================================================
+               COMMON SEARCH
+            ==================================================== */
+
+            searchCommonTableRows({
+
+                searchTerm:
+                    shikshanupakaranSearchTerm,
+
+                rows:
+                    shikshanupakaranRowsMemory,
+
+                khataColumn:
+                    "A",
+
+                nameColumn:
+                    "B",
+
+                receiptColumn:
+                    "I",
+
+                rowsPerPage:
+                    20,
+
+                currentPageSetter:
+                    function (page) {
+
+                        shikshanupakaranCurrentPage =
+                            page;
+
+                    },
+
+                renderPage:
+                    renderShikshanupakaranPage,
+
+                tableBodySelector:
+                    "#shikshanupakaranBody",
+
+                rowSelector:
+                    ".shikshanupakaranRow"
+
+            });
 
         }
 

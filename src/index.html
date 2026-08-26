@@ -26,11 +26,12 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 
-    <link
-        rel="stylesheet"
-        href="style.css">
+    <link rel="stylesheet" href="style.css">
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+        <link rel="stylesheet" href="utils/common.css">
+        <link rel="stylesheet" href="src/utils/search.css">
     
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
    
@@ -1154,35 +1155,6 @@
 
 
 
-  <!-- ==================================================
-                      COMMON UTILITIES
-      --------------------------------------------------
-      Shared functions used by multiple modules.
-  
-      Must load BEFORE module loaders so that:
-      Talapatrak
-      Shikshanupakaran
-      Main Bill
-      can use common.js functions.
-  ================================================== -->
-  
-  <script src="utils/common.js"></script>
-  
-  <!-- ==================================================
-                      DYNAMIC SYSTEM LOADERS
-  ================================================== -->
-  
-  <script src="mainbill/mainbill-loader.js"></script>
-  
-  <script src="shikshanupakaran/shikshanupakaran-loader.js"></script>
-  
-  <script src="talapatrak/talapatrak-loader.js"></script>
-  
-  
-  <!-- ==================================================
-                      MAIN APPLICATION
-  ================================================== -->
-  
-  <script src="script.js"></script>
+  <script src="js/appLoader.js"></script>
 
 </html>

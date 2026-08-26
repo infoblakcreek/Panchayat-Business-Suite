@@ -299,12 +299,6 @@ console.log(
         ELEMENT REFERENCES
 ============================================================ */
 
-const talapatrakSearchInputElement =
-    document.getElementById(
-        "talapatrakSearchInput"
-    );
-
-
 const talapatrakSortButtonElement =
     document.getElementById(
         "talapatrakSortButton"
@@ -6605,6 +6599,8 @@ function updateTalapatrakPaginationUI() {
     );
 }
 
+
+
 /* ============================================================
    GENERATE TALAPATRAK TOTALS AND CALCULATION
    ------------------------------------------------------------
@@ -10168,6 +10164,16 @@ async function openTalapatrakRecord(record) {
         renderTalapatrakPage(1);
 
 
+          if (
+              typeof initializePanchayatRowSearch ===
+              "function"
+          ) {
+          
+              initializePanchayatRowSearch();
+          
+          }
+
+
         /* ========================================================
            21. FINAL DOM CHECK
         ======================================================== */
@@ -10260,44 +10266,6 @@ async function openTalapatrakRecord(record) {
         );
 
     }
-
-}
-
-
-
-/* ============================================================
-        SEARCH
-============================================================ */
-
-if (
-    talapatrakSearchInputElement
-) {
-
-    talapatrakSearchInputElement.addEventListener(
-
-        "input",
-
-        function() {
-
-            talapatrakSearchTerm =
-                this.value
-                    .trim()
-                    .toLowerCase();
-
-
-            console.log(
-                "BEFORE RENDER MANAGEMENT CALL"
-            );
-            
-            renderTalapatrakManagement();
-            
-            console.log(
-                "AFTER RENDER MANAGEMENT CALL"
-            );
-
-        }
-
-    );
 
 }
 

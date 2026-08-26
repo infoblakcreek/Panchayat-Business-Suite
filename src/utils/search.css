@@ -1,0 +1,53 @@
+/* ============================================================
+   PANCHAYAT BUSINESS SUITE
+   SHARED SEARCH STYLES
+   ============================================================ */
+
+/* ============================================================
+   SEARCH RESULT HIGHLIGHT
+   ============================================================ */
+
+.panchayatSearchHighlight {
+
+    background-color:
+        #fff9c4 !important;
+
+    transition:
+        background-color 0.7s ease;
+
+}
+
+
+/* ============================================================
+   SEARCH RESULT CELLS
+   ============================================================ */
+
+.panchayatSearchHighlight td {
+
+    background-color:
+        #fff9c4 !important;
+
+}
+
+
+/* ============================================================
+   FADE
+   ============================================================ */
+
+.panchayatSearchHighlight.searchHighlightFading {
+
+    background-color:
+        #fffbea !important;
+
+    transition:
+        background-color 0.7s ease;
+
+}
+
+
+.panchayatSearchHighlight.searchHighlightFading td {
+
+    background-color:
+        #fffbea !important;
+
+}

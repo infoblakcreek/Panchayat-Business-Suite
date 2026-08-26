@@ -1,0 +1,423 @@
+/* ============================================================
+   COMMON SEARCH RESULT HIGHLIGHT
+============================================================ */
+
+.commonSearchHighlight {
+
+    outline: 3px solid #f5b400;
+
+    outline-offset: -3px;
+
+    background-color: #fff3b0 !important;
+
+    transition:
+        background-color 0.2s ease,
+        outline 0.2s ease;
+
+}
+
+
+
+
+/* ================================================================== */
+
+/* ============================================================
+   COMMON EDITOR ROW SEARCH
+   ------------------------------------------------------------
+   Used by:
+   - Shikshanupakaran
+   - Talapatrak
+   - Normal editor view
+   - Full view
+============================================================ */
+
+.shikshanupakaranRowSearch,
+.talapatrakRowSearch {
+
+    width: 100%;
+
+    min-height: 46px;
+
+    display: flex;
+    align-items: center;
+
+    box-sizing: border-box;
+
+    margin: 14px 0 16px;
+
+    padding: 5px 8px 5px 15px;
+
+    background: #f4f9ff;
+
+    border: 1px solid #c9def2;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 3px 10px rgba(52, 112, 170, 0.08);
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+
+}
+
+
+/* ============================================================
+   SEARCH ICON
+============================================================ */
+
+.shikshanupakaranRowSearch > i,
+.talapatrakRowSearch > i {
+
+    flex: 0 0 auto;
+
+    width: 30px;
+
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-right: 9px;
+
+    border-radius: 8px;
+
+    background: #e2f0ff;
+
+    color: #3b78a9;
+
+    font-size: 14px;
+
+}
+
+
+/* ============================================================
+   SEARCH INPUT
+============================================================ */
+
+.shikshanupakaranRowSearch input,
+.talapatrakRowSearch input {
+
+    flex: 1;
+
+    width: 100%;
+
+    min-width: 0;
+
+    height: 36px;
+
+    padding: 0 4px;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    color: #29445a;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    box-sizing: border-box;
+
+}
+
+
+/* ============================================================
+   PLACEHOLDER
+============================================================ */
+
+.shikshanupakaranRowSearch input::placeholder,
+.talapatrakRowSearch input::placeholder {
+
+    color: #7d9ab1;
+
+    opacity: 1;
+
+    font-weight: 400;
+
+}
+
+
+/* ============================================================
+   FOCUS
+============================================================ */
+
+.shikshanupakaranRowSearch:focus-within,
+.talapatrakRowSearch:focus-within {
+
+    background: #f8fcff;
+
+    border-color: #74aeda;
+
+    box-shadow:
+        0 0 0 3px rgba(84, 151, 202, 0.12),
+        0 4px 12px rgba(52, 112, 170, 0.10);
+
+}
+
+
+/* ============================================================
+   CLEAR BUTTON
+============================================================ */
+
+.shikshanupakaranRowSearch button,
+.talapatrakRowSearch button {
+
+    flex: 0 0 auto;
+
+    width: 31px;
+
+    height: 31px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-left: 7px;
+
+    padding: 0;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: transparent;
+
+    color: #7d9ab1;
+
+    cursor: pointer;
+
+    transition:
+        background 0.18s ease,
+        color 0.18s ease,
+        transform 0.18s ease;
+
+}
+
+
+.shikshanupakaranRowSearch button:hover,
+.talapatrakRowSearch button:hover {
+
+    background: #dceeff;
+
+    color: #3975a5;
+
+    transform: scale(1.05);
+
+}
+
+
+.shikshanupakaranRowSearch button:active,
+.talapatrakRowSearch button:active {
+
+    transform: scale(0.95);
+
+}
+
+
+/* ============================================================
+   FULL VIEW
+   ------------------------------------------------------------
+   Keeps the search visually comfortable when the editor
+   expands to full screen.
+============================================================ */
+
+.shikshanupakaranEditorView.fullView
+.shikshanupakaranRowSearch,
+
+.talapatrakEditorView.fullView
+.talapatrakRowSearch {
+
+    margin-top: 16px;
+
+    margin-bottom: 18px;
+
+}
+
+
+/* ============================================================
+   LARGE SCREENS / FULL VIEW
+============================================================ */
+
+@media (min-width: 1200px) {
+
+    .shikshanupakaranRowSearch,
+    .talapatrakRowSearch {
+
+        min-height: 48px;
+
+        padding-left: 16px;
+
+        padding-right: 9px;
+
+        border-radius: 13px;
+
+    }
+
+
+    .shikshanupakaranRowSearch > i,
+    .talapatrakRowSearch > i {
+
+        width: 32px;
+
+        height: 32px;
+
+        margin-right: 10px;
+
+        font-size: 15px;
+
+    }
+
+
+    .shikshanupakaranRowSearch input,
+    .talapatrakRowSearch input {
+
+        height: 38px;
+
+        font-size: 15px;
+
+    }
+
+
+    .shikshanupakaranRowSearch button,
+    .talapatrakRowSearch button {
+
+        width: 32px;
+
+        height: 32px;
+
+    }
+
+}
+
+
+/* ============================================================
+   TABLET
+============================================================ */
+
+@media (max-width: 900px) {
+
+    .shikshanupakaranRowSearch,
+    .talapatrakRowSearch {
+
+        min-height: 44px;
+
+        margin: 11px 0 13px;
+
+        padding-left: 12px;
+
+        border-radius: 10px;
+
+    }
+
+
+    .shikshanupakaranRowSearch > i,
+    .talapatrakRowSearch > i {
+
+        width: 29px;
+
+        height: 29px;
+
+        margin-right: 8px;
+
+    }
+
+
+    .shikshanupakaranRowSearch input,
+    .talapatrakRowSearch input {
+
+        height: 35px;
+
+        font-size: 13px;
+
+    }
+
+}
+
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (max-width: 600px) {
+
+    .shikshanupakaranRowSearch,
+    .talapatrakRowSearch {
+
+        min-height: 42px;
+
+        margin: 9px 0 11px;
+
+        padding: 4px 6px 4px 10px;
+
+        border-radius: 9px;
+
+    }
+
+
+    .shikshanupakaranRowSearch > i,
+    .talapatrakRowSearch > i {
+
+        width: 27px;
+
+        height: 27px;
+
+        margin-right: 7px;
+
+        font-size: 13px;
+
+        border-radius: 7px;
+
+    }
+
+
+    .shikshanupakaranRowSearch input,
+    .talapatrakRowSearch input {
+
+        height: 34px;
+
+        font-size: 13px;
+
+    }
+
+
+    .shikshanupakaranRowSearch button,
+    .talapatrakRowSearch button {
+
+        width: 28px;
+
+        height: 28px;
+
+        margin-left: 4px;
+
+    }
+
+}
+
+
+/* ============================================================
+   PRINT
+   ------------------------------------------------------------
+   Search should never appear on the printed register.
+============================================================ */
+
+@media print {
+
+    .shikshanupakaranRowSearch,
+    .talapatrakRowSearch {
+
+        display: none !important;
+
+    }
+
+}
