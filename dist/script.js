@@ -723,20 +723,6 @@ if (mainBillNav) {
 
 
 
-// if (createBillButton) {
-
-//     createBillButton.addEventListener(
-//         "click",
-//         function() {
-
-//             showInvoice();
-
-//         }
-//     );
-
-// }
-
-
 /* ==================================================
         DASHBOARD DATE
 ================================================== */
@@ -2357,80 +2343,6 @@ if (dashboardNav) {
 
 }
 
-// if (createBillButton) {
-
-//     createBillButton.addEventListener(
-//         "click",
-//         function() {
-
-//             dashboardView.style.display =
-//                 "none";
-
-//             invoiceView.style.display =
-//                 "block";
-
-//             dashboardNav.classList.remove(
-//                 "active"
-//             );
-
-//             window.scrollTo(
-//                 0,
-//                 0
-//             );
-
-//         }
-//     );
-
-// }
-
-/* ============================================================
-   CREATE BILL BUTTON
-============================================================ */
-
-// if (createBillButton) {
-
-//     createBillButton.addEventListener(
-//         "click",
-//         function (event) {
-
-//             event.preventDefault();
-
-//             console.log("CREATE BILL BUTTON CLICKED");
-
-//             hideAllViews();
-
-//             if (invoiceView) {
-
-//                 invoiceView.style.display =
-//                     "block";
-
-//             }
-
-//             if (dashboardNav) {
-
-//                 dashboardNav.classList.remove(
-//                     "active"
-//                 );
-
-//             }
-
-//             if (mainBillNav) {
-
-//                 mainBillNav.classList.remove(
-//                     "active"
-//                 );
-
-//             }
-
-//             window.scrollTo(
-//                 0,
-//                 0
-//             );
-
-//         }
-//     );
-
-// }
 
 
 /* ============================================================
@@ -2450,8 +2362,41 @@ if (createBillButton) {
             );
 
 
+            // ==========================================
+            // HIDE ALL APPLICATION VIEWS
+            // ==========================================
+
             hideAllViews();
 
+
+            // ==========================================
+            // EXPLICITLY HIDE TALAPATRAK EDITOR
+            // ==========================================
+
+            const talapatrakEditorView =
+                document.getElementById(
+                    "talapatrakEditorView"
+                );
+
+
+            if (talapatrakEditorView) {
+
+                talapatrakEditorView.style.display =
+                    "none";
+
+            }
+
+
+            // Remove Talapatrak fullscreen state
+
+            document.body.classList.remove(
+                "talapatrakFullscreen"
+            );
+
+
+            // ==========================================
+            // OPEN MAIN BILL
+            // ==========================================
 
             const invoiceView =
                 document.getElementById(
@@ -2480,6 +2425,10 @@ if (createBillButton) {
                 "block";
 
 
+            // ==========================================
+            // NAVIGATION STATE
+            // ==========================================
+
             if (dashboardNav) {
 
                 dashboardNav.classList.remove(
@@ -2498,8 +2447,16 @@ if (createBillButton) {
             }
 
 
+            // ==========================================
+            // NEW BILL NUMBER
+            // ==========================================
+
             setInitialBillNumber();
 
+
+            // ==========================================
+            // SCROLL TOP
+            // ==========================================
 
             window.scrollTo(
                 0,
@@ -2510,6 +2467,7 @@ if (createBillButton) {
     );
 
 }
+
 
 function autoGrow(textarea) {
 
@@ -3634,7 +3592,41 @@ if(viewAllButton){
 
 }
 
+const mainBillSystemCard =
+    document.getElementById(
+        "mainBillSystemCard"
+    );
 
+if (mainBillSystemCard) {
+
+    mainBillSystemCard.addEventListener(
+        "click",
+        function () {
+
+            console.log(
+                "MAIN BILL CARD → OPENING MAIN BILLS"
+            );
+
+
+            document.body.classList.remove(
+                "talapatrakFullscreen"
+            );
+
+
+            document.body.classList.remove(
+                "receiptGeneratedMode"
+            );
+
+
+            showMainView(
+                "mainBillsView"
+            );
+
+        }
+    );
+
+}
+  
     /* --------------------------------------------------------
        HIDE ACTIVITY
     -------------------------------------------------------- */
@@ -3790,6 +3782,8 @@ function hideAllMainViews() {
 
 }
 
+
+
 function showMainView(viewId) {
 
     const allViews = [
@@ -3802,7 +3796,6 @@ function showMainView(viewId) {
 
     ];
 
-    // Hide every main view first
     allViews.forEach(function (id) {
 
         const view = document.getElementById(id);
@@ -3816,8 +3809,8 @@ function showMainView(viewId) {
     });
 
 
-    // Show only the requested view
-    const selectedView = document.getElementById(viewId);
+    const selectedView =
+        document.getElementById(viewId);
 
     if (selectedView) {
 

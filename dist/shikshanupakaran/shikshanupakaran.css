@@ -4059,6 +4059,8 @@ body.dark-theme .shikshanupakaranTable tbody tr:nth-child(even) td,
 
     max-width: 200px;
 
+    text-align: left;
+
 }
 
 
@@ -5674,6 +5676,7 @@ TABLE TOP INFORMATION ROW
 
         width: 155px;
         min-width: 155px;
+        text-align: left;
 
     }
 
@@ -8462,4 +8465,355 @@ body.shikshanupakaranFullViewMode
 
 /* =========================================================================================================== */
 
+/* ============================================================
+   SHIKSHANUPAKARAN DELETE CONFIRMATION MODAL
+============================================================ */
 
+.shikshanupakaranDeleteModal {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 99999;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+}
+
+
+/*
+    Modal becomes visible
+*/
+
+.shikshanupakaranDeleteModal.open {
+
+    display: flex;
+
+}
+
+
+/* ============================================================
+   BACKDROP
+============================================================ */
+
+.shikshanupakaranDeleteModalOverlay {
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        rgba(15, 23, 42, 0.55);
+
+    backdrop-filter:
+        blur(4px);
+
+}
+
+
+/* ============================================================
+   MODAL
+============================================================ */
+
+.shikshanupakaranDeleteModalContent {
+
+    position: relative;
+
+    z-index: 1;
+
+    width: min(
+        440px,
+        100%
+    );
+
+    padding: 32px;
+
+    border-radius: 20px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 25px 70px
+        rgba(15, 23, 42, 0.25);
+
+    text-align: center;
+
+    animation:
+        shikshanupakaranDeleteModalIn
+        0.18s ease-out;
+
+}
+
+
+/* ============================================================
+   ICON
+============================================================ */
+
+.shikshanupakaranDeleteModalIcon {
+
+    width: 64px;
+
+    height: 64px;
+
+    margin:
+        0 auto 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        #fff1f2;
+
+    color:
+        #dc2626;
+
+    font-size: 26px;
+
+}
+
+
+/* ============================================================
+   TITLE
+============================================================ */
+
+.shikshanupakaranDeleteModalContent h2 {
+
+    margin:
+        0 0 14px;
+
+    font-size: 22px;
+
+    font-weight: 700;
+
+    color:
+        #111827;
+
+}
+
+
+/* ============================================================
+   MESSAGE
+============================================================ */
+
+.shikshanupakaranDeleteModalMessage {
+
+    margin:
+        0 auto;
+
+    max-width: 360px;
+
+    font-size: 15px;
+
+    line-height: 1.6;
+
+    color:
+        #4b5563;
+
+}
+
+
+.shikshanupakaranDeleteModalMessage strong {
+
+    color:
+        #111827;
+
+    font-weight: 700;
+
+}
+
+
+/* ============================================================
+   WARNING
+============================================================ */
+
+.shikshanupakaranDeleteModalWarning {
+
+    margin:
+        14px 0 0;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color:
+        #dc2626;
+
+}
+
+
+/* ============================================================
+   ACTIONS
+============================================================ */
+
+.shikshanupakaranDeleteModalActions {
+
+    display: flex;
+
+    gap: 12px;
+
+    margin-top: 28px;
+
+}
+
+
+.shikshanupakaranDeleteModalActions button {
+
+    flex: 1;
+
+    min-height: 44px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        opacity 0.15s ease;
+
+}
+
+
+/* ============================================================
+   CANCEL
+============================================================ */
+
+.shikshanupakaranDeleteCancelButton {
+
+    background:
+        #f3f4f6;
+
+    color:
+        #374151;
+
+}
+
+
+.shikshanupakaranDeleteCancelButton:hover {
+
+    background:
+        #e5e7eb;
+
+}
+
+
+/* ============================================================
+   DELETE
+============================================================ */
+
+.shikshanupakaranDeleteConfirmButton {
+
+    background:
+        #dc2626;
+
+    color:
+        #ffffff;
+
+}
+
+
+.shikshanupakaranDeleteConfirmButton:hover {
+
+    background:
+        #b91c1c;
+
+}
+
+
+.shikshanupakaranDeleteModalActions button:active {
+
+    transform:
+        scale(0.98);
+
+}
+
+
+/* ============================================================
+   DISABLED / DELETING
+============================================================ */
+
+.shikshanupakaranDeleteConfirmButton:disabled {
+
+    opacity:
+        0.65;
+
+    cursor:
+        not-allowed;
+
+}
+
+
+/* ============================================================
+   ANIMATION
+============================================================ */
+
+@keyframes shikshanupakaranDeleteModalIn {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(8px)
+            scale(0.98);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+
+    }
+
+}
+
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (
+    max-width: 520px
+) {
+
+    .shikshanupakaranDeleteModalContent {
+
+        padding:
+            26px 20px;
+
+        border-radius:
+            16px;
+
+    }
+
+
+    .shikshanupakaranDeleteModalActions {
+
+        flex-direction:
+            column-reverse;
+
+    }
+
+}

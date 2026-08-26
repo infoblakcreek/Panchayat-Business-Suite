@@ -1440,6 +1440,11 @@ if (saveBillBtn) {
 
 // ==========================================
 // PRINT BILL
+// MAIN BILL ONLY
+// ==========================================
+
+// ==========================================
+// PRINT BILL
 // ==========================================
 
 const printBillBtn =
@@ -1450,37 +1455,41 @@ const printBillBtn =
 
 if (printBillBtn) {
 
-    printBillBtn.addEventListener(
-        "click",
-        function() {
+   printBillBtn.addEventListener(
+    "click",
+    function() {
 
-          console.log("MAIN BILL PRINT BUTTON CLICKED");
+        console.log("MAIN BILL PRINT BUTTON CLICKED");
 
-            console.time("Main Bill Print Generation");
+        console.time("Main Bill Print Generation");
 
-            generatePrintableBills();
-            
-            console.timeEnd("Main Bill Print Generation");
+        generatePrintableBills();
 
-
-            document.body.classList.add(
-                "showCutLine"
-            );
+        console.timeEnd("Main Bill Print Generation");
 
 
-            window.print();
+        document.body.classList.add(
+            "printingMainBill"
+        );
 
-        }
+        document.body.classList.add(
+            "showCutLine"
+        );
 
-    );
+
+        window.print();
+
+    }
+);
 
 }
-
 
 
 // ==========================================
 // AFTER PRINT - MAIN BILL ONLY
 // ==========================================
+
+
 
 window.addEventListener(
     "afterprint",
@@ -1490,10 +1499,16 @@ window.addEventListener(
             "showCutLine"
         );
 
+        document.body.classList.remove(
+            "printingMainBill"
+        );
+
+
         console.log(
             "Main bill print completed."
         );
 
     }
-
 );
+
+

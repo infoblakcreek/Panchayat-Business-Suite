@@ -1,5 +1,6 @@
 console.log("TALAPATRAK JS FILE RUNNING");
 
+
 /* ============================================================
         TALAPATRAK SYSTEM
         STEP 1: NAVIGATION + MANAGEMENT + EDITOR
@@ -2736,10 +2737,10 @@ if (
 
 
             /*
-                Delete record
+                Open delete confirmation modal
             */
 
-            await deleteTalapatrakRecord(
+            await showTalapatrakDeleteModal(
                 record
             );
 
@@ -2764,37 +2765,62 @@ if (
         DELETE TALAPATRAK RECORD
 ============================================================ */
 
-async function deleteTalapatrakRecord(record) {
 
-    if (!record || !record.id) {
+async function permanentlyDeleteTalapatrakRecord(record) {
+
+    if(
+        !record ||
+        !record.id
+    ){
 
         console.error(
-            "Talapatrak document ID missing."
+            "Cannot delete Talapatrak: invalid record."
         );
 
-        return;
+        return false;
 
     }
+
 
     const villageName =
         record.moje ||
         "this village";
 
 
-    const confirmed =
-        confirm(
-            `Are you sure you want to delete "${villageName}"?`
-        );
-
-
-    if (!confirmed) {
-
-        return;
-
-    }
+    const year =
+        record.year ||
+        "";
 
 
     try {
+
+        /* ========================================================
+           CHECK LOGIN
+        ======================================================== */
+
+        if(
+            !auth ||
+            !auth.currentUser
+        ){
+
+            alert(
+                "Please login first."
+            );
+
+            return false;
+
+        }
+
+
+        console.log(
+            "TALAPATRAK DELETE → FIRESTORE DELETE START:",
+            record.id
+        );
+
+
+        /* ========================================================
+           DELETE FIRESTORE DOCUMENT
+        ======================================================== */
 
         await db
             .collection(
@@ -2806,62 +2832,107 @@ async function deleteTalapatrakRecord(record) {
             .delete();
 
 
-        talapatrakRecords =
-            talapatrakRecords.filter(
+        console.log(
+            "TALAPATRAK DELETE → FIRESTORE DELETE COMPLETE:",
+            record.id
+        );
 
+
+        /* ========================================================
+           REMOVE FROM LOCAL ARRAY
+        ======================================================== */
+
+        const index =
+            talapatrakRecords.findIndex(
                 function(item) {
 
-                    return item.id !==
+                    return item.id ===
                         record.id;
 
                 }
-
             );
 
 
-        console.log(
-              "BEFORE RENDER MANAGEMENT CALL"
-          );
-          
-          renderTalapatrakManagement();
-          
-          console.log(
-              "AFTER RENDER MANAGEMENT CALL"
-          );
+        if(index >= 0) {
 
-          await loadTalapatrakCount();
+            talapatrakRecords.splice(
+                index,
+                1
+            );
+
+        }
+
+
+        /* ========================================================
+           CLEAR CURRENT STATE
+        ======================================================== */
+
+        if(
+            currentTalapatrakDocumentId ===
+            record.id
+        ){
+
+            currentTalapatrakDocumentId =
+                null;
+
+
+            currentTalapatrakRecord =
+                null;
+
+        }
+
+
+        /* ========================================================
+           REFRESH MANAGEMENT
+        ======================================================== */
+
+        renderTalapatrakManagement();
+
+
+        /* ========================================================
+           ACTIVITY
+        ======================================================== */
 
         await addTalapatrakActivity(
-              "talapatrak_deleted",
-              "Talapatrak deleted",
-              `${villageName} Talapatrak deleted`,
-              villageName
-          );
-      
+
+            "talapatrak_deleted",
+
+            "Talapatrak deleted",
+
+            `${villageName} ${year} Talapatrak deleted`,
+
+            villageName
+
+        );
+
+
         console.log(
             "Talapatrak deleted:",
             record.id
         );
 
 
-    }
+        return true;
 
-    catch (error) {
+    }
+    catch(error) {
 
         console.error(
-            "Error deleting Talapatrak:",
+            "Talapatrak delete error:",
             error
         );
 
 
         alert(
-            "Error deleting Talapatrak. Please try again."
+            "Unable to delete Talapatrak."
         );
+
+
+        return false;
 
     }
 
 }
-
 /* ============================================================
         CLOSE CARD MENUS WHEN CLICKING OUTSIDE
 ============================================================ */
@@ -4281,8 +4352,7 @@ function createTalapatrakRow(
             <input
                 type="number"
                 class="columnA"
-                value="${escapeTalapatrakHTML(khataNumber)}"
-                readonly>
+                value="${escapeTalapatrakHTML(khataNumber)}">
         </td>
 
 
@@ -5357,17 +5427,29 @@ function calculateTalapatrakRow(input) {
     /* ============================================================
        GET NUMERIC VALUE
        ------------------------------------------------------------
-       Used internally for calculations.
-       Display formatting does not affect the calculation.
+       Used only for calculations.
+       DO NOT format the user's input here.
     ============================================================ */
 
     function getValue(column) {
 
-        return Number(
+        const element =
             row.querySelector(
                 "." + column
-            )?.value
-        ) || 0;
+            );
+
+        if (!element) {
+            return 0;
+        }
+
+        const value =
+            Number(
+                element.value
+            );
+
+        return Number.isFinite(value)
+            ? value
+            : 0;
 
     }
 
@@ -5375,93 +5457,44 @@ function calculateTalapatrakRow(input) {
     /* ============================================================
        SET CALCULATED VALUE
        ------------------------------------------------------------
-       ALL CALCULATED NUMBERS → 0.00
+       Calculated columns are always displayed as 0.00
     ============================================================ */
 
     function setValue(
-        column,
-        value
-    ) {
-
-        const element =
-            row.querySelector(
-                "." + column
-            );
-
-        if (element) {
-
-            element.value =
-                Number(
-                    value
-                ).toFixed(2);
-
-        }
-
-    }
+          column,
+          value
+      ) {
+      
+          const element =
+              row.querySelector(
+                  "." + column
+              );
+      
+          if (element) {
+      
+              element.value =
+                  roundGeneratedValueToFivePaise(
+                      value
+                  ).toFixed(2);
+      
+          }
+      
+      }
 
 
     /* ============================================================
-       FORMAT EDITABLE NUMERIC INPUTS
+       READ USER INPUTS
        ------------------------------------------------------------
-       Exceptions:
-       A      → Khata number
-       Pavati → leave unchanged
-       M      → date
-    ============================================================ */
+       IMPORTANT:
+       DO NOT call toFixed() here.
 
-    function formatInput(
-        column
-    ) {
+       This allows the user to type:
+       3
+       3.
+       3.1
+       3.15
 
-        const element =
-            row.querySelector(
-                "." + column
-            );
-
-        if (
-            element &&
-            element.value !== ""
-        ) {
-
-            const number =
-                Number(
-                    element.value
-                );
-
-            if (
-                Number.isFinite(
-                    number
-                )
-            ) {
-
-                element.value =
-                    number.toFixed(2);
-
-            }
-
-        }
-
-    }
-
-
-    /* ============================================================
-       INPUT COLUMNS
-       ------------------------------------------------------------
-       C, D, E, G, K, N, S
-       → 0.00
-    ============================================================ */
-
-    formatInput("columnC");
-    formatInput("columnD");
-    formatInput("columnE");
-    formatInput("columnG");
-    formatInput("columnK");
-    formatInput("columnN");
-    formatInput("columnS");
-
-
-    /* ============================================================
-       READ INPUT VALUES
+       without JavaScript changing the field to 3.00.
     ============================================================ */
 
     const C =
@@ -5469,10 +5502,12 @@ function calculateTalapatrakRow(input) {
             "columnC"
         );
 
+
     const D =
         getValue(
             "columnD"
         );
+
 
     const E =
         getValue(
@@ -5480,14 +5515,33 @@ function calculateTalapatrakRow(input) {
         );
 
 
+    const G =
+        getValue(
+            "columnG"
+        );
+
+
+    const K =
+        getValue(
+            "columnK"
+        );
+
+
+    const N =
+        getValue(
+            "columnN"
+        );
+
+
     /* ============================================================
        F
        ------------------------------------------------------------
-       (D + E) × 3
+       F = (D + E) × 3
     ============================================================ */
 
     const F =
         (D + E) * 3;
+
 
     setValue(
         "columnF",
@@ -5496,23 +5550,18 @@ function calculateTalapatrakRow(input) {
 
 
     /* ============================================================
-       G
-    ============================================================ */
-
-    const G =
-        getValue(
-            "columnG"
-        );
-
-
-    /* ============================================================
        H
        ------------------------------------------------------------
-       C + D + E + F + G
+       H = C + D + E + F + G
     ============================================================ */
 
     const H =
-        C + D + E + F + G;
+        C +
+        D +
+        E +
+        F +
+        G;
+
 
     setValue(
         "columnH",
@@ -5523,11 +5572,12 @@ function calculateTalapatrakRow(input) {
     /* ============================================================
        I
        ------------------------------------------------------------
-       D
+       I = D
     ============================================================ */
 
     const I =
         D;
+
 
     setValue(
         "columnI",
@@ -5538,11 +5588,13 @@ function calculateTalapatrakRow(input) {
     /* ============================================================
        J
        ------------------------------------------------------------
-       H - I
+       J = H - I
     ============================================================ */
 
     const J =
-        H - I;
+        H -
+        I;
+
 
     setValue(
         "columnJ",
@@ -5551,28 +5603,15 @@ function calculateTalapatrakRow(input) {
 
 
     /* ============================================================
-       K + N
-    ============================================================ */
-
-    const K =
-        getValue(
-            "columnK"
-        );
-
-    const N =
-        getValue(
-            "columnN"
-        );
-
-
-    /* ============================================================
        O
        ------------------------------------------------------------
-       K + N
+       O = K + N
     ============================================================ */
 
     const O =
-        K + N;
+        K +
+        N;
+
 
     setValue(
         "columnO",
@@ -5583,11 +5622,14 @@ function calculateTalapatrakRow(input) {
     /* ============================================================
        T
        ------------------------------------------------------------
-       H - I - O
+       T = H - I - O
     ============================================================ */
 
     const T =
-        H - I - O;
+        H -
+        I -
+        O;
+
 
     setValue(
         "columnT",
@@ -5598,13 +5640,14 @@ function calculateTalapatrakRow(input) {
     /* ============================================================
        U
        ------------------------------------------------------------
-       T < O ? T : O
+       U = IF(T < O, T, O)
     ============================================================ */
 
     const U =
-        T < O
+        T < 0
             ? T
-            : O;
+            : 0;
+
 
     setValue(
         "columnU",
@@ -5615,11 +5658,12 @@ function calculateTalapatrakRow(input) {
     /* ============================================================
        R
        ------------------------------------------------------------
-       -U
+       R = -U
     ============================================================ */
 
     const R =
         -U;
+
 
     setValue(
         "columnR",
@@ -5630,11 +5674,13 @@ function calculateTalapatrakRow(input) {
     /* ============================================================
        P
        ------------------------------------------------------------
-       O - R
+       P = O - R
     ============================================================ */
 
     const P =
-        O - R;
+        O -
+        R;
+
 
     setValue(
         "columnP",
@@ -5645,13 +5691,17 @@ function calculateTalapatrakRow(input) {
     /* ============================================================
        Q
        ------------------------------------------------------------
-       T > O ? T : O
+       Q = IF(T > 0, T, 0)
+       
+       IMPORTANT:
+       Q does NOT compare T with O.
     ============================================================ */
 
     const Q =
-        T > O
+        T > 0
             ? T
-            : O;
+            : 0;
+
 
     setValue(
         "columnQ",
@@ -5796,9 +5846,9 @@ function calculateTalapatrakGrandTotals() {
 
 
             const U =
-                T < O
+                T < 0
                     ? T
-                    : O;
+                    : 0;
 
 
             const R =
@@ -5809,10 +5859,10 @@ function calculateTalapatrakGrandTotals() {
                 O - R;
 
 
-            const Q =
-                T > O
+           const Q =
+                T > 0
                     ? T
-                    : O;
+                    : 0;
 
 
             /* ------------------------------------------------
@@ -5967,9 +6017,9 @@ function calculateTalapatrakMemoryTotals() {
 
 
             const U =
-                T < O
+                T < 0
                     ? T
-                    : O;
+                    : 0;
 
 
             const R =
@@ -5981,9 +6031,9 @@ function calculateTalapatrakMemoryTotals() {
 
 
             const Q =
-                T > O
-                    ? T
-                    : O;
+                  T > 0
+                      ? T
+                      : 0;
 
 
             /* ------------------------------------------------
@@ -6665,7 +6715,9 @@ function generateTalapatrakTotalsAndSummary() {
 
 function formatTalapatrakNumberInputs() {
 
-    if (!talapatrakBody) return;
+    if (!talapatrakBody) {
+        return;
+    }
 
 
     talapatrakBody
@@ -6674,10 +6726,6 @@ function formatTalapatrakNumberInputs() {
         )
         .forEach(function(input) {
 
-
-            /* ==================================================
-               DECIMAL FORMATTER
-            ================================================== */
 
             if (
                 !input.dataset
@@ -6702,11 +6750,6 @@ function formatTalapatrakNumberInputs() {
                         }
 
 
-                        /*
-                         * Column L = Receipt Number
-                         * Keep it as a normal integer.
-                         */
-
                         if (
                             this.classList.contains(
                                 "columnL"
@@ -6722,10 +6765,22 @@ function formatTalapatrakNumberInputs() {
 
                         else {
 
-                            this.value =
+                            const number =
                                 Number(
                                     this.value
-                                ).toFixed(2);
+                                );
+
+
+                            if (
+                                Number.isFinite(
+                                    number
+                                )
+                            ) {
+
+                                this.value =
+                                    number.toFixed(2);
+
+                            }
 
                         }
 
@@ -6734,10 +6789,6 @@ function formatTalapatrakNumberInputs() {
 
             }
 
-
-            /* ==================================================
-               LIVE ROW CALCULATION
-            ================================================== */
 
             if (
                 !input.dataset
@@ -7469,41 +7520,35 @@ async function saveTalapatrak(
        SAVE PROTECTION
     ============================================================ */
 
-    if (
-        window.talapatrakPrinting
-    ) {
+    if (window.talapatrakPrinting) {
 
         console.log(
-            "AUTOSAVE SKIPPED → TALAPATRAK IS PRINTING"
+            "SAVE SKIPPED → TALAPATRAK IS PRINTING"
         );
 
-        return;
+        return false;
 
     }
 
 
-    if (
-        window.khataImportInProgress
-    ) {
+    if (window.khataImportInProgress) {
 
         console.log(
-            "Talapatrak save skipped — Khata import is currently running."
+            "SAVE SKIPPED → KHATA IMPORT IS RUNNING"
         );
 
-        return;
+        return false;
 
     }
 
 
-    if (
-        window.talapatrakOpeningInProgress
-    ) {
+    if (window.talapatrakOpeningInProgress) {
 
         console.log(
-            "AUTOSAVE SKIPPED → TALAPATRAK IS STILL OPENING"
+            "SAVE SKIPPED → TALAPATRAK IS STILL OPENING"
         );
 
-        return;
+        return false;
 
     }
 
@@ -7511,16 +7556,18 @@ async function saveTalapatrak(
     try {
 
         /* ========================================================
-           LOGIN CHECK
+           LOGIN
         ======================================================== */
 
-        if (
-            !auth.currentUser
-        ) {
+        if (!auth || !auth.currentUser) {
 
-            alert(
-                "Please login before saving the Talapatrak."
-            );
+            if (showSuccessMessage) {
+
+                alert(
+                    "Please login before saving the Talapatrak."
+                );
+
+            }
 
             return false;
 
@@ -7528,7 +7575,7 @@ async function saveTalapatrak(
 
 
         /* ========================================================
-           HEADER INPUTS
+           HEADER
         ======================================================== */
 
         const mojeInput =
@@ -7587,7 +7634,7 @@ async function saveTalapatrak(
 
 
         /* ========================================================
-           CURRENT YEAR
+           YEAR
         ======================================================== */
 
         const yearSelect =
@@ -7608,7 +7655,7 @@ async function saveTalapatrak(
 
 
         /* ========================================================
-           COLLECT ALL ROWS
+           ROWS
         ======================================================== */
 
         const rows =
@@ -7627,7 +7674,7 @@ async function saveTalapatrak(
 
 
         /* ========================================================
-           DETERMINE OLD DOCUMENT
+           CURRENT RECORD
         ======================================================== */
 
         const oldDocumentId =
@@ -7636,60 +7683,43 @@ async function saveTalapatrak(
 
 
         const oldYear =
-            currentTalapatrakRecord &&
-            currentTalapatrakRecord.year
-                ? currentTalapatrakRecord.year
-                : null;
+            currentTalapatrakRecord?.year ||
+            null;
 
 
-        /*
-        ============================================================
-            NEW TALAPATRAK
-        ============================================================
+        const oldMoje =
+            currentTalapatrakRecord?.moje ||
+            "";
 
-        There is no existing document.
-
-        Therefore create using village + selected year.
-        ============================================================
-        */
 
         const isExistingRecord =
             !!oldDocumentId;
 
 
-        let documentId;
+        /* ========================================================
+           DETECT IDENTITY CHANGE
 
+           Talapatrak identity =
+           MOJE + YEAR
+        ======================================================== */
 
-        if (
-            isExistingRecord
-        ) {
-
-            /*
-                IMPORTANT:
-
-                Existing record keeps its current
-                document ID unless the year was
-                deliberately changed and confirmed.
-            */
-
-            documentId =
-                oldDocumentId;
-
-        }
-        else {
-
-            documentId =
-                getTalapatrakDocumentId(
-                    moje,
-                    currentYear
-                );
-
-        }
+        const identityChanged =
+            isExistingRecord &&
+            (
+                oldMoje !== moje ||
+                oldYear !== currentYear
+            );
 
 
         console.log(
-            "SAVE → OLD DOCUMENT ID:",
-            oldDocumentId
+            "SAVE → OLD MOJE:",
+            oldMoje
+        );
+
+
+        console.log(
+            "SAVE → NEW MOJE:",
+            moje
         );
 
 
@@ -7700,116 +7730,46 @@ async function saveTalapatrak(
 
 
         console.log(
-            "SAVE → SELECTED YEAR:",
+            "SAVE → NEW YEAR:",
             currentYear
         );
 
 
         console.log(
-            "SAVE → INITIAL DOCUMENT ID:",
-            documentId
+            "SAVE → IDENTITY CHANGED:",
+            identityChanged
         );
 
 
         /* ========================================================
-           YEAR CHANGE
+           DETERMINE DOCUMENT ID
         ======================================================== */
 
-        const yearChanged =
-            isExistingRecord &&
-            oldYear &&
-            currentYear !== oldYear;
+        let documentId;
 
-
-        /*
-        ============================================================
-            HANDLE YEAR CHANGE
-        ============================================================
-        */
 
         if (
-            yearChanged
+            isExistingRecord &&
+            !identityChanged
         ) {
 
-            console.log(
-                "SAVE → YEAR CHANGE DETECTED:",
-                oldYear,
-                "→",
-                currentYear
-            );
-
-
             /*
-            --------------------------------------------------------
-                Ask user only here.
-            --------------------------------------------------------
+                Normal edit.
+
+                Keep the existing document.
             */
 
-            const confirmed =
-                await showTalapatrakYearChangeModal(
-                    oldYear,
-                    currentYear
-                );
+            documentId =
+                oldDocumentId;
 
-
-            /*
-            --------------------------------------------------------
-                USER CANCELLED
-            --------------------------------------------------------
-            */
-
-            if (
-                !confirmed
-            ) {
-
-                /*
-                    Restore dropdown.
-                */
-
-                if (yearSelect) {
-
-                    yearSelect.value =
-                        oldYear;
-
-                }
-
-
-                updateTalapatrakYearDisplay(
-                    oldYear
-                );
-
-
-                /*
-                    Restore memory record.
-                */
-
-                if (
-                    currentTalapatrakRecord
-                ) {
-
-                    currentTalapatrakRecord.year =
-                        oldYear;
-
-                }
-
-
-                console.log(
-                    "SAVE → YEAR CHANGE CANCELLED:",
-                    oldYear,
-                    "→",
-                    currentYear
-                );
-
-
-                return false;
-
-            }
-
+        }
+        else {
 
             /*
-            --------------------------------------------------------
-                USER CONFIRMED
-            --------------------------------------------------------
+                New card OR
+                village/year changed.
+
+                Identity is village + year.
             */
 
             documentId =
@@ -7818,30 +7778,64 @@ async function saveTalapatrak(
                     currentYear
                 );
 
+        }
+
+
+        /* ========================================================
+           VILLAGE / YEAR CHANGE
+        ======================================================== */
+
+        if (
+            identityChanged
+        ) {
 
             console.log(
-                "SAVE → YEAR CHANGE CONFIRMED"
-            );
-
-
-            console.log(
-                "SAVE → OLD DOCUMENT:",
-                oldDocumentId
-            );
-
-
-            console.log(
-                "SAVE → NEW DOCUMENT:",
-                documentId
+                "SAVE → TALAPATRAK IDENTITY CHANGE"
             );
 
 
             /*
-            --------------------------------------------------------
-                Prevent overwrite of another existing Talapatrak
-                with same village + year.
-            --------------------------------------------------------
+                For year changes, use the existing
+                year confirmation modal.
             */
+
+            if (
+                oldYear &&
+                oldYear !== currentYear
+            ) {
+
+                const confirmed =
+                    await showTalapatrakYearChangeModal(
+                        oldYear,
+                        currentYear
+                    );
+
+
+                if (!confirmed) {
+
+                    if (yearSelect) {
+
+                        yearSelect.value =
+                            oldYear;
+
+                    }
+
+
+                    updateTalapatrakYearDisplay(
+                        oldYear
+                    );
+
+
+                    return false;
+
+                }
+
+            }
+
+
+            /* ====================================================
+               CHECK DESTINATION CARD
+            ==================================================== */
 
             const newDocumentReference =
                 db
@@ -7853,43 +7847,27 @@ async function saveTalapatrak(
                     );
 
 
-            const existingNewDocument =
+            const existingDestination =
                 await newDocumentReference.get();
 
 
             if (
-                existingNewDocument.exists &&
+                existingDestination.exists &&
                 documentId !== oldDocumentId
             ) {
 
-               
-
-                /*
-                    Restore old year.
-                */
-
-                if (yearSelect) {
-
-                    yearSelect.value =
-                        oldYear;
-
-                }
-
-
-                updateTalapatrakYearDisplay(
-                    oldYear
+                console.warn(
+                    "SAVE BLOCKED → TALAPATRAK ALREADY EXISTS:",
+                    documentId
                 );
 
 
-                if (
-                    currentTalapatrakRecord
-                ) {
+                /*
+                    Existing Talapatrak already belongs
+                    to this village + year.
 
-                    currentTalapatrakRecord.year =
-                        oldYear;
-
-                }
-
+                    Do not overwrite it.
+                */
 
                 return false;
 
@@ -7899,7 +7877,7 @@ async function saveTalapatrak(
 
 
         /* ========================================================
-           CREATE DATA
+           DATA
         ======================================================== */
 
         const talapatrakData = {
@@ -7939,49 +7917,44 @@ async function saveTalapatrak(
 
 
         /* ========================================================
-           SAVE DOCUMENT
+           SAVE TALAPATRAK
+
+           THIS MUST FINISH BEFORE ANY SYNC.
         ======================================================== */
 
-        const documentReference =
-            db
-                .collection(
-                    "talapatraks"
-                )
-                .doc(
-                    documentId
-                );
-
-
-        await documentReference.set(
-            talapatrakData,
-            {
-                merge:
-                    true
-            }
-        );
+        await db
+            .collection(
+                "talapatraks"
+            )
+            .doc(
+                documentId
+            )
+            .set(
+                talapatrakData,
+                {
+                    merge:
+                        true
+                }
+            );
 
 
         console.log(
-            "SAVE → FIRESTORE SAVE COMPLETE:",
+            "SAVE → TALAPATRAK FIRESTORE SAVE COMPLETE:",
             documentId
         );
 
 
         /* ========================================================
-           DELETE OLD DOCUMENT AFTER SUCCESSFUL YEAR CHANGE
+           DELETE OLD DOCUMENT
+
+           Only after the new document saved successfully.
         ======================================================== */
 
         if (
-            yearChanged &&
+            identityChanged &&
             oldDocumentId &&
             oldDocumentId !== documentId
         ) {
-
-            console.log(
-                "SAVE → DELETING OLD YEAR DOCUMENT:",
-                oldDocumentId
-            );
-
 
             await db
                 .collection(
@@ -7994,7 +7967,7 @@ async function saveTalapatrak(
 
 
             console.log(
-                "SAVE → OLD YEAR DOCUMENT DELETED:",
+                "SAVE → OLD TALAPATRAK DELETED:",
                 oldDocumentId
             );
 
@@ -8002,20 +7975,10 @@ async function saveTalapatrak(
 
 
         /* ========================================================
-           SHIKSHANUPAKARAN SYNC
-        ======================================================== */
-
-        await createShikshanupakaranFromTalapatrak(
-            {
-                ...talapatrakData,
-                id:
-                    documentId
-            }
-        );
-
-
-        /* ========================================================
            UPDATE CURRENT STATE
+
+           Do this before sync so the application knows
+           the new Talapatrak identity.
         ======================================================== */
 
         currentTalapatrakDocumentId =
@@ -8033,6 +7996,53 @@ async function saveTalapatrak(
 
 
         /* ========================================================
+           TALAPATRAK → SHIKSHANUPAKARAN
+
+           IMPORTANT:
+
+           ONLY MANUAL SAVE.
+
+           showSuccessMessage === true
+           means this was the Save button.
+
+           Autosave / background save:
+           showSuccessMessage === false
+
+           → NO SYNC
+           → NO MODAL
+        ======================================================== */
+
+        if (showSuccessMessage) {
+
+            console.log(
+                "SAVE → STARTING TALAPATRAK → SHIKSHANUPAKARAN SYNC"
+            );
+
+
+            await createShikshanupakaranFromTalapatrak(
+                {
+                    ...talapatrakData,
+                    id:
+                        documentId
+                }
+            );
+
+
+            console.log(
+                "SAVE → TALAPATRAK → SHIKSHANUPAKARAN SYNC FINISHED"
+            );
+
+        }
+        else {
+
+            console.log(
+                "AUTOSAVE → SHIKSHANUPAKARAN SYNC SKIPPED"
+            );
+
+        }
+
+
+        /* ========================================================
            UPDATE COUNT
         ======================================================== */
 
@@ -8041,41 +8051,47 @@ async function saveTalapatrak(
 
         /* ========================================================
            ACTIVITY
+
+           Only for actual Save.
         ======================================================== */
 
-        await addTalapatrakActivity(
+        if (showSuccessMessage) {
 
-            yearChanged
-                ? "talapatrak_updated"
-                : (
-                    oldDocumentId
-                        ? "talapatrak_updated"
-                        : "talapatrak_added"
-                ),
+            await addTalapatrakActivity(
 
-            yearChanged
-                ? "Talapatrak year updated"
-                : (
-                    oldDocumentId
-                        ? "Talapatrak updated"
-                        : "New Talapatrak added"
-                ),
+                identityChanged
+                    ? "talapatrak_updated"
+                    : (
+                        oldDocumentId
+                            ? "talapatrak_updated"
+                            : "talapatrak_added"
+                    ),
 
-            yearChanged
-                ? `${moje} Talapatrak year changed from ${oldYear} to ${currentYear}`
-                : (
-                    oldDocumentId
-                        ? `${moje} Talapatrak details updated`
-                        : `${moje} Talapatrak created successfully`
-                ),
+                identityChanged
+                    ? "Talapatrak identity updated"
+                    : (
+                        oldDocumentId
+                            ? "Talapatrak updated"
+                            : "New Talapatrak added"
+                    ),
 
-            moje
+                identityChanged
+                    ? `${moje} Talapatrak updated`
+                    : (
+                        oldDocumentId
+                            ? `${moje} Talapatrak details updated`
+                            : `${moje} Talapatrak created successfully`
+                    ),
 
-        );
+                moje
+
+            );
+
+        }
 
 
         /* ========================================================
-           REFRESH MANAGEMENT CARDS
+           REFRESH MANAGEMENT
         ======================================================== */
 
         if (
@@ -8093,7 +8109,7 @@ async function saveTalapatrak(
         ======================================================== */
 
         console.log(
-            "Talapatrak saved successfully:",
+            "TALAPATRAK SAVE COMPLETE:",
             documentId
         );
 
@@ -8102,17 +8118,16 @@ async function saveTalapatrak(
 
     }
 
+
     catch(error) {
 
         console.error(
-            "Error saving Talapatrak:",
+            "ERROR SAVING TALAPATRAK:",
             error
         );
 
 
-        if (
-            showSuccessMessage
-        ) {
+        if (showSuccessMessage) {
 
             alert(
                 "Talapatrak could not be saved: " +
@@ -9420,27 +9435,26 @@ function renderTalapatrakPage(pageNumber) {
 
 function openTalapatrakEditor() {
 
+    console.log(
+        "OPEN TALAPATRAK EDITOR → HIDING ALL MAIN VIEWS"
+    );
+
+
     /*
-        Hide every Talapatrak view first.
+    ============================================================
+        HIDE EVERY APPLICATION VIEW
+    ============================================================
     */
 
-    hideAllTalapatrakViews();
+    showMainView(
+        "talapatrakEditorView"
+    );
 
 
     /*
-        Show ONLY the editor.
-    */
-
-    if (talapatrakEditorViewElement) {
-
-        talapatrakEditorViewElement.style.display =
-            "block";
-
-    }
-
-
-    /*
-        Fullscreen editor mode.
+    ============================================================
+        FULLSCREEN EDITOR MODE
+    ============================================================
     */
 
     document.body.classList.add(
@@ -9449,14 +9463,16 @@ function openTalapatrakEditor() {
 
 
     /*
-        Make sure print container
-        is hidden during editing.
+    ============================================================
+        MAKE SURE PRINT CONTAINER IS HIDDEN
+    ============================================================
     */
 
     const printContainer =
         document.getElementById(
             "talapatrakPrintContainer"
         );
+
 
     if (printContainer) {
 
@@ -9465,6 +9481,12 @@ function openTalapatrakEditor() {
 
     }
 
+
+    /*
+    ============================================================
+        RESET PAGE SCROLL
+    ============================================================
+    */
 
     window.scrollTo(
         0,
@@ -10188,24 +10210,6 @@ async function openTalapatrakRecord(record) {
 }
 
 
-/* ============================================================
-        PRINT CLEANUP
-============================================================ */
-
-window.addEventListener(
-    "afterprint",
-    function() {
-
-        document.body.classList.remove(
-            "printingTalapatrak"
-        );
-
-        console.log(
-            "Talapatrak print completed."
-        );
-
-    }
-);
 
 /* ============================================================
         SEARCH
@@ -11536,7 +11540,18 @@ function createTalapatrakPrintPage(
    5. Do NOT modify editor rows
 ============================================================ */
 
+
 function printTalapatrak() {
+
+    /*
+    ========================================================
+    MARK THAT TALAPATRAK STARTED PRINTING
+    ========================================================
+    */
+
+    talapatrakIsPrinting =
+        true;
+
 
     console.log(
         "======================================"
@@ -11544,6 +11559,10 @@ function printTalapatrak() {
 
     console.log(
         "TALAPATRAK PRINT START"
+    );
+
+    console.log(
+        "======================================"
     );
 
     console.log(
@@ -11999,7 +12018,7 @@ function printTalapatrak() {
                     }
 
 
-                    window.talapatrakPrinting =
+                    talapatrakIsPrinting  =
                         false;
 
 
@@ -12020,34 +12039,49 @@ function printTalapatrak() {
 
 
 
-/* ============================================================
-   PRINT CLEANUP
-   IMPORTANT:
-   REMOVE PRINT PAGES AFTER PRINT
-   ============================================================ */
-
 window.addEventListener(
     "afterprint",
     function() {
 
+        /*
+        ========================================================
+        IMPORTANT
+
+        Main Bill also fires the global "afterprint" event.
+
+        Ignore that event unless Talapatrak itself
+        started printing.
+        ========================================================
+        */
+
+        if (!talapatrakIsPrinting) {
+
+            return;
+
+        }
+
+
+        /*
+        ========================================================
+        TALAPATRAK PRINT COMPLETED
+        ========================================================
+        */
 
         console.log(
             "TALAPATRAK PRINT COMPLETED"
         );
 
 
-        /* --------------------------------------------
-           REMOVE PRINT MODE
-           -------------------------------------------- */
-
         document.body.classList.remove(
             "printingTalapatrak"
         );
 
 
-        /* --------------------------------------------
-           REMOVE GENERATED PRINT CONTAINER
-           -------------------------------------------- */
+        /*
+        ========================================================
+        REMOVE GENERATED PRINT CONTAINER
+        ========================================================
+        */
 
         const printContainer =
             document.getElementById(
@@ -12064,9 +12098,11 @@ window.addEventListener(
         }
 
 
-        /* --------------------------------------------
-           RESTORE EDITOR
-           -------------------------------------------- */
+        /*
+        ========================================================
+        RESTORE EDITOR
+        ========================================================
+        */
 
         if (
             talapatrakEditorViewElement
@@ -12078,9 +12114,11 @@ window.addEventListener(
         }
 
 
-        /* --------------------------------------------
-           KEEP MANAGEMENT VIEW HIDDEN
-           -------------------------------------------- */
+        /*
+        ========================================================
+        KEEP MANAGEMENT VIEW HIDDEN
+        ========================================================
+        */
 
         if (
             talapatrakViewElement
@@ -12092,12 +12130,23 @@ window.addEventListener(
         }
 
 
+        /*
+        ========================================================
+        RESET PRINT STATE
+        ========================================================
+        */
+
+        talapatrakIsPrinting =
+            false;
+
+
         console.log(
             "Talapatrak print container removed."
         );
 
     }
 );
+
 
 
 /* ============================================================
@@ -13550,139 +13599,6 @@ function showTalapatrakYearChangeModal(
 
 
 
-/* ============================================================
-   SHOW SHIKSHANUPAKARAN CREATE MODAL
-============================================================ */
-
-function showTalapatrakShikshanupakaranModal() {
-
-    return new Promise(function(resolve) {
-
-        const modal =
-            document.getElementById(
-                "talapatrakShikshanupakaranModal"
-            );
-
-        const confirmButton =
-            document.getElementById(
-                "talapatrakShikshanupakaranConfirm"
-            );
-
-        const cancelButton =
-            document.getElementById(
-                "talapatrakShikshanupakaranCancel"
-            );
-
-        const overlay =
-            modal
-                ? modal.querySelector(
-                    ".talapatrakShikshanupakaranOverlay"
-                )
-                : null;
-
-
-        if (
-            !modal ||
-            !confirmButton ||
-            !cancelButton
-        ) {
-
-            console.error(
-                "Shikshanupakaran modal elements not found."
-            );
-
-            resolve(false);
-
-            return;
-
-        }
-
-
-        modal.classList.add("open");
-
-        modal.setAttribute(
-            "aria-hidden",
-            "false"
-        );
-
-
-        function close(result) {
-
-            modal.classList.remove("open");
-
-            modal.setAttribute(
-                "aria-hidden",
-                "true"
-            );
-
-
-            confirmButton.removeEventListener(
-                "click",
-                handleConfirm
-            );
-
-            cancelButton.removeEventListener(
-                "click",
-                handleCancel
-            );
-
-            if (overlay) {
-
-                overlay.removeEventListener(
-                    "click",
-                    handleCancel
-                );
-
-            }
-
-
-            resolve(result);
-
-        }
-
-
-        function handleConfirm(event) {
-
-            event.preventDefault();
-
-            close(true);
-
-        }
-
-
-        function handleCancel(event) {
-
-            event.preventDefault();
-
-            close(false);
-
-        }
-
-
-        confirmButton.addEventListener(
-            "click",
-            handleConfirm
-        );
-
-        cancelButton.addEventListener(
-            "click",
-            handleCancel
-        );
-
-
-        if (overlay) {
-
-            overlay.addEventListener(
-                "click",
-                handleCancel
-            );
-
-        }
-
-    });
-
-}
-
 
 /* ============================================================
    SHOW TALAPATRAK ALREADY EXISTS MODAL
@@ -13814,6 +13730,354 @@ function showTalapatrakAlreadyExistsModal(
             overlay.addEventListener(
                 "click",
                 handleClose
+            );
+
+        }
+
+    });
+
+}
+
+
+
+
+/* ============================================================
+   TALAPATRAK DELETE MODAL STATE
+============================================================ */
+
+let talapatrakDeleteRecordPending = null;
+
+
+/* ============================================================
+   SHOW TALAPATRAK DELETE MODAL
+============================================================ */
+
+function showTalapatrakDeleteModal(record) {
+
+    return new Promise(function(resolve) {
+
+        console.log(
+            "TALAPATRAK DELETE MODAL → OPEN REQUEST:",
+            record
+        );
+
+
+        const modal =
+            document.getElementById(
+                "talapatrakDeleteModal"
+            );
+
+
+        if(!modal){
+
+            console.error(
+                "TALAPATRAK DELETE MODAL → MODAL NOT FOUND"
+            );
+
+            resolve(false);
+
+            return;
+
+        }
+
+
+        const villageNameElement =
+            document.getElementById(
+                "talapatrakDeleteVillageName"
+            );
+
+
+        const yearElement =
+            document.getElementById(
+                "talapatrakDeleteYear"
+            );
+
+
+        const cancelButton =
+            document.getElementById(
+                "talapatrakDeleteCancelButton"
+            );
+
+
+        const confirmButton =
+            document.getElementById(
+                "talapatrakDeleteConfirmButton"
+            );
+
+
+        if(
+            !villageNameElement ||
+            !yearElement ||
+            !cancelButton ||
+            !confirmButton
+        ){
+
+            console.error(
+                "TALAPATRAK DELETE MODAL → REQUIRED ELEMENT MISSING"
+            );
+
+            resolve(false);
+
+            return;
+
+        }
+
+          /* ========================================================
+             RESET CONFIRM BUTTON STATE
+             IMPORTANT:
+             Every time the modal opens, restore the button.
+          ======================================================== */
+          
+          confirmButton.disabled = false;
+          
+          confirmButton.innerHTML = `
+          
+              <i class="fa-solid fa-trash-can"></i>
+          
+              Delete Permanently
+          
+          `;
+
+
+        talapatrakDeleteRecordPending =
+            record;
+
+
+        villageNameElement.textContent =
+            record.moje ||
+            "this village";
+
+
+        yearElement.textContent =
+            record.year ||
+            "";
+
+
+        modal.classList.add(
+            "open"
+        );
+
+
+        modal.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+
+        console.log(
+            "TALAPATRAK DELETE MODAL → OPENED:",
+            record.id
+        );
+
+
+        /* ========================================================
+           CANCEL
+        ======================================================== */
+
+        function handleCancel() {
+
+            console.log(
+                "TALAPATRAK DELETE MODAL → CANCELLED"
+            );
+
+
+            closeModal();
+
+            cleanup();
+
+            resolve(false);
+
+        }
+
+
+        /* ========================================================
+           CONFIRM
+        ======================================================== */
+
+        async function handleConfirm() {
+
+            console.log(
+                "TALAPATRAK DELETE MODAL → CONFIRM CLICKED:",
+                record.id
+            );
+
+
+            confirmButton.disabled =
+                true;
+
+
+            confirmButton.innerHTML = `
+
+                <i class="fa-solid fa-spinner fa-spin"></i>
+
+                Deleting...
+
+            `;
+
+
+            try {
+
+                const success =
+                    await permanentlyDeleteTalapatrakRecord(
+                        record
+                    );
+
+
+                console.log(
+                    "TALAPATRAK DELETE MODAL → DELETE RESULT:",
+                    success
+                );
+
+
+                closeModal();
+
+                cleanup();
+
+                resolve(success);
+
+            }
+            catch(error) {
+
+                console.error(
+                    "TALAPATRAK DELETE MODAL → DELETE FAILED:",
+                    error
+                );
+
+
+                confirmButton.disabled =
+                    false;
+
+
+                confirmButton.innerHTML = `
+
+                    <i class="fa-solid fa-trash-can"></i>
+
+                    Delete Permanently
+
+                `;
+
+
+                resolve(false);
+
+            }
+
+        }
+
+
+        /* ========================================================
+           OVERLAY
+        ======================================================== */
+
+        function handleOverlay(event) {
+
+            if(
+                event.target ===
+                modal
+            ){
+
+                handleCancel();
+
+            }
+
+        }
+
+
+        /* ========================================================
+           ESC
+        ======================================================== */
+
+        function handleEscape(event) {
+
+            if(
+                event.key ===
+                "Escape"
+            ){
+
+                handleCancel();
+
+            }
+
+        }
+
+
+        /* ========================================================
+           LISTENERS
+        ======================================================== */
+
+        cancelButton.addEventListener(
+            "click",
+            handleCancel
+        );
+
+
+        confirmButton.addEventListener(
+            "click",
+            handleConfirm
+        );
+
+
+        modal.addEventListener(
+            "click",
+            handleOverlay
+        );
+
+
+        document.addEventListener(
+            "keydown",
+            handleEscape
+        );
+
+
+        /* ========================================================
+           CLEANUP
+        ======================================================== */
+
+        function cleanup() {
+
+            cancelButton.removeEventListener(
+                "click",
+                handleCancel
+            );
+
+
+            confirmButton.removeEventListener(
+                "click",
+                handleConfirm
+            );
+
+
+            modal.removeEventListener(
+                "click",
+                handleOverlay
+            );
+
+
+            document.removeEventListener(
+                "keydown",
+                handleEscape
+            );
+
+
+            talapatrakDeleteRecordPending =
+                null;
+
+        }
+
+
+        /* ========================================================
+           CLOSE
+        ======================================================== */
+
+        function closeModal() {
+
+            modal.classList.remove(
+                "open"
+            );
+
+
+            modal.setAttribute(
+                "aria-hidden",
+                "true"
             );
 
         }
