@@ -7736,7 +7736,7 @@ async function saveTalapatrak(
        SAVE PROTECTION
     ============================================================ */
 
-    if (window.talapatrakPrinting) {
+    if (window.talapatrakIsPrinting === true) {
 
         console.log(
             "SAVE SKIPPED → TALAPATRAK IS PRINTING"
@@ -8416,7 +8416,7 @@ function scheduleTalapatrakAutoSave() {
     */
 
     if (
-        window.talapatrakPrinting === true
+        window.talapatrakIsPrinting  === true
     ) {
 
         console.log(
@@ -8482,7 +8482,7 @@ function scheduleTalapatrakAutoSave() {
                 */
 
                 if (
-                    window.talapatrakPrinting === true
+                    window.talapatrakIsPrinting  === true
                 ) {
 
                     console.log(
@@ -8585,7 +8585,7 @@ function scheduleTalapatrakAutoSave() {
                 */
 
                 if (
-                    window.talapatrakPrinting === true
+                    window.talapatrakIsPrinting  === true
                 ) {
 
                     console.log(
@@ -8927,7 +8927,7 @@ function setupTalapatrakAutoSave() {
 
 
             if (
-                window.talapatrakPrinting === true
+                window.talapatrakIsPrinting  === true
             ) {
 
                 console.log(
@@ -11992,7 +11992,7 @@ function printTalapatrak() {
     ========================================================
     */
 
-    talapatrakIsPrinting =
+    window.talapatrakIsPrinting =
         true;
 
 
@@ -12029,7 +12029,7 @@ function printTalapatrak() {
             "Talapatrak table not found."
         );
 
-       
+       talapatrakIsPrinting = false;
 
         return;
 
@@ -12162,6 +12162,8 @@ function printTalapatrak() {
         );
 
         printContainer.remove();
+
+        talapatrakIsPrinting = false;
 
         return;
 
@@ -12461,7 +12463,7 @@ function printTalapatrak() {
                     }
 
 
-                    talapatrakIsPrinting  =
+                    window.talapatrakIsPrinting  =
                         false;
 
 
@@ -12649,7 +12651,7 @@ function initializeTalapatrakPrintButton() {
                 "TALAPATRAK PRINT MODE ACTIVATED"
             );
     
-            window.talapatrakPrinting = true;
+            window.talapatrakIsPrinting  = true;
     
         }
     );
@@ -14528,3 +14530,7 @@ function showTalapatrakDeleteModal(record) {
     });
 
 }
+
+
+
+

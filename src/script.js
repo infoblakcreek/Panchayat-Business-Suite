@@ -285,9 +285,24 @@ auth.onAuthStateChanged((user) => {
 
         loadRecentActivity();
 
-        loadTalapatrakCount(); 
+        loadTalapatrakCount();
 
-        loadShikshanupakaranDashboardCount();
+
+        if (
+            typeof loadShikshanupakaranDashboardCount ===
+            "function"
+        ) {
+
+            loadShikshanupakaranDashboardCount();
+
+        }
+        else {
+
+            console.warn(
+                "loadShikshanupakaranDashboardCount() is not available."
+            );
+
+        }
 
     }
 
@@ -315,6 +330,7 @@ auth.onAuthStateChanged((user) => {
     }
 
 });
+
 
 /* ============================================================
    VIEW ALL BILLS BUTTON

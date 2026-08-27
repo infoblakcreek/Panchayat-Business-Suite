@@ -120,6 +120,30 @@ function convertGujaratiDigitsToEnglish(value) {
 }
 
 
+/* ============================================================
+   NORMALIZE INPUT FOR DISPLAY
+   ------------------------------------------------------------
+   User may enter English OR Gujarati digits.
+   Editor always displays Gujarati digits.
+   ============================================================ */
+
+function normalizeGujaratiDisplayValue(value) {
+
+    if (
+        value === undefined ||
+        value === null
+    ) {
+
+        return "";
+
+    }
+
+    return convertToGujaratiDigits(
+        value
+    );
+
+}
+
 
 
 /* ============================================================
@@ -564,6 +588,8 @@ function highlightCommonSearchRow({
     );
 
 }
+
+
 
 
 /* ============================================================

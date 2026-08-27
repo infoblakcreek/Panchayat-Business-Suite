@@ -8817,3 +8817,35 @@ body.shikshanupakaranFullViewMode
     }
 
 }
+
+
+
+
+/* ========================================================================= */
+
+
+
+/* ============================================================
+   SHIKSHANUPAKARAN — UNSAVED CHANGES DOT
+   ============================================================ */
+
+.shikshanupakaranUnsavedDot {
+
+    position: absolute;
+
+    top: 5px;
+
+    left: 5px;
+
+    width: 7px;
+
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #f2c94c;
+
+    z-index: 20;
+
+
+}
