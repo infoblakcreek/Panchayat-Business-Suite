@@ -4111,6 +4111,119 @@ function setupIndianDatePicker() {
 }
 
 
+function formatTalapatrakDecimalOnFinish(input) {
+
+    if (!input) {
+        return;
+    }
+
+
+    /* ========================================================
+       ONLY FORMAT THESE COLUMNS
+
+       C-K and N-S
+
+       A, B, L, M remain untouched.
+    ======================================================== */
+
+    const decimalColumns = [
+        "columnC",
+        "columnD",
+        "columnE",
+        "columnF",
+        "columnG",
+        "columnH",
+        "columnI",
+        "columnJ",
+        "columnK",
+        "columnN",
+        "columnO",
+        "columnP",
+        "columnQ",
+        "columnR",
+        "columnS"
+    ];
+
+
+    const shouldFormat =
+        decimalColumns.some(
+            function(className) {
+
+                return input.classList.contains(
+                    className
+                );
+
+            }
+        );
+
+
+    if (!shouldFormat) {
+        return;
+    }
+
+
+    /* ========================================================
+       GET VALUE
+    ======================================================== */
+
+    const rawValue =
+        String(input.value || "").trim();
+
+
+    /*
+        Empty cells remain empty.
+    */
+
+    if (rawValue === "") {
+        return;
+    }
+
+
+    /* ========================================================
+       GUJARATI → ENGLISH
+       
+       Needed temporarily for numeric calculation.
+    ======================================================== */
+
+    const englishValue =
+        convertGujaratiDigitsToEnglish(
+            rawValue
+        );
+
+
+    const number =
+        Number(englishValue);
+
+
+    /*
+        Invalid value → don't change it.
+    */
+
+    if (!Number.isFinite(number)) {
+        return;
+    }
+
+
+    /* ========================================================
+       FORMAT TO EXACTLY 2 DECIMAL PLACES
+    ======================================================== */
+
+    const formattedValue =
+        number.toFixed(2);
+
+
+    /* ========================================================
+       ENGLISH → GUJARATI
+    ======================================================== */
+
+    input.value =
+        convertToGujaratiDigits(
+            formattedValue
+        );
+
+}
+
+
 
 /* ============================================================
    CREATE TALAPATRAK ROW
@@ -4693,35 +4806,49 @@ function createTalapatrakRow(
                      ---------------------------------------------------- */
       
                   input.addEventListener(
-                      "change",
-                      function() {
-      
-                          /*
-                              Recalculate once more when the
-                              value is committed.
-                          */
-      
-                          calculateTalapatrakRow(
-                              input
-                          );
-      
-      
-                          /*
-                              Preserve the calculated row in memory.
-                          */
-      
-                          syncCurrentTalapatrakPageToMemory();
-      
-      
-                          /*
-                              Save after the edit.
-                          */
-      
-                          scheduleTalapatrakAutoSave();
-      
-                      }
-                  );
-      
+                        "change",
+                        function() {
+
+                            /*
+                                Format numeric columns when the user
+                                finishes editing the cell.
+
+                                A, B, L, M are automatically ignored.
+                            */
+
+                            formatTalapatrakDecimalOnFinish(
+                                input
+                            );
+
+
+                            /*
+                                Recalculate after formatting.
+
+                                This is important because calculations
+                                should use the final 2-decimal value.
+                            */
+
+                            calculateTalapatrakRow(
+                                input
+                            );
+
+
+                            /*
+                                Preserve the updated row in memory.
+                            */
+
+                            syncCurrentTalapatrakPageToMemory();
+
+
+                            /*
+                                Save after the edit.
+                            */
+
+                            scheduleTalapatrakAutoSave();
+
+                        }
+                    );
+                        
               }
           );
       
