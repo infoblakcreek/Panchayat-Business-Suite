@@ -4719,120 +4719,181 @@ async function createShikshanupakaranFromTalapatrak(
           
           
           const synchronizedRows =
-              talapatrakRows.map(
-                  function(
-                      talapatrakRow,
-                      index
-                  ){
-          
-                      const existingShikRow =
-                          existingShikRows[index] || {};
-          
-          
-                      /* ====================================================
-                         TALAPATRAK VALUES
-                      ==================================================== */
-          
-                      const talapatrakD =
-                          Number(
-                              talapatrakRow?.D
-                          ) || 0;
-          
-          
-                      const talapatrakE =
-                          Number(
-                              talapatrakRow?.E
-                          ) || 0;
-          
-          
-                      /* ====================================================
-                         SHIKSHANUPAKARAN E
-          
-                         E = 20% of (Talapatrak D + Talapatrak E)
-                      ==================================================== */
-          
-                      const shikshanupakaranE =
-                            roundShikshanupakaranGeneratedValue(
-                                (
-                                    talapatrakD +
-                                    talapatrakE
-                                ) * 0.20
-                            );
-          
-          
-                      /* ====================================================
-                         CREATE SYNCED ROW
-                      ==================================================== */
-          
-                      const syncedRow = {
-          
-                          /*
-                              Preserve existing Shikshanupakaran data
-                          */
-                          ...existingShikRow,
-          
-          
-                          /*
-                              ================================================
-                              A SYNC
-                              Talapatrak A → Shik A
-                              ================================================
-                          */
-          
-                          A:
-                              talapatrakRow?.A ??
-                              "",
-          
-          
-                          /*
-                              ================================================
-                              B SYNC
-                              Talapatrak B → Shik B
-                              ================================================
-                          */
-          
-                          B:
-                              talapatrakRow?.B ??
-                              "",
-          
-          
-                          /*
-                              ================================================
-                              E CALCULATION
-                              20% of Talapatrak D + E
-                              ================================================
-                          */
-          
-                          E:
-                              shikshanupakaranE
-                                  .toFixed(2)
-          
-                      };
-          
-          
-                      console.log(
-                          "TALAPATRAK → SHIK CALCULATION:",
-                          {
-                              row:
-                                  index,
-          
-                              talapatrakD:
-                                  talapatrakD,
-          
-                              talapatrakE:
-                                  talapatrakE,
-          
-                              shikshanupakaranE:
-                                  shikshanupakaranE
-                                      .toFixed(2)
-                          }
-                      );
-          
-          
-                      return syncedRow;
-          
-                  }
-              );
+    talapatrakRows.map(
+        function(
+            talapatrakRow,
+            index
+        ){
+
+            const existingShikRow =
+                existingShikRows[index] || {};
+
+
+            /* ====================================================
+               TALAPATRAK VALUES
+
+               Convert Gujarati digits → English digits
+               before performing calculations.
+            ==================================================== */
+
+            const convertGujaratiToEnglish =
+                function(value){
+
+                    return String(
+                        value ?? ""
+                    )
+                        .replace(/૦/g, "0")
+                        .replace(/૧/g, "1")
+                        .replace(/૨/g, "2")
+                        .replace(/૩/g, "3")
+                        .replace(/૪/g, "4")
+                        .replace(/૫/g, "5")
+                        .replace(/૬/g, "6")
+                        .replace(/૭/g, "7")
+                        .replace(/૮/g, "8")
+                        .replace(/૯/g, "9")
+                        .replace(/,/g, "")
+                        .trim();
+
+                };
+
+
+            const talapatrakD =
+                Number(
+                    convertGujaratiToEnglish(
+                        talapatrakRow?.D
+                    )
+                ) || 0;
+
+
+            const talapatrakE =
+                Number(
+                    convertGujaratiToEnglish(
+                        talapatrakRow?.E
+                    )
+                ) || 0;
+
+
+            /* ====================================================
+               SHIKSHANUPAKARAN E
+
+               E = 20% of
+               (Talapatrak D + Talapatrak E)
+            ==================================================== */
+
+            const shikshanupakaranE =
+                roundShikshanupakaranGeneratedValue(
+                    (
+                        talapatrakD +
+                        talapatrakE
+                    ) * 0.20
+                );
+
+
+            /* ====================================================
+               CONVERT ENGLISH DIGITS → GUJARATI DIGITS
+            ==================================================== */
+
+            const convertEnglishToGujarati =
+                function(value){
+
+                    return String(
+                        value ?? ""
+                    )
+                        .replace(/0/g, "૦")
+                        .replace(/1/g, "૧")
+                        .replace(/2/g, "૨")
+                        .replace(/3/g, "૩")
+                        .replace(/4/g, "૪")
+                        .replace(/5/g, "૫")
+                        .replace(/6/g, "૬")
+                        .replace(/7/g, "૭")
+                        .replace(/8/g, "૮")
+                        .replace(/9/g, "૯")
+                        .replace(/\./g, "ા")
+                        .replace(/ા/g, ".");
+
+                };
+
+
+            /* ====================================================
+               CREATE SYNCED ROW
+            ==================================================== */
+
+            const syncedRow = {
+
+                /*
+                    Preserve existing Shikshanupakaran data
+                */
+                ...existingShikRow,
+
+
+                /*
+                    ================================================
+                    A SYNC
+                    Talapatrak A → Shik A
+                    ================================================
+                */
+
+                A:
+                    talapatrakRow?.A ??
+                    "",
+
+
+                /*
+                    ================================================
+                    B SYNC
+                    Talapatrak B → Shik B
+                    ================================================
+                */
+
+                B:
+                    talapatrakRow?.B ??
+                    "",
+
+
+                /*
+                    ================================================
+                    E CALCULATION
+
+                    20% of
+                    (Talapatrak D + Talapatrak E)
+
+                    Display in Gujarati digits.
+                    ================================================
+                */
+
+                E:
+                    convertEnglishToGujarati(
+                        shikshanupakaranE.toFixed(2)
+                    )
+
+            };
+
+
+            console.log(
+                "TALAPATRAK → SHIK CALCULATION:",
+                {
+                    row:
+                        index,
+
+                    talapatrakD:
+                        talapatrakD,
+
+                    talapatrakE:
+                        talapatrakE,
+
+                    shikshanupakaranE:
+                        shikshanupakaranE
+                            .toFixed(2)
+                }
+            );
+
+
+            return syncedRow;
+
+        }
+    );
           
           
           console.log(
