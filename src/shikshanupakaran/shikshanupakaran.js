@@ -5750,15 +5750,6 @@ async function saveShikshanupakaran(
             documentIdChanged
         );
 
-
-        /*
-            ========================================================
-            SAVE BUTTON → SYNC CURRENT TABLE TO MEMORY
-            ========================================================
-        */
-        
-        syncCurrentShikshanupakaranPageToMemory();
-        
         
         /*
             ========================================================
@@ -10381,142 +10372,6 @@ if(
 }
 
 
-/* ============================================================
-   SYNC CURRENT PAGE → MEMORY
-============================================================ */
-
-function syncCurrentShikshanupakaranPageToMemory() {
-
-    if (
-        !Array.isArray(
-            window.shikshanupakaranAllRows
-        )
-    ) {
-
-        return;
-
-    }
-
-
-    if(
-        !shikshanupakaranBody
-    ){
-
-        return;
-
-    }
-
-
-    const currentPage =
-        Number(
-            window.shikshanupakaranCurrentPage
-        ) || 1;
-
-
-    const rowsPerPage =
-        Number(
-            window.shikshanupakaranRowsPerPage
-        ) || 20;
-
-
-    const visibleRows =
-        Array.from(
-            shikshanupakaranBody.querySelectorAll(
-                ".shikshanupakaranRow"
-            )
-        );
-
-
-    const startIndex =
-        (
-            currentPage - 1
-        ) *
-        rowsPerPage;
-
-
-    visibleRows.forEach(
-        function(
-            row,
-            visibleIndex
-        ){
-
-            /*
-                Use the row's actual memory index
-                when available.
-            */
-
-            let memoryIndex =
-                Number(
-                    row.dataset.memoryIndex
-                );
-
-
-            /*
-                Fallback only if the row does not
-                have a valid memory index.
-            */
-
-            if(
-                !Number.isInteger(
-                    memoryIndex
-                )
-            ){
-
-                memoryIndex =
-                    startIndex +
-                    visibleIndex;
-
-            }
-
-
-            if(
-                memoryIndex < 0 ||
-                memoryIndex >=
-                    window.shikshanupakaranAllRows.length
-            ){
-
-                console.warn(
-                    "SAVE SYNC → INVALID MEMORY INDEX:",
-                    memoryIndex
-                );
-
-                return;
-
-            }
-
-
-            const rowData =
-                collectSingleShikshanupakaranRow(
-                    row
-                );
-
-
-            window.shikshanupakaranAllRows[
-                memoryIndex
-            ] =
-                rowData;
-
-        }
-    );
-
-
-    console.log(
-        "SHIKSHANUPAKARAN SAVE SYNC COMPLETE:",
-        {
-            page:
-                currentPage,
-
-            visibleRows:
-                visibleRows.length,
-
-            totalRows:
-                window.shikshanupakaranAllRows.length
-        }
-    );
-
-}
-
-
 
 /* ============================================================
    COLLECT ONE ROW
@@ -10594,105 +10449,6 @@ function collectSingleShikshanupakaranRow(row) {
 }
 
 
-
-/* ============================================================
-   SYNC CURRENT PAGE → MEMORY
-============================================================ */
-
-function syncCurrentShikshanupakaranPageToMemory(){
-
-    if(
-        !Array.isArray(
-            window.shikshanupakaranAllRows
-        )
-    ){
-
-        return;
-
-    }
-
-
-    const visibleRows =
-        shikshanupakaranBody
-            ? shikshanupakaranBody.querySelectorAll(
-                ".shikshanupakaranRow"
-            )
-            : [];
-
-
-    const startIndex =
-        (
-            window.shikshanupakaranCurrentPage -
-            1
-        ) *
-        window.shikshanupakaranRowsPerPage;
-
-
-    visibleRows.forEach(
-        function(row, localIndex){
-
-            const globalIndex =
-                startIndex +
-                localIndex;
-
-
-            if(
-                globalIndex <
-                0 ||
-                globalIndex >=
-                window.shikshanupakaranAllRows.length
-            ){
-
-                return;
-
-            }
-
-
-            const rowData = {};
-
-
-            const inputs =
-                row.querySelectorAll(
-                    "[data-column]"
-                );
-
-
-            inputs.forEach(
-                function(input){
-
-                    const column =
-                        input.dataset.column;
-
-
-                    if(!column){
-
-                        return;
-
-                    }
-
-
-                    rowData[column] =
-                        input.value ?? "";
-
-                }
-            );
-
-
-            window.shikshanupakaranAllRows[
-                globalIndex
-            ] =
-                rowData;
-
-        }
-    );
-
-
-    console.log(
-        "SHIKSHANUPAKARAN PAGE SYNCED:",
-        window.shikshanupakaranCurrentPage
-    );
-
-}
 
 
 /* ============================================================
@@ -11287,10 +11043,27 @@ function initializeShikshanupakaranPagination(){
 
 initializeShikshanupakaranPagination();
 
+
+
+/* ============================================================
+   SYNC CURRENT SHIKSHANUPAKARAN PAGE → MEMORY
+
+   Supports BOTH:
+
+   1. Normal paginated editing
+      DOM contains only the current page.
+
+   2. Full DOM / Khata import
+      DOM temporarily contains ALL imported rows.
+
+   IMPORTANT:
+   There must be only ONE function with this name.
+============================================================ */
+
 function syncCurrentShikshanupakaranPageToMemory() {
 
     /* ============================================================
-       SAFETY
+       1. SAFETY
     ============================================================ */
 
     if (
@@ -11298,6 +11071,10 @@ function syncCurrentShikshanupakaranPageToMemory() {
             window.shikshanupakaranAllRows
         )
     ) {
+
+        console.warn(
+            "SHIKSHANUPAKARAN SYNC → MEMORY ARRAY NOT FOUND"
+        );
 
         return;
 
@@ -11308,13 +11085,17 @@ function syncCurrentShikshanupakaranPageToMemory() {
         !shikshanupakaranBody
     ) {
 
+        console.warn(
+            "SHIKSHANUPAKARAN SYNC → BODY NOT FOUND"
+        );
+
         return;
 
     }
 
 
     /* ============================================================
-       CURRENT PAGINATION STATE
+       2. PAGINATION STATE
     ============================================================ */
 
     const currentPage =
@@ -11337,25 +11118,372 @@ function syncCurrentShikshanupakaranPageToMemory() {
 
 
     /* ============================================================
-       GET VISIBLE ROWS
+       3. GET DOM ROWS
     ============================================================ */
 
     const visibleRows =
-        shikshanupakaranBody.querySelectorAll(
-            ".shikshanupakaranRow"
+        Array.from(
+            shikshanupakaranBody.querySelectorAll(
+                ".shikshanupakaranRow"
+            )
         );
 
 
+    if (
+        visibleRows.length === 0
+    ) {
+
+        console.warn(
+            "SHIKSHANUPAKARAN SYNC → NO DOM ROWS FOUND"
+        );
+
+        return;
+
+    }
+
+
     /* ============================================================
-       SYNC EACH VISIBLE ROW
+       4. HELPER
+       
+       Read ALL editable controls from one row.
+       
+       Supports:
+       - input
+       - textarea
+       - select
+       
+       using data-column.
+    ============================================================ */
+
+    function readShikshanupakaranRow(row) {
+
+        /*
+         * Preserve the existing memory object when possible.
+         *
+         * This prevents unrelated metadata from being lost.
+         */
+
+        let existingMemoryIndex =
+            Number(
+                row.dataset.memoryIndex
+            );
+
+
+        let existingRow =
+            Number.isInteger(
+                existingMemoryIndex
+            ) &&
+            existingMemoryIndex >= 0 &&
+            existingMemoryIndex <
+                window.shikshanupakaranAllRows.length
+                ? (
+                    window.shikshanupakaranAllRows[
+                        existingMemoryIndex
+                    ] || {}
+                )
+                : {};
+
+
+        const rowData = {
+            ...existingRow
+        };
+
+
+        /* --------------------------------------------------------
+           INPUTS
+        -------------------------------------------------------- */
+
+        const inputs =
+            row.querySelectorAll(
+                "input[data-column]"
+            );
+
+
+        inputs.forEach(
+            function(input) {
+
+                const column =
+                    input.dataset.column;
+
+
+                if (
+                    column
+                ) {
+
+                    rowData[column] =
+                        input.value ?? "";
+
+                }
+
+            }
+        );
+
+
+        /* --------------------------------------------------------
+           TEXTAREAS
+        -------------------------------------------------------- */
+
+        const textareas =
+            row.querySelectorAll(
+                "textarea[data-column]"
+            );
+
+
+        textareas.forEach(
+            function(textarea) {
+
+                const column =
+                    textarea.dataset.column;
+
+
+                if (
+                    column
+                ) {
+
+                    rowData[column] =
+                        textarea.value ?? "";
+
+                }
+
+            }
+        );
+
+
+        /* --------------------------------------------------------
+           SELECTS
+        -------------------------------------------------------- */
+
+        const selects =
+            row.querySelectorAll(
+                "select[data-column]"
+            );
+
+
+        selects.forEach(
+            function(select) {
+
+                const column =
+                    select.dataset.column;
+
+
+                if (
+                    column
+                ) {
+
+                    rowData[column] =
+                        select.value ?? "";
+
+                }
+
+            }
+        );
+
+
+        return rowData;
+
+    }
+
+
+    /* ============================================================
+       5. DETECT FULL-DOM MODE
+       
+       Normal pagination:
+           DOM = maximum 20 rows
+
+       Khata import:
+           DOM = hundreds of rows
+
+       Therefore, if DOM contains more rows than the
+       configured page size, treat it as a full dataset.
+    ============================================================ */
+
+    const fullDomMode =
+        visibleRows.length > rowsPerPage;
+
+
+    /* ============================================================
+       6. FULL DOM / KHATA IMPORT MODE
+    ============================================================ */
+
+    if (
+        fullDomMode
+    ) {
+
+        console.log(
+            "=========================================="
+        );
+
+        console.log(
+            "SHIKSHANUPAKARAN SYNC → FULL DOM MODE"
+        );
+
+        console.log(
+            "DOM rows:",
+            visibleRows.length
+        );
+
+        console.log(
+            "Rows per page:",
+            rowsPerPage
+        );
+
+        console.log(
+            "Existing memory rows:",
+            window.shikshanupakaranAllRows.length
+        );
+
+        console.log(
+            "=========================================="
+        );
+
+
+        /*
+         * Build a fresh complete memory array.
+         *
+         * IMPORTANT:
+         *
+         * If renderer supplied data-memory-index,
+         * respect it.
+         *
+         * Otherwise use DOM order.
+         */
+
+        const importedRows =
+            [];
+
+
+        visibleRows.forEach(
+            function(row, visibleIndex) {
+
+                let memoryIndex =
+                    Number(
+                        row.dataset.memoryIndex
+                    );
+
+
+                if (
+                    !Number.isInteger(
+                        memoryIndex
+                    ) ||
+                    memoryIndex < 0
+                ) {
+
+                    memoryIndex =
+                        visibleIndex;
+
+                }
+
+
+                const rowData =
+                    readShikshanupakaranRow(
+                        row
+                    );
+
+
+                importedRows[
+                    memoryIndex
+                ] =
+                    rowData;
+
+            }
+        );
+
+
+        /*
+         * Remove holes safely.
+         *
+         * Normally there should be none.
+         *
+         * If there is a missing index, preserve an empty
+         * object rather than shifting all subsequent rows.
+         */
+
+        for (
+            let i = 0;
+            i < importedRows.length;
+            i++
+        ) {
+
+            if (
+                !importedRows[i] ||
+                typeof importedRows[i] !== "object"
+            ) {
+
+                importedRows[i] = {};
+
+            }
+
+        }
+
+
+        /*
+         * Replace master memory with the complete
+         * imported dataset.
+         */
+
+        window.shikshanupakaranAllRows =
+            importedRows;
+
+
+        console.log(
+            "SHIKSHANUPAKARAN SYNC → FULL DATA STORED:",
+            importedRows.length,
+            "rows"
+        );
+
+
+        console.log(
+            "SHIKSHANUPAKARAN MEMORY NOW:",
+            window.shikshanupakaranAllRows.length,
+            "rows"
+        );
+
+
+        return;
+
+    }
+
+
+    /* ============================================================
+       7. NORMAL PAGINATED MODE
+       
+       Existing behavior preserved.
+
+       Only the currently visible page is synchronized.
     ============================================================ */
 
     visibleRows.forEach(
         function(row, visibleIndex) {
 
-            const memoryIndex =
-                startIndex +
-                visibleIndex;
+            /*
+             * Prefer the row's actual memory index.
+             *
+             * This is safer when rows have been inserted,
+             * deleted, reordered, or generated from imported data.
+             */
+
+            let memoryIndex =
+                Number(
+                    row.dataset.memoryIndex
+                );
+
+
+            /*
+             * Fallback to normal pagination calculation.
+             */
+
+            if (
+                !Number.isInteger(
+                    memoryIndex
+                ) ||
+                memoryIndex < 0
+            ) {
+
+                memoryIndex =
+                    startIndex +
+                    visibleIndex;
+
+            }
 
 
             /* ----------------------------------------------------
@@ -11368,15 +11496,19 @@ function syncCurrentShikshanupakaranPageToMemory() {
                     window.shikshanupakaranAllRows.length
             ) {
 
+                console.warn(
+                    "SHIKSHANUPAKARAN SYNC → INVALID MEMORY INDEX:",
+                    memoryIndex
+                );
+
                 return;
 
             }
 
 
-            /* ----------------------------------------------------
-               IMPORTANT:
-               Preserve existing memory object.
-            ---------------------------------------------------- */
+            /*
+             * Preserve existing memory object.
+             */
 
             const existingRow =
                 window.shikshanupakaranAllRows[
@@ -11384,8 +11516,13 @@ function syncCurrentShikshanupakaranPageToMemory() {
                 ] || {};
 
 
+            const rowData = {
+                ...existingRow
+            };
+
+
             /* ----------------------------------------------------
-               READ INPUTS
+               INPUTS
             ---------------------------------------------------- */
 
             const inputs =
@@ -11405,7 +11542,7 @@ function syncCurrentShikshanupakaranPageToMemory() {
                         column
                     ) {
 
-                        existingRow[column] =
+                        rowData[column] =
                             input.value ?? "";
 
                     }
@@ -11415,7 +11552,7 @@ function syncCurrentShikshanupakaranPageToMemory() {
 
 
             /* ----------------------------------------------------
-               READ TEXTAREAS TOO
+               TEXTAREAS
             ---------------------------------------------------- */
 
             const textareas =
@@ -11435,7 +11572,7 @@ function syncCurrentShikshanupakaranPageToMemory() {
                         column
                     ) {
 
-                        existingRow[column] =
+                        rowData[column] =
                             textarea.value ?? "";
 
                     }
@@ -11445,7 +11582,7 @@ function syncCurrentShikshanupakaranPageToMemory() {
 
 
             /* ----------------------------------------------------
-               READ SELECTS TOO
+               SELECTS
             ---------------------------------------------------- */
 
             const selects =
@@ -11465,7 +11602,7 @@ function syncCurrentShikshanupakaranPageToMemory() {
                         column
                     ) {
 
-                        existingRow[column] =
+                        rowData[column] =
                             select.value ?? "";
 
                     }
@@ -11481,14 +11618,18 @@ function syncCurrentShikshanupakaranPageToMemory() {
             window.shikshanupakaranAllRows[
                 memoryIndex
             ] =
-                existingRow;
+                rowData;
 
         }
     );
 
 
+    /* ============================================================
+       8. LOG
+    ============================================================ */
+
     console.log(
-        "CURRENT SHIKSHANUPAKARAN PAGE SYNCED:",
+        "SHIKSHANUPAKARAN PAGE SYNCED:",
         {
             page:
                 currentPage,
@@ -11499,10 +11640,11 @@ function syncCurrentShikshanupakaranPageToMemory() {
             visibleRows:
                 visibleRows.length,
 
-            endIndex:
-                startIndex +
-                visibleRows.length -
-                1
+            totalRows:
+                window.shikshanupakaranAllRows.length,
+
+            mode:
+                "PAGINATED"
         }
     );
 

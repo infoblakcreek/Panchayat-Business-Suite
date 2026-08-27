@@ -1,6 +1,7 @@
 console.log("TALAPATRAK JS FILE RUNNING");
 
 
+
 /* ============================================================
         TALAPATRAK SYSTEM
         STEP 1: NAVIGATION + MANAGEMENT + EDITOR
@@ -65,6 +66,13 @@ const emptyAddTalapatrakButton =
     document.getElementById(
         "emptyAddTalapatrakButton"
     );
+
+
+    
+window.talapatrakUnsavedRows =
+    new Set();
+
+
 
 
 if (backToTalapatrakManagementButton) {
@@ -4274,8 +4282,29 @@ function createTalapatrakRow(
             "tr"
         );
 
-    row.className =
-        "talapatrakRow";
+
+        row.className =
+            "talapatrakRow";
+
+        /* ============================================================
+        UNSAVED ROW TRACKING
+        ============================================================ */
+
+        const memoryRowIndex =
+            Number.isFinite(
+                Number(rowData._memoryIndex)
+            )
+                ? Number(rowData._memoryIndex)
+                : null;
+
+        if (
+            memoryRowIndex !== null
+        ) {
+
+            row.dataset.memoryRowIndex =
+                String(memoryRowIndex);
+
+        }
 
 
     /* ============================================================
@@ -4285,8 +4314,8 @@ function createTalapatrakRow(
     const rowNumber =
         rowData._displayRowNumber ||
         (
-            talapatrakBody
-                ? talapatrakBody.children.length + 1
+            Array.isArray(window.talapatrakAllRows)
+                ? window.talapatrakAllRows.length + 1
                 : 1
         );
 
@@ -4719,6 +4748,27 @@ function createTalapatrakRow(
 
     `;
 
+        /* ============================================================
+        RESTORE UNSAVED ROW DOT
+        ------------------------------------------------------------
+        IMPORTANT:
+        This must happen AFTER row.innerHTML because
+        innerHTML replaces all existing children.
+        ============================================================ */
+
+        if (
+            memoryRowIndex !== null &&
+            window.talapatrakUnsavedRows.has(
+                memoryRowIndex
+            )
+        ) {
+
+            addTalapatrakUnsavedDot(
+                row
+            );
+
+        }
+
 
     /* ============================================================
        APPEND ONLY FOR NORMAL EDITOR ROWS
@@ -4735,6 +4785,27 @@ function createTalapatrakRow(
 
     }
 
+    /* ============================================================
+    RESTORE UNSAVED DOT
+    ------------------------------------------------------------
+    If this row was previously edited but the user has not
+    pressed the real SAVE button, show the dot again.
+    ============================================================ */
+
+    if (
+        appendToBody &&
+        memoryRowIndex !== null &&
+        window.talapatrakUnsavedRows instanceof Set &&
+        window.talapatrakUnsavedRows.has(
+            memoryRowIndex
+        )
+    ) {
+
+        addTalapatrakUnsavedDot(
+            row
+        );
+
+    }
 
 
         /* ============================================================
@@ -4789,6 +4860,10 @@ function createTalapatrakRow(
                           */
       
                           syncCurrentTalapatrakPageToMemory();
+
+                          markTalapatrakRowAsChanged(
+                                row
+                            );
       
       
                           /*
@@ -4839,6 +4914,10 @@ function createTalapatrakRow(
 
                             syncCurrentTalapatrakPageToMemory();
 
+                            markTalapatrakRowAsChanged(
+                                row
+                            );
+
 
                             /*
                                 Save after the edit.
@@ -4870,72 +4949,6 @@ function createTalapatrakRow(
         setupIndianDatePicker();
 
     }
-
-      
-        /* ============================================================
-         TALAPATRAK ROW EVENTS
-         ------------------------------------------------------------
-         No separate setupTalapatrakRowEvents() function.
-         Attach events directly to each created row.
-      ============================================================ */
-      
-      if (appendToBody) {
-      
-          const editableInputs =
-              row.querySelectorAll(
-                  "input"
-              );
-      
-          editableInputs.forEach(
-              function(input) {
-      
-                  input.addEventListener(
-                        "input",
-                        function() {
-                    
-                            input.value =
-                                convertToGujaratiDigits(
-                                    convertGujaratiDigitsToEnglish(
-                                        input.value
-                                    )
-                                );
-                    
-                    
-                            calculateTalapatrakRow(
-                                input
-                            );
-                    
-                    
-                            syncCurrentTalapatrakPageToMemory();
-                    
-                    
-                            scheduleTalapatrakAutoSave();
-                    
-                        }
-                    );
-      
-      
-                  input.addEventListener(
-                      "change",
-                      function() {
-      
-                          calculateTalapatrakRow(
-                              input
-                          );
-      
-      
-                          syncCurrentTalapatrakPageToMemory();
-      
-      
-                          scheduleTalapatrakAutoSave();
-      
-                      }
-                  );
-      
-              }
-          );
-      
-      }
   
 
     /* ============================================================
@@ -5024,8 +5037,160 @@ function addTalapatrakRowAfter(button) {
 
 
     /* --------------------------------------------------------
-       INSERT NEW MEMORY ROW AFTER CURRENT ROW
+       FIND LAST EXISTING KHATA NUMBER
+       
+       IMPORTANT:
+       
+       Search ALL memory rows.
+       
+       Do NOT use DOM row count.
+       
+       Do NOT use current page number.
     -------------------------------------------------------- */
+
+    let lastKhataNumber =
+        0;
+
+
+    window.talapatrakAllRows.forEach(
+        function(row) {
+
+            if (
+                !row ||
+                typeof row !== "object"
+            ) {
+
+                return;
+
+            }
+
+
+            let value =
+                row.A;
+
+
+            /*
+                Support lowercase "a" as well.
+            */
+
+            if (
+                value === undefined ||
+                value === null ||
+                String(value).trim() === ""
+            ) {
+
+                value =
+                    row.a;
+
+            }
+
+
+            if (
+                value === undefined ||
+                value === null
+            ) {
+
+                return;
+
+            }
+
+
+            /*
+                Convert Gujarati digits to English.
+            */
+
+            const englishValue =
+                convertGujaratiDigitsToEnglish(
+                    String(value).trim()
+                );
+
+
+            /*
+                Remove anything that isn't a digit.
+
+                Example:
+
+                "605" → "605"
+                "૬૦૫" → "605"
+            */
+
+            const digitsOnly =
+                englishValue.replace(
+                    /[^0-9]/g,
+                    ""
+                );
+
+
+            if (
+                digitsOnly === ""
+            ) {
+
+                return;
+
+            }
+
+
+            const number =
+                Number(digitsOnly);
+
+
+            if (
+                Number.isFinite(number) &&
+                number > lastKhataNumber
+            ) {
+
+                lastKhataNumber =
+                    number;
+
+            }
+
+        }
+    );
+
+
+    /* --------------------------------------------------------
+       NEXT KHATA NUMBER
+    -------------------------------------------------------- */
+
+    const nextKhataNumber =
+        lastKhataNumber + 1;
+
+
+    const nextKhataNumberGujarati =
+        convertToGujaratiDigits(
+            String(nextKhataNumber)
+        );
+
+
+    console.log(
+        "ADD ROW → LAST KHATA NUMBER:",
+        lastKhataNumber
+    );
+
+
+    console.log(
+        "ADD ROW → NEXT KHATA NUMBER:",
+        nextKhataNumber
+    );
+
+
+    console.log(
+        "ADD ROW → NEXT KHATA GUJARATI:",
+        nextKhataNumberGujarati
+    );
+
+
+    /* --------------------------------------------------------
+       INSERT NEW MEMORY ROW
+    -------------------------------------------------------- */
+
+    const newRow = {
+
+        A:
+            nextKhataNumberGujarati
+
+    };
+
 
     window.talapatrakAllRows.splice(
 
@@ -5033,7 +5198,7 @@ function addTalapatrakRowAfter(button) {
 
         0,
 
-        {}
+        newRow
 
     );
 
@@ -5075,16 +5240,16 @@ function addTalapatrakRowAfter(button) {
         );
 
 
-    const newRow =
+    const newRowElement =
         rowsAfterRender[
             newVisibleIndex
         ];
 
 
-    if (newRow) {
+    if (newRowElement) {
 
         const firstInput =
-            newRow.querySelector(
+            newRowElement.querySelector(
                 "input"
             );
 
@@ -7204,6 +7369,77 @@ function collectTalapatrakRows() {
 }
 
 
+function getTalapatrakRowDataFromDOM(row) {
+
+    return {
+
+        A:
+            row.querySelector(".columnA")?.value || "",
+
+        B:
+            row.querySelector(".columnB")?.value || "",
+
+        C:
+            row.querySelector(".columnC")?.value || "",
+
+        D:
+            row.querySelector(".columnD")?.value || "",
+
+        E:
+            row.querySelector(".columnE")?.value || "",
+
+        F:
+            row.querySelector(".columnF")?.value || "",
+
+        G:
+            row.querySelector(".columnG")?.value || "",
+
+        H:
+            row.querySelector(".columnH")?.value || "",
+
+        I:
+            row.querySelector(".columnI")?.value || "",
+
+        J:
+            row.querySelector(".columnJ")?.value || "",
+
+        K:
+            row.querySelector(".columnK")?.value || "",
+
+        L:
+            row.querySelector(".columnL")?.value || "",
+
+        M:
+            row.querySelector(".columnM")?.value || "",
+
+        N:
+            row.querySelector(".columnN")?.value || "",
+
+        O:
+            row.querySelector(".columnO")?.value || "",
+
+        P:
+            row.querySelector(".columnP")?.value || "",
+
+        Q:
+            row.querySelector(".columnQ")?.value || "",
+
+        R:
+            row.querySelector(".columnR")?.value || "",
+
+        S:
+            row.querySelector(".columnS")?.value || "",
+
+        T:
+            row.querySelector(".columnT")?.value || "",
+
+        U:
+            row.querySelector(".columnU")?.value || ""
+
+    };
+
+}
+
 /* ============================================================
         SYNC CURRENT PAGE → MEMORY
 
@@ -7218,6 +7454,25 @@ function collectTalapatrakRows() {
 ============================================================ */
 
 function syncCurrentTalapatrakPageToMemory() {
+
+    /*
+     * ========================================================
+     * TALAPATRAK DOM → MEMORY SYNC
+     *
+     * There are TWO valid situations:
+     *
+     * 1. NORMAL PAGINATION
+     *    DOM contains only the current page.
+     *
+     * 2. FULL DOM IMPORT
+     *    Khata importer temporarily places ALL imported
+     *    rows into the DOM.
+     *
+     * We must support both without changing existing
+     * pagination behavior.
+     * ========================================================
+     */
+
 
     if (
         !Array.isArray(
@@ -7249,17 +7504,166 @@ function syncCurrentTalapatrakPageToMemory() {
         ) || 20;
 
 
+    const visibleRows =
+        talapatrakBody.querySelectorAll(
+            ".talapatrakRow"
+        );
+
+
+    /*
+     * ========================================================
+     * SAFETY
+     * ========================================================
+     */
+
+    if (!visibleRows.length) {
+
+        console.warn(
+            "SYNC PAGE → MEMORY: No DOM rows found."
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * ========================================================
+     * IMPORTANT:
+     *
+     * KHATA IMPORT / FULL DOM MODE
+     *
+     * If DOM contains more rows than the configured
+     * page size, the DOM is temporarily holding the
+     * complete imported dataset.
+     *
+     * Example:
+     *
+     * rowsPerPage = 20
+     * DOM rows    = 1056
+     *
+     * This MUST NOT be treated as page 1.
+     *
+     * Instead, rebuild master memory from the DOM.
+     * ========================================================
+     */
+
+    const fullDomMode =
+        visibleRows.length > rowsPerPage;
+
+
+    if (fullDomMode) {
+
+        console.log(
+            "======================================"
+        );
+
+        console.log(
+            "SYNC → FULL DOM MODE DETECTED"
+        );
+
+        console.log(
+            "DOM rows:",
+            visibleRows.length
+        );
+
+        console.log(
+            "Rows per page:",
+            rowsPerPage
+        );
+
+        console.log(
+            "Existing memory rows:",
+            window.talapatrakAllRows.length
+        );
+
+        console.log(
+            "======================================"
+        );
+
+
+        const importedRows = [];
+
+
+        visibleRows.forEach(
+            function(row) {
+
+                importedRows.push(
+                    getTalapatrakRowDataFromDOM(
+                        row
+                    )
+                );
+
+            }
+        );
+
+
+        /*
+         * Replace master memory with the complete
+         * DOM dataset.
+         *
+         * This is intentional.
+         *
+         * Khata import has just created the complete
+         * new Talapatrak dataset.
+         */
+
+        window.talapatrakAllRows =
+            importedRows;
+
+
+        /*
+         * Reset pagination state safely.
+         *
+         * The complete dataset is now in memory.
+         */
+
+        window.talapatrakCurrentPage =
+            Math.max(
+                1,
+                Math.min(
+                    currentPage,
+                    Math.ceil(
+                        importedRows.length /
+                        rowsPerPage
+                    )
+                )
+            );
+
+
+        console.log(
+            "SYNC → FULL DOM IMPORT STORED:",
+            importedRows.length,
+            "rows"
+        );
+
+
+        console.log(
+            "SYNC → MEMORY NOW:",
+            window.talapatrakAllRows.length,
+            "rows"
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+     * ========================================================
+     * NORMAL PAGINATED MODE
+     *
+     * Existing behavior remains unchanged.
+     * Only the currently visible page is synchronized.
+     * ========================================================
+     */
+
     const startIndex =
         (
             currentPage - 1
         ) *
         rowsPerPage;
-
-
-    const visibleRows =
-        talapatrakBody.querySelectorAll(
-            ".talapatrakRow"
-        );
 
 
     visibleRows.forEach(
@@ -7271,11 +7675,10 @@ function syncCurrentTalapatrakPageToMemory() {
 
 
             /*
-                Safety check.
-
-                Never write outside the
-                master array.
-            */
+             * Safety check.
+             *
+             * Never write outside the master array.
+             */
 
             if (
                 memoryIndex < 0 ||
@@ -7288,120 +7691,16 @@ function syncCurrentTalapatrakPageToMemory() {
             }
 
 
-            const rowData = {
-
-                A:
-                    row.querySelector(
-                        ".columnA"
-                    )?.value || "",
-
-                B:
-                    row.querySelector(
-                        ".columnB"
-                    )?.value || "",
-
-                C:
-                    row.querySelector(
-                        ".columnC"
-                    )?.value || "",
-
-                D:
-                    row.querySelector(
-                        ".columnD"
-                    )?.value || "",
-
-                E:
-                    row.querySelector(
-                        ".columnE"
-                    )?.value || "",
-
-                F:
-                    row.querySelector(
-                        ".columnF"
-                    )?.value || "",
-
-                G:
-                    row.querySelector(
-                        ".columnG"
-                    )?.value || "",
-
-                H:
-                    row.querySelector(
-                        ".columnH"
-                    )?.value || "",
-
-                I:
-                    row.querySelector(
-                        ".columnI"
-                    )?.value || "",
-
-                J:
-                    row.querySelector(
-                        ".columnJ"
-                    )?.value || "",
-
-                K:
-                    row.querySelector(
-                        ".columnK"
-                    )?.value || "",
-
-                L:
-                    row.querySelector(
-                        ".columnL"
-                    )?.value || "",
-
-                M:
-                    row.querySelector(
-                        ".columnM"
-                    )?.value || "",
-
-                N:
-                    row.querySelector(
-                        ".columnN"
-                    )?.value || "",
-
-                O:
-                    row.querySelector(
-                        ".columnO"
-                    )?.value || "",
-
-                P:
-                    row.querySelector(
-                        ".columnP"
-                    )?.value || "",
-
-                Q:
-                    row.querySelector(
-                        ".columnQ"
-                    )?.value || "",
-
-                R:
-                    row.querySelector(
-                        ".columnR"
-                    )?.value || "",
-
-                S:
-                    row.querySelector(
-                        ".columnS"
-                    )?.value || "",
-
-                T:
-                    row.querySelector(
-                        ".columnT"
-                    )?.value || "",
-
-                U:
-                    row.querySelector(
-                        ".columnU"
-                    )?.value || ""
-
-            };
+            const rowData =
+                getTalapatrakRowDataFromDOM(
+                    row
+                );
 
 
             /*
-                Replace ONLY this row
-                inside master memory.
-            */
+             * Replace ONLY this row
+             * inside master memory.
+             */
 
             window.talapatrakAllRows[
                 memoryIndex
@@ -8031,6 +8330,23 @@ async function saveTalapatrak(
         );
 
 
+        /* ============================================================
+        MARK AS SAVED
+        ------------------------------------------------------------
+        IMPORTANT:
+        Only a real manual SAVE clears the unsaved state.
+
+        Autosave calls saveTalapatrak(false), so autosave
+        must NOT clear this flag.
+        ============================================================ */
+
+        if (showSuccessMessage) {
+
+            markTalapatrakAsSaved();
+
+        }
+
+
         return true;
 
     }
@@ -8071,6 +8387,8 @@ async function saveTalapatrak(
 let talapatrakAutoSaveTimer = null;
 
 let talapatrakAutoSaveInProgress = false;
+
+window.talapatrakHasUnsavedChanges = false;
 
 
 /* ============================================================
@@ -8310,14 +8628,49 @@ function scheduleTalapatrakAutoSave() {
 
                 try {
 
-                    await saveTalapatrak(
-                        false
-                    );
+                    /*
+                    * ========================================================
+                    * AUTOSAVE ONLY RUNS FOR UNSAVED CHANGES
+                    *
+                    * IMPORTANT:
+                    * Autosave saves the complete editor dataset.
+                    * It does NOT perform synchronization.
+                    *
+                    * Manual SAVE remains responsible for sync.
+                    * ========================================================
+                    */
+
+                    if (
+                        window.talapatrakHasUnsavedChanges !== true
+                    ) {
+
+                        console.log(
+                            "TALAPATRAK AUTOSAVE SKIPPED — NO UNSAVED CHANGES"
+                        );
+
+                        return;
+
+                    }
 
 
-                    console.log(
-                        "Talapatrak autosaved."
-                    );
+                    const autosaveResult =
+                        await saveTalapatrak(false);
+
+
+                    if (autosaveResult) {
+
+                        console.log(
+                            "🟢 TALAPATRAK AUTOSAVE COMPLETE — ALL EDITOR DATA SAVED, SYNC SKIPPED"
+                        );
+
+                    }
+                    else {
+
+                        console.warn(
+                            "🔴 TALAPATRAK AUTOSAVE FAILED — DATA WAS NOT CONFIRMED SAVED"
+                        );
+
+                    }
 
                 }
 
@@ -8344,6 +8697,163 @@ function scheduleTalapatrakAutoSave() {
 
 }
 
+function markTalapatrakRowAsChanged(row) {
+
+    if (!row) {
+
+        return;
+
+    }
+
+
+    const memoryRowIndex =
+        row.dataset.memoryRowIndex;
+
+
+    if (
+        memoryRowIndex === undefined
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        !(window.talapatrakUnsavedRows instanceof Set)
+    ) {
+
+        window.talapatrakUnsavedRows =
+            new Set();
+
+    }
+
+
+    window.talapatrakUnsavedRows.add(
+        Number(memoryRowIndex)
+    );
+
+
+    window.talapatrakHasUnsavedChanges =
+        true;
+
+
+    addTalapatrakUnsavedDot(
+        row
+    );
+
+
+    console.log(
+        "🟡 TALAPATRAK UNSAVED ROW:",
+        Number(memoryRowIndex) + 1
+    );
+
+}
+
+
+function addTalapatrakUnsavedDot(row) {
+
+    if (!row) {
+
+        return;
+
+    }
+
+
+    /*
+    ------------------------------------------------------------
+    DO NOT CREATE DUPLICATE DOTS
+    ------------------------------------------------------------
+    */
+
+    if (
+        row.querySelector(
+            ".talapatrakUnsavedDot"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const firstCell =
+        row.querySelector(
+            "td"
+        );
+
+
+    if (!firstCell) {
+
+        return;
+
+    }
+
+
+    const dot =
+        document.createElement(
+            "span"
+        );
+
+
+    dot.className =
+        "talapatrakUnsavedDot";
+
+
+    dot.title =
+        "Unsaved changes — press SAVE";
+
+
+    firstCell.style.position =
+        "relative";
+
+
+    firstCell.appendChild(
+        dot
+    );
+
+}
+
+
+/* ============================================================
+   TALAPATRAK SAVED STATE
+============================================================ */
+
+function markTalapatrakAsSaved() {
+
+    window.talapatrakHasUnsavedChanges =
+        false;
+
+
+    if (
+        window.talapatrakUnsavedRows instanceof Set
+    ) {
+
+        window.talapatrakUnsavedRows.clear();
+
+    }
+
+
+    /* Remove visible dots immediately */
+
+    document
+        .querySelectorAll(
+            ".talapatrakUnsavedDot"
+        )
+        .forEach(
+            function(dot) {
+
+                dot.remove();
+
+            }
+        );
+
+
+    console.log(
+        "🟢 TALAPATRAK MARKED AS SAVED — ALL UNSAVED ROW DOTS REMOVED"
+    );
+
+}
 
 /* ============================================================
    ATTACH AUTO SAVE LISTENERS
@@ -8378,7 +8888,7 @@ function setupTalapatrakAutoSave() {
 
     /*
     ========================================================
-       PREVENT DUPLICATE LISTENERS
+       PREVENT DUPLICATE LISTENER
     ========================================================
     */
 
@@ -8397,98 +8907,47 @@ function setupTalapatrakAutoSave() {
 
     /*
     ========================================================
-       INPUT
-    ========================================================
-    */
-
-    editor.addEventListener(
-        "input",
-        function () {
-
-            if (
-                window.talapatrakPrinting === true
-            ) {
-
-                console.log(
-                    "Autosave skipped — printing."
-                );
-
-                return;
-
-            }
-
-
-            scheduleTalapatrakAutoSave();
-
-        }
-    );
-
-
-    /*
-    ========================================================
-       CHANGE
-    ========================================================
-    */
-
-    editor.addEventListener(
-        "change",
-        function () {
-
-            if (
-                window.talapatrakPrinting === true
-            ) {
-
-                console.log(
-                    "Autosave skipped — printing."
-                );
-
-                return;
-
-            }
-
-
-            scheduleTalapatrakAutoSave();
-
-        }
-    );
-
-
-    /*
-    ========================================================
        BLUR
        
-       VERY IMPORTANT:
-       Print button causes the currently focused
-       input to blur.
+       DO NOT START A NEW AUTOSAVE HERE.
        
-       NEVER start autosave during printing.
+       Input/change handlers already schedule autosave.
+       
+       Blur is only useful for logging / debugging.
     ========================================================
     */
 
-   editor.addEventListener(
+    editor.addEventListener(
         "blur",
         function () {
-    
+
             console.log(
                 "TALAPATRAK BLUR"
             );
-    
-    
+
+
             if (
                 window.talapatrakPrinting === true
             ) {
-    
+
                 console.log(
                     "Autosave skipped — printing."
                 );
-    
+
                 return;
-    
+
             }
-    
-    
-            scheduleTalapatrakAutoSave();
-    
+
+
+            /*
+                IMPORTANT:
+
+                Do NOT call scheduleTalapatrakAutoSave()
+                here.
+
+                The input/change listeners already did that.
+            */
+
         },
         true
     );
@@ -9344,8 +9803,38 @@ function renderTalapatrakPage(pageNumber) {
                 : {};
 
 
+        /*
+        * Preserve the exact position of this row
+        * inside the complete Talapatrak memory.
+        *
+        * This is critical because only 20 rows exist
+        * in the DOM at any one time.
+        */
+        rowData._memoryIndex =
+            memoryIndex;
+
+
+        /*
+        * Human-visible row number.
+        */
         rowData._displayRowNumber =
             memoryIndex + 1;
+
+
+        /*
+        ============================================================
+        UNSAVED ROW TRACKING
+
+        memoryIndex is the permanent position of this row
+        inside talapatrakAllRows.
+
+        This is NOT the visible row number.
+        It remains correct across pagination.
+        ============================================================
+        */
+
+        rowData._memoryIndex =
+            memoryIndex;
 
 
         const row =

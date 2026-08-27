@@ -4027,6 +4027,45 @@ async function openTalapatrakManagement() {
 }
 
 
+
+/* ============================================================
+   TALAPATRAK UNSAVED CHANGE STATE
+============================================================ */
+
+window.talapatrakHasUnsavedChanges = false;
+
+
+/* ============================================================
+   MARK TALAPATRAK AS CHANGED
+============================================================ */
+
+function markTalapatrakAsChanged() {
+
+    window.talapatrakHasUnsavedChanges = true;
+
+    console.log(
+        "🟡 TALAPATRAK HAS UNSAVED CHANGES"
+    );
+
+}
+
+
+/* ============================================================
+   MARK TALAPATRAK AS SAVED
+============================================================ */
+
+function markTalapatrakAsSaved() {
+
+    window.talapatrakHasUnsavedChanges = false;
+
+    console.log(
+        "🟢 TALAPATRAK CHANGES SAVED"
+    );
+
+}
+
+
+
 /* ============================================================
         CLEAR ROWS
 ============================================================ */
@@ -4670,6 +4709,7 @@ function createTalapatrakRow(
       
                           syncCurrentTalapatrakPageToMemory();
       
+                          markTalapatrakAsChanged();
       
                           /*
                               Keep existing autosave behavior.
@@ -4705,6 +4745,7 @@ function createTalapatrakRow(
       
                           syncCurrentTalapatrakPageToMemory();
       
+                          markTalapatrakAsChanged();
       
                           /*
                               Save after the edit.
@@ -4778,6 +4819,7 @@ function createTalapatrakRow(
       
                           syncCurrentTalapatrakPageToMemory();
       
+                          markTalapatrakAsChanged();
       
                           /*
                               Schedule existing autosave.
@@ -4790,21 +4832,21 @@ function createTalapatrakRow(
       
       
                   input.addEventListener(
-                      "change",
-                      function() {
-      
-                          calculateTalapatrakRow(
-                              input
-                          );
-      
-      
-                          syncCurrentTalapatrakPageToMemory();
-      
-      
-                          scheduleTalapatrakAutoSave();
-      
-                      }
-                  );
+                        "change",
+                        function() {
+
+                            calculateTalapatrakRow(
+                                input
+                            );
+
+                            syncCurrentTalapatrakPageToMemory();
+
+                            markTalapatrakAsChanged();
+
+                            scheduleTalapatrakAutoSave();
+
+                        }
+                    );
       
               }
           );
