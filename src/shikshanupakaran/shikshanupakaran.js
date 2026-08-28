@@ -4871,14 +4871,9 @@ async function createShikshanupakaranFromTalapatrak(
                             */
 
                             E:
-                                String(
-                                    existingShikRow.E ?? ""
-                                ).trim() !== ""
-                                    ? existingShikRow.E
-                                    : convertToGujaratiDigits(
-                                        shikshanupakaranE
-                                            .toFixed(2)
-                                    )
+                                convertToGujaratiDigits(
+                                    shikshanupakaranE.toFixed(2)
+                                )
           
                       };
           
