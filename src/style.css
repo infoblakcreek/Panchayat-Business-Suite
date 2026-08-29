@@ -4005,3 +4005,155 @@ body[data-theme="dark"] #khataScanProgressPage {
     font-size: 13px;
 
 }
+
+
+/* ======================================================================================================================== */
+
+
+/* =========================================================
+   DASHBOARD NAVIGATION
+   Light + Dark Mode
+========================================================= */
+
+#dashboardNav {
+    position: relative;
+}
+
+
+/* Dashboard icon */
+
+#dashboardNav .dashboardNavIcon {
+
+    width: 36px;
+    height: 36px;
+
+    min-width: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: var(--sidebar-icon-bg);
+
+    color: var(--sidebar-icon-color);
+
+    border: 1px solid var(--sidebar-icon-border);
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+
+}
+
+
+/* Icon itself */
+
+#dashboardNav .dashboardNavIcon i {
+
+    font-size: 16px;
+
+}
+
+
+/* Hover */
+
+#dashboardNav:hover .dashboardNavIcon {
+
+    background: var(--sidebar-icon-hover-bg);
+
+    color: var(--sidebar-icon-hover-color);
+
+    border-color: var(--sidebar-icon-hover-border);
+
+    transform: translateY(-1px);
+
+}
+
+
+/* Active Dashboard */
+
+#dashboardNav.active .dashboardNavIcon {
+
+    background: var(--sidebar-active-icon-bg);
+
+    color: var(--sidebar-active-icon-color);
+
+    border-color: var(--sidebar-active-icon-border);
+
+}
+
+
+/* =========================================================
+   LIGHT MODE
+========================================================= */
+
+:root {
+
+    --sidebar-icon-bg:
+        rgba(0, 0, 0, 0.035);
+
+    --sidebar-icon-color:
+        #64748b;
+
+    --sidebar-icon-border:
+        rgba(0, 0, 0, 0.07);
+
+    --sidebar-icon-hover-bg:
+        rgba(0, 0, 0, 0.06);
+
+    --sidebar-icon-hover-color:
+        #334155;
+
+    --sidebar-icon-hover-border:
+        rgba(0, 0, 0, 0.10);
+
+    --sidebar-active-icon-bg:
+        rgba(59, 130, 246, 0.10);
+
+    --sidebar-active-icon-color:
+        #2563eb;
+
+    --sidebar-active-icon-border:
+        rgba(59, 130, 246, 0.18);
+
+}
+
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+[data-theme="dark"] {
+
+    --sidebar-icon-bg:
+        rgba(255, 255, 255, 0.055);
+
+    --sidebar-icon-color:
+        #aeb8c7;
+
+    --sidebar-icon-border:
+        rgba(255, 255, 255, 0.08);
+
+    --sidebar-icon-hover-bg:
+        rgba(255, 255, 255, 0.09);
+
+    --sidebar-icon-hover-color:
+        #ffffff;
+
+    --sidebar-icon-hover-border:
+        rgba(255, 255, 255, 0.14);
+
+    --sidebar-active-icon-bg:
+        rgba(96, 165, 250, 0.15);
+
+    --sidebar-active-icon-color:
+        #60a5fa;
+
+    --sidebar-active-icon-border:
+        rgba(96, 165, 250, 0.25);
+
+}
