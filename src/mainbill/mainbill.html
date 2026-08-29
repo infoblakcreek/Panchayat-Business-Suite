@@ -985,15 +985,14 @@
 
 
 
-
-
-
-
 <style data-mainbill-print>
 
 /* ============================================================
-   MAIN BILL + DUPLICATE RECEIPT
-   ONE A4 PORTRAIT PAGE
+   MAIN BILL PRINT PAGE
+   IMPORTANT:
+   This page is ONLY for Main Bill.
+   Do NOT change global @page rules because
+   Talapatrak + Shikshanupakaran use landscape.
 ============================================================ */
 
 @page mainbill {
@@ -1002,27 +1001,21 @@
 }
 
 
+/* ============================================================
+   MAIN BILL PRINT MODE ONLY
+============================================================ */
+
 @media print {
 
-    /* ========================================================
-       PAGE
-    ======================================================== */
-
-    html,
-    body {
-
-        width: 210mm !important;
-
-        height: 297mm !important;
-
-        margin: 0 !important;
-
-        padding: 0 !important;
-
-    }
-
+    /*
+    ------------------------------------------------------------
+    MAIN BILL OWNS THE PAGE CONTEXT
+    ------------------------------------------------------------
+    */
 
     body.printingMainBill {
+
+        page: mainbill !important;
 
         width: 210mm !important;
 
@@ -1037,17 +1030,54 @@
     }
 
 
-    /* ========================================================
-       ONE A4 PRINT AREA
-    ======================================================== */
+    /*
+    ------------------------------------------------------------
+    FORCE MAIN BILL PRINT CONTAINER TO USE mainbill PAGE
+    ------------------------------------------------------------
+    */
 
-    .generatedReceiptPage {
+    body.printingMainBill #printableBills {
 
         page: mainbill !important;
 
-        display: block !important;
+        width: 210mm !important;
+
+        min-width: 210mm !important;
+
+        max-width: 210mm !important;
+
+        height: 297mm !important;
+
+        min-height: 297mm !important;
+
+        max-height: 297mm !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+
+    }
+
+
+    /*
+    ------------------------------------------------------------
+    ACTUAL GENERATED MAIN BILL PAGE
+    ------------------------------------------------------------
+    */
+
+    body.printingMainBill .generatedReceiptPage {
+
+        page: mainbill !important;
 
         width: 210mm !important;
+
+        min-width: 210mm !important;
+
+        max-width: 210mm !important;
 
         height: 297mm !important;
 
@@ -1068,7 +1098,13 @@
     }
 
 
-    #printableBills {
+    /*
+    ------------------------------------------------------------
+    PRINTABLE BILLS
+    ------------------------------------------------------------
+    */
+
+    body.printingMainBill #printableBills {
 
         display: flex !important;
 
@@ -1078,11 +1114,11 @@
 
         align-items: stretch !important;
 
-        width: 100% !important;
+        width: 210mm !important;
 
         height: auto !important;
 
-        max-height: none !important;
+        max-height: 297mm !important;
 
         margin: 0 !important;
 
@@ -1092,39 +1128,39 @@
 
         overflow: hidden !important;
 
-        page: mainbill !important;
-
     }
 
 
-    /* ========================================================
-       HIDE APPLICATION UI
-    ======================================================== */
+    /*
+    ------------------------------------------------------------
+    HIDE APPLICATION UI
+    ------------------------------------------------------------
+    */
 
-    #loginScreen,
-    .topBar,
-    .sidebar,
-    .dashboardView,
-    #formPage,
-    .receiptActionButtons,
-    .receiptActions,
-    .generateReceiptArea,
-    .searchModalOverlay {
+    body.printingMainBill #loginScreen,
+    body.printingMainBill .topBar,
+    body.printingMainBill .sidebar,
+    body.printingMainBill .dashboardView,
+    body.printingMainBill #formPage,
+    body.printingMainBill .receiptActionButtons,
+    body.printingMainBill .receiptActions,
+    body.printingMainBill .generateReceiptArea,
+    body.printingMainBill .searchModalOverlay {
 
         display: none !important;
 
     }
 
 
-    #printableBills button {
+    body.printingMainBill #printableBills button {
 
         display: none !important;
 
     }
 
 
-    #printableBills,
-    #printableBills * {
+    body.printingMainBill #printableBills,
+    body.printingMainBill #printableBills * {
 
         visibility: visible !important;
 
@@ -1133,10 +1169,9 @@
 
     /* ========================================================
        MAIN BILL
-       KEEP THIS RELATIVELY LARGE
     ======================================================== */
 
-    #generatedMainBill {
+    body.printingMainBill #generatedMainBill {
 
         width: 100% !important;
 
@@ -1171,7 +1206,7 @@
        MAIN HEADER
     ======================================================== */
 
-    #generatedMainBill .printHeaderRow td {
+    body.printingMainBill #generatedMainBill .printHeaderRow td {
 
         padding: 8px 12px 7px !important;
 
@@ -1182,7 +1217,7 @@
     }
 
 
-    #generatedMainBill .printGanesh {
+    body.printingMainBill #generatedMainBill .printGanesh {
 
         margin: 0 0 1px !important;
 
@@ -1193,7 +1228,7 @@
     }
 
 
-    #generatedMainBill .printHeaderRow h1 {
+    body.printingMainBill #generatedMainBill .printHeaderRow h1 {
 
         margin: 2px 0 !important;
 
@@ -1204,7 +1239,7 @@
     }
 
 
-    #generatedMainBill .printHeaderRow h2 {
+    body.printingMainBill #generatedMainBill .printHeaderRow h2 {
 
         margin: 0 0 3px !important;
 
@@ -1215,7 +1250,7 @@
     }
 
 
-    #generatedMainBill .printHeaderRow p {
+    body.printingMainBill #generatedMainBill .printHeaderRow p {
 
         margin: 1px 0 !important;
 
@@ -1226,7 +1261,7 @@
     }
 
 
-    #generatedMainBill .printPhone {
+    body.printingMainBill #generatedMainBill .printPhone {
 
         width: 105px !important;
 
@@ -1243,14 +1278,14 @@
        CUSTOMER DETAILS
     ======================================================== */
 
-    #generatedMainBill .printCustomerDetails {
+    body.printingMainBill #generatedMainBill .printCustomerDetails {
 
         line-height: 1.15 !important;
 
     }
 
 
-    #generatedMainBill .printCustomerDetails td {
+    body.printingMainBill #generatedMainBill .printCustomerDetails td {
 
         padding: 4px 6px !important;
 
@@ -1261,8 +1296,8 @@
     }
 
 
-    #generatedMainBill .printCustomerDetails label,
-    #generatedMainBill .printCustomerDetails strong {
+    body.printingMainBill #generatedMainBill .printCustomerDetails label,
+    body.printingMainBill #generatedMainBill .printCustomerDetails strong {
 
         font-size: 9.5px !important;
 
@@ -1271,7 +1306,7 @@
     }
 
 
-    #generatedMainBill .printCustomerDetails span {
+    body.printingMainBill #generatedMainBill .printCustomerDetails span {
 
         min-width: 0 !important;
 
@@ -1282,14 +1317,14 @@
     }
 
 
-    #generatedMainBill .printCustomerDetails tr:nth-child(2) {
+    body.printingMainBill #generatedMainBill .printCustomerDetails tr:nth-child(2) {
 
         white-space: nowrap !important;
 
     }
 
 
-    #generatedMainBill .printCustomerDetails tr:nth-child(2) td {
+    body.printingMainBill #generatedMainBill .printCustomerDetails tr:nth-child(2) td {
 
         padding-left: 4px !important;
 
@@ -1298,7 +1333,7 @@
     }
 
 
-    #generatedMainBill .printCustomerDetails tr:nth-child(2) span {
+    body.printingMainBill #generatedMainBill .printCustomerDetails tr:nth-child(2) span {
 
         padding: 1px 3px !important;
 
@@ -1307,7 +1342,7 @@
     }
 
 
-    #generatedMainBill .panchayatText {
+    body.printingMainBill #generatedMainBill .panchayatText {
 
         margin-left: 2px !important;
 
@@ -1320,14 +1355,14 @@
        ITEMS TABLE
     ======================================================== */
 
-    #generatedMainBill .itemTableSpace > td {
+    body.printingMainBill #generatedMainBill .itemTableSpace > td {
 
         padding: 5px 7px 4px !important;
 
     }
 
 
-    #generatedMainBill .innerItemTable {
+    body.printingMainBill #generatedMainBill .innerItemTable {
 
         margin: 0 !important;
 
@@ -1340,7 +1375,7 @@
     }
 
 
-    #generatedMainBill .innerItemTable th {
+    body.printingMainBill #generatedMainBill .innerItemTable th {
 
         padding: 5px 4px !important;
 
@@ -1351,7 +1386,7 @@
     }
 
 
-    #generatedMainBill .innerItemTable td {
+    body.printingMainBill #generatedMainBill .innerItemTable td {
 
         padding: 3px 4px !important;
 
@@ -1364,7 +1399,7 @@
     }
 
 
-    #generatedMainBill #printMainItems td:nth-child(2) {
+    body.printingMainBill #generatedMainBill #printMainItems td:nth-child(2) {
 
         padding-left: 5px !important;
 
@@ -1377,7 +1412,7 @@
        SUMMARY
     ======================================================== */
 
-    #generatedMainBill .printSummaryRow td {
+    body.printingMainBill #generatedMainBill .printSummaryRow td {
 
         padding: 4px 7px !important;
 
@@ -1388,7 +1423,7 @@
     }
 
 
-    #generatedMainBill .printSummaryRow label {
+    body.printingMainBill #generatedMainBill .printSummaryRow label {
 
         margin-right: 3px !important;
 
@@ -1401,7 +1436,7 @@
        AMOUNT IN WORDS
     ======================================================== */
 
-    #generatedMainBill #pAmountWords {
+    body.printingMainBill #generatedMainBill #pAmountWords {
 
         display: inline-block !important;
 
@@ -1422,7 +1457,7 @@
     }
 
 
-    #generatedMainBill #pAmountWords::after {
+    body.printingMainBill #generatedMainBill #pAmountWords::after {
 
         display: none !important;
 
@@ -1433,7 +1468,7 @@
        GRAND TOTAL
     ======================================================== */
 
-    #generatedMainBill #pGrandTotal {
+    body.printingMainBill #generatedMainBill #pGrandTotal {
 
         display: inline-block !important;
 
@@ -1458,7 +1493,7 @@
        PAYMENT
     ======================================================== */
 
-    #generatedMainBill .printPaymentDetails {
+    body.printingMainBill #generatedMainBill .printPaymentDetails {
 
         padding: 4px 7px !important;
 
@@ -1469,7 +1504,7 @@
     }
 
 
-    #generatedMainBill .printPaymentDetails strong {
+    body.printingMainBill #generatedMainBill .printPaymentDetails strong {
 
         margin-right: 3px !important;
 
@@ -1480,7 +1515,7 @@
        FOOTER
     ======================================================== */
 
-    #generatedMainBill .printFooter td {
+    body.printingMainBill #generatedMainBill .printFooter td {
 
         padding: 5px 7px !important;
 
@@ -1495,7 +1530,7 @@
        CUT LINE
     ======================================================== */
 
-    #printableBills .cutLine {
+    body.printingMainBill #printableBills .cutLine {
 
         width: 100% !important;
 
@@ -1514,7 +1549,7 @@
     }
 
 
-    #printableBills .cutLine span {
+    body.printingMainBill #printableBills .cutLine span {
 
         position: absolute !important;
 
@@ -1539,11 +1574,10 @@
 
     /* ========================================================
        DUPLICATE RECEIPT
-       VERY COMPACT — THIS IS INTENTIONAL
     ======================================================== */
 
-    #printableBills #duplicateReceipt,
-    #printableBills .duplicateReceipt {
+    body.printingMainBill #printableBills #duplicateReceipt,
+    body.printingMainBill #printableBills .duplicateReceipt {
 
         width: 100% !important;
 
@@ -1582,7 +1616,7 @@
        DUPLICATE HEADER
     ======================================================== */
 
-    #printableBills .duplicateHeader {
+    body.printingMainBill #printableBills .duplicateHeader {
 
         display: grid !important;
 
@@ -1599,7 +1633,7 @@
     }
 
 
-    #printableBills .duplicateCompany h4 {
+    body.printingMainBill #printableBills .duplicateCompany h4 {
 
         margin: 0 !important;
 
@@ -1610,7 +1644,7 @@
     }
 
 
-    #printableBills .duplicateCompany p {
+    body.printingMainBill #printableBills .duplicateCompany p {
 
         margin: 1px 0 0 !important;
 
@@ -1621,7 +1655,7 @@
     }
 
 
-    #printableBills .duplicatePhone {
+    body.printingMainBill #printableBills .duplicatePhone {
 
         font-size: 8px !important;
 
@@ -1634,7 +1668,7 @@
        RECEIPT TITLE
     ======================================================== */
 
-    #printableBills .receiptTitle {
+    body.printingMainBill #printableBills .receiptTitle {
 
         margin: 2px 0 !important;
 
@@ -1649,7 +1683,7 @@
        RECEIPT NUMBER + DATE
     ======================================================== */
 
-    #printableBills .duplicateReceiptHeader {
+    body.printingMainBill #printableBills .duplicateReceiptHeader {
 
         display: grid !important;
 
@@ -1662,21 +1696,21 @@
     }
 
 
-    #printableBills .duplicateReceiptHeader > div {
+    body.printingMainBill #printableBills .duplicateReceiptHeader > div {
 
         gap: 4px !important;
 
     }
 
 
-    #printableBills .duplicateReceiptHeader label {
+    body.printingMainBill #printableBills .duplicateReceiptHeader label {
 
         font-size: 7px !important;
 
     }
 
 
-    #printableBills .duplicateReceiptHeader input {
+    body.printingMainBill #printableBills .duplicateReceiptHeader input {
 
         height: 14px !important;
 
@@ -1693,7 +1727,7 @@
        DUPLICATE CUSTOMER
     ======================================================== */
 
-    #printableBills .duplicateCustomer {
+    body.printingMainBill #printableBills .duplicateCustomer {
 
         gap: 3px !important;
 
@@ -1702,8 +1736,8 @@
     }
 
 
-    #printableBills .duplicateCustomer label,
-    #printableBills .duplicateCustomer span {
+    body.printingMainBill #printableBills .duplicateCustomer label,
+    body.printingMainBill #printableBills .duplicateCustomer span {
 
         font-size: 7px !important;
 
@@ -1712,7 +1746,7 @@
     }
 
 
-    #printableBills .duplicateCustomer span {
+    body.printingMainBill #printableBills .duplicateCustomer span {
 
         min-height: 10px !important;
 
@@ -1721,7 +1755,7 @@
     }
 
 
-    #printableBills .panchayatLabel {
+    body.printingMainBill #printableBills .panchayatLabel {
 
         font-size: 6.5px !important;
 
@@ -1732,7 +1766,7 @@
        RECEIPT BODY
     ======================================================== */
 
-    #printableBills .receiptBody {
+    body.printingMainBill #printableBills .receiptBody {
 
         margin-top: 2px !important;
 
@@ -1741,7 +1775,7 @@
     }
 
 
-    #printableBills .receiptBody p {
+    body.printingMainBill #printableBills .receiptBody p {
 
         margin: 1px 0 2px !important;
 
@@ -1752,7 +1786,7 @@
     }
 
 
-    #printableBills .receiptBody strong {
+    body.printingMainBill #printableBills .receiptBody strong {
 
         margin: 0 2px !important;
 
@@ -1765,7 +1799,7 @@
        AMOUNT WORDS
     ======================================================== */
 
-    #printableBills .amountWordsReceipt {
+    body.printingMainBill #printableBills .amountWordsReceipt {
 
         gap: 3px !important;
 
@@ -1774,8 +1808,8 @@
     }
 
 
-    #printableBills .amountWordsReceipt label,
-    #printableBills .amountWordsReceipt span {
+    body.printingMainBill #printableBills .amountWordsReceipt label,
+    body.printingMainBill #printableBills .amountWordsReceipt span {
 
         font-size: 7px !important;
 
@@ -1784,7 +1818,7 @@
     }
 
 
-    #printableBills .amountWordsReceipt span {
+    body.printingMainBill #printableBills .amountWordsReceipt span {
 
         min-width: 65% !important;
 
@@ -1799,7 +1833,7 @@
        PAYMENT DETAILS
     ======================================================== */
 
-    #printableBills .paymentDetails {
+    body.printingMainBill #printableBills .paymentDetails {
 
         gap: 7px !important;
 
@@ -1808,15 +1842,15 @@
     }
 
 
-    #printableBills .paymentDetails > div {
+    body.printingMainBill #printableBills .paymentDetails > div {
 
         gap: 3px !important;
 
     }
 
 
-    #printableBills .paymentDetails label,
-    #printableBills .paymentDetails span {
+    body.printingMainBill #printableBills .paymentDetails label,
+    body.printingMainBill #printableBills .paymentDetails span {
 
         font-size: 7px !important;
 
@@ -1825,7 +1859,7 @@
     }
 
 
-    #printableBills .paymentDetails span {
+    body.printingMainBill #printableBills .paymentDetails span {
 
         min-width: 45px !important;
 
@@ -1840,7 +1874,7 @@
        BANK DETAILS
     ======================================================== */
 
-    #printableBills .bankDetailsRow {
+    body.printingMainBill #printableBills .bankDetailsRow {
 
         margin-top: 2px !important;
 
@@ -1849,8 +1883,8 @@
     }
 
 
-    #printableBills .bankDetailsRow label,
-    #printableBills .bankDetailsRow span {
+    body.printingMainBill #printableBills .bankDetailsRow label,
+    body.printingMainBill #printableBills .bankDetailsRow span {
 
         font-size: 7px !important;
 
@@ -1859,7 +1893,7 @@
     }
 
 
-    #printableBills .bankDetailsRow span {
+    body.printingMainBill #printableBills .bankDetailsRow span {
 
         min-height: 10px !important;
 
@@ -1870,7 +1904,7 @@
        DUPLICATE FOOTER
     ======================================================== */
 
-    #printableBills .duplicateFooter {
+    body.printingMainBill #printableBills .duplicateFooter {
 
         margin-top: 3px !important;
 
@@ -1882,13 +1916,13 @@
 
 
     /* ========================================================
-       ABSOLUTELY NO PAGE BREAK
+       NO PAGE BREAK
     ======================================================== */
 
-    #printableBills,
-    #generatedMainBill,
-    #duplicateReceipt,
-    #printableBills .duplicateReceipt {
+    body.printingMainBill #printableBills,
+    body.printingMainBill #generatedMainBill,
+    body.printingMainBill #duplicateReceipt,
+    body.printingMainBill #printableBills .duplicateReceipt {
 
         break-before: auto !important;
 
@@ -1905,5 +1939,8 @@
     }
 
 }
+
+
+
 
 </style>

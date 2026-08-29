@@ -2556,3 +2556,108 @@ body.receiptGeneratedMode
 
 
 
+/* ============================================================
+        GENERATED RECEIPT — MAIN BILL SCREEN FRAME
+        This styles ONLY the page around the generated bill.
+        The bill's internal elements are untouched.
+============================================================ */
+
+body.receiptGeneratedMode #invoiceView {
+    width: 100%;
+    min-height: calc(100vh - 76px);
+
+    padding: 28px 32px;
+
+    background: var(--page-background);
+
+    box-sizing: border-box;
+}
+
+
+/* Main receipt area */
+body.receiptGeneratedMode #printableBills {
+
+    width: 100% !important;
+    max-width: 1100px !important;
+
+    margin: 0 auto !important;
+    padding: 28px !important;
+
+    box-sizing: border-box;
+
+    background: var(--card-background);
+
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, .04),
+        0 2px 6px rgba(0, 0, 0, .03);
+
+}
+
+
+/* Give the generated bill a little breathing room
+   without changing anything inside it */
+body.receiptGeneratedMode #generatedMainBill {
+    width: 100% !important;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, .06);
+}
+
+
+/* Duplicate receipt stays inside the same visual system */
+body.receiptGeneratedMode #duplicateReceipt {
+    width: 100% !important;
+
+    border-radius: 10px;
+}
+
+
+/* Cut line should visually belong to the page */
+body.receiptGeneratedMode .cutLine {
+    border-color: var(--border);
+}
+
+
+/* ============================================================
+        MOBILE
+============================================================ */
+
+@media (max-width: 900px) {
+
+    body.receiptGeneratedMode #invoiceView {
+        padding: 20px 15px;
+    }
+
+    body.receiptGeneratedMode #printableBills {
+        padding: 20px !important;
+        border-radius: 16px;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    body.receiptGeneratedMode #invoiceView {
+        padding: 12px 8px;
+    }
+
+    body.receiptGeneratedMode #printableBills {
+        padding: 14px !important;
+        border-radius: 14px;
+    }
+
+}
+
+
+
+
+/* ================================================================================= */
+
+
