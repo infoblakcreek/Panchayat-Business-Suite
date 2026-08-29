@@ -6941,51 +6941,6 @@ function generateTalapatrakTotalsAndSummary() {
     renderTalapatrakGrandTotalRow();
 
 
-    /* ========================================================
-       4. CREATE SUMMARY PAGE
-    ======================================================== */
-    
-    const summaryPage =
-        createTalapatrakSummaryPage(1);
-    
-    
-    if (!summaryPage) {
-    
-        console.error(
-            "❌ Talapatrak Summary Page could not be created."
-        );
-    
-        return;
-    
-    }
-    
-    
-    /* ========================================================
-       5. FORCE SUMMARY PAGE VISIBLE
-    ======================================================== */
-    
-    summaryPage.hidden = false;
-    
-    summaryPage.style.display =
-        "block";
-    
-    summaryPage.style.visibility =
-        "visible";
-    
-    summaryPage.style.opacity =
-        "1";
-    
-    
-    console.log(
-        "SUMMARY PAGE FINAL DISPLAY:",
-        getComputedStyle(summaryPage).display
-    );
-    
-    console.log(
-        "SUMMARY PAGE FINAL HEIGHT:",
-        summaryPage.offsetHeight
-    );
-    
     
     /* ========================================================
        6. REFRESH DOCUMENT PAGINATION
@@ -7015,10 +6970,6 @@ function generateTalapatrakTotalsAndSummary() {
                 )
             )
         )
-        +
-        document.querySelectorAll(
-            ".talapatrakSummaryPage"
-        ).length;
     
     
     console.log(
