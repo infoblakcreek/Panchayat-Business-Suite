@@ -7529,6 +7529,7 @@ function createShikshanupakaranRow(
      */
 
     const autoColumns = [
+        "E",
         "G",
         "M",
         "N",
