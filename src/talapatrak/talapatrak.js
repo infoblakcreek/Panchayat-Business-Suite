@@ -6305,25 +6305,25 @@ function calculateTalapatrakMemoryTotals() {
             ------------------------------------------------ */
 
             const C =
-                Number(row.C) || 0;
+                Number(convertGujaratiDigitsToEnglish(row.C)) || 0;
 
             const D =
-                Number(row.D) || 0;
+                Number(convertGujaratiDigitsToEnglish(row.D)) || 0;
 
             const E =
-                Number(row.E) || 0;
+                Number(convertGujaratiDigitsToEnglish(row.E)) || 0;
 
             const G =
-                Number(row.G) || 0;
+                Number(convertGujaratiDigitsToEnglish(row.G)) || 0;
 
             const K =
-                Number(row.K) || 0;
+                Number(convertGujaratiDigitsToEnglish(row.K)) || 0;
 
             const N =
-                Number(row.N) || 0;
+                Number(convertGujaratiDigitsToEnglish(row.N)) || 0;
 
             const S =
-                Number(row.S) || 0;
+                Number(convertGujaratiDigitsToEnglish(row.S)) || 0;
 
 
             /* ------------------------------------------------
