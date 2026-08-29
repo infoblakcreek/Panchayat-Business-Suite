@@ -14,7 +14,7 @@ console.log("TALAPATRAK JS FILE RUNNING");
 
 const talapatrakNavElement =
     document.getElementById(
-                            
+
         "talapatrakNav"
     );
 
@@ -68,7 +68,7 @@ const emptyAddTalapatrakButton =
     );
 
 
-    
+
 window.talapatrakUnsavedRows =
     new Set();
 
@@ -141,7 +141,7 @@ if (talapatrakNavElement) {
                 "NAV OPEN — TALAPATRAK DISPLAY:",
                 getComputedStyle(talapatrakViewElement).display
             );
-            
+
             console.log(
                 "NAV OPEN — COUNT DISPLAY:",
                 getComputedStyle(talapatrakRecordCountElement).display,
@@ -852,9 +852,9 @@ function renderTalapatrakGrandTotalRow() {
 
     /* ========================================================
        CREATE GRAND TOTAL ROW
-       
+
        ACTUAL TABLE STRUCTURE:
-       
+
        A
        B
        C
@@ -1023,7 +1023,7 @@ function renderTalapatrakGrandTotalRow() {
 
             /* ----------------------------------------------
                HIDE EDITOR-ONLY COLUMNS
-               
+
                T  = index 19
                U  = index 20
                V  = index 21
@@ -1134,7 +1134,7 @@ function setCalculationEditorValue(
 }
 
 
-  
+
 
 /* ============================================================
         TALAPATRAK SORT DROPDOWN
@@ -1216,9 +1216,9 @@ talapatrakSortOptions.forEach(function(option) {
             console.log(
                 "BEFORE RENDER MANAGEMENT CALL"
             );
-            
+
             renderTalapatrakManagement();
-            
+
             console.log(
                 "AFTER RENDER MANAGEMENT CALL"
             );
@@ -1426,8 +1426,8 @@ function renderTalapatrakManagement() {
             filteredRecords
         );
 
-      
-    
+
+
     console.log(
           "GRID ELEMENT EXISTS:",
           !!talapatrakVillageGridElement
@@ -1449,7 +1449,7 @@ function renderTalapatrakManagement() {
                 "COUNT ELEMENT EXISTS:",
                 !!talapatrakRecordCountElement
             );
-          
+
               console.log(
             "COUNT AFTER UPDATE:",
             talapatrakRecordCountElement.textContent
@@ -1461,10 +1461,10 @@ function renderTalapatrakManagement() {
       if (
         talapatrakManagementRecordCountElement
     ) {
-    
+
         talapatrakManagementRecordCountElement.textContent =
             sortedRecords.length;
-    
+
     }
 
     /*
@@ -1522,19 +1522,19 @@ function renderTalapatrakManagement() {
         talapatrakVillageGridElement.querySelector(
             ".talapatrakLoadingState"
         );
-    
-    
+
+
     if(loadingState){
-    
+
         loadingState.remove();
-    
+
     }
-  
+
     console.log(
         "RECORDS BEING USED TO CREATE CARDS:",
         sortedRecords.map(
             function(record) {
-    
+
                 return {
                     id: record.id,
                     moje: record.moje,
@@ -1542,11 +1542,11 @@ function renderTalapatrakManagement() {
                         ? record.rows.length
                         : 0
                 };
-    
+
             }
         )
     );
-    
+
     console.log(
         "GRID ELEMENT:",
         talapatrakVillageGridElement
@@ -1554,19 +1554,19 @@ function renderTalapatrakManagement() {
 
 
     if (talapatrakViewMode === "list") {
-  
+
       talapatrakVillageGridElement.classList.add(
           "listView"
       );
-      
+
       } else {
-      
+
           talapatrakVillageGridElement.classList.remove(
               "listView"
           );
-      
+
       }
-  
+
     /*
         Create a card for every village
     */
@@ -1745,97 +1745,97 @@ function createTalapatrakVillageCard(
 
             <div
                 class="talapatrakCardMenuWrapper">
-            
-            
+
+
                 <button
                     type="button"
                     class="talapatrakCardMenuButton"
                     title="More options">
-            
+
                     <i
                         class="fa-solid fa-ellipsis-vertical">
                     </i>
-            
+
                 </button>
 
-                
+
                 <!-- DROPDOWN MENU -->
-            
+
                 <div class="talapatrakCardMenu">
 
 
                     <!-- RENAME -->
-              
+
                         <button
                             type="button"
                             class="talapatrakCardMenuItem"
                             data-action="rename">
-                    
+
                             <i class="fa-solid fa-pen"></i>
-                    
+
                             <span>
                                 Rename
                             </span>
-                    
+
                         </button>
-                    
-                    
+
+
                         <!-- COPY -->
-                    
+
                         <button
                             type="button"
                             class="talapatrakCardMenuItem"
                             data-action="copy">
-                    
+
                             <i class="fa-solid fa-copy"></i>
-                    
+
                             <span>
                                 Copy
                             </span>
-                    
+
                         </button>
-                    
-                    
+
+
                         <!-- DUPLICATE -->
-                    
+
                         <button
                             type="button"
                             class="talapatrakCardMenuItem"
                             data-action="duplicate">
-                    
+
                             <i class="fa-solid fa-clone"></i>
-                    
+
                             <span>
                                 Duplicate
                             </span>
-                    
+
                         </button>
-                    
-                    
-                         
-              
+
+
+
+
                       <!-- DIVIDER -->
-                  
+
                       <div class="talapatrakCardMenuDivider"></div>
-                  
-                  
+
+
                       <!-- DELETE -->
-                  
-                   
+
+
                     <button
                         class="talapatrakCardMenuItem delete"
                         data-action="delete">
-                
-                
+
+
                         <i class="fa-solid fa-trash"></i>
-                
-                
+
+
                         Delete
-                
-                
+
+
                     </button>
-                
-                
+
+
                 </div>
 
         </div>
@@ -1915,41 +1915,41 @@ function createTalapatrakVillageCard(
      card.addEventListener(
           "click",
           function(event) {
-      
+
               console.log(
                     "CARD CLICKED:",
                     record.id
                 );
-      
-      
+
+
               if (
                   event.target.closest(
                       ".talapatrakCardMenuWrapper"
                   )
               ) {
-      
+
                   console.log(
                       "CLICK WAS ON CARD MENU"
                   );
-      
+
                   return;
-      
+
               }
-      
-      
+
+
               event.preventDefault();
               event.stopPropagation();
-      
-      
+
+
               console.log(
                   "OPENING RECORD:",
                   record.id
               );
-              
+
               openTalapatrakRecord(
                   record
               );
-      
+
           }
       );
 
@@ -2156,14 +2156,14 @@ if (renameButton) {
                 if (
                       existingNewDocument.exists
                   ) {
-                  
+
                       await showTalapatrakAlreadyExistsModal(
                           trimmedName,
                           record.year
                       );
-                  
+
                       return;
-                  
+
                   }
 
 
@@ -2525,7 +2525,7 @@ if (duplicateButton) {
                           trimmedName,
                           record.year
                       );
-                  
+
                       return;
 
                 }
@@ -2758,7 +2758,7 @@ if (
         "CARD CREATION COMPLETE:",
         record.id
     );
-  
+
     return card;
 
 }
@@ -3158,52 +3158,52 @@ async function createNextYearTalapatrakCopies() {
 
         const currentYear =
             getCurrentTalapatrakYear();
-        
-        
+
+
         /*
         ============================================================
             INITIAL SYSTEM YEAR PROTECTION
-        
+
             GamSetu is being introduced in 2026.
-        
+
             During 2026, users are entering existing
             Talapatrak records manually.
-        
+
             Therefore the automatic annual-copy system
             must NOT create 2026-2027 records.
-        
+
             Automatic yearly copying begins from
             August 1, 2027.
         ============================================================
         */
-        
+
         const currentStartYear =
             Number(
                 String(currentYear)
                     .split("-")[0]
             );
-        
-        
+
+
         if (
             currentStartYear < 2027
         ) {
-        
+
             console.log(
                 "YEAR COPY → AUTOMATIC COPYING DISABLED FOR INITIAL 2026 SYSTEM YEAR:",
                 currentYear
             );
-        
+
             return;
-        
+
         }
-        
-        
+
+
         const previousYear =
             getPreviousTalapatrakYear(
                 currentYear
             );
-        
-        
+
+
         console.log(
             "YEAR COPY → CHECKING:",
             previousYear,
@@ -3342,9 +3342,9 @@ async function createNextYearTalapatrakCopies() {
 
             /* ====================================================
                COPY ROWS
-               
+
                NEW YEAR RULE:
-               
+
                C ← Q
                K ← R
             ==================================================== */
@@ -3974,7 +3974,7 @@ async function openTalapatrakManagement() {
               "TALAPATRAK VIEW AFTER OPEN:",
               getComputedStyle(talapatrakViewElement).display
           );
-          
+
           console.log(
               "COUNT VISIBILITY:",
               getComputedStyle(talapatrakRecordCountElement).display,
@@ -4189,7 +4189,7 @@ function formatTalapatrakDecimalOnFinish(input) {
 
     /* ========================================================
        GUJARATI → ENGLISH
-       
+
        Needed temporarily for numeric calculation.
     ======================================================== */
 
@@ -4328,7 +4328,7 @@ function createTalapatrakRow(
         rowData.A !== undefined &&
         rowData.A !== null &&
         String(rowData.A).trim() !== "";
-    
+
     const khataNumber =
         hasSavedKhata
             ? convertToGujaratiDigits(
@@ -4337,7 +4337,7 @@ function createTalapatrakRow(
             : convertToGujaratiDigits(
                   String(rowNumber)
               );
-    
+
     console.log(
         "CREATE ROW:",
         {
@@ -4827,68 +4827,68 @@ function createTalapatrakRow(
          4. Autosave is scheduled after the edit.
          5. No duplicate input listeners.
       ============================================================ */
-      
+
       if (appendToBody) {
-      
+
           const editableInputs =
               row.querySelectorAll(
                   "input"
               );
-      
-      
+
+
           editableInputs.forEach(
               function(input) {
-      
+
                   /* ----------------------------------------------------
                      LIVE INPUT
                      ---------------------------------------------------- */
-      
+
                   input.addEventListener(
                       "input",
                       function() {
-      
+
                           /*
                               Calculate FIRST.
-      
+
                               This keeps H/I/J/O/P/Q/R etc.
                               updated immediately while typing.
                           */
-      
+
                           calculateTalapatrakRow(
                               input
                           );
-      
-      
+
+
                           /*
                               After calculation, copy the complete
                               current DOM page into memory.
-      
+
                               This preserves both:
                               - entered values
                               - calculated values
                           */
-      
+
                           syncCurrentTalapatrakPageToMemory();
 
                           markTalapatrakRowAsChanged(
                                 row
                             );
-      
-      
+
+
                           /*
                               Keep existing autosave behavior.
                           */
-      
+
                           scheduleTalapatrakAutoSave();
-      
+
                       }
                   );
-      
-      
+
+
                   /* ----------------------------------------------------
                      CHANGE EVENT
                      ---------------------------------------------------- */
-      
+
                   input.addEventListener(
                         "change",
                         function() {
@@ -4936,14 +4936,14 @@ function createTalapatrakRow(
 
                         }
                     );
-                        
+
               }
           );
-      
+
       }
 
 
-  
+
     /* ============================================================
        DATE PICKER
        ------------------------------------------------------------
@@ -4958,7 +4958,7 @@ function createTalapatrakRow(
         setupIndianDatePicker();
 
     }
-  
+
 
     /* ============================================================
        RETURN ROW
@@ -5047,13 +5047,13 @@ function addTalapatrakRowAfter(button) {
 
     /* --------------------------------------------------------
        FIND LAST EXISTING KHATA NUMBER
-       
+
        IMPORTANT:
-       
+
        Search ALL memory rows.
-       
+
        Do NOT use DOM row count.
-       
+
        Do NOT use current page number.
     -------------------------------------------------------- */
 
@@ -5769,7 +5769,7 @@ function calculateTalapatrakRow(input) {
        SET CALCULATED VALUE
        ------------------------------------------------------------
        Calculation:
-       
+
        English number
             ↓
        Round to nearest 5 paise
@@ -5779,7 +5779,7 @@ function calculateTalapatrakRow(input) {
        Convert to Gujarati digits
             ↓
        Display
-       
+
        Example:
        2.23 → 2.25 → ૨.૨૫
        4.54 → 4.55 → ૪.૫૫
@@ -5802,8 +5802,8 @@ function calculateTalapatrakRow(input) {
                   Number(
                       value || 0
                   ).toFixed(2);
-              
-              
+
+
               element.value =
                   convertToGujaratiDigits(
                       formattedValue
@@ -6941,21 +6941,21 @@ function generateTalapatrakTotalsAndSummary() {
     renderTalapatrakGrandTotalRow();
 
 
-    
+
     /* ========================================================
        6. REFRESH DOCUMENT PAGINATION
     ======================================================== */
-    
+
     if (
         typeof updateTalapatrakPaginationUI ===
         "function"
     ) {
-    
+
         updateTalapatrakPaginationUI();
-    
+
     }
-    
-    
+
+
     window.talapatrakTotalPages =
         (
             Math.max(
@@ -6970,22 +6970,22 @@ function generateTalapatrakTotalsAndSummary() {
                 )
             )
         )
-    
-    
+
+
     console.log(
         "UPDATED TOTAL DOCUMENT PAGES:",
         window.talapatrakTotalPages
     );
-    
-    
+
+
     console.log(
         "TALAPATRAK SUMMARY PAGE 1 READY"
     );
-    
+
     console.log(
         "TALAPATRAK GENERATE TOTAL COMPLETE"
     );
-    
+
     console.log(
         "======================================"
     );
@@ -8352,18 +8352,18 @@ function scheduleTalapatrakAutoSave() {
 
 
       if (window.talapatrakOpeningInProgress === true) {
-    
+
         console.log(
             "Talapatrak autosave scheduling skipped — record is opening."
         );
-    
+
         return;
-    
+
     }
     /*
     ========================================================
        PRINTING
-       
+
        NEVER schedule autosave while printing.
     ========================================================
     */
@@ -8428,7 +8428,7 @@ function scheduleTalapatrakAutoSave() {
                 /*
                 =================================================
                    PRINTING CHECK AGAIN
-                   
+
                    Printing may have started while timer
                    was waiting.
                 =================================================
@@ -8532,7 +8532,7 @@ function scheduleTalapatrakAutoSave() {
                 /*
                 =================================================
                    FINAL PRINT CHECK
-                   
+
                    This is immediately before save.
                 =================================================
                 */
@@ -8861,11 +8861,11 @@ function setupTalapatrakAutoSave() {
     /*
     ========================================================
        BLUR
-       
+
        DO NOT START A NEW AUTOSAVE HERE.
-       
+
        Input/change handlers already schedule autosave.
-       
+
        Blur is only useful for logging / debugging.
     ========================================================
     */
@@ -9458,7 +9458,7 @@ function renderTalapatrakPage(pageNumber) {
 
     /* ========================================================
        3. TOTAL DATA PAGES
-       
+
        Summary pages are not part of pagination.
     ======================================================== */
 
@@ -9887,7 +9887,7 @@ async function openTalapatrakRecord(record) {
                 record
             );
 
-           
+
             return;
 
         }
@@ -10071,21 +10071,21 @@ async function openTalapatrakRecord(record) {
 
         /* ========================================================
            9. LOAD YEAR DROPDOWN
-           
+
            IMPORTANT:
-           
+
            We must populate the dropdown FIRST.
-           
+
            Then we make sure the saved year exists.
-           
+
            Then we select the saved year.
-           
+
            This allows old records such as:
-           
+
                2008-2009
                2018-2019
                2021-2022
-           
+
            to open correctly.
         ======================================================== */
 
@@ -10133,7 +10133,7 @@ async function openTalapatrakRecord(record) {
             /*
             --------------------------------------------------------
                 Older year protection
-               
+
                 If the record is older than the
                 normal 20-year dropdown range,
                 add that year.
@@ -10419,9 +10419,9 @@ async function openTalapatrakRecord(record) {
               typeof initializePanchayatRowSearch ===
               "function"
           ) {
-          
+
               initializePanchayatRowSearch();
-          
+
           }
 
 
@@ -10496,7 +10496,7 @@ async function openTalapatrakRecord(record) {
         );
 
 
-       
+
 
     }
 
@@ -11353,146 +11353,6 @@ function createTalapatrakPrintPage(
 
 
     /* ========================================================
-     GRAND TOTAL — ONLY ON FINAL TALAPATRAK PAGE
-     ======================================================== */
-    
-    const isFinalTalapatrakPage =
-        pageNumber === totalPages;
-    
-    
-    if (
-        isFinalTalapatrakPage
-    ) {
-    
-        const totals =
-            calculateTalapatrakMemoryTotals();
-    
-    
-        console.log(
-            "ADDING GRAND TOTAL TO FINAL PRINT PAGE:",
-            totals
-        );
-    
-    
-        const totalRow =
-            document.createElement("tr");
-    
-    
-        totalRow.className =
-            "talapatrakPrintGrandTotalRow";
-    
-    
-        function formatPrintTotal(value) {
-    
-            return Number(
-                value || 0
-            ).toFixed(2);
-    
-        }
-    
-    
-        totalRow.innerHTML = `
-    
-            <td
-                colspan="2"
-                class="grandTotalLabel">
-    
-                કુલ એકંદર
-    
-            </td>
-    
-            <td>
-                ${formatPrintTotal(totals.C)}
-            </td>
-    
-            <td>
-                ${formatPrintTotal(totals.D)}
-            </td>
-    
-            <td>
-                ${formatPrintTotal(totals.E)}
-            </td>
-    
-            <td>
-                ${formatPrintTotal(totals.F)}
-            </td>
-    
-            <td>
-                ${formatPrintTotal(totals.G)}
-            </td>
-    
-            <td>
-                ${formatPrintTotal(totals.H)}
-            </td>
-    
-            <td>
-                ${formatPrintTotal(totals.I)}
-            </td>
-    
-            <td>
-                ${formatPrintTotal(totals.J)}
-            </td>
-    
-            <td>
-                ${formatPrintTotal(totals.K)}
-            </td>
-    
-            <td></td>
-    
-            <td></td>
-    
-            <td>
-                ${formatPrintTotal(totals.N)}
-            </td>
-    
-            <td>
-                ${formatPrintTotal(totals.O)}
-            </td>
-    
-            <td>
-                ${formatPrintTotal(totals.P)}
-            </td>
-    
-            <td>
-                ${formatPrintTotal(totals.Q)}
-            </td>
-    
-            <td>
-                ${formatPrintTotal(totals.R)}
-            </td>
-    
-            <td>
-                ${formatPrintTotal(totals.S)}
-            </td>
-    
-            <td>
-                ${formatPrintTotal(totals.T)}
-            </td>
-    
-            <td>
-                ${formatPrintTotal(totals.U)}
-            </td>
-    
-            <td class="printHide"></td>
-    
-            <td class="printHide"></td>
-    
-        `;
-    
-    
-        printTbody.appendChild(
-            totalRow
-        );
-    
-    
-        console.log(
-            "GRAND TOTAL ADDED TO PAGE:",
-            pageNumber
-        );
-    
-    }
-
-    /* ========================================================
        PRINT COLUMNS
     ======================================================== */
 
@@ -11686,11 +11546,150 @@ function createTalapatrakPrintPage(
         }
     );
 
-    
+    /* ========================================================
+       GRAND TOTAL — ONLY ON FINAL TALAPATRAK PAGE
+     ======================================================== */
+
+    const isFinalTalapatrakPage =
+        pageNumber === totalPages;
+
+
+    if (
+        isFinalTalapatrakPage
+    ) {
+
+        const totals =
+            calculateTalapatrakMemoryTotals();
+
+
+        console.log(
+            "ADDING GRAND TOTAL TO FINAL PRINT PAGE:",
+            totals
+        );
+
+
+        const totalRow =
+            document.createElement("tr");
+
+
+        totalRow.className =
+            "talapatrakPrintGrandTotalRow";
+
+
+        function formatPrintTotal(value) {
+
+            return Number(
+                value || 0
+            ).toFixed(2);
+
+        }
+
+
+        totalRow.innerHTML = `
+
+            <td
+                colspan="2"
+                class="grandTotalLabel">
+
+                કુલ એકંદર
+
+            </td>
+
+            <td>
+                ${formatPrintTotal(totals.C)}
+            </td>
+
+            <td>
+                ${formatPrintTotal(totals.D)}
+            </td>
+
+            <td>
+                ${formatPrintTotal(totals.E)}
+            </td>
+
+            <td>
+                ${formatPrintTotal(totals.F)}
+            </td>
+
+            <td>
+                ${formatPrintTotal(totals.G)}
+            </td>
+
+            <td>
+                ${formatPrintTotal(totals.H)}
+            </td>
+
+            <td>
+                ${formatPrintTotal(totals.I)}
+            </td>
+
+            <td>
+                ${formatPrintTotal(totals.J)}
+            </td>
+
+            <td>
+                ${formatPrintTotal(totals.K)}
+            </td>
+
+            <td></td>
+
+            <td></td>
+
+            <td>
+                ${formatPrintTotal(totals.N)}
+            </td>
+
+            <td>
+                ${formatPrintTotal(totals.O)}
+            </td>
+
+            <td>
+                ${formatPrintTotal(totals.P)}
+            </td>
+
+            <td>
+                ${formatPrintTotal(totals.Q)}
+            </td>
+
+            <td>
+                ${formatPrintTotal(totals.R)}
+            </td>
+
+            <td>
+                ${formatPrintTotal(totals.S)}
+            </td>
+
+            <td>
+                ${formatPrintTotal(totals.T)}
+            </td>
+
+            <td>
+                ${formatPrintTotal(totals.U)}
+            </td>
+
+            <td class="printHide"></td>
+
+            <td class="printHide"></td>
+
+        `;
+
+
+        printTbody.appendChild(
+            totalRow
+        );
+
+
+        console.log(
+            "GRAND TOTAL ADDED TO PAGE:",
+            pageNumber
+        );
+
+    }
+
     /* ========================================================
        ADD TABLE
     ======================================================== */
-    
+
     printPage.appendChild(
         printTable
     );
@@ -12476,33 +12475,33 @@ function initializeTalapatrakPrintButton() {
     printButton.addEventListener(
         "mousedown",
         function(event) {
-    
+
             event.preventDefault();
             event.stopPropagation();
-    
+
             console.log(
                 "TALAPATRAK PRINT MODE ACTIVATED"
             );
-    
+
             window.talapatrakIsPrinting  = true;
-    
+
         }
     );
-    
-    
+
+
     printButton.addEventListener(
         "click",
         function(event) {
-    
+
             event.preventDefault();
             event.stopPropagation();
-    
+
             console.log(
                 "TALAPATRAK PRINT BUTTON CLICKED"
             );
-    
+
             printTalapatrak();
-    
+
         }
     );
 
@@ -14105,15 +14104,15 @@ function showTalapatrakDeleteModal(record) {
              IMPORTANT:
              Every time the modal opens, restore the button.
           ======================================================== */
-          
+
           confirmButton.disabled = false;
-          
+
           confirmButton.innerHTML = `
-          
+
               <i class="fa-solid fa-trash-can"></i>
-          
+
               Delete Permanently
-          
+
           `;
 
 
