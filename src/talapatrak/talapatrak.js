@@ -6700,15 +6700,9 @@ function updateTalapatrakPaginationUI() {
         );
 
 
-    const summaryPages =
-        document.querySelectorAll(
-            ".talapatrakSummaryPage"
-        ).length;
-
 
     const totalPages =
-        dataPages +
-        summaryPages;
+        dataPages;
 
 
     const currentPage =
@@ -6882,7 +6876,6 @@ function updateTalapatrakPaginationUI() {
             totalRows,
             rowsPerPage,
             dataPages,
-            summaryPages,
             totalPages,
             currentPage
         }
@@ -9510,35 +9503,16 @@ function renderTalapatrakPage(pageNumber) {
         );
 
 
-    /* ========================================================
-       3. FIND SUMMARY PAGES
-       
-       Summary pages are part of DOCUMENT pagination,
-       but NOT part of DATA pagination.
-    ======================================================== */
-
-    const summaryPages =
-        document.querySelectorAll(
-            ".talapatrakSummaryPage"
-        );
-
-    const summaryPageCount =
-        summaryPages.length;
 
 
     /* ========================================================
-       4. TOTAL DOCUMENT PAGES
+       3. TOTAL DATA PAGES
        
-       Example:
-       
-       4 rows
-       → 1 data page
-       → 1 summary page
-       → TOTAL = 2
+       Summary pages are not part of pagination.
     ======================================================== */
 
     const totalPages =
-        dataPages + summaryPageCount;
+        dataPages;
 
 
     console.log(
@@ -9547,12 +9521,7 @@ function renderTalapatrakPage(pageNumber) {
     );
 
     console.log(
-        "SUMMARY PAGES:",
-        summaryPageCount
-    );
-
-    console.log(
-        "TOTAL DOCUMENT PAGES:",
+        "TOTAL PAGES:",
         totalPages
     );
 
@@ -9595,24 +9564,9 @@ function renderTalapatrakPage(pageNumber) {
         );
 
 
-    /* ========================================================
-       7. HIDE ALL SUMMARY PAGES
-    ======================================================== */
-
-    summaryPages.forEach(
-        function(summaryPage) {
-
-            summaryPage.hidden = true;
-
-            summaryPage.style.display =
-                "none";
-
-        }
-    );
-
 
     /* ========================================================
-       8. HIDE GRAND TOTAL WHEN SWITCHING DATA PAGE
+       7. HIDE GRAND TOTAL WHEN SWITCHING DATA PAGE
     ======================================================== */
 
     if (
@@ -9626,89 +9580,7 @@ function renderTalapatrakPage(pageNumber) {
 
 
     /* ========================================================
-       9. CHECK IF THIS IS A SUMMARY PAGE
-    ======================================================== */
-
-    if (pageNumber > dataPages) {
-
-        const summaryIndex =
-            pageNumber - dataPages - 1;
-
-
-        const summaryPage =
-            summaryPages[summaryIndex];
-
-
-        console.log(
-            "OPENING SUMMARY PAGE:",
-            summaryIndex + 1
-        );
-
-
-        if (editorPage) {
-
-            editorPage.style.display =
-                "none";
-
-            editorPage.style.visibility =
-                "hidden";
-
-            editorPage.style.opacity =
-                "0";
-
-        }
-
-
-        if (summaryPage) {
-
-            summaryPage.hidden = false;
-
-            summaryPage.style.display =
-                "block";
-
-            summaryPage.style.visibility =
-                "visible";
-
-            summaryPage.style.opacity =
-                "1";
-
-
-            console.log(
-                "SUMMARY PAGE DISPLAY:",
-                getComputedStyle(
-                    summaryPage
-                ).display
-            );
-
-        }
-
-
-        /* -----------------------------------------------
-           UPDATE PAGINATION
-        ----------------------------------------------- */
-
-        if (
-            typeof updateTalapatrakPaginationUI ===
-            "function"
-        ) {
-
-            updateTalapatrakPaginationUI();
-
-        }
-
-
-        console.log(
-            "TALAPATRAK SUMMARY PAGE SHOWN:",
-            pageNumber
-        );
-
-
-        return;
-    }
-
-
-    /* ========================================================
-       10. THIS IS A DATA PAGE
+       8. THIS IS A DATA PAGE
     ======================================================== */
 
     if (editorPage) {
@@ -9723,6 +9595,7 @@ function renderTalapatrakPage(pageNumber) {
             "1";
 
     }
+
 
 
     /* ========================================================
@@ -14539,7 +14412,3 @@ function showTalapatrakDeleteModal(record) {
     });
 
 }
-
-
-
-
