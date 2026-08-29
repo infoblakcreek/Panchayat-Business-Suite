@@ -4568,7 +4568,8 @@ function createTalapatrakRow(
                 type="text"
                 inputmode="decimal"
                 class="columnH"
-                value="${escapeTalapatrakHTML(valueH)}">
+                value="${escapeTalapatrakHTML(valueH)}"
+                readonly>
         </td>
 
 
@@ -4579,7 +4580,8 @@ function createTalapatrakRow(
                 type="text"
                 inputmode="decimal"
                 class="columnI"
-                value="${escapeTalapatrakHTML(valueI)}">
+                value="${escapeTalapatrakHTML(valueI)}"
+                readonly>
         </td>
 
 
@@ -4590,7 +4592,8 @@ function createTalapatrakRow(
                 type="text"
                 inputmode="decimal"
                 class="columnJ"
-                value="${escapeTalapatrakHTML(valueJ)}">
+                value="${escapeTalapatrakHTML(valueJ)}"
+                readonly>
         </td>
 
 
@@ -4645,7 +4648,8 @@ function createTalapatrakRow(
                 type="text"
                 inputmode="decimal"
                 class="columnO"
-                value="${escapeTalapatrakHTML(valueO)}">
+                value="${escapeTalapatrakHTML(valueO)}"
+                readonly>
         </td>
 
 
@@ -4656,7 +4660,8 @@ function createTalapatrakRow(
                 type="text"
                 inputmode="decimal"
                 class="columnP"
-                value="${escapeTalapatrakHTML(valueP)}">
+                value="${escapeTalapatrakHTML(valueP)}"
+                readonly>
         </td>
 
 
@@ -4667,7 +4672,8 @@ function createTalapatrakRow(
                 type="text"
                 inputmode="decimal"
                 class="columnQ"
-                value="${escapeTalapatrakHTML(valueQ)}">
+                value="${escapeTalapatrakHTML(valueQ)}"
+                readonly>
         </td>
 
 
@@ -4678,7 +4684,8 @@ function createTalapatrakRow(
                 type="text"
                 inputmode="decimal"
                 class="columnR"
-                value="${escapeTalapatrakHTML(valueR)}">
+                value="${escapeTalapatrakHTML(valueR)}"
+                readonly>
         </td>
 
 
@@ -4701,7 +4708,8 @@ function createTalapatrakRow(
                 type="text"
                 inputmode="decimal"
                 class="columnT"
-                value="${escapeTalapatrakHTML(valueT)}">
+                value="${escapeTalapatrakHTML(valueT)}"
+                readonly>
 
         </td>
 
@@ -4714,7 +4722,8 @@ function createTalapatrakRow(
                 type="text"
                 inputmode="decimal"
                 class="columnU"
-                value="${escapeTalapatrakHTML(valueU)}">
+                value="${escapeTalapatrakHTML(valueU)}"
+                readonly>
 
         </td>
 

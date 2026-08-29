@@ -440,14 +440,29 @@ function moveKeyboardHorizontal(
     }
 
 
-    const targetIndex =
-        currentIndex +
-        direction;
+    let targetIndex =
+    currentIndex +
+    direction;
 
 
     /*
-     * Stay inside current row.
-     */
+    * Skip readonly cells.
+    */
+
+    while (
+        targetIndex >= 0 &&
+        targetIndex < rowInputs.length &&
+        rowInputs[targetIndex].readOnly
+    ) {
+
+        targetIndex += direction;
+
+    }
+
+
+    /*
+    * Stay inside current row.
+    */
 
     if (
         targetIndex < 0 ||
