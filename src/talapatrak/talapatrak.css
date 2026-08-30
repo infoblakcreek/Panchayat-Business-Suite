@@ -6555,7 +6555,170 @@ body.talapatrakFullViewMode
 
 }
 
+/* ============================================================
+   SHIKSHANUPAKARAN → TALAPATRAK
+   NOT NOW / NEVER BUTTONS
+============================================================ */
 
+
+/* ------------------------------------------------------------
+   NOT NOW
+------------------------------------------------------------ */
+
+.shikshanupakaranCreateNotNow {
+
+    min-height:
+        42px;
+
+    padding:
+        0 17px;
+
+    border:
+        1px solid #e2e8f0;
+
+    border-radius:
+        10px;
+
+    background:
+        #f8fafc;
+
+    color:
+        #64748b;
+
+    cursor:
+        pointer;
+
+    font-size:
+        14px;
+
+    font-weight:
+        600;
+
+    transition:
+        background 0.18s ease,
+        color 0.18s ease,
+        border-color 0.18s ease,
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
+
+}
+
+
+.shikshanupakaranCreateNotNow:hover {
+
+    background:
+        #f1f5f9;
+
+    color:
+        #475569;
+
+    border-color:
+        #cbd5e1;
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 4px 10px
+        rgba(15, 23, 42, 0.08);
+
+}
+
+
+/* ------------------------------------------------------------
+   NEVER
+------------------------------------------------------------ */
+
+.shikshanupakaranCreateNever {
+
+    min-height:
+        42px;
+
+    padding:
+        0 17px;
+
+    border:
+        1px solid #fecaca;
+
+    border-radius:
+        10px;
+
+    background:
+        #fff7f7;
+
+    color:
+        #b91c1c;
+
+    cursor:
+        pointer;
+
+    font-size:
+        14px;
+
+    font-weight:
+        600;
+
+    transition:
+        background 0.18s ease,
+        color 0.18s ease,
+        border-color 0.18s ease,
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
+
+}
+
+
+.shikshanupakaranCreateNever:hover {
+
+    background:
+        #fef2f2;
+
+    color:
+        #991b1b;
+
+    border-color:
+        #fca5a5;
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 4px 10px
+        rgba(185, 28, 28, 0.10);
+
+}
+
+
+/* ------------------------------------------------------------
+   KEEP BUTTONS ALIGNED WITH CREATE & SAVE
+------------------------------------------------------------ */
+
+.shikshanupakaranCreateActions
+.shikshanupakaranCreateNotNow,
+.shikshanupakaranCreateActions
+.shikshanupakaranCreateNever {
+
+    flex-shrink:
+        0;
+
+}
+
+
+/* ------------------------------------------------------------
+   MOBILE
+------------------------------------------------------------ */
+
+@media (max-width: 520px) {
+
+    .shikshanupakaranCreateNotNow,
+    .shikshanupakaranCreateNever {
+
+        width:
+            100%;
+
+    }
+
+}
 
 
 /* ======================================================================================= */
