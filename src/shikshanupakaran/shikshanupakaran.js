@@ -2842,6 +2842,8 @@ function startNewShikshanupakaran(){
 
     }
 
+    initializeShikshanupakaranYearChangeHandler();
+
         /*
         ============================================================
         YEAR DROPDOWN CHANGE
@@ -2853,26 +2855,9 @@ function startNewShikshanupakaran(){
 
     if(yearSelect){
 
-        yearSelect.onchange =
-            function(){
-
-                const changedYear =
-                    yearSelect.value;
-
-
-                updateShikshanupakaranYearDisplay(
-                    changedYear
-                );
-
-
-                if(editorYear){
-
-                    editorYear.textContent =
-                        changedYear;
-
-                }
-
-            };
+        populateShikshanupakaranYearOptions(
+            currentYear
+        );
 
     }
 
@@ -7080,6 +7065,8 @@ async function openShikshanupakaranRecord(
 
         }
 
+        initializeShikshanupakaranYearChangeHandler();
+
 
         /* ========================================================
            EDITOR YEAR
@@ -7366,96 +7353,6 @@ async function openShikshanupakaranRecord(
 }
 
 
-
-/* ============================================================
-   SHIKSHANUPAKARAN YEAR SELECTION
-============================================================ */
-
-document.addEventListener(
-    "change",
-    function(event) {
-
-        if (
-            !event.target ||
-            event.target.id !==
-                "shikshanupakaranYear"
-        ) {
-
-            return;
-
-        }
-
-
-        const selectedYear =
-            event.target.value;
-
-
-        if (!selectedYear) {
-
-            return;
-
-        }
-
-
-        /*
-            Update current Shikshanupakaran record
-            in memory.
-        */
-
-        if (
-            currentShikshanupakaranRecord
-        ) {
-
-            currentShikshanupakaranRecord.year =
-                selectedYear;
-
-        }
-
-
-        /*
-            Keep the existing year display
-            synchronized.
-        */
-
-        const editorYear =
-            document.getElementById(
-                "shikshanupakaranEditorYear"
-            );
-
-
-        if (editorYear) {
-
-            editorYear.textContent =
-                selectedYear;
-
-        }
-
-
-        /*
-            Keep print year synchronized.
-        */
-
-        const printYear =
-            document.getElementById(
-                "printYear"
-            );
-
-
-        if (printYear) {
-
-            printYear.textContent =
-                selectedYear;
-
-        }
-
-
-        console.log(
-            "SHIKSHANUPAKARAN YEAR CHANGED →",
-            selectedYear
-        );
-
-    }
-);
 
 /* ============================================================
         CLOSE SHIKSHANUPAKARAN CARD MENUS
@@ -14588,5 +14485,250 @@ function showShikshanupakaranDeleteModal(record) {
         }
 
     });
+
+}
+
+
+
+
+/* ============================================================================== */
+
+function showShikshanupakaranYearChangeModal(
+    oldYear,
+    newYear
+) {
+
+    return new Promise(function(resolve) {
+
+        const modal =
+            document.getElementById(
+                "shikshanupakaranYearChangeModal"
+            );
+
+        const oldYearText =
+            document.getElementById(
+                "shikshanupakaranOldYearText"
+            );
+
+        const newYearText =
+            document.getElementById(
+                "shikshanupakaranNewYearText"
+            );
+
+        const cancelButton =
+            document.getElementById(
+                "shikshanupakaranYearChangeCancel"
+            );
+
+        const confirmButton =
+            document.getElementById(
+                "shikshanupakaranYearChangeConfirm"
+            );
+
+        if (
+            !modal ||
+            !oldYearText ||
+            !newYearText ||
+            !cancelButton ||
+            !confirmButton
+        ) {
+
+            resolve(false);
+
+            return;
+
+        }
+
+
+        oldYearText.textContent =
+            convertToGujaratiDigits(
+                String(oldYear || "")
+            );
+
+        newYearText.textContent =
+            convertToGujaratiDigits(
+                String(newYear || "")
+            );
+
+
+        modal.classList.add("open");
+
+        modal.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+
+        function cleanup(result) {
+
+            modal.classList.remove("open");
+
+            modal.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
+
+            cancelButton.removeEventListener(
+                "click",
+                handleCancel
+            );
+
+            confirmButton.removeEventListener(
+                "click",
+                handleConfirm
+            );
+
+
+            resolve(result);
+
+        }
+
+
+        function handleCancel() {
+
+            cleanup(false);
+
+        }
+
+
+        function handleConfirm() {
+
+            cleanup(true);
+
+        }
+
+
+        cancelButton.addEventListener(
+            "click",
+            handleCancel
+        );
+
+        confirmButton.addEventListener(
+            "click",
+            handleConfirm
+        );
+
+    });
+
+}
+
+/* ============================================================
+   SHIKSHANUPAKARAN YEAR CHANGE HANDLER
+============================================================ */
+
+function initializeShikshanupakaranYearChangeHandler() {
+
+    const yearSelect =
+        document.getElementById(
+            "shikshanupakaranYear"
+        );
+
+    if (!yearSelect) {
+        return;
+    }
+
+
+    yearSelect.onchange = async function () {
+
+        const changedYear =
+            yearSelect.value;
+
+
+        const oldYear =
+            currentShikshanupakaranRecord?.year ||
+            getCurrentShikshanupakaranYear();
+
+
+        if (
+            String(changedYear) ===
+            String(oldYear)
+        ) {
+
+            return;
+
+        }
+
+
+        const confirmed =
+            await showShikshanupakaranYearChangeModal(
+                oldYear,
+                changedYear
+            );
+
+
+        if (!confirmed) {
+
+            yearSelect.value =
+                oldYear;
+
+
+            updateShikshanupakaranYearDisplay(
+                oldYear
+            );
+
+
+            const editorYear =
+                document.getElementById(
+                    "shikshanupakaranEditorYear"
+                );
+
+
+            if (editorYear) {
+
+                editorYear.textContent =
+                    oldYear;
+
+            }
+
+
+            return;
+
+        }
+
+
+        /*
+            CONFIRMED YEAR CHANGE
+
+            Change the record only after confirmation.
+            Firestore is NOT written here.
+        */
+
+        if (currentShikshanupakaranRecord) {
+
+            currentShikshanupakaranRecord.year =
+                changedYear;
+
+        }
+
+
+        updateShikshanupakaranYearDisplay(
+            changedYear
+        );
+
+
+        const editorYear =
+            document.getElementById(
+                "shikshanupakaranEditorYear"
+            );
+
+
+        if (editorYear) {
+
+            editorYear.textContent =
+                changedYear;
+
+        }
+
+
+        console.log(
+            "SHIKSHANUPAKARAN YEAR CHANGED:",
+            {
+                oldYear: oldYear,
+                newYear: changedYear
+            }
+        );
+
+    };
 
 }

@@ -8849,3 +8849,260 @@ body.shikshanupakaranFullViewMode
 
 
 }
+
+
+/* ========================================================================= */
+
+/* ============================================================
+   SHIKSHANUPAKARAN YEAR CHANGE MODAL
+============================================================ */
+
+.shikshanupakaranYearChangeModal {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 99999;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+}
+
+
+.shikshanupakaranYearChangeModal.open {
+
+    display: flex;
+
+}
+
+
+.shikshanupakaranYearChangeOverlay {
+
+    position: absolute;
+
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.45);
+
+    backdrop-filter: blur(4px);
+
+}
+
+
+.shikshanupakaranYearChangeDialog {
+
+    position: relative;
+
+    z-index: 1;
+
+    width: min(
+        430px,
+        calc(100vw - 40px)
+    );
+
+    padding: 28px;
+
+    border-radius: 20px;
+
+    background:
+        var(--shikshanupakaran-card);
+
+    color:
+        var(--shikshanupakaran-text);
+
+    border:
+        1px solid var(--shikshanupakaran-border);
+
+    box-shadow:
+        var(--shikshanupakaran-shadow);
+
+    animation:
+        shikshanupakaranYearModalIn
+        0.18s
+        ease-out;
+
+}
+
+
+@keyframes shikshanupakaranYearModalIn {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(10px)
+            scale(0.97);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+
+    }
+
+}
+
+
+.shikshanupakaranYearChangeIcon {
+
+    width: 48px;
+
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-bottom: 16px;
+
+    border-radius: 14px;
+
+    background:
+        rgba(22, 163, 74, 0.10);
+
+    color:
+        var(--shikshanupakaran-primary);
+
+    font-size: 20px;
+
+}
+
+
+.shikshanupakaranYearChangeContent h3 {
+
+    margin: 0 0 10px;
+
+    font-size: 20px;
+
+    font-weight: 700;
+
+    color:
+        var(--shikshanupakaran-text);
+
+}
+
+
+.shikshanupakaranYearChangeContent p {
+
+    margin: 0 0 10px;
+
+    line-height: 1.55;
+
+    color:
+        var(--shikshanupakaran-muted);
+
+}
+
+
+.shikshanupakaranYearChangeContent strong {
+
+    color:
+        var(--shikshanupakaran-text);
+
+}
+
+
+.shikshanupakaranYearChangeNote {
+
+    font-size: 13px;
+
+}
+
+
+.shikshanupakaranYearChangeActions {
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin-top: 24px;
+
+}
+
+
+.shikshanupakaranYearChangeActions button {
+
+    border: 0;
+
+    border-radius: 10px;
+
+    padding: 10px 16px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        transform 0.15s ease;
+
+}
+
+
+.shikshanupakaranYearChangeActions button:active {
+
+    transform: scale(0.98);
+
+}
+
+
+.shikshanupakaranYearChangeCancel {
+
+    background:
+        var(--shikshanupakaran-bg);
+
+    color:
+        var(--shikshanupakaran-muted);
+
+    border:
+        1px solid var(--shikshanupakaran-border) !important;
+
+}
+
+
+.shikshanupakaranYearChangeCancel:hover {
+
+    background:
+        var(--shikshanupakaran-border);
+
+    color:
+        var(--shikshanupakaran-text);
+
+}
+
+
+.shikshanupakaranYearChangeConfirm {
+
+    background:
+        var(--shikshanupakaran-primary);
+
+    color:
+        #ffffff;
+
+}
+
+
+.shikshanupakaranYearChangeConfirm:hover {
+
+    background:
+        var(--shikshanupakaran-primary-dark);
+
+}
