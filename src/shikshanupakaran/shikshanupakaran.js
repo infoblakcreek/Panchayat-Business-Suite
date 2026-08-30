@@ -3628,6 +3628,12 @@ function createShikshanupakaranPrintPage(
                 const value =
                     element.value || "";
 
+                const displayValue =
+                    element.tagName === "SELECT" &&
+                    element.id === "shikshanupakaranYear"
+                        ? convertToGujaratiDigits(value)
+                        : value;
+
 
                 const span =
                     document.createElement(
@@ -3640,7 +3646,7 @@ function createShikshanupakaranPrintPage(
 
 
                 span.textContent =
-                    value;
+                    displayValue;
 
 
                 element.replaceWith(
