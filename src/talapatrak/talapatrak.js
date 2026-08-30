@@ -11180,7 +11180,9 @@ function createTalapatrakPrintPage(
 
     const year =
         yearElement
-            ? yearElement.value
+            ? convertToGujaratiDigits(
+                yearElement.value
+            )
             : "";
 
 
