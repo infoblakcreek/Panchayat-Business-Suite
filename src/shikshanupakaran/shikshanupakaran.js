@@ -2777,7 +2777,7 @@ function startNewShikshanupakaran(){
     currentShikshanupakaranDocumentId = null;
 
 
-    /*
+        /*
         ============================================================
         YEAR SELECTION
         ============================================================
@@ -2796,64 +2796,16 @@ function startNewShikshanupakaran(){
     if(yearSelect){
 
         /*
-            Populate year options only once.
+            Populate the dropdown using the same
+            financial-year system as Talapatrak.
+
+            This does NOT affect any other editor,
+            row, save, or autosave behavior.
         */
 
-        if(
-            yearSelect.options.length === 0
-        ){
-
-            const today =
-                new Date();
-
-
-            const currentCalendarYear =
-                today.getFullYear();
-
-
-            const startYear =
-                currentCalendarYear - 2;
-
-
-            const endYear =
-                currentCalendarYear + 2;
-
-
-            for(
-                let year = startYear;
-                year <= endYear;
-                year++
-            ){
-
-                const option =
-                    document.createElement(
-                        "option"
-                    );
-
-
-                option.value =
-                    `${year}-${year + 1}`;
-
-
-                option.textContent =
-                    `${year}-${year + 1}`;
-
-
-                yearSelect.appendChild(
-                    option
-                );
-
-            }
-
-        }
-
-
-        /*
-            Default year for new record.
-        */
-
-        yearSelect.value =
-            currentYear;
+        populateShikshanupakaranYearOptions(
+            currentYear
+        );
 
     }
 
@@ -2865,9 +2817,17 @@ function startNewShikshanupakaran(){
 
     /*
         ============================================================
-        UPDATE YEAR DISPLAY
+        UPDATE YEAR DISPLAYS
         ============================================================
+
+        The selected dropdown year is the single source
+        of truth for both editor and print.
     */
+
+    updateShikshanupakaranYearDisplay(
+        selectedYear
+    );
+
 
     const editorYear =
         document.getElementById(
@@ -2882,19 +2842,40 @@ function startNewShikshanupakaran(){
 
     }
 
+        /*
+        ============================================================
+        YEAR DROPDOWN CHANGE
+        ============================================================
 
-    const printYear =
-        document.getElementById(
-            "printYear"
-        );
+        Keep editor year and print year synchronized
+        whenever the user manually changes the year.
+    */
+
+    if(yearSelect){
+
+        yearSelect.onchange =
+            function(){
+
+                const changedYear =
+                    yearSelect.value;
 
 
-    if(printYear){
+                updateShikshanupakaranYearDisplay(
+                    changedYear
+                );
 
-        printYear.textContent =
-            selectedYear;
+
+                if(editorYear){
+
+                    editorYear.textContent =
+                        changedYear;
+
+                }
+
+            };
 
     }
+
 
 
     /*
@@ -3263,6 +3244,7 @@ function prepareShikshanupakaranPrint(sourceRows) {
             "shikshanupakaranTable"
         );
 
+
     const container =
         document.getElementById(
             "shikshanupakaranPrintContainer"
@@ -3281,9 +3263,7 @@ function prepareShikshanupakaranPrint(sourceRows) {
         return;
 
     }
-
-
-    /*
+/*
         ========================================================
         REMOVE OLD PRINT PAGES
         ========================================================
@@ -3585,6 +3565,48 @@ function createShikshanupakaranPrintPage(
 
         const printInfoPanel =
             infoPanel.cloneNode(true);
+
+
+        /*
+            ========================================================
+            SYNCHRONIZE CLONED FORM VALUES
+            --------------------------------------------------------
+            cloneNode() copies the HTML/default state of controls,
+            not necessarily their current runtime value.
+
+            Therefore copy the LIVE values from the original
+            infoPanel into the cloned controls before converting
+            them to printable text.
+            ========================================================
+        */
+
+        const originalControls =
+            infoPanel.querySelectorAll(
+                "textarea, input, select"
+            );
+
+        const clonedControls =
+            printInfoPanel.querySelectorAll(
+                "textarea, input, select"
+            );
+
+
+        originalControls.forEach(
+            function(originalElement, index){
+
+                const clonedElement =
+                    clonedControls[index];
+
+                if(!clonedElement){
+                    return;
+                }
+
+
+                clonedElement.value =
+                    originalElement.value;
+
+            }
+        );
 
 
         printInfoPanel.classList.add(
@@ -4147,6 +4169,21 @@ if(printShikshanupakaranButton){
                   ----------------------------------------
               */
               
+              const debugYearSelect =
+                  document.getElementById(
+                      "shikshanupakaranYear"
+                  );
+
+              console.log(
+                  "PRINT CLICK → LIVE EDITOR YEAR:",
+                  debugYearSelect?.value
+              );
+
+              console.log(
+                  "PRINT CLICK → SELECTED OPTION:",
+                  debugYearSelect?.selectedOptions?.[0]?.textContent
+              );
+
               prepareShikshanupakaranPrint();
               
               
@@ -5318,48 +5355,94 @@ function populateShikshanupakaranYearOptions(
 
     if (!yearSelect) {
 
+        console.warn(
+            "populateShikshanupakaranYearOptions(): year select not found."
+        );
+
         return;
 
     }
 
 
-    const currentYear =
+    /*
+    ========================================================
+        CURRENT FINANCIAL YEAR
+        YEAR CHANGES EVERY 1 AUGUST
+    ========================================================
+    */
+
+    const currentFinancialYear =
         getCurrentShikshanupakaranYear();
 
 
     const currentStartYear =
         Number(
-            currentYear.split("-")[0]
+            currentFinancialYear.split("-")[0]
         );
 
 
     /*
-       Provide a small range of financial years.
+    ========================================================
+        CREATE STANDARD YEAR OPTIONS
 
-       The user can manually select the required year.
+        Same structure as Talapatrak:
+
+        2026-2027
+        2025-2026
+        2024-2025
+        ...
+    ========================================================
     */
+
+    const numberOfYears =
+        20;
+
 
     const years = [];
 
 
     for (
-        let year = currentStartYear - 5;
-        year <= currentStartYear + 5;
-        year++
+        let i = 0;
+        i < numberOfYears;
+        i++
     ) {
 
+        const startYear =
+            currentStartYear - i;
+
+
+        const endYear =
+            startYear + 1;
+
+
+        const financialYear =
+            `${startYear}-${endYear}`;
+
+
         years.push(
-            `${year}-${year + 1}`
+            financialYear
         );
 
     }
 
 
+    /*
+    ========================================================
+        CLEAR EXISTING OPTIONS
+    ========================================================
+    */
+
     yearSelect.innerHTML = "";
 
 
+    /*
+    ========================================================
+        ADD STANDARD YEARS
+    ========================================================
+    */
+
     years.forEach(
-        function(year) {
+        function(financialYear) {
 
             const option =
                 document.createElement(
@@ -5368,11 +5451,11 @@ function populateShikshanupakaranYearOptions(
 
 
             option.value =
-                year;
+                financialYear;
 
 
             option.textContent =
-                year;
+                financialYear;
 
 
             yearSelect.appendChild(
@@ -5384,30 +5467,73 @@ function populateShikshanupakaranYearOptions(
 
 
     /*
-       Select the record's year when opening
-       an existing record.
+    ========================================================
+        EXISTING RECORD PROTECTION
+
+        Preserve a saved year even if it is older
+        than the standard 20-year dropdown range.
+    ========================================================
     */
 
     if (
         selectedYear &&
-        years.includes(selectedYear)
+        !years.includes(
+            String(selectedYear)
+        )
     ) {
 
-        yearSelect.value =
-            selectedYear;
+        const option =
+            document.createElement(
+                "option"
+            );
 
-    }
-    else {
 
-        yearSelect.value =
-            currentYear;
+        option.value =
+            String(selectedYear);
+
+
+        option.textContent =
+            String(selectedYear);
+
+
+        yearSelect.insertBefore(
+            option,
+            yearSelect.firstChild
+        );
+
+
+        console.log(
+            "OPEN → OLD YEAR ADDED TO DROPDOWN:",
+            selectedYear
+        );
 
     }
 
 
     /*
-       Keep printYear synchronized if
-       something else still uses it.
+    ========================================================
+        SELECT YEAR
+    ========================================================
+    */
+
+    if (selectedYear) {
+
+        yearSelect.value =
+            String(selectedYear);
+
+    }
+    else {
+
+        yearSelect.value =
+            currentFinancialYear;
+
+    }
+
+
+    /*
+    ========================================================
+        SYNCHRONIZE OTHER YEAR DISPLAYS
+    ========================================================
     */
 
     updateShikshanupakaranYearDisplay(
@@ -5415,7 +5541,6 @@ function populateShikshanupakaranYearOptions(
     );
 
 }
-
 
 /* ============================================================
    UPDATE SHIKSHANUPAKARAN YEAR DISPLAY
