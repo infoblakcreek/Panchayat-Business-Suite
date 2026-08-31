@@ -1,4 +1,4 @@
-console.log("SHIKSHANUPAKARAN JS FILE RUNNING");
+﻿console.log("SHIKSHANUPAKARAN JS FILE RUNNING");
 
 /* ============================================================
         SHIKSHANUPAKARAN SYSTEM
@@ -2764,23 +2764,126 @@ document.addEventListener(
         START NEW SHIKSHANUPAKARAN
 ============================================================ */
 
+/* ============================================================
+        START NEW SHIKSHANUPAKARAN
+============================================================ */
+
 function startNewShikshanupakaran(){
 
+    console.log(
+        "NEW SHIKSHANUPAKARAN → OPENING NEW EMPTY CARD"
+    );
+
+
     /*
-        ============================================================
-        RESET CURRENT RECORD
-        ============================================================
+    ============================================================
+        1. RESET CURRENT RECORD / DOCUMENT ID
+    ============================================================
     */
 
-    currentShikshanupakaranRecord = null;
+    currentShikshanupakaranRecord =
+        null;
 
-    currentShikshanupakaranDocumentId = null;
+    currentShikshanupakaranDocumentId =
+        null;
 
 
-        /*
-        ============================================================
-        YEAR SELECTION
-        ============================================================
+    /*
+    ============================================================
+        2. RESET PAGINATION MEMORY
+    ============================================================
+    */
+
+    window.shikshanupakaranAllRows =
+        null;
+
+    window.shikshanupakaranCurrentPage =
+        1;
+
+    window.shikshanupakaranTotalPages =
+        1;
+
+
+    /*
+    ============================================================
+        3. OPEN EDITOR
+    ============================================================
+    */
+
+    openShikshanupakaranEditor();
+
+
+    /*
+    ============================================================
+        4. CLEAR VILLAGE / MOJE / TALUKA / JILLO
+    ============================================================
+    */
+
+    const editorVillageName =
+        document.getElementById(
+            "shikshanupakaranEditorVillageName"
+        );
+
+    if(editorVillageName){
+
+        editorVillageName.textContent =
+            "New Shikshanupakaran";
+
+    }
+
+
+    const mojeInput =
+        document.getElementById(
+            "shikshanupakaranMoje"
+        );
+
+    if(mojeInput){
+
+        mojeInput.value =
+            "";
+
+    }
+
+
+    const talukaInput =
+        document.getElementById(
+            "shikshanupakaranTaluka"
+        );
+
+    if(talukaInput){
+
+        talukaInput.value =
+            "";
+
+    }
+
+
+    const jilloInput =
+        document.getElementById(
+            "shikshanupakaranJillo"
+        );
+
+    if(jilloInput){
+
+        jilloInput.value =
+            "";
+
+    }
+
+
+    /*
+    ============================================================
+        5. POPULATE YEARS
+    ============================================================
+    */
+
+    populateShikshanupakaranYearOptions();
+
+
+    /*
+    ============================================================
+        6. LEAVE YEAR UNSELECTED
+    ============================================================
     */
 
     const yearSelect =
@@ -2788,262 +2891,54 @@ function startNewShikshanupakaran(){
             "shikshanupakaranYear"
         );
 
-
-    const currentYear =
-        getCurrentShikshanupakaranYear();
-
-
     if(yearSelect){
 
-        /*
-            Populate the dropdown using the same
-            financial-year system as Talapatrak.
-
-            This does NOT affect any other editor,
-            row, save, or autosave behavior.
-        */
-
-        populateShikshanupakaranYearOptions(
-            currentYear
-        );
+        yearSelect.selectedIndex =
+            -1;
 
     }
 
 
-    const selectedYear =
-        yearSelect?.value ||
-        currentYear;
-
-
     /*
-        ============================================================
-        UPDATE YEAR DISPLAYS
-        ============================================================
-
-        The selected dropdown year is the single source
-        of truth for both editor and print.
+    ============================================================
+        7. SHOW "SELECT YEAR"
+    ============================================================
     */
-
-    updateShikshanupakaranYearDisplay(
-        selectedYear
-    );
-
 
     const editorYear =
         document.getElementById(
             "shikshanupakaranEditorYear"
         );
 
-
     if(editorYear){
 
         editorYear.textContent =
-            selectedYear;
-
-    }
-
-    initializeShikshanupakaranYearChangeHandler();
-
-        /*
-        ============================================================
-        YEAR DROPDOWN CHANGE
-        ============================================================
-
-        Keep editor year and print year synchronized
-        whenever the user manually changes the year.
-    */
-
-    if(yearSelect){
-
-        populateShikshanupakaranYearOptions(
-            currentYear
-        );
-
-    }
-
-
-
-    /*
-        ============================================================
-        UPDATE TITLE
-        ============================================================
-    */
-
-    const title =
-        document.getElementById(
-            "shikshanupakaranEditorVillageName"
-        );
-
-
-    if(title){
-
-        title.textContent =
-            "New Shikshanupakaran";
+            "Select Year";
 
     }
 
 
     /*
-        ============================================================
-        CLEAR HEADER VALUES
-       
-        The user will enter these directly
-        inside the editor.
-        ============================================================
+    ============================================================
+        8. DO NOT CREATE INITIAL ROW
+    ============================================================
+
+        No clearShikshanupakaranRows()
+        No addInitialShikshanupakaranRow()
+        No autosave initialization
+        No Firestore document creation
+        No card creation
+
+        Row creation happens later through the
+        normal editor flow.
     */
 
-    const mojeElement =
-        document.getElementById(
-            "printMoje"
-        );
-
-
-    const talukaElement =
-        document.getElementById(
-            "printTaluka"
-        );
-
-
-    const jilloElement =
-        document.getElementById(
-            "printJillo"
-        );
-
-
-    if(mojeElement){
-
-        /*
-            IMPORTANT:
-            Do NOT use prompt().
-            Do NOT assign `moje`.
-            
-            Leave the field blank so the
-            user can enter the village name.
-        */
-
-        mojeElement.textContent =
-            "";
-
-    }
-
-
-    if(talukaElement){
-
-        talukaElement.textContent =
-            "";
-
-    }
-
-
-    if(jilloElement){
-
-        jilloElement.textContent =
-            "";
-
-    }
-
-
-    /*
-        ============================================================
-        MAKE HEADER FIELDS EDITABLE
-       
-        This allows the user to enter:
-       
-        મોજે
-        તાલુકો
-        જિલ્લો
-        ============================================================
-    */
-
-    if(mojeElement){
-
-        mojeElement.contentEditable =
-            "true";
-
-        mojeElement
-            .setAttribute(
-                "data-placeholder",
-                "Enter village name"
-            );
-
-    }
-
-
-    if(talukaElement){
-
-        talukaElement.contentEditable =
-            "true";
-
-    }
-
-
-    if(jilloElement){
-
-        jilloElement.contentEditable =
-            "true";
-
-    }
-
-
-    /*
-        ============================================================
-        CLEAR OLD ROWS
-        ============================================================
-    */
-
-    clearShikshanupakaranRows();
-
-
-    /*
-        ============================================================
-        ADD FIRST EMPTY ROW
-        ============================================================
-    */
-
-    addInitialShikshanupakaranRow();
-
-
-    /*
-        ============================================================
-        OPEN EDITOR
-        ============================================================
-    */
-
-    openShikshanupakaranEditor();
-
-
-    /*
-        ============================================================
-        INITIALIZE AUTOSAVE
-        ============================================================
-    */
-
-    initializeShikshanupakaranAutoSave();
-
-
-    /*
-        ============================================================
-        DEBUG
-        ============================================================
-    */
 
     console.log(
-        "NEW SHIKSHANUPAKARAN EDITOR OPENED:",
-        {
-            year:
-                selectedYear,
-
-            villageName:
-                "",
-
-            status:
-                "WAITING FOR USER TO ENTER VILLAGE NAME"
-        }
+        "NEW SHIKSHANUPAKARAN → EMPTY CARD READY"
     );
 
 }
-
-
 /* ============================================================
         OPEN EDITOR
 ============================================================ */
@@ -14732,3 +14627,5 @@ function initializeShikshanupakaranYearChangeHandler() {
     };
 
 }
+
+
