@@ -5837,7 +5837,7 @@ async function saveShikshanupakaran(
 
 
         /* ========================================================
-           NEW DOCUMENT ID
+        NEW DOCUMENT ID
         ======================================================== */
 
         const documentId =
@@ -5845,6 +5845,35 @@ async function saveShikshanupakaran(
                 moje,
                 year
             );
+
+
+        /* ========================================================
+        CHECK WHETHER SHIKSHANUPAKARAN ALREADY EXISTS
+        ======================================================== */
+
+        const existingShikshanupakaran =
+            await db
+                .collection(
+                    "shikshanupakarans"
+                )
+                .doc(
+                    documentId
+                )
+                .get();
+
+
+        if (
+            existingShikshanupakaran.exists
+        ) {
+
+            await showShikshanupakaranAlreadyExistsModal(
+                moje,
+                year
+            );
+
+            return false;
+
+        }
 
 
         /* ========================================================
@@ -14617,6 +14646,10 @@ function showShikshanupakaranYearChangeModal(
    SHIKSHANUPAKARAN YEAR CHANGE HANDLER
 ============================================================ */
 
+/* ============================================================
+   SHIKSHANUPAKARAN YEAR CHANGE HANDLER
+============================================================ */
+
 function initializeShikshanupakaranYearChangeHandler() {
 
     const yearSelect =
@@ -14624,8 +14657,11 @@ function initializeShikshanupakaranYearChangeHandler() {
             "shikshanupakaranYear"
         );
 
+
     if (!yearSelect) {
+
         return;
+
     }
 
 
@@ -14635,8 +14671,62 @@ function initializeShikshanupakaranYearChangeHandler() {
             yearSelect.value;
 
 
+        /*
+            ========================================================
+            NEW SHIKSHANUPAKARAN
+            ========================================================
+
+            When creating a new Shikshanupakaran there is
+            no existing record yet.
+
+            Therefore the user can freely select the year.
+
+            NO YEAR CHANGE MODAL.
+        */
+
+        if (!currentShikshanupakaranRecord) {
+
+            updateShikshanupakaranYearDisplay(
+                changedYear
+            );
+
+
+            const editorYear =
+                document.getElementById(
+                    "shikshanupakaranEditorYear"
+                );
+
+
+            if (editorYear) {
+
+                editorYear.textContent =
+                    changedYear;
+
+            }
+
+
+            console.log(
+                "NEW SHIKSHANUPAKARAN YEAR SELECTED:",
+                changedYear
+            );
+
+
+            return;
+
+        }
+
+
+        /*
+            ========================================================
+            EXISTING SHIKSHANUPAKARAN
+            ========================================================
+
+            Existing records continue to use the
+            year-change confirmation modal.
+        */
+
         const oldYear =
-            currentShikshanupakaranRecord?.year ||
+            currentShikshanupakaranRecord.year ||
             getCurrentShikshanupakaranYear();
 
 
@@ -14650,12 +14740,20 @@ function initializeShikshanupakaranYearChangeHandler() {
         }
 
 
+        /*
+            SHOW YEAR CHANGE CONFIRMATION
+        */
+
         const confirmed =
             await showShikshanupakaranYearChangeModal(
                 oldYear,
                 changedYear
             );
 
+
+        /*
+            USER CANCELLED
+        */
 
         if (!confirmed) {
 
@@ -14688,18 +14786,18 @@ function initializeShikshanupakaranYearChangeHandler() {
 
 
         /*
+            ========================================================
             CONFIRMED YEAR CHANGE
+            ========================================================
 
-            Change the record only after confirmation.
+            Change the existing record only after
+            confirmation.
+
             Firestore is NOT written here.
         */
 
-        if (currentShikshanupakaranRecord) {
-
-            currentShikshanupakaranRecord.year =
-                changedYear;
-
-        }
+        currentShikshanupakaranRecord.year =
+            changedYear;
 
 
         updateShikshanupakaranYearDisplay(
@@ -14724,8 +14822,11 @@ function initializeShikshanupakaranYearChangeHandler() {
         console.log(
             "SHIKSHANUPAKARAN YEAR CHANGED:",
             {
-                oldYear: oldYear,
-                newYear: changedYear
+                oldYear:
+                    oldYear,
+
+                newYear:
+                    changedYear
             }
         );
 
