@@ -1,4 +1,4 @@
-console.log("SHIKSHANUPAKARAN JS FILE RUNNING");
+﻿console.log("SHIKSHANUPAKARAN JS FILE RUNNING");
 
 /* ============================================================
         SHIKSHANUPAKARAN SYSTEM
@@ -2894,19 +2894,19 @@ function startNewShikshanupakaran(){
 
     const mojeElement =
         document.getElementById(
-            "printMoje"
+            "shikshanupakaranMoje"
         );
 
 
     const talukaElement =
         document.getElementById(
-            "printTaluka"
+            "shikshanupakaranTaluka"
         );
 
 
     const jilloElement =
         document.getElementById(
-            "printJillo"
+            "shikshanupakaranJillo"
         );
 
 
@@ -2921,7 +2921,7 @@ function startNewShikshanupakaran(){
             user can enter the village name.
         */
 
-        mojeElement.textContent =
+        mojeElement.value =
             "";
 
     }
@@ -2929,7 +2929,7 @@ function startNewShikshanupakaran(){
 
     if(talukaElement){
 
-        talukaElement.textContent =
+        talukaElement.value =
             "";
 
     }
@@ -2937,7 +2937,7 @@ function startNewShikshanupakaran(){
 
     if(jilloElement){
 
-        jilloElement.textContent =
+        jilloElement.value =
             "";
 
     }
