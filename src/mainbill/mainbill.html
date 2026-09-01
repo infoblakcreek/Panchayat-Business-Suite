@@ -1,4 +1,4 @@
-<!-- ==================================================
+﻿<!-- ==================================================
                         MAIN BILLS DATABASE VIEW
                 ================================================== -->
                 
@@ -417,6 +417,12 @@
                                                 + Add Next Row
                         
                                             </button>
+
+                                            <div
+                                                id="mainBillRowLimitMessage"
+                                                class="mainBillRowLimitMessage"
+                                                aria-live="polite">
+                                            </div>
                         
                                         </div>
                         
@@ -731,7 +737,7 @@
                     
                                 <tr class="printFooter">
                     
-                                    <td colspan="3">
+                                    <td colspan="2">
                     
                                         બાકી / રોકડા
                     
@@ -985,6 +991,36 @@
               </section>
 
 
+
+
+<style data-mainbill-row-limit>
+
+    .mainBillRowLimitMessage {
+
+        display: none;
+
+        margin-top: 8px;
+
+        padding: 6px 12px;
+
+        font-size: 13px;
+
+        font-weight: 600;
+
+        text-align: center;
+
+        border-radius: 5px;
+
+    }
+
+
+    .mainBillRowLimitMessage.show {
+
+        display: block;
+
+    }
+
+</style>
 
 <style data-mainbill-print>
 
@@ -1533,6 +1569,26 @@
     /* ========================================================
        CUT LINE
     ======================================================== */
+
+
+
+    body.printingMainBill #generatedMainBill .printFooter td:first-child {
+
+        white-space: nowrap !important;
+
+        text-align: left !important;
+
+    }
+
+
+    body.printingMainBill #generatedMainBill .printFooter td:last-child {
+
+        white-space: nowrap !important;
+
+        text-align: right !important;
+
+    }
+
 
     body.printingMainBill #printableBills .cutLine {
 

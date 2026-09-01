@@ -1,4 +1,4 @@
-// ==========================================================================//
+﻿// ==========================================================================//
 
 
 
@@ -192,6 +192,30 @@ function addItemRow() {
 
 
     if (!tbody) return;
+
+    // Main Bill allows a maximum of 5 item rows.
+    if (tbody.rows.length >= 5) {
+
+        const limitMessage =
+            document.getElementById(
+                "mainBillRowLimitMessage"
+            );
+
+        if (limitMessage) {
+
+            limitMessage.textContent =
+                "⚠️ Maximum 5 rows are allowed in the Main Bill.";
+
+            limitMessage.classList.add(
+                "show"
+            );
+
+        }
+
+        return;
+
+    }
+
 
 
     const row =
@@ -3285,7 +3309,7 @@ body {
 
         overflow: visible !important;
 
-        overflow-wrap: anywhere !important;
+        overflow-wrap: normal !important;
 
         box-sizing: border-box !important;
 
