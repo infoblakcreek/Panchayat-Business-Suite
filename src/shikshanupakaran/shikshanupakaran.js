@@ -1,4 +1,4 @@
-console.log("SHIKSHANUPAKARAN JS FILE RUNNING");
+﻿console.log("SHIKSHANUPAKARAN JS FILE RUNNING");
 
 /* ============================================================
         SHIKSHANUPAKARAN SYSTEM
@@ -4557,12 +4557,12 @@ async function createShikshanupakaranFromTalapatrak(
 
                 if (
                     decision ===
-                    "yes"
+                    "sync"
                 ) {
 
                     localStorage.setItem(
                         decisionKey,
-                        "yes"
+                        "sync"
                     );
 
 
@@ -4989,7 +4989,7 @@ if (
             */
 
             const newRowNumber =
-                window.shikshanupakaranAllRows.length + 1;
+                getNextShikshanupakaranSerial();
 
 
             window.shikshanupakaranAllRows.push({
@@ -7754,38 +7754,47 @@ const clearOnCreateColumns = [
 function autoFillNextSerialNumber(row){
 
     const serialInput =
-        row.querySelector('[data-column="A"]');
-
+        row.querySelector(
+            '[data-column="A"]'
+        );
 
     if(!serialInput){
         return;
     }
 
+    let value =
+        String(serialInput.value || "").trim();
+
+    /*
+     * Convert Gujarati digits to English digits
+     * before converting to Number.
+     */
+    value =
+        value.replace(/[૦-૯]/g, function(digit){
+
+            return "૦૧૨૩૪૫૬૭૮૯"
+                .indexOf(digit);
+
+        });
 
     const startNumber =
-        Number(serialInput.value) || 0;
-
+        Number(value) || 0;
 
     if(startNumber <= 0){
         return;
     }
-
 
     const allRows =
         document.querySelectorAll(
             ".shikshanupakaranRow"
         );
 
-
     let currentNumber =
         startNumber;
 
-
     let foundRow = false;
 
-
     allRows.forEach(function(currentRow){
-
 
         if(currentRow === row){
 
@@ -7793,36 +7802,29 @@ function autoFillNextSerialNumber(row){
 
         }
 
-
         if(foundRow){
-
 
             const input =
                 currentRow.querySelector(
                     '[data-column="A"]'
                 );
 
-
             if(input){
 
                 input.value =
-                    currentNumber;
+                    convertToGujaratiDigits(
+                        String(currentNumber)
+                    );
 
                 currentNumber++;
 
             }
 
-
         }
-
 
     });
 
-
 }
-
-
-
 function markShikshanupakaranAsSaved(){
 
     window.shikshanupakaranHasUnsavedChanges =
@@ -8061,7 +8063,8 @@ function addShikshanupakaranRowAfter(button) {
 
     const newRowData = {
 
-        A: "",
+        A:
+            getNextShikshanupakaranSerial(),
 
         B: "",
         C: "",
@@ -8170,26 +8173,7 @@ function addShikshanupakaranRowAfter(button) {
                 String(
                     globalIndex
                 );
-
-
-            /*
-                Update visible row number.
-            */
-
-            const numberInput =
-                row.querySelector(
-                    ".column-A"
-                );
-
-
-            if(numberInput){
-
-                numberInput.value =
-                    globalIndex + 1;
-
-            }
-
-        }
+}
     );
 
 
@@ -8429,26 +8413,7 @@ function deleteShikshanupakaranRow(button) {
                 String(
                     globalIndex
                 );
-
-
-            /*
-                Update visible row number.
-            */
-
-            const numberInput =
-                row.querySelector(
-                    ".column-A"
-                );
-
-
-            if(numberInput){
-
-                numberInput.value =
-                    globalIndex + 1;
-
-            }
-
-        }
+}
     );
 
 
@@ -8852,48 +8817,153 @@ function formatShikshanupakaranInput(input){
 
 function getNextShikshanupakaranSerial(){
 
+    /*
+     * ========================================================
+     * FIND NEXT ACTUAL SERIAL / KHATA NUMBER
+     *
+     * IMPORTANT:
+     *
+     * Do NOT use DOM row count.
+     * Do NOT use array length.
+     * Do NOT use visible row number.
+     *
+     * Search the COMPLETE master memory so pagination
+     * cannot break the serial sequence.
+     *
+     * Example:
+     *
+     * 501
+     * 502
+     * 503
+     *
+     * Next = 504
+     * ========================================================
+     */
 
-    const rows =
-        document.querySelectorAll(
-            ".shikshanupakaranRow"
-        );
+    if (
+        !Array.isArray(
+            window.shikshanupakaranAllRows
+        )
+    ) {
+
+        return 1;
+
+    }
 
 
-
-    let max = 0;
-
+    let maxSerial = 0;
 
 
-    rows.forEach(function(row){
+    window.shikshanupakaranAllRows.forEach(
+        function(row){
+
+            if (
+                !row ||
+                typeof row !== "object"
+            ) {
+
+                return;
+
+            }
 
 
-        const value =
-            Number(
-                row.querySelector(
-                    '[data-column="A"]'
-                )?.value
-            )
-            ||
-            0;
+            let value =
+                row.A;
 
 
+            /*
+             * Support lowercase "a" as well.
+             */
 
-        if(value > max){
+            if (
+                value === undefined ||
+                value === null ||
+                String(value).trim() === ""
+            ) {
 
-            max=value;
+                value =
+                    row.a;
+
+            }
+
+
+            if (
+                value === undefined ||
+                value === null
+            ) {
+
+                return;
+
+            }
+
+
+            /*
+             * Convert Gujarati digits to English.
+             */
+
+            const englishValue =
+                convertGujaratiDigitsToEnglish(
+                    String(value).trim()
+                );
+
+
+            /*
+             * Keep only numeric digits.
+             */
+
+            const digitsOnly =
+                englishValue.replace(
+                    /[^0-9]/g,
+                    ""
+                );
+
+
+            if (
+                digitsOnly === ""
+            ) {
+
+                return;
+
+            }
+
+
+            const number =
+                Number(digitsOnly);
+
+
+            if (
+                Number.isFinite(number) &&
+                number > maxSerial
+            ) {
+
+                maxSerial =
+                    number;
+
+            }
 
         }
+    );
 
 
-    });
+    const nextSerial =
+        maxSerial + 1;
 
 
+    console.log(
+        "SHIK ADD ROW → LAST SERIAL:",
+        maxSerial
+    );
 
-    return max + 1;
 
+    console.log(
+        "SHIK ADD ROW → NEXT SERIAL:",
+        nextSerial
+    );
+
+
+    return nextSerial;
 
 }
-
 function addInitialShikshanupakaranRow(){
 
 
@@ -14637,6 +14707,5 @@ function initializeShikshanupakaranYearChangeHandler() {
     };
 
 }
-
 
 

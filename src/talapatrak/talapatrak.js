@@ -5311,9 +5311,7 @@ if (addTalapatrakRowButton) {
 function addTalapatrakRow() {
 
     if (!talapatrakBody) {
-
         return null;
-
     }
 
 
@@ -5332,31 +5330,157 @@ function addTalapatrakRow() {
         syncCurrentTalapatrakPageToMemory();
 
 
-        /* Add new row to master memory */
+        /* ----------------------------------------------------
+           FIND HIGHEST EXISTING KHATA NUMBER
+        ---------------------------------------------------- */
 
-        window.talapatrakAllRows.push(
-            {}
+        let lastKhataNumber = 0;
+
+
+        window.talapatrakAllRows.forEach(
+            function(row) {
+
+                if (
+                    !row ||
+                    typeof row !== "object"
+                ) {
+                    return;
+                }
+
+
+                let value = row.A;
+
+
+                /*
+                 * Support lowercase "a" as well.
+                 */
+
+                if (
+                    value === undefined ||
+                    value === null ||
+                    String(value).trim() === ""
+                ) {
+
+                    value = row.a;
+
+                }
+
+
+                if (
+                    value === undefined ||
+                    value === null
+                ) {
+                    return;
+                }
+
+
+                /*
+                 * Convert Gujarati digits to English.
+                 */
+
+                const englishValue =
+                    convertGujaratiDigitsToEnglish(
+                        String(value).trim()
+                    );
+
+
+                /*
+                 * Keep digits only.
+                 */
+
+                const digitsOnly =
+                    englishValue.replace(
+                        /[^0-9]/g,
+                        ""
+                    );
+
+
+                if (
+                    digitsOnly === ""
+                ) {
+                    return;
+                }
+
+
+                const number =
+                    Number(digitsOnly);
+
+
+                if (
+                    Number.isFinite(number) &&
+                    number > lastKhataNumber
+                ) {
+
+                    lastKhataNumber =
+                        number;
+
+                }
+
+            }
         );
 
 
-        /* Update pages */
+        /* ----------------------------------------------------
+           CREATE NEXT KHATA NUMBER
+        ---------------------------------------------------- */
+
+        const nextKhataNumber =
+            lastKhataNumber + 1;
+
+
+        const nextKhataNumberGujarati =
+            convertToGujaratiDigits(
+                String(nextKhataNumber)
+            );
+
+
+        console.log(
+            "BOTTOM ADD ROW → LAST KHATA:",
+            lastKhataNumber
+        );
+
+
+        console.log(
+            "BOTTOM ADD ROW → NEW KHATA:",
+            nextKhataNumberGujarati
+        );
+
+
+        /* ----------------------------------------------------
+           ADD NEW ROW AT VERY END
+        ---------------------------------------------------- */
+
+        window.talapatrakAllRows.push({
+
+            A:
+                nextKhataNumberGujarati
+
+        });
+
+
+        /* ----------------------------------------------------
+           UPDATE TOTAL PAGES
+        ---------------------------------------------------- */
 
         const rowsPerPage =
             Number(
                 window.talapatrakRowsPerPage
             ) || 20;
 
-      window.talapatrakTotalPages =
-          Math.max(
-              1,
-              Math.ceil(
-                  window.talapatrakAllRows.length /
-                  rowsPerPage
-              )
-          );
+
+        window.talapatrakTotalPages =
+            Math.max(
+                1,
+                Math.ceil(
+                    window.talapatrakAllRows.length /
+                    rowsPerPage
+                )
+            );
 
 
-        /* Go to last page */
+        /* ----------------------------------------------------
+           GO TO LAST PAGE
+        ---------------------------------------------------- */
 
         const lastPage =
             window.talapatrakTotalPages;
@@ -5367,7 +5491,9 @@ function addTalapatrakRow() {
         );
 
 
-        /* Focus new row */
+        /* ----------------------------------------------------
+           FOCUS NEW ROW
+        ---------------------------------------------------- */
 
         const lastRow =
             talapatrakBody.querySelector(
@@ -5379,7 +5505,7 @@ function addTalapatrakRow() {
 
             const firstInput =
                 lastRow.querySelector(
-                    "input"
+                    "input:not([readonly])"
                 );
 
 
@@ -5401,6 +5527,7 @@ function addTalapatrakRow() {
 
     /* --------------------------------------------------------
        OLD NON-PAGINATED MODE
+       DO NOT CHANGE
     -------------------------------------------------------- */
 
     const newRow =
@@ -5408,9 +5535,7 @@ function addTalapatrakRow() {
 
 
     if (!newRow) {
-
         return null;
-
     }
 
 
@@ -5433,9 +5558,7 @@ function addTalapatrakRow() {
 
 
     if (firstInput) {
-
         firstInput.focus();
-
     }
 
 
