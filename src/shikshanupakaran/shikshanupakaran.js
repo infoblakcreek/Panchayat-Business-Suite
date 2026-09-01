@@ -7451,16 +7451,26 @@ function createShikshanupakaranRow(
      * Column I is date-only.
      */
 
-    const autoColumns = [
-        "E",
-        "G",
-        "M",
-        "N",
-        "O",
-        "P",
-        "R",
-        "S"
-    ];
+    const calculatedColumns = [
+    "E",
+    "G",
+    "M",
+    "N",
+    "O",
+    "P",
+    "R",
+    "S"
+];
+
+const clearOnCreateColumns = [
+    "G",
+    "M",
+    "N",
+    "O",
+    "P",
+    "R",
+    "S"
+];
 
 
     let html = "";
@@ -7555,7 +7565,7 @@ function createShikshanupakaranRow(
            ======================================================== */
 
         if (
-            autoColumns.includes(col)
+             clearOnCreateColumns.includes(col)
         ) {
 
             value = "";
@@ -7569,7 +7579,7 @@ function createShikshanupakaranRow(
 
 
         if (
-            autoColumns.includes(col)
+            calculatedColumns.includes(col)
         ) {
 
             readonly =
