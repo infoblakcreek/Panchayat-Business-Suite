@@ -997,8 +997,8 @@
 
 
 
-        <!-- ============================================================
-     SHIKSHANUPAKARAN CREATE CONFIRMATION MODAL
+<!-- ============================================================
+    SHIKSHANUPAKARAN → TALAPATRAK CREATE & SYNC MODAL
 ============================================================ -->
 
 <div
@@ -1007,10 +1007,7 @@
     aria-hidden="true"
 >
 
-    <div
-        class="shikshanupakaranCreateOverlay">
-    </div>
-
+    <div class="shikshanupakaranCreateOverlay"></div>
 
     <div
         class="shikshanupakaranCreateDialog"
@@ -1019,31 +1016,22 @@
         aria-labelledby="shikshanupakaranCreateTitle"
     >
 
-        <div
-            class="shikshanupakaranCreateIcon"
-        >
-
+        <div class="shikshanupakaranCreateIcon">
             <i class="fa-solid fa-table-list"></i>
-
         </div>
 
+        <div class="shikshanupakaranCreateContent">
 
-        <div
-            class="shikshanupakaranCreateContent"
-        >
-
-            <h3
-                id="shikshanupakaranCreateTitle"
-            >
-                Create Shikshanupakaran card?
+            <h3 id="shikshanupakaranCreateTitle">
+                Create Talapatrak card?
             </h3>
 
-
             <p>
-                No Shikshanupakaran card exists for
+                No Talapatrak card exists for
                 <strong id="shikshanupakaranCreateVillage">
                     —
                 </strong>
+
                 <span>
                     (
                     <strong id="shikshanupakaranCreateYear">
@@ -1053,20 +1041,15 @@
                 </span>.
             </p>
 
-
-            <p
-                class="shikshanupakaranCreateNote"
-            >
+            <p class="shikshanupakaranCreateNote">
                 Would you like to create a new card
-                and sync it with this Talapatrak?
+                and sync it with this Shikshanupakaran?
             </p>
 
         </div>
 
-
         <div class="shikshanupakaranCreateActions">
 
-            <!-- NOT NOW -->
             <button
                 type="button"
                 id="shikshanupakaranCreateNotNow"
@@ -1075,8 +1058,6 @@
                 Not Now
             </button>
 
-
-            <!-- NEVER -->
             <button
                 type="button"
                 id="shikshanupakaranCreateNever"
@@ -1085,15 +1066,13 @@
                 Never
             </button>
 
-
-            <!-- SYNC & SAVE -->
             <button
                 type="button"
                 id="shikshanupakaranCreateConfirm"
                 class="shikshanupakaranCreateConfirm"
             >
                 <i class="fa-solid fa-arrows-rotate"></i>
-                Sync & Save
+                Create & Sync
             </button>
 
         </div>

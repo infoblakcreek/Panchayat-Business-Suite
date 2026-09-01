@@ -1,4 +1,4 @@
-﻿console.log("SHIKSHANUPAKARAN JS FILE RUNNING");
+console.log("SHIKSHANUPAKARAN JS FILE RUNNING");
 
 /* ============================================================
         SHIKSHANUPAKARAN SYSTEM
@@ -12852,7 +12852,7 @@ async function syncShikshanupakaranToTalapatrak(
         else {
 
             const decision =
-                await showTalapatrakCreateModal(
+                await showShikshanupakaranCreateModal(
                     moje,
                     year
                 );
@@ -13384,7 +13384,7 @@ function showShikshanupakaranCreateModal(
                     event.stopPropagation();
 
                     closeModal(
-                        "yes"
+                        "sync"
                     );
 
                 };
@@ -14627,5 +14627,6 @@ function initializeShikshanupakaranYearChangeHandler() {
     };
 
 }
+
 
 
