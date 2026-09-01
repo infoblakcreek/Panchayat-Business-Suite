@@ -1,4 +1,4 @@
-console.log("TALAPATRAK JS FILE RUNNING");
+﻿console.log("TALAPATRAK JS FILE RUNNING");
 
 
 
@@ -5038,6 +5038,16 @@ function addTalapatrakRowAfter(button) {
         visibleIndex;
 
 
+    if (
+        memoryIndex < 0 ||
+        memoryIndex >= window.talapatrakAllRows.length
+    ) {
+
+        return;
+
+    }
+
+
     /* --------------------------------------------------------
        SAVE CURRENT PAGE FIRST
     -------------------------------------------------------- */
@@ -5046,123 +5056,81 @@ function addTalapatrakRowAfter(button) {
 
 
     /* --------------------------------------------------------
-       FIND LAST EXISTING KHATA NUMBER
-
-       IMPORTANT:
-
-       Search ALL memory rows.
-
-       Do NOT use DOM row count.
-
-       Do NOT use current page number.
+       GET CURRENT ROW KHATA NUMBER
+       
+       NEW ROW = CURRENT ROW + 1
     -------------------------------------------------------- */
 
-    let lastKhataNumber =
-        0;
+    const currentMemoryRow =
+        window.talapatrakAllRows[
+            memoryIndex
+        ] || {};
 
 
-    window.talapatrakAllRows.forEach(
-        function(row) {
-
-            if (
-                !row ||
-                typeof row !== "object"
-            ) {
-
-                return;
-
-            }
+    let currentValue =
+        currentMemoryRow.A;
 
 
-            let value =
-                row.A;
+    if (
+        currentValue === undefined ||
+        currentValue === null ||
+        String(currentValue).trim() === ""
+    ) {
+
+        currentValue =
+            currentMemoryRow.a;
+
+    }
 
 
-            /*
-                Support lowercase "a" as well.
-            */
-
-            if (
-                value === undefined ||
-                value === null ||
-                String(value).trim() === ""
-            ) {
-
-                value =
-                    row.a;
-
-            }
+    const currentEnglishValue =
+        convertGujaratiDigitsToEnglish(
+            String(
+                currentValue ?? ""
+            ).trim()
+        );
 
 
-            if (
-                value === undefined ||
-                value === null
-            ) {
-
-                return;
-
-            }
+    const currentDigitsOnly =
+        currentEnglishValue.replace(
+            /[^0-9]/g,
+            ""
+        );
 
 
-            /*
-                Convert Gujarati digits to English.
-            */
+    if (
+        currentDigitsOnly === ""
+    ) {
 
-            const englishValue =
-                convertGujaratiDigitsToEnglish(
-                    String(value).trim()
-                );
+        console.warn(
+            "ADD ROW AFTER → CURRENT ROW HAS NO NUMERIC KHATA:",
+            currentValue
+        );
 
+        return;
 
-            /*
-                Remove anything that isn't a digit.
-
-                Example:
-
-                "605" → "605"
-                "૬૦૫" → "605"
-            */
-
-            const digitsOnly =
-                englishValue.replace(
-                    /[^0-9]/g,
-                    ""
-                );
+    }
 
 
-            if (
-                digitsOnly === ""
-            ) {
-
-                return;
-
-            }
+    const currentKhataNumber =
+        Number(
+            currentDigitsOnly
+        );
 
 
-            const number =
-                Number(digitsOnly);
+    if (
+        !Number.isFinite(
+            currentKhataNumber
+        )
+    ) {
 
+        return;
 
-            if (
-                Number.isFinite(number) &&
-                number > lastKhataNumber
-            ) {
+    }
 
-                lastKhataNumber =
-                    number;
-
-            }
-
-        }
-    );
-
-
-    /* --------------------------------------------------------
-       NEXT KHATA NUMBER
-    -------------------------------------------------------- */
 
     const nextKhataNumber =
-        lastKhataNumber + 1;
+        currentKhataNumber + 1;
 
 
     const nextKhataNumberGujarati =
@@ -5172,31 +5140,151 @@ function addTalapatrakRowAfter(button) {
 
 
     console.log(
-        "ADD ROW → LAST KHATA NUMBER:",
-        lastKhataNumber
+        "ADD ROW AFTER → CURRENT KHATA:",
+        currentKhataNumber
     );
 
 
     console.log(
-        "ADD ROW → NEXT KHATA NUMBER:",
-        nextKhataNumber
-    );
-
-
-    console.log(
-        "ADD ROW → NEXT KHATA GUJARATI:",
+        "ADD ROW AFTER → NEW KHATA:",
         nextKhataNumberGujarati
     );
 
 
     /* --------------------------------------------------------
-       INSERT NEW MEMORY ROW
+       SHIFT ALL ROWS BELOW INSERTION POINT BY +1
+       
+       Existing rows above remain untouched.
     -------------------------------------------------------- */
 
-    const newRow = {
+    for (
+        let index =
+            memoryIndex + 1;
+
+        index <
+        window.talapatrakAllRows.length;
+
+        index++
+    ) {
+
+        const row =
+            window.talapatrakAllRows[
+                index
+            ];
+
+
+        if (
+            !row ||
+            typeof row !== "object"
+        ) {
+
+            continue;
+
+        }
+
+
+        let value =
+            row.A;
+
+
+        if (
+            value === undefined ||
+            value === null ||
+            String(value).trim() === ""
+        ) {
+
+            value =
+                row.a;
+
+        }
+
+
+        if (
+            value === undefined ||
+            value === null
+        ) {
+
+            continue;
+
+        }
+
+
+        const englishValue =
+            convertGujaratiDigitsToEnglish(
+                String(value).trim()
+            );
+
+
+        const digitsOnly =
+            englishValue.replace(
+                /[^0-9]/g,
+                ""
+            );
+
+
+        if (
+            digitsOnly === ""
+        ) {
+
+            continue;
+
+        }
+
+
+        const number =
+            Number(
+                digitsOnly
+            );
+
+
+        if (
+            !Number.isFinite(number)
+        ) {
+
+            continue;
+
+        }
+
+
+        row.A =
+            convertToGujaratiDigits(
+                String(
+                    number + 1
+                )
+            );
+
+    }
+
+
+    /* --------------------------------------------------------
+       INSERT NEW ROW
+    -------------------------------------------------------- */
+
+    const newRowData = {
 
         A:
-            nextKhataNumberGujarati
+            nextKhataNumberGujarati,
+
+        B: "",
+        C: "",
+        D: "",
+        E: "",
+        F: "",
+        G: "",
+        H: "",
+        I: "",
+        J: "",
+        K: "",
+        L: "",
+        M: "",
+        N: "",
+        O: "",
+        P: "",
+        Q: "",
+        R: "",
+        S: "",
+        T: "",
+        U: ""
 
     };
 
@@ -5207,7 +5295,7 @@ function addTalapatrakRowAfter(button) {
 
         0,
 
-        newRow
+        newRowData
 
     );
 
@@ -5275,7 +5363,6 @@ function addTalapatrakRowAfter(button) {
 
 }
 
-
 /* ============================================================
         INITIAL ROW
 ============================================================ */
@@ -5315,257 +5402,282 @@ function addTalapatrakRow() {
     }
 
 
-    /* --------------------------------------------------------
+    /* ========================================================
        PAGINATED MODE
-    -------------------------------------------------------- */
+    ======================================================== */
 
     if (
-        Array.isArray(
+        !Array.isArray(
             window.talapatrakAllRows
         )
     ) {
 
-        /* Save currently visible page */
+        return null;
 
-        syncCurrentTalapatrakPageToMemory();
-
-
-        /* ----------------------------------------------------
-           FIND HIGHEST EXISTING KHATA NUMBER
-        ---------------------------------------------------- */
-
-        let lastKhataNumber = 0;
+    }
 
 
-        window.talapatrakAllRows.forEach(
-            function(row) {
+    /* ========================================================
+       SAVE CURRENT PAGE
+    ======================================================== */
 
-                if (
-                    !row ||
-                    typeof row !== "object"
-                ) {
-                    return;
-                }
+    syncCurrentTalapatrakPageToMemory();
 
 
-                let value = row.A;
+    /* ========================================================
+       FIND HIGHEST COLUMN A IN ENTIRE DOCUMENT
+       
+       IMPORTANT:
+       This is NOT based on array length.
+       This is NOT based on row position.
+       This is NOT based on visible page.
+       
+       Example:
+       
+       201
+       202
+       ...
+       234
+       ...
+       700
+       
+       Bottom Add Row = 701
+    ======================================================== */
+
+    let highestKhataNumber = 0;
 
 
-                /*
-                 * Support lowercase "a" as well.
-                 */
+    window.talapatrakAllRows.forEach(
+        function(row) {
 
-                if (
-                    value === undefined ||
-                    value === null ||
-                    String(value).trim() === ""
-                ) {
+            if (
+                !row ||
+                typeof row !== "object"
+            ) {
 
-                    value = row.a;
-
-                }
-
-
-                if (
-                    value === undefined ||
-                    value === null
-                ) {
-                    return;
-                }
-
-
-                /*
-                 * Convert Gujarati digits to English.
-                 */
-
-                const englishValue =
-                    convertGujaratiDigitsToEnglish(
-                        String(value).trim()
-                    );
-
-
-                /*
-                 * Keep digits only.
-                 */
-
-                const digitsOnly =
-                    englishValue.replace(
-                        /[^0-9]/g,
-                        ""
-                    );
-
-
-                if (
-                    digitsOnly === ""
-                ) {
-                    return;
-                }
-
-
-                const number =
-                    Number(digitsOnly);
-
-
-                if (
-                    Number.isFinite(number) &&
-                    number > lastKhataNumber
-                ) {
-
-                    lastKhataNumber =
-                        number;
-
-                }
+                return;
 
             }
-        );
 
 
-        /* ----------------------------------------------------
-           CREATE NEXT KHATA NUMBER
-        ---------------------------------------------------- */
-
-        const nextKhataNumber =
-            lastKhataNumber + 1;
+            let value =
+                row.A;
 
 
-        const nextKhataNumberGujarati =
-            convertToGujaratiDigits(
-                String(nextKhataNumber)
-            );
+            /* Support lowercase a */
+
+            if (
+                value === undefined ||
+                value === null ||
+                String(value).trim() === ""
+            ) {
+
+                value =
+                    row.a;
+
+            }
 
 
-        console.log(
-            "BOTTOM ADD ROW → LAST KHATA:",
-            lastKhataNumber
-        );
+            if (
+                value === undefined ||
+                value === null
+            ) {
+
+                return;
+
+            }
 
 
-        console.log(
-            "BOTTOM ADD ROW → NEW KHATA:",
-            nextKhataNumberGujarati
-        );
-
-
-        /* ----------------------------------------------------
-           ADD NEW ROW AT VERY END
-        ---------------------------------------------------- */
-
-        window.talapatrakAllRows.push({
-
-            A:
-                nextKhataNumberGujarati
-
-        });
-
-
-        /* ----------------------------------------------------
-           UPDATE TOTAL PAGES
-        ---------------------------------------------------- */
-
-        const rowsPerPage =
-            Number(
-                window.talapatrakRowsPerPage
-            ) || 20;
-
-
-        window.talapatrakTotalPages =
-            Math.max(
-                1,
-                Math.ceil(
-                    window.talapatrakAllRows.length /
-                    rowsPerPage
-                )
-            );
-
-
-        /* ----------------------------------------------------
-           GO TO LAST PAGE
-        ---------------------------------------------------- */
-
-        const lastPage =
-            window.talapatrakTotalPages;
-
-
-        renderTalapatrakPage(
-            lastPage
-        );
-
-
-        /* ----------------------------------------------------
-           FOCUS NEW ROW
-        ---------------------------------------------------- */
-
-        const lastRow =
-            talapatrakBody.querySelector(
-                ".talapatrakRow:last-child"
-            );
-
-
-        if (lastRow) {
-
-            const firstInput =
-                lastRow.querySelector(
-                    "input:not([readonly])"
+            const englishValue =
+                convertGujaratiDigitsToEnglish(
+                    String(value).trim()
                 );
 
 
-            if (firstInput) {
+            const digitsOnly =
+                englishValue.replace(
+                    /[^0-9]/g,
+                    ""
+                );
 
-                firstInput.focus();
 
-                firstInput.select();
+            if (
+                digitsOnly === ""
+            ) {
+
+                return;
+
+            }
+
+
+            const number =
+                Number(
+                    digitsOnly
+                );
+
+
+            if (
+                Number.isFinite(number) &&
+                number > highestKhataNumber
+            ) {
+
+                highestKhataNumber =
+                    number;
 
             }
 
         }
-
-
-        return lastRow || null;
-
-    }
-
-
-    /* --------------------------------------------------------
-       OLD NON-PAGINATED MODE
-       DO NOT CHANGE
-    -------------------------------------------------------- */
-
-    const newRow =
-        createTalapatrakRow();
-
-
-    if (!newRow) {
-        return null;
-    }
-
-
-    talapatrakBody.appendChild(
-        newRow
     );
 
 
-    renumberTalapatrakRows();
+    /* ========================================================
+       NEXT KHATA NUMBER
+    ======================================================== */
 
-    calculateAllTalapatrakRows();
+    const nextKhataNumber =
+        highestKhataNumber + 1;
 
-    formatTalapatrakNumberInputs();
 
-
-    const firstInput =
-        newRow.querySelector(
-            "input"
+    const nextKhataNumberGujarati =
+        convertToGujaratiDigits(
+            String(nextKhataNumber)
         );
 
 
-    if (firstInput) {
-        firstInput.focus();
+    console.log(
+        "TALAPATRAK BOTTOM ADD → HIGHEST KHATA:",
+        highestKhataNumber
+    );
+
+
+    console.log(
+        "TALAPATRAK BOTTOM ADD → NEW KHATA:",
+        nextKhataNumberGujarati
+    );
+
+
+    /* ========================================================
+       CREATE NEW ROW
+    ======================================================== */
+
+    const newRowData = {
+
+        A:
+            nextKhataNumberGujarati,
+
+        B: "",
+        C: "",
+        D: "",
+        E: "",
+        F: "",
+        G: "",
+        H: "",
+        I: "",
+        J: "",
+        K: "",
+        L: "",
+        M: "",
+        N: "",
+        O: "",
+        P: "",
+        Q: "",
+        R: "",
+        S: "",
+        T: "",
+        U: ""
+
+    };
+
+
+    /* ========================================================
+       ADD AT VERY END OF MASTER MEMORY
+    ======================================================== */
+
+    window.talapatrakAllRows.push(
+        newRowData
+    );
+
+
+    /* ========================================================
+       UPDATE PAGINATION
+    ======================================================== */
+
+    const rowsPerPage =
+        Number(
+            window.talapatrakRowsPerPage
+        ) || 20;
+
+
+    window.talapatrakTotalPages =
+        Math.max(
+            1,
+            Math.ceil(
+                window.talapatrakAllRows.length /
+                rowsPerPage
+            )
+        );
+
+
+    /* ========================================================
+       GO TO LAST PAGE
+    ======================================================== */
+
+    const lastPage =
+        window.talapatrakTotalPages;
+
+
+    renderTalapatrakPage(
+        lastPage
+    );
+
+
+    /* ========================================================
+       FOCUS NEW ROW
+    ======================================================== */
+
+    const lastRow =
+        talapatrakBody.querySelector(
+            ".talapatrakRow:last-child"
+        );
+
+
+    if (lastRow) {
+
+        const firstInput =
+            lastRow.querySelector(
+                "input:not([readonly])"
+            );
+
+
+        if (firstInput) {
+
+            firstInput.focus();
+
+            firstInput.select();
+
+        }
+
     }
 
 
-    return newRow;
+    console.log(
+        "TALAPATRAK BOTTOM ADD → COMPLETE:",
+        {
+            newKhata:
+                nextKhataNumberGujarati,
+
+            totalRows:
+                window.talapatrakAllRows.length,
+
+            lastPage:
+                lastPage
+        }
+    );
+
+
+    return newRowData;
 
 }
-
 
 /* ============================================================
         DELETE ROW
@@ -14257,3 +14369,6 @@ function showTalapatrakDeleteModal(record) {
     });
 
 }
+
+
+

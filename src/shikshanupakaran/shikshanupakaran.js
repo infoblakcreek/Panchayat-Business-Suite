@@ -5054,41 +5054,7 @@ if (
                 T:
                     ""
 
-            });
-
-
-            /*
-                ====================================================
-                SAFETY: RE-NUMBER ALL MASTER ROWS
-                ====================================================
-                
-                This guarantees Column A is always:
-                
-                1
-                2
-                3
-                ...
-                n
-            */
-
-            window.shikshanupakaranAllRows.forEach(
-                function(rowData, index) {
-
-                    if(
-                        rowData &&
-                        typeof rowData === "object"
-                    ) {
-
-                        rowData.A =
-                            index + 1;
-
-                    }
-
-                }
-            );
-
-
-            /*
+            });/*
                 ====================================================
                 RECALCULATE TOTAL PAGES
                 ====================================================
@@ -8050,21 +8016,240 @@ function addShikshanupakaranRowAfter(button) {
 
 
     /* ========================================================
-       DO NOT SYNC
+       READ CLICKED ROW'S COLUMN A
        
-       DOM contains the user's current unsaved edits.
-       We must preserve those DOM rows.
+       NEW ROW MUST BE:
+       
+       CURRENT A + 1
     ======================================================== */
+
+    const currentMemoryRow =
+        window.shikshanupakaranAllRows[
+            memoryIndex
+        ] || {};
+
+
+    let currentValue =
+        currentMemoryRow.A;
+
+
+    /* Support lowercase "a" */
+
+    if (
+        currentValue === undefined ||
+        currentValue === null ||
+        String(currentValue).trim() === ""
+    ) {
+
+        currentValue =
+            currentMemoryRow.a;
+
+    }
+
+
+    if (
+        currentValue === undefined ||
+        currentValue === null ||
+        String(currentValue).trim() === ""
+    ) {
+
+        console.warn(
+            "SHIK ADD AFTER → CURRENT ROW HAS NO COLUMN A:",
+            currentValue
+        );
+
+        return;
+
+    }
+
+
+    const englishValue =
+        convertGujaratiDigitsToEnglish(
+            String(currentValue).trim()
+        );
+
+
+    const digitsOnly =
+        englishValue.replace(
+            /[^0-9]/g,
+            ""
+        );
+
+
+    if (
+        digitsOnly === ""
+    ) {
+
+        console.warn(
+            "SHIK ADD AFTER → COLUMN A IS NOT NUMERIC:",
+            currentValue
+        );
+
+        return;
+
+    }
+
+
+    const currentKhataNumber =
+        Number(
+            digitsOnly
+        );
+
+
+    if (
+        !Number.isFinite(
+            currentKhataNumber
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const nextKhataNumber =
+        currentKhataNumber + 1;
+
+
+    const nextKhataNumberGujarati =
+        convertToGujaratiDigits(
+            String(
+                nextKhataNumber
+            )
+        );
+
+
+    console.log(
+        "SHIK ADD AFTER → CURRENT KHATA:",
+        currentKhataNumber
+    );
+
+
+    console.log(
+        "SHIK ADD AFTER → NEW KHATA:",
+        nextKhataNumberGujarati
+    );
 
 
     /* ========================================================
-       CREATE NEW MASTER ROW
+       SHIFT ONLY ROWS BELOW INSERTION POINT
+       
+       IMPORTANT:
+       We do NOT renumber the whole document.
+       
+       Mixed series remain intact.
+    ======================================================== */
+
+    for (
+        let index =
+            memoryIndex + 1;
+
+        index <
+            window.shikshanupakaranAllRows.length;
+
+        index++
+    ) {
+
+        const row =
+            window.shikshanupakaranAllRows[
+                index
+            ];
+
+
+        if (
+            !row ||
+            typeof row !== "object"
+        ) {
+
+            continue;
+
+        }
+
+
+        let value =
+            row.A;
+
+
+        if (
+            value === undefined ||
+            value === null ||
+            String(value).trim() === ""
+        ) {
+
+            value =
+                row.a;
+
+        }
+
+
+        if (
+            value === undefined ||
+            value === null ||
+            String(value).trim() === ""
+        ) {
+
+            continue;
+
+        }
+
+
+        const rowEnglishValue =
+            convertGujaratiDigitsToEnglish(
+                String(value).trim()
+            );
+
+
+        const rowDigitsOnly =
+            rowEnglishValue.replace(
+                /[^0-9]/g,
+                ""
+            );
+
+
+        if (
+            rowDigitsOnly === ""
+        ) {
+
+            continue;
+
+        }
+
+
+        const rowNumber =
+            Number(
+                rowDigitsOnly
+            );
+
+
+        if (
+            !Number.isFinite(
+                rowNumber
+            )
+        ) {
+
+            continue;
+
+        }
+
+
+        row.A =
+            convertToGujaratiDigits(
+                String(
+                    rowNumber + 1
+                )
+            );
+
+    }
+
+
+    /* ========================================================
+       CREATE NEW ROW
     ======================================================== */
 
     const newRowData = {
 
         A:
-            getNextShikshanupakaranSerial(),
+            nextKhataNumberGujarati,
 
         B: "",
         C: "",
@@ -8097,10 +8282,6 @@ function addShikshanupakaranRowAfter(button) {
 
     /* ========================================================
        INSERT INTO MASTER MEMORY
-       
-       IMPORTANT:
-       This only changes the row structure.
-       It does NOT replace existing DOM data.
     ======================================================== */
 
     window.shikshanupakaranAllRows.splice(
@@ -8111,11 +8292,7 @@ function addShikshanupakaranRowAfter(button) {
 
 
     /* ========================================================
-       CREATE NEW DOM ROW
-       
-       createShikshanupakaranRow() normally appends.
-       We will move the newly-created row immediately
-       after the clicked row.
+       CREATE DOM ROW
     ======================================================== */
 
     const newRow =
@@ -8133,7 +8310,7 @@ function addShikshanupakaranRowAfter(button) {
 
 
     /* ========================================================
-       MOVE NEW ROW INTO CORRECT POSITION
+       PUT NEW ROW AFTER CLICKED ROW
     ======================================================== */
 
     currentRow.after(
@@ -8142,9 +8319,97 @@ function addShikshanupakaranRowAfter(button) {
 
 
     /* ========================================================
-       UPDATE MEMORY INDEXES
+       SYNC VISIBLE COLUMN A AFTER MIDDLE INSERT
        
-       The insertion shifted every row after the new row.
+       Master memory has already shifted all rows
+       below the insertion point by +1.
+       
+       Update ONLY Column A in the visible DOM.
+       All other unsaved DOM values remain untouched.
+    ======================================================== */
+
+    const visibleRowsAfterInsert =
+        Array.from(
+            shikshanupakaranBody.querySelectorAll(
+                ".shikshanupakaranRow"
+            )
+        );
+
+
+    visibleRowsAfterInsert.forEach(
+        function(
+            row,
+            index
+        ) {
+
+            const globalIndex =
+                (
+                    currentPage - 1
+                ) *
+                rowsPerPage +
+                index;
+
+
+            const memoryRow =
+                window.shikshanupakaranAllRows[
+                    globalIndex
+                ];
+
+
+            if (
+                !memoryRow ||
+                typeof memoryRow !== "object"
+            ) {
+
+                return;
+
+            }
+
+
+            const serialInput =
+                row.querySelector(
+                    '[data-column="A"]'
+                );
+
+
+            if (
+                serialInput
+            ) {
+
+                let serialValue =
+                    memoryRow.A;
+
+
+                if (
+                    serialValue === undefined ||
+                    serialValue === null ||
+                    String(serialValue).trim() === ""
+                ) {
+
+                    serialValue =
+                        memoryRow.a;
+
+                }
+
+
+                if (
+                    serialValue !== undefined &&
+                    serialValue !== null
+                ) {
+
+                    serialInput.value =
+                        String(serialValue);
+
+                }
+
+            }
+
+        }
+    );
+
+
+    /* ========================================================
+       UPDATE MEMORY INDEX DATASET
     ======================================================== */
 
     const updatedRows =
@@ -8159,7 +8424,7 @@ function addShikshanupakaranRowAfter(button) {
         function(
             row,
             index
-        ){
+        ) {
 
             const globalIndex =
                 (
@@ -8173,12 +8438,13 @@ function addShikshanupakaranRowAfter(button) {
                 String(
                     globalIndex
                 );
-}
+
+        }
     );
 
 
     /* ========================================================
-       RECALCULATE PAGINATION STATE
+       UPDATE PAGINATION
     ======================================================== */
 
     window.shikshanupakaranTotalPages =
@@ -8191,17 +8457,8 @@ function addShikshanupakaranRowAfter(button) {
         );
 
 
-    /*
-        IMPORTANT:
-        Do NOT renderShikshanupakaranPage() here.
-        
-        Rendering would destroy the user's unsaved
-        DOM values.
-    */
-
-
     /* ========================================================
-       TOTALS ARE STALE
+       TOTALS ARE NOW STALE
     ======================================================== */
 
     window.shikshanupakaranTotalGenerated =
@@ -8225,7 +8482,7 @@ function addShikshanupakaranRowAfter(button) {
         );
 
 
-    if(firstInput){
+    if (firstInput) {
 
         firstInput.focus();
 
@@ -8235,10 +8492,13 @@ function addShikshanupakaranRowAfter(button) {
 
 
     console.log(
-        "SHIKSHANUPAKARAN ADD → COMPLETE:",
+        "SHIK ADD AFTER → COMPLETE:",
         {
             insertedAfter:
                 memoryIndex,
+
+            newKhata:
+                nextKhataNumberGujarati,
 
             newMemoryIndex:
                 memoryIndex + 1,
@@ -8250,12 +8510,20 @@ function addShikshanupakaranRowAfter(button) {
 
 }
 
-
 /* ============================================================
    DELETE ROW
 ============================================================ */
 
 function deleteShikshanupakaranRow(button) {
+
+    if (!shikshanupakaranBody) {
+        return;
+    }
+
+
+    /* ============================================================
+       MASTER MEMORY CHECK
+    ============================================================ */
 
     if (
         !Array.isArray(
@@ -8267,6 +8535,10 @@ function deleteShikshanupakaranRow(button) {
 
     }
 
+
+    /* ============================================================
+       CURRENT ROW
+    ============================================================ */
 
     const currentRow =
         button.closest(
@@ -8280,6 +8552,10 @@ function deleteShikshanupakaranRow(button) {
 
     }
 
+
+    /* ============================================================
+       VISIBLE ROWS
+    ============================================================ */
 
     const visibleRows =
         Array.from(
@@ -8304,6 +8580,10 @@ function deleteShikshanupakaranRow(button) {
     }
 
 
+    /* ============================================================
+       CURRENT PAGINATION
+    ============================================================ */
+
     const currentPage =
         Number(
             window.shikshanupakaranCurrentPage
@@ -8315,6 +8595,29 @@ function deleteShikshanupakaranRow(button) {
             window.shikshanupakaranRowsPerPage
         ) || 20;
 
+
+    const dataPages =
+        Math.max(
+            1,
+            Math.ceil(
+                window.shikshanupakaranAllRows.length /
+                rowsPerPage
+            )
+        );
+
+
+    if (
+        currentPage > dataPages
+    ) {
+
+        return;
+
+    }
+
+
+    /* ============================================================
+       MASTER MEMORY INDEX
+    ============================================================ */
 
     const memoryIndex =
         (
@@ -8335,9 +8638,9 @@ function deleteShikshanupakaranRow(button) {
     }
 
 
-    /* ========================================================
+    /* ============================================================
        KEEP AT LEAST ONE ROW
-    ======================================================== */
+    ============================================================ */
 
     if (
         window.shikshanupakaranAllRows.length <= 1
@@ -8352,20 +8655,25 @@ function deleteShikshanupakaranRow(button) {
     }
 
 
-    /* ========================================================
-       DO NOT SYNC
+    /* ============================================================
+       SYNC CURRENT PAGE BEFORE DELETE
        
-       We intentionally do NOT call:
+       This preserves unsaved values in B-T and all other
+       editable fields before the memory array is changed.
+    ============================================================ */
 
-       syncCurrentShikshanupakaranPageToMemory();
-
-       because that would save the DOM before delete.
-    ======================================================== */
+    syncCurrentShikshanupakaranPageToMemory();
 
 
-    /* ========================================================
-       REMOVE FROM MASTER MEMORY
-    ======================================================== */
+    /* ============================================================
+       DELETE EXACT CLICKED ROW FROM MASTER MEMORY
+    ============================================================ */
+
+    const deletedRow =
+        window.shikshanupakaranAllRows[
+            memoryIndex
+        ];
+
 
     window.shikshanupakaranAllRows.splice(
         memoryIndex,
@@ -8373,55 +8681,136 @@ function deleteShikshanupakaranRow(button) {
     );
 
 
-    /* ========================================================
-       REMOVE ONLY THIS DOM ROW
+    /* ============================================================
+       RENUMBER COLUMN A AFTER DELETION
        
-       IMPORTANT:
-       We do NOT re-render the entire table.
-    ======================================================== */
+       Only rows AFTER the deleted position are renumbered.
+       
+       Example:
+       
+       504
+       505
+       506  <- deleted
+       507
+       508
+       509
+       
+       becomes:
+       
+       504
+       505
+       506
+       507
+       508
+       
+       Other columns remain attached to their original row data.
+    ============================================================ */
 
-    currentRow.remove();
+    for (
+        let index =
+            memoryIndex;
+
+        index <
+            window.shikshanupakaranAllRows.length;
+
+        index++
+    ) {
+
+        const rowData =
+            window.shikshanupakaranAllRows[
+                index
+            ];
 
 
-    /* ========================================================
-       UPDATE REMAINING DOM ROW MEMORY INDEXES
-    ======================================================== */
+        if (
+            !rowData ||
+            typeof rowData !== "object"
+        ) {
 
-    const remainingRows =
-        Array.from(
-            shikshanupakaranBody.querySelectorAll(
-                ".shikshanupakaranRow"
-            )
-        );
+            continue;
+
+        }
 
 
-    remainingRows.forEach(
-        function(
-            row,
-            index
-        ){
-
-            const globalIndex =
-                (
-                    currentPage - 1
-                ) *
-                rowsPerPage +
-                index;
+        let value =
+            rowData.A;
 
 
-            row.dataset.memoryIndex =
+        if (
+            value === undefined ||
+            value === null ||
+            String(value).trim() === ""
+        ) {
+
+            value =
+                rowData.a;
+
+        }
+
+
+        if (
+            value === undefined ||
+            value === null ||
+            String(value).trim() === ""
+        ) {
+
+            continue;
+
+        }
+
+
+        const englishValue =
+            convertGujaratiDigitsToEnglish(
+                String(value).trim()
+            );
+
+
+        const digitsOnly =
+            englishValue.replace(
+                /[^0-9]/g,
+                ""
+            );
+
+
+        if (
+            digitsOnly === ""
+        ) {
+
+            continue;
+
+        }
+
+
+        const number =
+            Number(
+                digitsOnly
+            );
+
+
+        if (
+            !Number.isFinite(number)
+        ) {
+
+            continue;
+
+        }
+
+
+        rowData.A =
+            convertToGujaratiDigits(
                 String(
-                    globalIndex
-                );
-}
-    );
+                    number - 1
+                )
+            );
+
+    }
 
 
-    /* ========================================================
-       RECALCULATE PAGINATION
-    ======================================================== */
+    /* ============================================================
+       RECALCULATE DATA PAGES
+    ============================================================ */
 
-    window.shikshanupakaranTotalPages =
+    const newDataPages =
         Math.max(
             1,
             Math.ceil(
@@ -8431,18 +8820,41 @@ function deleteShikshanupakaranRow(button) {
         );
 
 
-    /*
-        IMPORTANT:
-        No renderShikshanupakaranPage().
-        
-        Existing DOM rows remain untouched,
-        so their unsaved data remains.
-    */
+    window.shikshanupakaranTotalPages =
+        newDataPages;
 
 
-    /* ========================================================
-       TOTALS ARE STALE
-    ======================================================== */
+    /* ============================================================
+       IF LAST PAGE BECAME EMPTY,
+       MOVE TO PREVIOUS VALID PAGE
+    ============================================================ */
+
+    const newPage =
+        Math.min(
+            currentPage,
+            newDataPages
+        );
+
+
+    /* ============================================================
+       RENDER AGAIN FROM MASTER MEMORY
+       
+       This is the important part.
+       
+       The clicked row is gone.
+       The following rows move up.
+       Column A comes from updated master memory.
+       B-T stay with their corresponding row objects.
+    ============================================================ */
+
+    renderShikshanupakaranPage(
+        newPage
+    );
+
+
+    /* ============================================================
+       RECALCULATE TOTALS
+    ============================================================ */
 
     window.shikshanupakaranTotalGenerated =
         false;
@@ -8455,11 +8867,43 @@ function deleteShikshanupakaranRow(button) {
     renderShikshanupakaranTotal();
 
 
+    /* ============================================================
+       MARK DOCUMENT AS UNSAVED
+    ============================================================ */
+
+    window.shikshanupakaranHasUnsavedChanges =
+        true;
+
+
+    /* ============================================================
+       AUTOSAVE
+    ============================================================ */
+
+    if (
+        typeof scheduleShikshanupakaranAutoSave ===
+            "function"
+    ) {
+
+        scheduleShikshanupakaranAutoSave();
+
+    }
+
+
+    /* ============================================================
+       DEBUG
+    ============================================================ */
+
     console.log(
         "SHIKSHANUPAKARAN DELETE → COMPLETE:",
         {
             deletedMemoryIndex:
                 memoryIndex,
+
+            deletedRow:
+                deletedRow,
+
+            newPage:
+                newPage,
 
             remainingRows:
                 window.shikshanupakaranAllRows.length
@@ -8467,8 +8911,6 @@ function deleteShikshanupakaranRow(button) {
     );
 
 }
-
-
 
 
 function renumberShikshanupakaranRows(){
@@ -8819,24 +9261,30 @@ function getNextShikshanupakaranSerial(){
 
     /*
      * ========================================================
-     * FIND NEXT ACTUAL SERIAL / KHATA NUMBER
+     * FIND NEXT SERIAL FROM THE LAST ROW
      *
      * IMPORTANT:
      *
-     * Do NOT use DOM row count.
-     * Do NOT use array length.
-     * Do NOT use visible row number.
+     * The bottom Add Row must continue the series
+     * at the END of the document.
      *
-     * Search the COMPLETE master memory so pagination
-     * cannot break the serial sequence.
+     * Do NOT use the highest number in the document.
      *
      * Example:
      *
-     * 501
-     * 502
-     * 503
+     * 701
+     * 702
+     * 703
+     * ...
+     * 200
+     * 201
+     * 202
+     * 203
+     * 234
      *
-     * Next = 504
+     * Bottom Add Row = 235
+     *
+     * Mixed series are intentionally preserved.
      * ========================================================
      */
 
@@ -8851,112 +9299,149 @@ function getNextShikshanupakaranSerial(){
     }
 
 
-    let maxSerial = 0;
+    const totalRows =
+        window.shikshanupakaranAllRows.length;
 
 
-    window.shikshanupakaranAllRows.forEach(
-        function(row){
+    if (
+        totalRows === 0
+    ) {
 
-            if (
-                !row ||
-                typeof row !== "object"
-            ) {
+        return 1;
 
-                return;
-
-            }
+    }
 
 
-            let value =
-                row.A;
+    /*
+     * ========================================================
+     * GET LAST MASTER ROW
+     * ========================================================
+     */
+
+    const lastRow =
+        window.shikshanupakaranAllRows[
+            totalRows - 1
+        ];
 
 
-            /*
-             * Support lowercase "a" as well.
-             */
+    if (
+        !lastRow ||
+        typeof lastRow !== "object"
+    ) {
 
-            if (
-                value === undefined ||
-                value === null ||
-                String(value).trim() === ""
-            ) {
+        return 1;
 
-                value =
-                    row.a;
-
-            }
+    }
 
 
-            if (
-                value === undefined ||
-                value === null
-            ) {
+    /*
+     * ========================================================
+     * GET COLUMN A FROM LAST ROW
+     * ========================================================
+     */
 
-                return;
-
-            }
-
-
-            /*
-             * Convert Gujarati digits to English.
-             */
-
-            const englishValue =
-                convertGujaratiDigitsToEnglish(
-                    String(value).trim()
-                );
+    let value =
+        lastRow.A;
 
 
-            /*
-             * Keep only numeric digits.
-             */
+    /*
+     * Support lowercase "a" as well.
+     */
 
-            const digitsOnly =
-                englishValue.replace(
-                    /[^0-9]/g,
-                    ""
-                );
+    if (
+        value === undefined ||
+        value === null ||
+        String(value).trim() === ""
+    ) {
 
+        value =
+            lastRow.a;
 
-            if (
-                digitsOnly === ""
-            ) {
-
-                return;
-
-            }
+    }
 
 
-            const number =
-                Number(digitsOnly);
+    if (
+        value === undefined ||
+        value === null ||
+        String(value).trim() === ""
+    ) {
+
+        console.warn(
+            "SHIK ADD ROW → LAST ROW HAS NO SERIAL:",
+            lastRow
+        );
+
+        return 1;
+
+    }
 
 
-            if (
-                Number.isFinite(number) &&
-                number > maxSerial
-            ) {
+    /*
+     * ========================================================
+     * CONVERT GUJARATI DIGITS TO ENGLISH
+     * ========================================================
+     */
 
-                maxSerial =
-                    number;
+    const englishValue =
+        convertGujaratiDigitsToEnglish(
+            String(value).trim()
+        );
 
-            }
 
-        }
-    );
+    /*
+     * Keep numeric digits only.
+     */
+
+    const digitsOnly =
+        englishValue.replace(
+            /[^0-9]/g,
+            ""
+        );
+
+
+    if (
+        digitsOnly === ""
+    ) {
+
+        console.warn(
+            "SHIK ADD ROW → LAST ROW SERIAL IS NOT NUMERIC:",
+            value
+        );
+
+        return 1;
+
+    }
+
+
+    const lastSerial =
+        Number(
+            digitsOnly
+        );
+
+
+    if (
+        !Number.isFinite(
+            lastSerial
+        )
+    ) {
+
+        return 1;
+
+    }
 
 
     const nextSerial =
-        maxSerial + 1;
+        lastSerial + 1;
 
 
     console.log(
-        "SHIK ADD ROW → LAST SERIAL:",
-        maxSerial
+        "SHIK BOTTOM ADD ROW → LAST ROW SERIAL:",
+        lastSerial
     );
 
 
     console.log(
-        "SHIK ADD ROW → NEXT SERIAL:",
+        "SHIK BOTTOM ADD ROW → NEXT SERIAL:",
         nextSerial
     );
 
@@ -8964,6 +9449,7 @@ function getNextShikshanupakaranSerial(){
     return nextSerial;
 
 }
+
 function addInitialShikshanupakaranRow(){
 
 
@@ -14707,5 +15193,9 @@ function initializeShikshanupakaranYearChangeHandler() {
     };
 
 }
+
+
+
+
 
 
