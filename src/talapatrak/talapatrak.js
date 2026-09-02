@@ -1,4 +1,4 @@
-﻿console.log("TALAPATRAK JS FILE RUNNING");
+console.log("TALAPATRAK JS FILE RUNNING");
 
 
 
@@ -1003,7 +1003,11 @@ function renderTalapatrakGrandTotalRow() {
             else {
 
                 cell.textContent =
-                    value;
+                    typeof value === "number"
+                        ? convertToGujaratiDigits(
+                            value.toFixed(2)
+                        )
+                        : value;
 
             }
 
@@ -6664,16 +6668,6 @@ window.talapatrakCalculationSummary =
     window.talapatrakCalculationSummary || null;
 
 
-/* ============================================================
-   FORMAT SUMMARY NUMBER
-   ============================================================ */
-
-function formatTalapatrakSummaryNumber(value) {
-
-    return Number(value || 0).toFixed(2);
-
-}
-
 
 /* ============================================================
    UPDATE CALCULATION PAGE
@@ -6743,9 +6737,7 @@ function updateTalapatrakCalculationPage(page) {
 
 
         input.value =
-            formatTalapatrakSummaryNumber(
-                value
-            );
+            convertToGujaratiDigits(Number(value || 0).toFixed(2));
 
     }
 
@@ -14369,6 +14361,11 @@ function showTalapatrakDeleteModal(record) {
     });
 
 }
+
+
+
+
+
 
 
 

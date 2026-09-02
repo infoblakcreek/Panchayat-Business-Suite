@@ -1,0 +1,478 @@
+<section id="shikshanupakaranSummaryView" class="summaryView shikshanupakaranSummaryView">
+
+    <!-- SUMMARY TOP BAR -->
+    <header class="summaryTopBar shikshanupakaranSummaryTopBar">
+
+        <div class="summaryTitleArea">
+            <h1>શિક્ષણોપકરણ સારાંશ</h1>
+            <p>ગામવાર માંગણા અને વસુલાતની તારીજ</p>
+        </div>
+
+        <div class="summaryActions">
+
+            <div class="summarySearchGroup">
+                <label for="shikshanupakaranSummarySearch">
+                    ગામ શોધો
+                </label>
+
+                <input
+                    type="search"
+                    id="shikshanupakaranSummarySearch"
+                    placeholder="ગામનું નામ શોધો..."
+                    autocomplete="off"
+                >
+            </div>
+
+            <button
+                type="button"
+                id="generateShikshanupakaranSummaryTotalButton"
+                class="summaryButton generateTotal"
+            >
+                <span>Generate Total</span>
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- VILLAGE RECORDS -->
+    <section
+        id="shikshanupakaranSummaryRecords"
+        class="summaryRecordsSection"
+    >
+
+        <div class="summarySectionHeader">
+            <h2>ગામવાર સારાંશ</h2>
+        </div>
+
+        <div
+            id="shikshanupakaranSummaryRecordList"
+            class="summaryRecordList"
+        >
+            <!-- Village records will be inserted here -->
+        </div>
+
+    </section>
+
+
+    <!-- SUMMARY EDITOR -->
+    <section
+        id="shikshanupakaranSummaryEditor"
+        class="summaryEditor"
+        hidden
+    >
+
+        <!-- EDITOR HEADER -->
+        <div class="summaryEditorHeader">
+
+            <div class="summaryEditorTitle">
+                <h2>શિક્ષણોપકરણ સારાંશ</h2>
+
+                <span id="shikshanupakaranSummaryEditorStatus">
+                    સારાંશ તૈયાર નથી
+                </span>
+            </div>
+
+            <div class="summaryEditorActions">
+
+                <button
+                    type="button"
+                    id="closeShikshanupakaranSummaryEditorButton"
+                    class="summaryButton secondary"
+                >
+                    બંધ કરો
+                </button>
+
+                <button
+                    type="button"
+                    id="printShikshanupakaranSummaryButton"
+                    class="summaryButton primary"
+                >
+                    Print
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- BASIC INFORMATION -->
+        <section class="summaryInfoCard">
+
+            <div class="summaryInfoGrid">
+
+                <div class="summaryInfoField">
+                    <label for="shikshanupakaranSummaryMoje">
+                        ગામ
+                    </label>
+
+                    <input
+                        type="text"
+                        id="shikshanupakaranSummaryMoje"
+                        readonly
+                    >
+                </div>
+
+                <div class="summaryInfoField">
+                    <label for="shikshanupakaranSummaryTaluka">
+                        તાલુકો
+                    </label>
+
+                    <input
+                        type="text"
+                        id="shikshanupakaranSummaryTaluka"
+                        readonly
+                    >
+                </div>
+
+                <div class="summaryInfoField">
+                    <label for="shikshanupakaranSummaryJillo">
+                        જિલ્લો
+                    </label>
+
+                    <input
+                        type="text"
+                        id="shikshanupakaranSummaryJillo"
+                        readonly
+                    >
+                </div>
+
+                <div class="summaryInfoField">
+                    <label for="shikshanupakaranSummaryYear">
+                        વર્ષ
+                    </label>
+
+                    <input
+                        type="text"
+                        id="shikshanupakaranSummaryYear"
+                        readonly
+                    >
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- MAIN SUMMARY -->
+        <section class="summaryDocumentSection">
+
+            <div class="summaryDocumentHeader">
+                <h3>
+                    શિક્ષણોપકરણ માંગણા અને વસુલાતની તારીજ
+                </h3>
+            </div>
+
+
+            <!-- MAIN CALCULATION TABLE -->
+            <div class="summaryTableWrapper">
+
+                <table
+                    id="shikshanupakaranSummaryTable"
+                    class="summaryTable shikshanupakaranSummaryTable"
+                >
+
+                    <thead>
+
+                        <tr>
+                            <th>અ.નં.</th>
+                            <th>વિગત</th>
+                            <th>પાછલી</th>
+                            <th>ચાલુ</th>
+                            <th>ફરતી</th>
+                            <th>કુલ</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>૧</td>
+                            <td>પાછલી બાકી</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    data-shik-summary="previousAuthorized"
+                                >
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    data-shik-summary="previousUnauthorized"
+                                >
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    data-shik-summary="previousOther"
+                                >
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    data-shik-summary="previousTotal"
+                                    readonly
+                                >
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>૨</td>
+                            <td>માંગણું</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    data-shik-summary="demandPrevious"
+                                >
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    data-shik-summary="demandCurrent"
+                                >
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    data-shik-summary="demandOther"
+                                >
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    data-shik-summary="demandTotal"
+                                    readonly
+                                >
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>૩</td>
+                            <td>કુલ એકંદરે માંગણું</td>
+                            <td colspan="3"></td>
+                            <td>
+                                <input
+                                    type="text"
+                                    data-shik-summary="grandDemand"
+                                    readonly
+                                >
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>૪</td>
+                            <td>વસુલાત</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    data-shik-summary="collectionPrevious"
+                                >
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    data-shik-summary="collectionCurrent"
+                                >
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    data-shik-summary="collectionOther"
+                                >
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    data-shik-summary="collectionTotal"
+                                    readonly
+                                >
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>૫</td>
+                            <td>ખરેખર વસુલ</td>
+                            <td colspan="3"></td>
+                            <td>
+                                <input
+                                    type="text"
+                                    data-shik-summary="actualCollection"
+                                    readonly
+                                >
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>૬</td>
+                            <td>જાહેર વસુલ</td>
+                            <td colspan="3"></td>
+                            <td>
+                                <input
+                                    type="text"
+                                    data-shik-summary="publicCollection"
+                                    readonly
+                                >
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>૭</td>
+                            <td>બિન હુકમી બાકી</td>
+                            <td colspan="3"></td>
+                            <td>
+                                <input
+                                    type="text"
+                                    data-shik-summary="unauthorizedOutstanding"
+                                    readonly
+                                >
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>૮</td>
+                            <td>ફાજલ</td>
+                            <td colspan="3"></td>
+                            <td>
+                                <input
+                                    type="text"
+                                    data-shik-summary="surplus"
+                                    readonly
+                                >
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                    <tfoot>
+
+                        <tr class="summaryGrandTotalRow">
+
+                            <td colspan="5">
+                                કુલ એકંદર
+                            </td>
+
+                            <td>
+                                <input
+                                    type="text"
+                                    id="shikshanupakaranSummaryGrandTotal"
+                                    readonly
+                                >
+                            </td>
+
+                        </tr>
+
+                    </tfoot>
+
+                </table>
+
+            </div>
+
+
+            <!-- ADDITIONAL DYNAMIC SECTION -->
+            <section class="summaryDynamicSection">
+
+                <div class="summarySubsectionHeader">
+                    <h4>વધારાની વિગતો</h4>
+                </div>
+
+                <table
+                    id="shikshanupakaranSummaryAdditionalTable"
+                    class="summaryTable dynamicSummaryTable"
+                >
+
+                    <thead>
+
+                        <tr>
+                            <th>અ.નં.</th>
+                            <th>વિગત</th>
+                            <th>રકમ</th>
+                            <th class="editorOnlyColumn">
+                                ક્રિયા
+                            </th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="shikshanupakaranSummaryAdditionalBody">
+                        <!-- Dynamic rows -->
+                    </tbody>
+
+                </table>
+
+                <button
+                    type="button"
+                    id="addShikshanupakaranSummaryAdditionalButton"
+                    class="summaryAddRowButton"
+                >
+                    + નવી લાઇન ઉમેરો
+                </button>
+
+            </section>
+
+
+            <!-- NOTES -->
+            <section class="summaryNotesSection">
+
+                <div class="summarySubsectionHeader">
+                    <h4>શેરો / નોંધ</h4>
+                </div>
+
+                <textarea
+                    id="shikshanupakaranSummaryNotes"
+                    rows="4"
+                    placeholder="જરૂરી નોંધ લખો..."
+                ></textarea>
+
+            </section>
+
+
+            <!-- SIGNATURES -->
+            <section class="summaryCertificationSection">
+
+                <div class="summarySignatureGrid">
+
+                    <div class="summarySignatureField">
+                        <span>તૈયાર કરનાર</span>
+                        <div class="signatureLine"></div>
+                    </div>
+
+                    <div class="summarySignatureField">
+                        <span>તપાસનાર</span>
+                        <div class="signatureLine"></div>
+                    </div>
+
+                    <div class="summarySignatureField">
+                        <span>મંજુર કરનાર</span>
+                        <div class="signatureLine"></div>
+                    </div>
+
+                </div>
+
+                <div class="summaryRegisterNumber">
+
+                    <label for="shikshanupakaranSummaryRegisterNumber">
+                        સિક્કા રજીસ્ટર નંબર :
+                    </label>
+
+                    <input
+                        type="text"
+                        id="shikshanupakaranSummaryRegisterNumber"
+                    >
+
+                </div>
+
+                <p class="summaryCertificationParagraph">
+                    આ તારીજમાં દર્શાવેલ હિસાબ તથા વસુલાત સંબંધિત વિગતો
+                    રજીસ્ટર અને ઉપલબ્ધ રેકોર્ડના આધારે તૈયાર કરવામાં આવેલ છે.
+                </p>
+
+            </section>
+
+        </section>
+
+    </section>
+
+</section>
+

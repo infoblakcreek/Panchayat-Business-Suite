@@ -1,0 +1,604 @@
+/* ============================================================
+   TALAPATRAK SUMMARY
+   Blue / Indigo theme
+   Light + Dark
+   ============================================================ */
+
+.talapatrakSummaryView {
+    --summary-primary: #6366f1;
+    --summary-primary-dark: #4f46e5;
+    --summary-blue: #3b82f6;
+    --summary-purple: #8b5cf6;
+    --summary-cyan: #06b6d4;
+
+    --summary-bg: #f5f7ff;
+    --summary-card: #ffffff;
+    --summary-surface: #ffffff;
+    --summary-text: #1e293b;
+    --summary-muted: #64748b;
+    --summary-border: #e2e8f0;
+
+    --summary-header-bg: linear-gradient(
+        135deg,
+        #6366f1,
+        #8b5cf6
+    );
+
+    --summary-soft: #eef2ff;
+    --summary-soft-border: #c7d2fe;
+
+    --summary-shadow:
+        0 12px 35px rgba(79, 70, 229, 0.08);
+
+    width: 100%;
+    min-height: 100%;
+    padding: 24px;
+    box-sizing: border-box;
+    background: var(--summary-bg);
+    color: var(--summary-text);
+}
+
+/* DARK THEME */
+body.dark-theme .talapatrakSummaryView,
+[data-theme="dark"] .talapatrakSummaryView {
+    --summary-primary: #8b7cff;
+    --summary-primary-dark: #6d5dfc;
+    --summary-blue: #6366f1;
+    --summary-purple: #a855f7;
+    --summary-cyan: #22d3ee;
+
+    --summary-bg: #17152b;
+    --summary-card: #211d3a;
+    --summary-surface: #282242;
+    --summary-text: #f8fafc;
+    --summary-muted: #b4b0c8;
+    --summary-border: rgba(167,139,250,0.20);
+
+    --summary-header-bg: linear-gradient(
+        135deg,
+        #6d5dfc,
+        #a855f7
+    );
+
+    --summary-soft: rgba(139,124,255,0.12);
+    --summary-soft-border: rgba(167,139,250,0.30);
+
+    --summary-shadow:
+        0 18px 45px rgba(0,0,0,0.35);
+}
+
+
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+
+.talapatrakSummaryTopBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+
+    padding: 22px 26px;
+    margin-bottom: 24px;
+
+    background: var(--summary-card);
+    border: 1px solid var(--summary-border);
+    border-radius: 18px;
+    box-shadow: var(--summary-shadow);
+}
+
+.talapatrakSummaryTopBar .summaryTitleArea h1 {
+    margin: 0;
+    color: var(--summary-primary);
+    font-size: 26px;
+    font-weight: 800;
+}
+
+.talapatrakSummaryTopBar .summaryTitleArea p {
+    margin: 5px 0 0;
+    color: var(--summary-muted);
+    font-size: 14px;
+}
+
+.summaryActions {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.summarySearchGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.summarySearchGroup label {
+    color: var(--summary-muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.summarySearchGroup input {
+    width: 230px;
+    min-height: 42px;
+    padding: 9px 13px;
+
+    border: 1px solid var(--summary-border);
+    border-radius: 10px;
+
+    background: var(--summary-surface);
+    color: var(--summary-text);
+
+    outline: none;
+    box-sizing: border-box;
+}
+
+.summarySearchGroup input:focus {
+    border-color: var(--summary-primary);
+    box-shadow: 0 0 0 4px rgba(99,102,241,0.10);
+}
+
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.summaryButton,
+.summaryAddRowButton {
+    border: 0;
+    border-radius: 10px;
+    min-height: 42px;
+    padding: 9px 17px;
+
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+
+    transition:
+        transform .15s ease,
+        box-shadow .15s ease,
+        opacity .15s ease;
+}
+
+.summaryButton:hover,
+.summaryAddRowButton:hover {
+    transform: translateY(-1px);
+}
+
+.summaryButton.primary,
+.summaryButton.generateTotal {
+    color: #ffffff;
+    background: linear-gradient(
+        135deg,
+        var(--summary-primary),
+        var(--summary-purple)
+    );
+
+    box-shadow:
+        0 7px 18px rgba(99,102,241,0.24);
+}
+
+.summaryButton.secondary {
+    color: var(--summary-primary);
+    background: var(--summary-soft);
+    border: 1px solid var(--summary-soft-border);
+}
+
+.summaryAddRowButton {
+    margin-top: 12px;
+    color: var(--summary-primary);
+    background: var(--summary-soft);
+    border: 1px solid var(--summary-soft-border);
+}
+
+
+/* ============================================================
+   RECORDS
+   ============================================================ */
+
+.summaryRecordsSection,
+.summaryEditor {
+    width: 100%;
+}
+
+.summaryRecordsSection {
+    padding: 22px;
+    margin-bottom: 24px;
+
+    background: var(--summary-card);
+    border: 1px solid var(--summary-border);
+    border-radius: 18px;
+    box-shadow: var(--summary-shadow);
+}
+
+.summarySectionHeader h2 {
+    margin: 0 0 16px;
+    color: var(--summary-text);
+    font-size: 20px;
+}
+
+.summaryRecordList {
+    display: grid;
+    gap: 10px;
+}
+
+.summaryRecordItem {
+    padding: 15px 17px;
+
+    background: var(--summary-surface);
+    border: 1px solid var(--summary-border);
+    border-radius: 12px;
+
+    cursor: pointer;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.summaryRecordItem:hover {
+    border-color: var(--summary-primary);
+    box-shadow: 0 6px 18px rgba(99,102,241,0.10);
+}
+
+
+/* ============================================================
+   EDITOR HEADER
+   ============================================================ */
+
+.summaryEditorHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+
+    padding: 20px 24px;
+    margin-bottom: 18px;
+
+    color: #ffffff;
+    background: var(--summary-header-bg);
+
+    border-radius: 16px;
+    box-shadow: var(--summary-shadow);
+}
+
+.summaryEditorTitle h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.summaryEditorTitle span {
+    display: inline-block;
+    margin-top: 5px;
+    font-size: 12px;
+    opacity: .85;
+}
+
+.summaryEditorActions {
+    display: flex;
+    gap: 10px;
+}
+
+
+/* ============================================================
+   INFO CARD
+   ============================================================ */
+
+.summaryInfoCard {
+    padding: 20px;
+    margin-bottom: 20px;
+
+    background: var(--summary-card);
+    border: 1px solid var(--summary-border);
+    border-radius: 16px;
+    box-shadow: var(--summary-shadow);
+}
+
+.summaryInfoGrid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.summaryInfoField {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.summaryInfoField label {
+    color: var(--summary-muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.summaryInfoField input {
+    width: 100%;
+    min-height: 40px;
+    padding: 8px 11px;
+
+    box-sizing: border-box;
+    border: 1px solid var(--summary-border);
+    border-radius: 9px;
+
+    background: var(--summary-surface);
+    color: var(--summary-text);
+}
+
+
+/* ============================================================
+   DOCUMENT SECTION
+   ============================================================ */
+
+.summaryDocumentSection {
+    padding: 24px;
+    margin-bottom: 24px;
+
+    background: var(--summary-card);
+    border: 1px solid var(--summary-border);
+    border-radius: 18px;
+    box-shadow: var(--summary-shadow);
+}
+
+.summaryDocumentHeader {
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--summary-soft-border);
+}
+
+.summaryDocumentHeader h3 {
+    margin: 0;
+    color: var(--summary-primary);
+    text-align: center;
+    font-size: 19px;
+    line-height: 1.5;
+}
+
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+
+.summaryTableWrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.summaryTable {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    color: var(--summary-text);
+}
+
+.summaryTable th {
+    padding: 10px 7px;
+
+    color: #ffffff;
+    background: var(--summary-primary);
+
+    border: 1px solid var(--summary-primary-dark);
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.summaryTable td {
+    padding: 7px;
+
+    background: var(--summary-surface);
+    border: 1px solid var(--summary-border);
+
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.summaryTable tbody tr:nth-child(even) td {
+    background: var(--summary-soft);
+}
+
+.summaryTable input,
+.summaryTable textarea {
+    width: 100%;
+    box-sizing: border-box;
+
+    border: 1px solid transparent;
+    border-radius: 6px;
+
+    padding: 6px 7px;
+
+    background: transparent;
+    color: var(--summary-text);
+
+    font: inherit;
+}
+
+.summaryTable input:focus,
+.summaryTable textarea:focus {
+    outline: none;
+    border-color: var(--summary-primary);
+    background: var(--summary-surface);
+}
+
+.summaryGrandTotalRow td {
+    background: var(--summary-soft) !important;
+    color: var(--summary-primary);
+    font-weight: 800;
+}
+
+
+/* ============================================================
+   ACCOUNTING / DYNAMIC SECTIONS
+   ============================================================ */
+
+.summaryAccountingSection {
+    margin-top: 22px;
+}
+
+.summaryAccountingTable td:first-child {
+    width: 72%;
+    font-weight: 600;
+}
+
+.summaryAccountingTable td:last-child {
+    width: 28%;
+}
+
+.summaryAccountingTable .sectionDivider td {
+    color: var(--summary-primary);
+    background: var(--summary-soft) !important;
+    font-weight: 800;
+}
+
+.summaryDynamicSection {
+    margin-top: 24px;
+}
+
+.summarySubsectionHeader {
+    margin-bottom: 10px;
+}
+
+.summarySubsectionHeader h4 {
+    margin: 0;
+    color: var(--summary-primary);
+    font-size: 16px;
+}
+
+.editorOnlyColumn {
+    width: 75px;
+}
+
+.summaryCertificationSection {
+    margin-top: 28px;
+}
+
+.summaryVerificationText {
+    color: var(--summary-muted);
+}
+
+.summarySignatureGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 35px;
+}
+
+.summarySignatureField {
+    color: var(--summary-muted);
+    text-align: center;
+    font-size: 13px;
+}
+
+.signatureLine {
+    height: 1px;
+    margin-top: 35px;
+    background: var(--summary-border);
+}
+
+.summaryShareSection,
+.summaryRegisterNumber {
+    margin-top: 24px;
+}
+
+.summaryShareSection label,
+.summaryRegisterNumber label {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--summary-muted);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.summaryShareSection textarea,
+.summaryRegisterNumber input,
+.summaryNotesSection textarea {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 10px;
+
+    border: 1px solid var(--summary-border);
+    border-radius: 9px;
+
+    background: var(--summary-surface);
+    color: var(--summary-text);
+
+    font: inherit;
+}
+
+.summaryCertificationParagraph {
+    margin-top: 28px;
+    color: var(--summary-muted);
+    line-height: 1.7;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 900px) {
+    .talapatrakSummaryTopBar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .summaryInfoGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .summarySignatureGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .talapatrakSummaryView {
+        padding: 12px;
+    }
+
+    .summaryInfoGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .summaryActions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .summarySearchGroup input {
+        width: 100%;
+    }
+}
+
+
+/* ============================================================
+   PRINT
+   Editor controls disappear.
+   Summary pages themselves will be handled by JS print logic.
+   ============================================================ */
+
+@media print {
+    .talapatrakSummaryView {
+        padding: 0;
+        background: #ffffff;
+    }
+
+    .summaryTopBar,
+    .summaryRecordsSection,
+    .summaryEditorHeader,
+    .summaryAddRowButton,
+    .editorOnlyColumn {
+        display: none !important;
+    }
+
+    .summaryEditor,
+    .summaryInfoCard,
+    .summaryDocumentSection {
+        box-shadow: none !important;
+        border: 0 !important;
+    }
+
+    .summaryDocumentSection {
+        margin: 0;
+        padding: 0;
+    }
+}

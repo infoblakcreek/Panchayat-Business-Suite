@@ -201,6 +201,11 @@ async function loadPanchayatApplication() {
         );
 
 
+        await loadAppScript(
+            "summary/summary-loader.js"
+        );
+
+
         console.log(
             "========================================"
         );
