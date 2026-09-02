@@ -3385,9 +3385,9 @@ function prepareShikshanupakaranPrint(sourceRows) {
             pageRows,
             pageNumber + 1,
             container,
-            table
+            table,
+            totalPages
         );
-
     }
 
 }
@@ -3405,9 +3405,9 @@ function createShikshanupakaranPrintPage(
     sourceRows,
     pageNumber,
     container,
-    originalTable
+    originalTable,
+    totalPages
 ){
-
     /*
         ========================================================
         CREATE PRINT PAGE
@@ -3898,6 +3898,52 @@ function createShikshanupakaranPrintPage(
         );
 
     });
+
+
+    /*
+        ========================================================
+        ADD TABLE
+        ========================================================
+    */
+    /*
+        ========================================================
+        GRAND TOTAL — ONLY ON FINAL PAGE
+        ========================================================
+    */
+
+    const printTotalFooter =
+        printTable.querySelector(
+            "#shikshanupakaranTotalFooter"
+        );
+
+
+    if (
+        printTotalFooter &&
+        pageNumber === totalPages
+    ) {
+
+        const totalRow =
+            printTotalFooter.querySelector(
+                "tr"
+            );
+
+
+        if (totalRow) {
+
+            printTbody.appendChild(
+                totalRow
+            );
+
+        }
+
+    }
+
+
+    if (printTotalFooter) {
+
+        printTotalFooter.remove();
+
+    }
 
 
     /*
@@ -12080,6 +12126,76 @@ function syncCurrentShikshanupakaranPageToMemory() {
 /* ======================================================================================================================== */
 
 
+
+/* ============================================================
+   GUJARATI NUMBER → ENGLISH NUMBER
+============================================================ */
+
+function parseShikshanupakaranNumber(
+    value
+) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        value === ""
+    ) {
+
+        return 0;
+
+    }
+
+
+    const gujaratiDigits = {
+
+        "૦": "0",
+        "૧": "1",
+        "૨": "2",
+        "૩": "3",
+        "૪": "4",
+        "૫": "5",
+        "૬": "6",
+        "૭": "7",
+        "૮": "8",
+        "૯": "9"
+
+    };
+
+
+    const normalizedValue =
+        String(value)
+            .replace(
+                /[૦-૯]/g,
+                function(digit) {
+
+                    return gujaratiDigits[digit];
+
+                }
+            )
+            .replace(
+                /,/g,
+                ""
+            )
+            .trim();
+
+
+    const numberValue =
+        Number(normalizedValue);
+
+
+    if (
+        Number.isNaN(numberValue)
+    ) {
+
+        return 0;
+
+    }
+
+
+    return numberValue;
+
+}
+
 function generateShikshanupakaranTotal() {
 
     /*
@@ -12143,9 +12259,7 @@ function generateShikshanupakaranTotal() {
                 function(column){
 
                     const value =
-                        Number(
-                            rowData[column]
-                        ) || 0;
+                        parseShikshanupakaranNumber(rowData[column]);
 
 
                     totals[column] +=
@@ -12225,6 +12339,16 @@ if (
 
 
             generateShikshanupakaranTotal();
+
+
+            if (
+                window.shikshanupakaranSummary &&
+                typeof window.shikshanupakaranSummary.generate === "function"
+            ) {
+
+                window.shikshanupakaranSummary.generate();
+
+            }
 
         }
     );
@@ -12447,8 +12571,12 @@ function renderShikshanupakaranTotal() {
 
                 cell.textContent =
                     Number.isFinite(value)
-                        ? value.toFixed(2)
-                        : "0.00";
+                        ? convertToGujaratiDigits(
+                            value.toFixed(2)
+                        )
+                        : convertToGujaratiDigits(
+                            "0.00"
+                        );
 
             }
 
@@ -15193,6 +15321,15 @@ function initializeShikshanupakaranYearChangeHandler() {
     };
 
 }
+
+
+
+
+
+
+
+
+
 
 
 
