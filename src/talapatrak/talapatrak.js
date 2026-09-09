@@ -11141,24 +11141,27 @@ function prepareTalapatrakPrint(sourceRows) {
 
 
     /* ========================================================
-       GLOBAL ROW NUMBER
-    ======================================================== */
+        PRESERVE COLUMN A EXACTLY AS IT EXISTS IN EDITOR
 
-    allRows =
-        allRows.map(
-            function(row, index) {
+        IMPORTANT:
+        Do NOT auto-generate or overwrite Column A.
 
-                return {
+        Whatever value exists in the Talapatrak editor memory
+        must be printed exactly.
+        ======================================================== */
 
-                    ...row,
+        allRows =
+            allRows.map(
+                function(row) {
 
-                    A:
-                        index + 1
+                    return {
 
-                };
+                        ...row
 
-            }
-        );
+                    };
+
+                }
+            );
 
 
     console.log(
@@ -11626,6 +11629,30 @@ function createTalapatrakPrintPage(
             }
 
 
+            /* ======================================================
+            VERIFY COLUMN A EXISTS
+            ====================================================== */
+
+            if (
+                !Object.prototype.hasOwnProperty.call(
+                    rowData,
+                    "A"
+                )
+            ) {
+
+                console.warn(
+                    "⚠️ PRINT ROW IS MISSING COLUMN A",
+                    {
+                        pageNumber: pageNumber,
+                        rowIndex: rowIndex,
+                        rowData: rowData
+                    }
+                );
+
+            }
+
+
+
             console.log(
                 "TALAPATRAK PRINT ROW DATA:",
                 rowData
@@ -11658,9 +11685,9 @@ function createTalapatrakPrintPage(
                     let value = "";
 
 
-                    /* ------------------------------------------
-                       READ MEMORY VALUE
-                    ------------------------------------------ */
+                    /* ======================================================
+                    READ EXACT VALUE FROM MEMORY
+                    ====================================================== */
 
                     if (
                         Object.prototype.hasOwnProperty.call(
@@ -11669,38 +11696,62 @@ function createTalapatrakPrintPage(
                         )
                     ) {
 
-                        value =
-                            rowData[column];
+                        value = rowData[column];
 
                     }
 
 
-                    /* ------------------------------------------
-                       LOWERCASE FALLBACK
-                    ------------------------------------------ */
+                    /* ======================================================
+                    LOWERCASE FALLBACK
+                    ====================================================== */
 
                     if (
-                        value === undefined ||
-                        value === null
+                        (
+                            value === undefined ||
+                            value === null
+                        ) &&
+                        Object.prototype.hasOwnProperty.call(
+                            rowData,
+                            column.toLowerCase()
+                        )
                     ) {
 
-                        const lowerColumn =
-                            column.toLowerCase();
+                        value =
+                            rowData[
+                                column.toLowerCase()
+                            ];
+
+                    }
 
 
-                        if (
-                            Object.prototype.hasOwnProperty.call(
-                                rowData,
-                                lowerColumn
-                            )
-                        ) {
+                    /* ======================================================
+                    COLUMN A — PRINT EXACT EDITOR/MEMORY VALUE
 
-                            value =
-                                rowData[
-                                    lowerColumn
-                                ];
+                    IMPORTANT:
+                    Do NOT use:
+                    rowIndex
+                    pageNumber
+                    globalIndex
+                    + 1
 
-                        }
+                    Whatever is stored in Column A must print exactly.
+                    ====================================================== */
+
+                    if (
+                        column === "A"
+                    ) {
+
+                        console.log(
+                            "PRINT COLUMN A →",
+                            "Page:",
+                            pageNumber,
+                            "Row on page:",
+                            rowIndex,
+                            "Exact memory value:",
+                            value,
+                            "Full row:",
+                            rowData
+                        );
 
                     }
 
