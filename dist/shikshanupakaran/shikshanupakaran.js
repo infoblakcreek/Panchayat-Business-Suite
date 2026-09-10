@@ -9050,9 +9050,7 @@ function calculateShikshanupakaranRow(row) {
       
               el.value =
                 convertToGujaratiDigits(
-                    roundGeneratedValueToFivePaise(
-                        value
-                    ).toFixed(2)
+                    value.toFixed(2)
                 );
       
           }
@@ -12319,24 +12317,34 @@ function generateShikshanupakaranTotal() {
 
 
     /*
+        Grand M must equal:
+        Grand J + Grand K + Grand L.
+    */
+
+    totals.M =
+        Number(
+            (
+                totals.J +
+                totals.K +
+                totals.L
+            ).toFixed(2)
+        );
+
+
+    /*
         Grand G must equal:
         Grand C + Grand D + Grand E + Grand F.
     */
 
     totals.G =
-    Number(
-        (
-            Math.ceil(
-                (
-                    totals.C +
-                    totals.D +
-                    totals.E +
-                    totals.F
-                ) * 20
-            ) / 20
-        ).toFixed(2)
-    );
-
+        Number(
+            (
+                totals.C +
+                totals.D +
+                totals.E +
+                totals.F
+            ).toFixed(2)
+        );
 
     /*
         Store generated totals.
@@ -15533,6 +15541,11 @@ function initializeShikshanupakaranYearChangeHandler() {
     };
 
 }
+
+
+
+
+
 
 
 
