@@ -12263,54 +12263,40 @@ function generateShikshanupakaranTotal() {
             }
 
 
-            totalColumns.forEach(
-                    function(column){
+            /*
+                Grand G is calculated later
+                from Grand C + D + E + F.
+            */
 
-                        if (column === "G") {
+            [
+                "C",
+                "D",
+                "E",
+                "F",
+                "J",
+                "K",
+                "L",
+                "M",
+                "N",
+                "O",
+                "P",
+                "Q",
+                "R",
+                "S"
+            ].forEach(
+                function(column){
 
-                            const C =
-                                parseShikshanupakaranNumber(
-                                    rowData.C
-                                );
-
-                            const D =
-                                parseShikshanupakaranNumber(
-                                    rowData.D
-                                );
-
-                            const E =
-                                parseShikshanupakaranNumber(
-                                    rowData.E
-                                );
-
-                            const F =
-                                parseShikshanupakaranNumber(
-                                    rowData.F
-                                );
-
-                            totals.G +=
-                                roundGeneratedValueToFivePaise(
-                                    C +
-                                    D +
-                                    E +
-                                    F
-                                );
-
-                            return;
-                        }
+                    const value =
+                        parseShikshanupakaranNumber(
+                            rowData[column]
+                        );
 
 
-                        const value =
-                            parseShikshanupakaranNumber(
-                                rowData[column]
-                            );
+                    totals[column] +=
+                        value;
 
-
-                        totals[column] +=
-                            value;
-
-                    }
-                );
+                }
+            );
 
         }
     );
@@ -12329,6 +12315,26 @@ function generateShikshanupakaranTotal() {
                 );
 
         }
+    );
+
+
+    /*
+        Grand G must equal:
+        Grand C + Grand D + Grand E + Grand F.
+    */
+
+    totals.G =
+    Number(
+        (
+            Math.ceil(
+                (
+                    totals.C +
+                    totals.D +
+                    totals.E +
+                    totals.F
+                ) * 20
+            ) / 20
+        ).toFixed(2)
     );
 
 
@@ -12356,10 +12362,7 @@ function generateShikshanupakaranTotal() {
         totals
     );
 
-}
-
-
-/* ============================================================
+}/* ============================================================
    GENERATE TOTAL BUTTON
 ============================================================ */
 
@@ -15530,6 +15533,9 @@ function initializeShikshanupakaranYearChangeHandler() {
     };
 
 }
+
+
+
 
 
 
