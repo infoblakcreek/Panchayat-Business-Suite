@@ -1,4 +1,4 @@
-       <!-- ==========================================
+﻿       <!-- ==========================================
                 SHIKSHANUPAKARAN MANAGEMENT VIEW
         ================================================ -->
         
@@ -986,6 +986,17 @@
         
         
         
+
+                <!-- ============================================================
+                     SHIKSHANUPAKARAN SUMMARY PAGE MOUNT
+                     Separate from normal data pagination
+                ============================================================= -->
+                <div
+                    id="shikshanupakaranSummaryPageMount"
+                    class="shikshanupakaranSummaryPageMount"
+                    style="display:none;">
+                </div>
+
                 </div>
         
         
@@ -997,8 +1008,8 @@
 
 
 
-        <!-- ============================================================
-     SHIKSHANUPAKARAN CREATE CONFIRMATION MODAL
+<!-- ============================================================
+    SHIKSHANUPAKARAN → TALAPATRAK CREATE & SYNC MODAL
 ============================================================ -->
 
 <div
@@ -1007,10 +1018,7 @@
     aria-hidden="true"
 >
 
-    <div
-        class="shikshanupakaranCreateOverlay">
-    </div>
-
+    <div class="shikshanupakaranCreateOverlay"></div>
 
     <div
         class="shikshanupakaranCreateDialog"
@@ -1019,31 +1027,22 @@
         aria-labelledby="shikshanupakaranCreateTitle"
     >
 
-        <div
-            class="shikshanupakaranCreateIcon"
-        >
-
+        <div class="shikshanupakaranCreateIcon">
             <i class="fa-solid fa-table-list"></i>
-
         </div>
 
+        <div class="shikshanupakaranCreateContent">
 
-        <div
-            class="shikshanupakaranCreateContent"
-        >
-
-            <h3
-                id="shikshanupakaranCreateTitle"
-            >
-                Create Shikshanupakaran card?
+            <h3 id="shikshanupakaranCreateTitle">
+                Create Talapatrak card?
             </h3>
 
-
             <p>
-                No Shikshanupakaran card exists for
+                No Talapatrak card exists for
                 <strong id="shikshanupakaranCreateVillage">
                     —
                 </strong>
+
                 <span>
                     (
                     <strong id="shikshanupakaranCreateYear">
@@ -1053,40 +1052,38 @@
                 </span>.
             </p>
 
-
-            <p
-                class="shikshanupakaranCreateNote"
-            >
+            <p class="shikshanupakaranCreateNote">
                 Would you like to create a new card
-                and sync it with this Talapatrak?
+                and sync it with this Shikshanupakaran?
             </p>
 
         </div>
 
-
-        <div
-            class="shikshanupakaranCreateActions"
-        >
+        <div class="shikshanupakaranCreateActions">
 
             <button
                 type="button"
-                id="shikshanupakaranCreateCancel"
-                class="shikshanupakaranCreateCancel"
+                id="shikshanupakaranCreateNotNow"
+                class="shikshanupakaranCreateNotNow"
             >
-                Cancel
+                Not Now
             </button>
 
+            <button
+                type="button"
+                id="shikshanupakaranCreateNever"
+                class="shikshanupakaranCreateNever"
+            >
+                Never
+            </button>
 
             <button
                 type="button"
                 id="shikshanupakaranCreateConfirm"
                 class="shikshanupakaranCreateConfirm"
             >
-
-                <i class="fa-solid fa-plus"></i>
-
+                <i class="fa-solid fa-arrows-rotate"></i>
                 Create & Sync
-
             </button>
 
         </div>
@@ -1286,6 +1283,97 @@
 </div>
 
 
+<!-- ============================================================
+     SHIKSHANUPAKARAN YEAR CHANGE CONFIRMATION MODAL
+============================================================ -->
+
+<div
+    id="shikshanupakaranYearChangeModal"
+    class="shikshanupakaranYearChangeModal"
+    aria-hidden="true"
+>
+
+    <div
+        class="shikshanupakaranYearChangeOverlay">
+    </div>
+
+
+    <div
+        class="shikshanupakaranYearChangeDialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="shikshanupakaranYearChangeTitle"
+    >
+
+        <div
+            class="shikshanupakaranYearChangeIcon">
+
+            <i class="fa-solid fa-calendar-days"></i>
+
+        </div>
+
+
+        <div
+            class="shikshanupakaranYearChangeContent"
+        >
+
+            <h3
+                id="shikshanupakaranYearChangeTitle"
+            >
+                Change financial year?
+            </h3>
+
+
+            <p>
+                You are changing this Shikshanupakaran from
+
+                <strong id="shikshanupakaranOldYearText">
+                    —
+                </strong>
+
+                to
+
+                <strong id="shikshanupakaranNewYearText">
+                    —
+                </strong>.
+            </p>
+
+
+            <p class="shikshanupakaranYearChangeNote">
+                This will update the existing card.
+                It will not create a separate card.
+            </p>
+
+        </div>
+
+
+        <div
+            class="shikshanupakaranYearChangeActions"
+        >
+
+            <button
+                type="button"
+                id="shikshanupakaranYearChangeCancel"
+                class="shikshanupakaranYearChangeCancel"
+            >
+                Cancel
+            </button>
+
+
+            <button
+                type="button"
+                id="shikshanupakaranYearChangeConfirm"
+                class="shikshanupakaranYearChangeConfirm"
+            >
+                <i class="fa-solid fa-check"></i>
+                Yes, update year
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 
 
 
@@ -1347,7 +1435,7 @@
 
     margin: 0 20px !important;
 
-    padding: 0 30px 15mm 30px !important;
+    padding: 40px 40px 15mm 40px !important;
 
     box-sizing: border-box !important;
 
@@ -1375,7 +1463,7 @@
 
     min-width: 0 !important;
 
-    margin: 0 !important;
+    margin: 6mm 0 0 0 !important;
 
     padding: 0 !important;
 
@@ -1459,7 +1547,7 @@
 
     font-weight: 700 !important;
 
-    line-height: 1.15 !important;
+    line-height: 1.20 !important;
 
     text-align: center !important;
 
@@ -1499,7 +1587,7 @@
 
     font-size: 12px !important;
 
-    line-height: 1.15 !important;
+    line-height: 1.20 !important;
 
     text-align: center !important;
 
@@ -1809,6 +1897,8 @@
 
 /* ============================================================
    PRINT FOOTER
+   ALWAYS STICK TO PHYSICAL PAGE BOTTOM
+   INDEPENDENT OF TABLE / CONTENT
    ============================================================ */
 
 .shikshanupakaranPrintFooter {
@@ -1816,27 +1906,28 @@
     position: absolute !important;
 
     left: 0 !important;
+
     right: 0 !important;
 
-    /*
-       Footer is kept INSIDE the print-page flow.
-       Do not use mm-based top/bottom positioning.
-    */
     bottom: 0 !important;
 
     width: 100% !important;
 
-    height: 5mm !important;
+    height: 6mm !important;
+
+    bottom: 2mm !important;
 
     margin: 0 !important;
+
     padding: 0 !important;
 
     display: flex !important;
 
-    align-items: center !important;
+    align-items: flex-end !important;
+
     justify-content: center !important;
 
-    z-index: 100 !important;
+    z-index: 9999 !important;
 
     opacity: 1 !important;
 
@@ -1845,6 +1936,9 @@
     background: transparent !important;
 
     pointer-events: none !important;
+
+
+    box-sizing: border-box !important;
 
 }
 
@@ -1890,18 +1984,6 @@
 
 }
 
-/* ============================================================
-   TABLE STAYS ABOVE / CAN OVERLAP FOOTER
-   ============================================================ */
-
-.shikshanupakaranPrintPage > .shikshanupakaranPrintTable {
-
-    position: relative !important;
-
-    z-index: 1 !important;
-
-}
-
 
 
 /* ============================================================
@@ -1914,7 +1996,7 @@
     #addShikshanupakaranRow,
     #generateShikshanupakaranTotalButton {
 
-        display: none !important;`11F
+        display: none !important;
 
     }
 
@@ -1954,6 +2036,14 @@
 
 }
 
+.shikshanupakaranPrintTable tbody td:nth-child(2) {
+    text-align: left !important;
+}
+
+.shikshanupakaranPrintTable tbody td:nth-child(2) input,
+.shikshanupakaranPrintTable tbody td:nth-child(2) textarea {
+    text-align: left !important;
+}
 
 /* ============================================================
    END

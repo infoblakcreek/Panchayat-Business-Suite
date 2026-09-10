@@ -70,6 +70,109 @@
 
 
     /* ========================================================
+       RENDER SUMMARY PAGE INSIDE SHIKSHANUPAKARAN PAGINATION
+       ======================================================== */
+
+    function renderShikshanupakaranSummaryPage() {
+
+        const mount =
+            document.getElementById(
+                "shikshanupakaranSummaryPageMount"
+            );
+
+        const editor =
+            getShikshanupakaranSummaryEditor();
+
+        if (!mount || !editor) {
+
+            console.warn(
+                "Shikshanupakaran summary editor or mount not found."
+            );
+
+            return false;
+
+        }
+
+        populateSummaryHeader();
+
+        const totalsReady =
+            populateSummaryTotals();
+
+        if (!totalsReady) {
+
+            console.warn(
+                "Shikshanupakaran summary totals are not ready."
+            );
+
+            return false;
+
+        }
+
+        mount.innerHTML = "";
+
+        const summaryPage =
+            editor.cloneNode(true);
+
+        summaryPage.hidden = false;
+        summaryPage.style.display = "block";
+
+        summaryPage.removeAttribute("id");
+
+        summaryPage
+            .querySelectorAll("[id]")
+            .forEach(function(element) {
+
+                element.removeAttribute("id");
+
+            });
+
+        summaryPage
+            .querySelectorAll("button")
+            .forEach(function(button) {
+
+                button.remove();
+
+            });
+
+        summaryPage
+            .querySelectorAll(
+                "input, textarea, select"
+            )
+            .forEach(function(element) {
+
+                const value =
+                    element.value || "";
+
+                const span =
+                    document.createElement("span");
+
+                span.textContent =
+                    value;
+
+                span.className =
+                    "shikshanupakaranSummaryPageValue";
+
+                element.replaceWith(span);
+
+            });
+
+        mount.appendChild(
+            summaryPage
+        );
+
+        mount.style.display =
+            "block";
+
+        console.log(
+            "SHIKSHANUPAKARAN SUMMARY PAGE RENDERED INSIDE PAGINATION"
+        );
+
+        return true;
+
+    }
+
+
+    /* ========================================================
        READ CURRENT SOURCE INFORMATION
        ======================================================== */
 
@@ -550,6 +653,10 @@
 
         generate:
             generateSummary,
+
+
+        renderPage:
+            renderShikshanupakaranSummaryPage,
 
         createPrintPages:
             createPrintPages

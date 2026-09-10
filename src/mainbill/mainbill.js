@@ -2685,7 +2685,7 @@ body {
 
     #generatedMainBill .printHeaderRow {
 
-        border-bottom: 1px solid #d6d6d6 !important;
+        border-bottom: 1px solid #176B87  !important;
 
     }
 
@@ -2714,7 +2714,7 @@ body {
 
         font-weight: 700 !important;
 
-        color: #202020 !important;
+        color: #155E75  !important;
 
         white-space: normal !important;
 
@@ -2737,7 +2737,7 @@ body {
 
         letter-spacing: .7px;
 
-        color: #444 !important;
+        color: #2563A6  !important;
 
         white-space: normal !important;
 
@@ -2754,7 +2754,7 @@ body {
 
         line-height: 1.45 !important;
 
-        color: #666 !important;
+        color: #607D8B  !important;
 
         white-space: normal !important;
 
@@ -2802,7 +2802,7 @@ body {
 
         line-height: 1.4 !important;
 
-        color: #333 !important;
+        color: #D4A72C  !important;
 
         white-space: nowrap !important;
 
@@ -2831,6 +2831,8 @@ body {
         text-align: center;
 
         white-space: nowrap !important;
+
+        color: #176B87 !important;
 
     }
 
@@ -2864,9 +2866,9 @@ body {
 
         table-layout: auto !important;
 
-        background: #f8f8f8 !important;
+        background: #F4F8FB   !important;
 
-        border: 1px solid #dedede !important;
+        border: 1px solid #A9CDD8  !important;
 
         border-radius: 8px !important;
 
@@ -2885,7 +2887,7 @@ body {
 
         vertical-align: middle !important;
 
-        border-bottom: 1px solid #dedede !important;
+        border-bottom: 1px solid #C9E1E7 !important;
 
         min-width: 0 !important;
 
@@ -2916,7 +2918,7 @@ body {
 
         font-weight: 700 !important;
 
-        color: #202020 !important;
+        color: #176B87  !important;
 
     }
 
@@ -3032,11 +3034,11 @@ body {
 
     #generatedMainBill .innerItemTable th {
 
-        background: #f5f5f5 !important;
+        background: #176B87  !important;
 
-        border: 1px solid #bdbdbd !important;
+        border: 1px solid #176B87  !important;
 
-        color: #555 !important;
+        color: #FFFFFF  !important;
 
         font-size: 10px !important;
 
@@ -3051,7 +3053,7 @@ body {
 
     #generatedMainBill .innerItemTable td {
 
-        border: 1px solid #c8c8c8 !important;
+        border: 1px solid #C8DDE3  !important;
 
         font-size: 10px !important;
 
@@ -3059,7 +3061,7 @@ body {
 
         vertical-align: middle !important;
 
-        color: #202020 !important;
+        color: #263238  !important;
 
         word-break: normal !important;
 
@@ -3154,7 +3156,7 @@ body {
 
         vertical-align: middle !important;
 
-        border-bottom: 1px solid #dedede !important;
+        border-bottom: 1px solid #C9E1E7  !important;
 
         min-width: 0 !important;
 
@@ -3170,6 +3172,9 @@ body {
         margin-right: 7px !important;
 
         font-weight: 700 !important;
+
+        color: #176B87 !important;
+
 
     }
 
@@ -3217,11 +3222,13 @@ body {
 
         padding: 7px 12px !important;
 
-        border: 2px solid #202020 !important;
+        border: 2px solid #176B87  !important;
 
         border-radius: 6px !important;
 
-        background: #ffffff !important;
+        color: #155E75 !important;
+
+        background: #E8F4F7  !important;
 
         font-size: 18px !important;
 
@@ -3252,9 +3259,11 @@ body {
 
         box-sizing: border-box !important;
 
-        background: #f8f8f8 !important;
+        background: #F4F8FB  !important;
 
-        border: 1px solid #dedede !important;
+        border: 1px solid #A9CDD8  !important;
+
+        color: #176B87 !important;
 
         font-size: 10px !important;
 
@@ -3292,6 +3301,8 @@ body {
 
         width: 100% !important;
 
+        border-top: 2px solid #D4A72C !important;
+
     }
 
 
@@ -3306,6 +3317,8 @@ body {
         font-weight: 600 !important;
 
         min-width: 0 !important;
+
+        color: #455A64 !important;
 
         overflow: visible !important;
 

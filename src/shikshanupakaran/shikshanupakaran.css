@@ -9106,3 +9106,36 @@ body.shikshanupakaranFullViewMode
         var(--shikshanupakaran-primary-dark);
 
 }
+
+
+
+/* =================================================================================== */
+
+/* ============================================================
+   SHIKSHANUPAKARAN SUMMARY AS A FULL EDITOR PAGE
+============================================================ */
+
+.shikshanupakaranSummaryPageMount {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.shikshanupakaranSummaryPageMount > .summaryEditor {
+    width: 100%;
+    margin: 0;
+    padding: 28px;
+    box-sizing: border-box;
+    background: #ffffff;
+    border-radius: inherit;
+    box-shadow: inherit;
+}
+
+.shikshanupakaranSummaryPageMount[style*="display: block"] {
+    display: block !important;
+}
+
+.shikshanupakaranSummaryPageMount .summaryEditor {
+    min-height: 100%;
+}

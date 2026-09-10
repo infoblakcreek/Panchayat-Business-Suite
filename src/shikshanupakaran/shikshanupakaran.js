@@ -3388,19 +3388,29 @@ function prepareShikshanupakaranPrint(sourceRows) {
             table,
             totalPages
         );
+
     }
 
+    /* ========================================================
+       APPEND SUMMARY AFTER LAST DATA PAGE
+       ======================================================== */
+
+    if (
+        window.shikshanupakaranSummary &&
+        typeof window.shikshanupakaranSummary.createPrintPages ===
+            "function"
+    ) {
+        window.shikshanupakaranSummary.createPrintPages(
+            container,
+            totalPages + 1
+        );
+    }
 }
-
-
-
-
 /* ============================================================
    CREATE ONE SHIKSHANUPAKARAN PRINT PAGE
    SAME STRUCTURE AS EDITOR
    ACTION / DELETE COLUMN REMOVED
 ============================================================ */
-
 function createShikshanupakaranPrintPage(
     sourceRows,
     pageNumber,
@@ -3413,7 +3423,6 @@ function createShikshanupakaranPrintPage(
         CREATE PRINT PAGE
         ========================================================
     */
-
     const page =
         document.createElement("div");
 
@@ -5119,7 +5128,7 @@ if (
                         window.shikshanupakaranAllRows.length /
                         rowsPerPage
                     )
-                );
+                ) + 1;
 
 
             /*
@@ -8500,7 +8509,7 @@ function addShikshanupakaranRowAfter(button) {
                 window.shikshanupakaranAllRows.length /
                 rowsPerPage
             )
-        );
+        ) + 1;
 
 
     /* ========================================================
@@ -10582,7 +10591,7 @@ function updateShikshanupakaranPaginationState() {
         window.shikshanupakaranAllRows.length;
 
 
-    window.shikshanupakaranTotalPages =
+    const dataPages =
         Math.max(
             1,
             Math.ceil(
@@ -10590,6 +10599,9 @@ function updateShikshanupakaranPaginationState() {
                 rowsPerPage
             )
         );
+
+    window.shikshanupakaranTotalPages =
+        dataPages;
 
 
     const requestedPage =
@@ -11521,7 +11533,7 @@ function updateShikshanupakaranPaginationUI(){
 
 
     const totalPages =
-        window.shikshanupakaranTotalPages;
+        getShikshanupakaranNavigationTotalPages();
 
 
     const totalRows =
@@ -11756,9 +11768,7 @@ function initializeShikshanupakaranPagination(){
         
         
                 const totalPages =
-                    Number(
-                        window.shikshanupakaranTotalPages
-                    ) || 1;
+                    getShikshanupakaranNavigationTotalPages();
         
         
                 if (currentPage >= totalPages) {
@@ -11782,9 +11792,7 @@ function initializeShikshanupakaranPagination(){
             lastButton.onclick = function () {
         
                 const totalPages =
-                    Number(
-                        window.shikshanupakaranTotalPages
-                    ) || 1;
+                    getShikshanupakaranNavigationTotalPages();
         
         
                 goToShikshanupakaranPage(
@@ -11810,7 +11818,7 @@ function initializeShikshanupakaranPagination(){
         
         
                     const totalPages =
-                        Number(window.shikshanupakaranTotalPages) || 1;
+                        getShikshanupakaranNavigationTotalPages();
         
         
                     if (Number.isNaN(page)) {
@@ -12256,17 +12264,53 @@ function generateShikshanupakaranTotal() {
 
 
             totalColumns.forEach(
-                function(column){
+                    function(column){
 
-                    const value =
-                        parseShikshanupakaranNumber(rowData[column]);
+                        if (column === "G") {
+
+                            const C =
+                                parseShikshanupakaranNumber(
+                                    rowData.C
+                                );
+
+                            const D =
+                                parseShikshanupakaranNumber(
+                                    rowData.D
+                                );
+
+                            const E =
+                                parseShikshanupakaranNumber(
+                                    rowData.E
+                                );
+
+                            const F =
+                                parseShikshanupakaranNumber(
+                                    rowData.F
+                                );
+
+                            totals.G +=
+                                roundGeneratedValueToFivePaise(
+                                    C +
+                                    D +
+                                    E +
+                                    F
+                                );
+
+                            return;
+                        }
 
 
-                    totals[column] +=
-                        value;
+                        const value =
+                            parseShikshanupakaranNumber(
+                                rowData[column]
+                            );
 
-                }
-            );
+
+                        totals[column] +=
+                            value;
+
+                    }
+                );
 
         }
     );
@@ -12308,7 +12352,7 @@ function generateShikshanupakaranTotal() {
 
 
     console.log(
-        "SHIKSHANUPAKARAN GRAND TOTAL:",
+        "SHIKSHANUPAKARAN GRAND TOTAL CHECK:",
         totals
     );
 
@@ -12340,6 +12384,15 @@ if (
 
             generateShikshanupakaranTotal();
 
+            const lastShikshanupakaranPage =
+                Number(window.shikshanupakaranTotalPages) || 1;
+
+            goToShikshanupakaranPage(
+                lastShikshanupakaranPage
+            );
+
+            renderShikshanupakaranTotal();
+
 
             if (
                 window.shikshanupakaranSummary &&
@@ -12348,6 +12401,15 @@ if (
 
                 window.shikshanupakaranSummary.generate();
 
+
+                if (
+                    window.shikshanupakaranSummary &&
+                    typeof window.shikshanupakaranSummary.renderPage === "function"
+                ) {
+
+                    window.shikshanupakaranSummary.renderPage();
+
+                }
             }
 
         }
@@ -12665,12 +12727,114 @@ function renderShikshanupakaranTotal() {
    SHIKSHANUPAKARAN — PAGINATION NAVIGATION
 ============================================================ */
 
-function goToShikshanupakaranPage(page) {
+/* ============================================================
+   SHIKSHANUPAKARAN DOCUMENT NAVIGATION
+   Data pages and summary pages are separate.
+============================================================ */
 
-    const totalPages =
+function getShikshanupakaranNavigationTotalPages() {
+
+    const dataPages =
         Number(
             window.shikshanupakaranTotalPages
         ) || 1;
+
+    const summaryExists =
+        window.shikshanupakaranTotalGenerated === true;
+
+    return summaryExists
+        ? dataPages + 1
+        : dataPages;
+}
+
+
+function isShikshanupakaranSummaryPage(page) {
+
+    const dataPages =
+        Number(
+            window.shikshanupakaranTotalPages
+        ) || 1;
+
+    return (
+        window.shikshanupakaranTotalGenerated === true &&
+        Number(page) === dataPages + 1
+    );
+}
+
+
+function showShikshanupakaranSummaryPage() {
+
+    const dataPage =
+        Number(
+            window.shikshanupakaranTotalPages
+        ) || 1;
+
+    const mount =
+        document.getElementById(
+            "shikshanupakaranSummaryPageMount"
+        );
+
+    if (!mount) {
+        console.warn(
+            "Shikshanupakaran summary page mount not found."
+        );
+        return false;
+    }
+
+    if (
+        window.shikshanupakaranSummary &&
+        typeof window.shikshanupakaranSummary.generate ===
+            "function"
+    ) {
+        window.shikshanupakaranSummary.generate();
+    }
+
+    if (
+        window.shikshanupakaranSummary &&
+        typeof window.shikshanupakaranSummary.renderPage ===
+            "function"
+    ) {
+        window.shikshanupakaranSummary.renderPage();
+    }
+
+    mount.style.display = "block";
+
+    window.shikshanupakaranCurrentPage =
+        dataPage + 1;
+
+    console.log(
+        "SHIKSHANUPAKARAN → SUMMARY PAGE:",
+        dataPage + 1
+    );
+
+    return true;
+}
+
+
+function hideShikshanupakaranSummaryPage() {
+
+    const mount =
+        document.getElementById(
+            "shikshanupakaranSummaryPageMount"
+        );
+
+    if (mount) {
+        mount.style.display = "none";
+    }
+
+    if (
+        window.shikshanupakaranSummary &&
+        typeof window.shikshanupakaranSummary.hide ===
+            "function"
+    ) {
+        window.shikshanupakaranSummary.hide();
+    }
+}
+
+function goToShikshanupakaranPage(page) {
+
+    const totalPages =
+        getShikshanupakaranNavigationTotalPages();
 
 
     let targetPage =
@@ -12722,10 +12886,55 @@ function goToShikshanupakaranPage(page) {
        RENDER REQUESTED PAGE
     ======================================================== */
 
+        /* ========================================================
+       SUMMARY PAGE
+       Summary is NOT a data page.
+    ======================================================== */
+
+    if (
+        isShikshanupakaranSummaryPage(
+            targetPage
+        )
+    ) {
+
+        const dataPageElement =
+            document.querySelector(
+                ".shikshanupakaranPage"
+            );
+
+        if (dataPageElement) {
+            dataPageElement.style.display = "none";
+        }
+
+        showShikshanupakaranSummaryPage();
+
+        if (
+            typeof updateShikshanupakaranPaginationUI ===
+            "function"
+        ) {
+
+            updateShikshanupakaranPaginationUI();
+
+        }
+
+        return;
+    }
+
+
+    hideShikshanupakaranSummaryPage();
+
+    const dataPageElement =
+        document.querySelector(
+            ".shikshanupakaranPage"
+        );
+
+    if (dataPageElement) {
+        dataPageElement.style.display = "";
+    }
+
     renderShikshanupakaranPage(
         targetPage
     );
-
 
     /* ========================================================
        UPDATE PAGINATION UI
@@ -15321,6 +15530,17 @@ function initializeShikshanupakaranYearChangeHandler() {
     };
 
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
