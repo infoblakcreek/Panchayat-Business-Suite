@@ -5839,26 +5839,6 @@ async function saveShikshanupakaran(
            SAME DATA ALREADY SAVED
         ======================================================== */
 
-        if(
-            shikshanupakaranLastSavedSignature ===
-            saveSignature
-        ){
-
-            shikshanupakaranSkippedSaveCount++;
-
-            console.log(
-                "🟡 SAVE SKIPPED — NOTHING CHANGED"
-            );
-
-            console.log(
-                "Skipped save count:",
-                shikshanupakaranSkippedSaveCount
-            );
-
-            return true;
-
-        }
-
 
         /* ========================================================
            YEAR CHANGE SAFETY CHECK
@@ -6483,9 +6463,7 @@ async function autoSaveShikshanupakaran(){
             false = NO activity entry
         */
 
-        await saveShikshanupakaran(
-            false
-        );
+        syncCurrentShikshanupakaranPageToMemory();
 
 
         console.log(
@@ -15541,6 +15519,8 @@ function initializeShikshanupakaranYearChangeHandler() {
     };
 
 }
+
+
 
 
 

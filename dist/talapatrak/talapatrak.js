@@ -1,4 +1,4 @@
-console.log("TALAPATRAK JS FILE RUNNING");
+﻿console.log("TALAPATRAK JS FILE RUNNING");
 
 
 /* ============================================================
@@ -8435,13 +8435,10 @@ function scheduleTalapatrakAutoSave() {
 
                 try {
 
-                    await saveTalapatrak(
-                        false
-                    );
-
+                    syncCurrentTalapatrakPageToMemory();
 
                     console.log(
-                        "Talapatrak autosaved."
+                        "🟢 TALAPATRAK AUTOSAVE COMPLETE — EDITOR DATA KEPT IN MEMORY"
                     );
 
                 }

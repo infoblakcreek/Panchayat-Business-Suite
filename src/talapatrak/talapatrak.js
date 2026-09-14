@@ -8838,24 +8838,11 @@ function scheduleTalapatrakAutoSave() {
                     }
 
 
-                    const autosaveResult =
-                        await saveTalapatrak(false);
+                    syncCurrentTalapatrakPageToMemory();
 
-
-                    if (autosaveResult) {
-
-                        console.log(
-                            "🟢 TALAPATRAK AUTOSAVE COMPLETE — ALL EDITOR DATA SAVED, SYNC SKIPPED"
-                        );
-
-                    }
-                    else {
-
-                        console.warn(
-                            "🔴 TALAPATRAK AUTOSAVE FAILED — DATA WAS NOT CONFIRMED SAVED"
-                        );
-
-                    }
+                    console.log(
+                        "🟢 TALAPATRAK AUTOSAVE COMPLETE — EDITOR DATA KEPT IN MEMORY"
+                    );
 
                 }
 
@@ -14417,6 +14404,7 @@ function showTalapatrakDeleteModal(record) {
     });
 
 }
+
 
 
 
