@@ -1,4 +1,4 @@
-console.log("TALAPATRAK JS FILE RUNNING");
+﻿console.log("TALAPATRAK JS FILE RUNNING");
 
 
 
@@ -4074,41 +4074,12 @@ function formatTalapatrakInputDate(date) {
     }
 
 
-    const parsedDate =
-        new Date(date);
-
-
-    if (isNaN(parsedDate)) {
-
-        console.warn(
-            "Invalid Talapatrak date:",
-            date
-        );
-
-        return "";
-
-    }
-
-
-    const day =
-        String(
-            parsedDate.getDate()
-        ).padStart(2,"0");
-
-
-    const month =
-        String(
-            parsedDate.getMonth() + 1
-        ).padStart(2,"0");
-
-
-    const year =
-        parsedDate.getFullYear();
-
-
-    return `${day}/${month}/${year}`;
+    return normalizeDateDDMMYYYY(
+        date
+    );
 
 }
+
 
 function setupIndianDatePicker() {
 
@@ -4116,7 +4087,41 @@ function setupIndianDatePicker() {
         ".indianDatePicker",
         {
             dateFormat: "d/m/Y",
-            allowInput: true
+            allowInput: true,
+
+            formatDate: function (
+                date,
+                format
+            ) {
+
+                const englishDate =
+                    flatpickr.formatDate(
+                        date,
+                        format
+                    );
+
+                return convertToGujaratiDigits(
+                    englishDate
+                );
+
+            },
+
+            parseDate: function (
+                date,
+                format
+            ) {
+
+                const englishDate =
+                    convertGujaratiDigitsToEnglish(
+                        String(date)
+                    );
+
+                return flatpickr.parseDate(
+                    englishDate,
+                    format
+                );
+
+            }
         }
     );
 
@@ -11779,7 +11784,7 @@ function createTalapatrakPrintPage(
                     ) {
 
                         value =
-                            formatTalapatrakInputDate(
+                            formatGujaratiDate(
                                 value
                             );
 
@@ -14412,6 +14417,11 @@ function showTalapatrakDeleteModal(record) {
     });
 
 }
+
+
+
+
+
 
 
 

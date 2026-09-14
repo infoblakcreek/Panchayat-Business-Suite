@@ -590,6 +590,298 @@ function highlightCommonSearchRow({
 }
 
 
+/* ============================================================
+   GUJARATI DATE UTILITIES
+   ------------------------------------------------------------
+   Canonical stored/editing format:
+      DD/MM/YYYY
+
+   Display / print format:
+      Gujarati digits
+
+   Example:
+      15/09/2026
+      →
+      ૧૫/૦૯/૨૦૨૬
+
+   IMPORTANT:
+   ------------------------------------------------------------
+   Dates are stored as normal English digits.
+   Gujarati conversion is ONLY for display / print.
+
+   This avoids JavaScript problems with:
+      new Date("15/09/2026")
+
+   because DD/MM/YYYY is not reliably parsed by JavaScript.
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   normalizeDateDDMMYYYY()
+
+   Converts supported date values into the canonical:
+
+      DD/MM/YYYY
+
+   Supported:
+      DD/MM/YYYY
+      D/M/YYYY
+      DD-MM-YYYY
+      YYYY-MM-DD
+      JavaScript Date
+      Firestore Timestamp
+
+   IMPORTANT:
+   ------------------------------------------------------------
+   Do NOT use new Date() on DD/MM/YYYY strings.
+   ------------------------------------------------------------ */
+
+function normalizeDateDDMMYYYY(value) {
+
+    if (
+        value === undefined ||
+        value === null
+    ) {
+
+        return "";
+
+    }
+
+
+    /* ========================================================
+       FIRESTORE TIMESTAMP
+    ======================================================== */
+
+    if (
+        value &&
+        typeof value.toDate === "function"
+    ) {
+
+        const date =
+            value.toDate();
+
+        if (
+            date instanceof Date &&
+            !Number.isNaN(
+                date.getTime()
+            )
+        ) {
+
+            return [
+
+                String(
+                    date.getDate()
+                ).padStart(2, "0"),
+
+                String(
+                    date.getMonth() + 1
+                ).padStart(2, "0"),
+
+                String(
+                    date.getFullYear()
+                )
+
+            ].join("/");
+
+        }
+
+    }
+
+
+    /* ========================================================
+       JAVASCRIPT DATE
+    ======================================================== */
+
+    if (
+        value instanceof Date
+    ) {
+
+        if (
+            Number.isNaN(
+                value.getTime()
+            )
+        ) {
+
+            return "";
+
+        }
+
+        return [
+
+            String(
+                value.getDate()
+            ).padStart(2, "0"),
+
+            String(
+                value.getMonth() + 1
+            ).padStart(2, "0"),
+
+            String(
+                value.getFullYear()
+            )
+
+        ].join("/");
+
+    }
+
+
+    /* ========================================================
+       STRING
+    ======================================================== */
+
+    let text =
+        String(value)
+            .trim();
+
+
+    if (!text) {
+
+        return "";
+
+    }
+
+
+    /* ========================================================
+       CONVERT GUJARATI DIGITS FIRST
+
+       This allows the function to safely handle:
+
+          ૧૫/૦૯/૨૦૨૬
+
+       and convert it back to:
+
+          15/09/2026
+    ======================================================== */
+
+    text =
+        convertGujaratiDigitsToEnglish(
+            text
+        );
+
+
+    /* ========================================================
+       DD/MM/YYYY
+       D/M/YYYY
+       DD-MM-YYYY
+       DD.MM.YYYY
+    ======================================================== */
+
+    let match =
+        text.match(
+            /^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4})$/
+        );
+
+
+    if (match) {
+
+        const day =
+            String(
+                match[1]
+            ).padStart(2, "0");
+
+        const month =
+            String(
+                match[2]
+            ).padStart(2, "0");
+
+        const year =
+            match[3];
+
+
+        return `${day}/${month}/${year}`;
+
+    }
+
+
+    /* ========================================================
+       YYYY-MM-DD
+
+       Used if an existing record happens to contain
+       an ISO date.
+    ======================================================== */
+
+    match =
+        text.match(
+            /^(\d{4})-(\d{1,2})-(\d{1,2})$/
+        );
+
+
+    if (match) {
+
+        const year =
+            match[1];
+
+        const month =
+            String(
+                match[2]
+            ).padStart(2, "0");
+
+        const day =
+            String(
+                match[3]
+            ).padStart(2, "0");
+
+
+        return `${day}/${month}/${year}`;
+
+    }
+
+
+    /*
+       Unknown format.
+
+       Return the original text rather than trying
+       new Date(text), because that can silently create
+       incorrect dates.
+    */
+
+    return text;
+
+}
+
+
+/* ------------------------------------------------------------
+   formatGujaratiDate()
+
+   Converts a date into Gujarati digits for:
+
+      - screen display
+      - print
+
+   Example:
+
+      15/09/2026
+      →
+      ૧૫/૦૯/૨૦૨૬
+   ------------------------------------------------------------ */
+
+function formatGujaratiDate(value) {
+
+    const date =
+        normalizeDateDDMMYYYY(
+            value
+        );
+
+
+    if (!date) {
+
+        return "";
+
+    }
+
+
+    return convertToGujaratiDigits(
+        date
+    );
+
+}
+
+
+/* ============================================================
+   END GUJARATI DATE UTILITIES
+============================================================ */
+
+
 
 
 /* ============================================================

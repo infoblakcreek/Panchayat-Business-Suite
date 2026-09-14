@@ -3119,6 +3119,8 @@ const printShikshanupakaranButton =
 
 function prepareShikshanupakaranPrint(sourceRows) {
 
+    syncCurrentShikshanupakaranPageToMemory();
+
     const table =
         document.getElementById(
             "shikshanupakaranTable"
@@ -3845,11 +3847,21 @@ function createShikshanupakaranPrintPage(
                     Preserve 0.
                 */
 
-                const value =
+                let value =
                     rowData[column] !== undefined &&
                     rowData[column] !== null
                         ? rowData[column]
                         : "";
+
+
+                if (column === "I") {
+
+                    value =
+                        formatGujaratiDate(
+                            value
+                        );
+
+                }
 
 
                 const td =
@@ -11144,7 +11156,15 @@ function collectSingleShikshanupakaranRow(row) {
                 input.value.trim();
 
 
-            if (
+            if (column === "I") {
+
+                value =
+                    normalizeDateDDMMYYYY(
+                        value
+                    );
+
+            }
+            else if (
                 column === "A" ||
                 column === "H"
             ) {
@@ -15541,6 +15561,8 @@ function initializeShikshanupakaranYearChangeHandler() {
     };
 
 }
+
+
 
 
 
