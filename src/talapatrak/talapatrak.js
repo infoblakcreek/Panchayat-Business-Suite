@@ -716,9 +716,7 @@ function syncVisibleTalapatrakRows() {
                 "P",
                 "Q",
                 "R",
-                "S",
-                "T",
-                "U"
+                "S"
             ];
 
 
@@ -4431,7 +4429,7 @@ function createTalapatrakRow(
     const valueL =
         rowData.L !== undefined &&
         rowData.L !== null
-            ? String(rowData.L)
+            ? convertToGujaratiDigits(String(rowData.L))
             : "";
 
     const valueM =
@@ -11931,18 +11929,6 @@ function createTalapatrakPrintPage(
                 ${formatPrintTotal(totals.S)}
             </td>
 
-            <td>
-                ${formatPrintTotal(totals.T)}
-            </td>
-
-            <td>
-                ${formatPrintTotal(totals.U)}
-            </td>
-
-            <td class="printHide"></td>
-
-            <td class="printHide"></td>
-
         `;
 
 
@@ -14404,6 +14390,8 @@ function showTalapatrakDeleteModal(record) {
     });
 
 }
+
+
 
 
 

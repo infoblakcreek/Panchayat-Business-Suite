@@ -1,4 +1,4 @@
-﻿console.log("TALAPATRAK JS FILE RUNNING");
+console.log("TALAPATRAK JS FILE RUNNING");
 
 
 /* ============================================================
@@ -714,9 +714,7 @@ function syncVisibleTalapatrakRows() {
                 "P",
                 "Q",
                 "R",
-                "S",
-                "T",
-                "U"
+                "S"
             ];
 
 
@@ -4322,7 +4320,7 @@ function createTalapatrakRow(
     const valueL =
         rowData.L !== undefined &&
         rowData.L !== null
-            ? String(rowData.L)
+            ? convertToGujaratiDigits(String(rowData.L))
             : "";
 
     const valueM =
@@ -4502,8 +4500,7 @@ function createTalapatrakRow(
 
         <td>
             <input
-                type="number"
-                class="columnL"
+                type="text" inputmode="decimal" class="columnL"
                 value="${escapeTalapatrakHTML(valueL)}">
         </td>
 
@@ -6799,9 +6796,7 @@ function formatTalapatrakNumberInputs() {
                         ) {
 
                             this.value =
-                                Number(
-                                    this.value
-                                ).toString();
+                                convertToGujaratiDigits(convertGujaratiDigitsToEnglish(this.value));
 
                         }
 
@@ -7215,9 +7210,9 @@ function collectTalapatrakRows() {
                         )?.value || "",
 
                     L:
-                        row.querySelector(
-                            ".columnL"
-                        )?.value || "",
+                            convertGujaratiDigitsToEnglish(
+                                row.querySelector(".columnL")?.value || ""
+                            ),
 
                     M:
                         row.querySelector(
@@ -7471,9 +7466,9 @@ function syncCurrentTalapatrakPageToMemory() {
                     )?.value || "",
 
                 L:
-                    row.querySelector(
-                        ".columnL"
-                    )?.value || "",
+                            convertGujaratiDigitsToEnglish(
+                                row.querySelector(".columnL")?.value || ""
+                            ),
 
                 M:
                     row.querySelector(
@@ -11228,18 +11223,6 @@ function createTalapatrakPrintPage(
                 ${formatPrintTotal(totals.S)}
             </td>
     
-            <td>
-                ${formatPrintTotal(totals.T)}
-            </td>
-    
-            <td>
-                ${formatPrintTotal(totals.U)}
-            </td>
-    
-            <td class="printHide"></td>
-    
-            <td class="printHide"></td>
-    
         `;
     
     
@@ -11345,6 +11328,11 @@ function createTalapatrakPrintPage(
 
                         value =
                             rowData[column];
+
+                          if (column === "L" && value !== undefined && value !== null) {
+                              value = convertToGujaratiDigits(String(value));
+                          }
+
 
                     }
 
@@ -14124,3 +14112,11 @@ function showTalapatrakDeleteModal(record) {
     });
 
 }
+
+
+
+
+
+
+
+

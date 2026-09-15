@@ -500,6 +500,8 @@ document.addEventListener(
 
         setInitialBillNumber();
 
+        setupIndianDatePicker();
+
 
         updateSerialNumbers();
 
@@ -532,24 +534,7 @@ document.addEventListener(
 // ==========================================
 
 function formatIndianDate(dateValue) {
-
-    if (!dateValue) return "";
-
-    const date =
-        new Date(
-            dateValue + "T00:00:00"
-        );
-
-
-    return date.toLocaleDateString(
-        "en-IN",
-        {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric"
-        }
-    );
-
+    return formatGujaratiDate(dateValue);
 }
 // ==========================================
 // GENERATE RECEIPT BUTTON
@@ -1169,13 +1154,7 @@ async function saveCurrentBill() {
                 .trim(),
 
 
-        billDate:
-
-            document
-                .getElementById(
-                    "billDate"
-                )
-                .value,
+        billDate: normalizeDateDDMMYYYY(document.getElementById("billDate").value),
 
 
         paymentDetails:
@@ -1510,5 +1489,8 @@ window.addEventListener(
 
     }
 );
+
+
+
 
 

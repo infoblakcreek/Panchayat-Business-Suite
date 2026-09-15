@@ -52,11 +52,51 @@ fetch("mainbill/mainbill.html")
             "mainbill/mainbill.js";
 
         script.onload = function () {
-
             console.log(
                 "Main Bill JS loaded successfully"
             );
 
+            function initializeMainBillDatePicker() {
+
+                if (
+                    typeof setupIndianDatePicker === "function"
+                ) {
+
+                    setupIndianDatePicker();
+
+                    console.log(
+                        "Main Bill date picker initialized"
+                    );
+
+                    return true;
+                }
+
+                return false;
+            }
+
+            let datePickerAttempts = 0;
+
+            const datePickerTimer =
+                setInterval(
+                    function() {
+
+                        datePickerAttempts++;
+
+                        if (
+                            initializeMainBillDatePicker()
+                            ||
+                            datePickerAttempts >= 40
+                        ) {
+
+                            clearInterval(
+                                datePickerTimer
+                            );
+
+                        }
+
+                    },
+                    50
+                );
         };
 
         script.onerror = function () {

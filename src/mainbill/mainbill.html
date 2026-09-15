@@ -288,9 +288,11 @@
                                                             તારીખ:
                                                         </label>
                                     
-                                                        <input
-                                                            type="date"
-                                                            id="billDate">
+                                                        <input type="text" 
+                                                               id="billDate" 
+                                                               class="indianDatePicker" 
+                                                               inputmode="numeric" 
+                                                               placeholder="DD/MM/YYYY">
                                     
                                                     </div>
                                     
@@ -1022,6 +1024,7 @@
 
 </style>
 
+
 <style data-mainbill-print>
 
 /* ============================================================
@@ -1030,7 +1033,29 @@
    This page is ONLY for Main Bill.
    Do NOT change global @page rules because
    Talapatrak + Shikshanupakaran use landscape.
+
+/* ============================================================
+   MAIN BILL COLOR PALETTE
 ============================================================ */
+
+body.printingMainBill {
+
+    --bill-yellow: #FFC400;
+
+    --bill-yellow-soft: #FFF4C7;
+
+    --bill-ink: #353640;
+
+    --bill-gray: #F3F3F3;
+
+    --bill-border: #D8D8D8;
+
+    --bill-muted: #6B6B6B;
+
+    --bill-white: #FFFFFF;
+
+}
+
 
 @page mainbill {
     size: A4 portrait;
@@ -1220,9 +1245,9 @@
 
         padding: 0 !important;
 
-        border: 2px solid var(--bill-ink) !important;
+        border: 1.5px solid var(--bill-ink) !important;
 
-        border-radius: 5px !important;
+        border-radius: 0 !important;
 
         box-sizing: border-box !important;
 
@@ -1247,9 +1272,47 @@
 
         padding: 8px 12px 7px !important;
 
-        text-align: center !important;
+        text-align: left !important;
 
         vertical-align: middle !important;
+
+    }
+
+
+    body.printingMainBill #generatedMainBill .printHeaderRow td:first-child {
+
+        position: relative !important;
+
+        background: var(--bill-yellow-soft) !important;
+
+    }
+
+
+    body.printingMainBill #generatedMainBill .printHeaderRow td:first-child::after {
+
+        content: "BILL / INVOICE" !important;
+
+        position: absolute !important;
+
+        right: 0 !important;
+
+        bottom: 4px !important;
+
+        padding: 3px 10px !important;
+
+        background: var(--bill-yellow) !important;
+
+        color: var(--bill-ink) !important;
+
+        font-size: 16px !important;
+
+        font-weight: 800 !important;
+
+        line-height: 1 !important;
+
+        letter-spacing: 0.4px !important;
+
+        white-space: nowrap !important;
 
     }
 
@@ -1269,9 +1332,11 @@
 
         margin: 2px 0 !important;
 
-        font-size: 22px !important;
+        font-size: clamp(15px, 2.2vw, 22px) !important;
 
         line-height: 1.2 !important;
+
+        white-space: nowrap !important;
 
     }
 
@@ -1285,7 +1350,6 @@
         line-height: 1.2 !important;
 
         white-space: nowrap !important;
-
 
     }
 
@@ -1311,6 +1375,50 @@
 
         line-height: 1.25 !important;
 
+        color: var(--bill-ink) !important;
+
+        background: var(--bill-yellow-soft) !important;
+
+        border: 1px solid var(--bill-yellow) !important;
+
+        font-weight: 600 !important;
+
+        border-radius: 3px !important;
+
+        text-align: center !important;
+
+        box-shadow: 0 0 0 1px var(--bill-yellow-soft) !important;
+
+    }
+
+
+    body.printingMainBill #generatedMainBill .billHeader {
+
+        background: var(--bill-yellow) !important;
+
+        padding: 7px 12px !important;
+
+        margin: 0 !important;
+
+        border-bottom: 2px solid var(--bill-yellow) !important;
+
+    }
+
+
+    body.printingMainBill #generatedMainBill .invoiceTitle {
+
+        color: var(--bill-ink) !important;
+
+        font-size: 20px !important;
+
+        font-weight: 800 !important;
+
+        letter-spacing: 0.5px !important;
+
+        text-align: center !important;
+
+        line-height: 1.1 !important;
+
     }
 
 
@@ -1318,7 +1426,24 @@
        CUSTOMER DETAILS
     ======================================================== */
 
+    body.printingMainBill #generatedMainBill .printCustomerRow {
+
+        background: var(--bill-white) !important;
+
+        border-top: 2px solid var(--bill-yellow) !important;
+
+        border-bottom: 1px solid var(--bill-border) !important;
+
+    }
+
+
     body.printingMainBill #generatedMainBill .printCustomerDetails {
+
+        width: 100% !important;
+
+        border-collapse: collapse !important;
+
+        background: var(--bill-white) !important;
 
         line-height: 1.15 !important;
 
@@ -1326,6 +1451,10 @@
 
 
     body.printingMainBill #generatedMainBill .printCustomerDetails td {
+
+        border-bottom: 1px solid #E5E5E5 !important;
+
+        color: var(--bill-ink) !important;
 
         padding: 4px 6px !important;
 
@@ -1336,23 +1465,38 @@
     }
 
 
-    body.printingMainBill #generatedMainBill .printCustomerDetails label,
-    body.printingMainBill #generatedMainBill .printCustomerDetails strong {
+    body.printingMainBill #generatedMainBill .printCustomerDetails label {
 
-        font-size: 9.5px !important;
+        color: var(--bill-ink) !important;
 
-        margin-right: 3px !important;
+        font-weight: 700 !important;
 
     }
 
 
     body.printingMainBill #generatedMainBill .printCustomerDetails span {
 
+        color: var(--bill-muted) !important;
+
+        background: var(--bill-yellow-soft) !important;
+
+        border-radius: 2px !important;
+
         min-width: 0 !important;
 
         padding: 1px 3px !important;
 
         font-size: 9.5px !important;
+
+    }
+
+
+    body.printingMainBill #generatedMainBill .printCustomerDetails label,
+    body.printingMainBill #generatedMainBill .printCustomerDetails strong {
+
+        font-size: 9.5px !important;
+
+        margin-right: 3px !important;
 
     }
 
@@ -1423,6 +1567,14 @@
 
         line-height: 1.15 !important;
 
+        background: var(--bill-yellow) !important;
+
+        color: #ffffff !important;
+
+        font-weight: 700 !important;
+
+        border: 1px solid var(--bill-ink) !important;
+
     }
 
 
@@ -1435,6 +1587,21 @@
         line-height: 1.15 !important;
 
         height: 21px !important;
+
+        color: var(--bill-ink) !important;
+
+        background: var(--bill-white) !important;
+
+        border: 1px solid var(--bill-border) !important;
+
+        vertical-align: middle !important;
+
+    }
+
+
+    body.printingMainBill #generatedMainBill #printMainItems tr:nth-child(even) td {
+
+        background: var(--bill-yellow-soft) !important;
 
     }
 
@@ -1459,6 +1626,12 @@
         font-size: 9px !important;
 
         line-height: 1.15 !important;
+
+        background: var(--bill-yellow-soft) !important;
+
+        border-top: 1px solid #c9d6d9 !important;
+
+        border-bottom: 1px solid #c9d6d9 !important;
 
     }
 
@@ -1486,9 +1659,11 @@
 
         padding: 2px 5px !important;
 
-        border: 1px solid #999 !important;
+        border: 1px solid var(--bill-yellow) !important;
 
         border-radius: 3px !important;
+
+        background: var(--bill-white) !important;
 
         font-size: 9px !important;
 
@@ -1518,13 +1693,19 @@
 
         padding: 4px 7px !important;
 
-        border: 2px solid var(--bill-ink) !important;
+        border: 2px solid var(--bill-yellow) !important;
 
-        border-radius: 3px !important;
+        border-radius: 4px !important;
+
+        background: var(--bill-yellow-soft) !important;
+
+        color: #24474d !important;
 
         font-size: 15px !important;
 
         line-height: 1.1 !important;
+
+        font-weight: 700 !important;
 
     }
 
@@ -1541,12 +1722,18 @@
 
         line-height: 1.15 !important;
 
+        background: var(--bill-yellow-soft) !important;
+
+        border-top: 1px solid #c9d6d9 !important;
+
     }
 
 
     body.printingMainBill #generatedMainBill .printPaymentDetails strong {
 
         margin-right: 3px !important;
+
+        color: var(--bill-ink) !important;
 
     }
 
@@ -1563,13 +1750,11 @@
 
         line-height: 1.1 !important;
 
+        background: var(--bill-yellow-soft) !important;
+
+        color: var(--bill-ink) !important;
+
     }
-
-
-    /* ========================================================
-       CUT LINE
-    ======================================================== */
-
 
 
     body.printingMainBill #generatedMainBill .printFooter td:first-child {
@@ -1590,6 +1775,10 @@
     }
 
 
+    /* ========================================================
+       CUT LINE
+    ======================================================== */
+
     body.printingMainBill #printableBills .cutLine {
 
         width: 100% !important;
@@ -1600,7 +1789,7 @@
 
         padding: 0 !important;
 
-        border-top: 1px dashed #777 !important;
+        border-top: 1px dashed var(--bill-yellow) !important;
 
         flex-shrink: 0 !important;
 
@@ -1653,13 +1842,13 @@
 
         padding: 5px 9px !important;
 
-        border: 2px solid var(--bill-ink) !important;
+        border: 2px solid var(--bill-yellow) !important;
 
         border-radius: 4px !important;
 
         box-sizing: border-box !important;
 
-        background: #ffffff !important;
+        background: #fbfcfc !important;
 
         overflow: hidden !important;
 
@@ -1690,6 +1879,8 @@
 
         margin: 0 !important;
 
+        border-bottom: 1px solid var(--bill-yellow) !important;
+
     }
 
 
@@ -1700,6 +1891,8 @@
         font-size: 12px !important;
 
         line-height: 1.05 !important;
+
+        color: var(--bill-ink) !important;
 
     }
 
@@ -1712,6 +1905,8 @@
 
         line-height: 1.05 !important;
 
+        color: var(--bill-muted) !important;
+
     }
 
 
@@ -1720,6 +1915,10 @@
         font-size: 8px !important;
 
         line-height: 1 !important;
+
+        color: var(--bill-muted) !important;
+
+        font-weight: 600 !important;
 
     }
 
@@ -1735,6 +1934,14 @@
         font-size: 12px !important;
 
         line-height: 1.05 !important;
+
+        background: var(--bill-yellow) !important;
+
+        color: var(--bill-ink) !important;
+
+        padding: 3px 8px !important;
+
+        border-radius: 3px !important;
 
     }
 
@@ -1780,6 +1987,8 @@
 
         line-height: 1 !important;
 
+        background: var(--bill-yellow-soft) !important;
+
     }
 
 
@@ -1811,6 +2020,8 @@
         min-height: 10px !important;
 
         padding: 1px 3px 1px !important;
+
+        background: var(--bill-yellow-soft) !important;
 
     }
 
@@ -1852,6 +2063,8 @@
 
         font-size: 8.5px !important;
 
+        background: var(--bill-yellow-soft) !important;
+
     }
 
 
@@ -1885,6 +2098,10 @@
         min-height: 11px !important;
 
         padding: 1px 3px 1px !important;
+
+        border: 1px solid var(--bill-yellow) !important;
+
+        background: var(--bill-yellow-soft) !important;
 
     }
 
@@ -1927,6 +2144,8 @@
 
         padding: 1px 3px !important;
 
+        background: var(--bill-yellow-soft) !important;
+
     }
 
 
@@ -1957,6 +2176,10 @@
 
         min-height: 10px !important;
 
+        background: var(--bill-yellow-soft) !important;
+
+        border: 1px solid var(--bill-yellow) !important;
+
     }
 
 
@@ -1971,6 +2194,10 @@
         font-size: 7px !important;
 
         line-height: 1 !important;
+
+        border-top: 1px solid var(--bill-yellow) !important;
+
+        color: var(--bill-ink) !important;
 
     }
 
@@ -2000,7 +2227,5 @@
 
 }
 
-
-
-
 </style>
+

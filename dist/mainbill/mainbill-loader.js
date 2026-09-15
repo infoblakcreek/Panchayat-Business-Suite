@@ -52,11 +52,15 @@ fetch("mainbill/mainbill.html")
             "mainbill/mainbill.js";
 
         script.onload = function () {
-
             console.log(
                 "Main Bill JS loaded successfully"
             );
 
+            if (
+                typeof setupIndianDatePicker === "function"
+            ) {
+                setupIndianDatePicker();
+            }
         };
 
         script.onerror = function () {
