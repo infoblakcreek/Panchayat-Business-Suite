@@ -1280,6 +1280,7 @@ body.printingMainBill {
 
 
     body.printingMainBill #generatedMainBill .printHeaderRow td:first-child {
+        white-space: nowrap !important;
 
         position: relative !important;
 
@@ -1332,7 +1333,7 @@ body.printingMainBill {
 
         margin: 2px 0 !important;
 
-        font-size: clamp(15px, 2.2vw, 22px) !important;
+        font-size: 16px !important;
 
         line-height: 1.2 !important;
 
@@ -1461,6 +1462,20 @@ body.printingMainBill {
         font-size: 9.5px !important;
 
         line-height: 1.2 !important;
+
+    }
+
+
+    body.printingMainBill #generatedMainBill .printCustomerDetails tr:first-child {
+
+        white-space: nowrap !important;
+
+    }
+
+
+    body.printingMainBill #generatedMainBill #pCustomerName {
+
+        white-space: nowrap !important;
 
     }
 
@@ -2228,4 +2243,9 @@ body.printingMainBill {
 }
 
 </style>
+
+
+
+
+
 

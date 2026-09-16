@@ -2748,9 +2748,9 @@ body {
 
         color: #155E75  !important;
 
-        white-space: normal !important;
+        white-space: nowrap !important;
 
-        overflow-wrap: anywhere !important;
+        overflow-wrap: normal !important;
 
     }
 
@@ -2846,7 +2846,7 @@ body {
 
     #generatedMainBill .printPhone {
 
-        width: auto !important;
+        width: 60px !important;
 
         max-width: none !important;
 
@@ -3511,5 +3511,7 @@ window.addEventListener(
     printWindow.document.close();
 
 }
+
+
 
 
