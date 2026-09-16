@@ -559,19 +559,8 @@ function formatIndianDate(dateValue) {
 
     if (!dateValue) return "";
 
-    const date =
-        new Date(
-            dateValue + "T00:00:00"
-        );
-
-
-    return date.toLocaleDateString(
-        "en-IN",
-        {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric"
-        }
+    return formatGujaratiDate(
+        dateValue
     );
 
 }
@@ -1581,7 +1570,50 @@ function printMainBillAndReceipt() {
         duplicateReceipt.cloneNode(true);
 
 
+    
+
+
     // --------------------------------------------------------
+    // PRESERVE LIVE DUPLICATE RECEIPT INPUT VALUES
+    // cloneNode() does not reliably preserve current input
+    // properties, so copy them into the cloned attributes.
+    // --------------------------------------------------------
+
+    const clonedPavtiNo =
+        duplicateClone.querySelector(
+            "#dPavtiNo"
+        );
+
+
+    const clonedPavtiDate =
+        duplicateClone.querySelector(
+            "#dPavtiDate"
+        );
+
+
+    if (clonedPavtiNo) {
+
+        clonedPavtiNo.setAttribute(
+            "value",
+            document
+                .getElementById("dPavtiNo")
+                .value
+        );
+
+    }
+
+
+    if (clonedPavtiDate) {
+
+        clonedPavtiDate.setAttribute(
+            "value",
+            document
+                .getElementById("dPavtiDate")
+                .value
+        );
+
+    }
+// --------------------------------------------------------
     // Build print document
     // --------------------------------------------------------
 
@@ -3479,3 +3511,5 @@ window.addEventListener(
     printWindow.document.close();
 
 }
+
+
