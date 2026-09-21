@@ -7043,3 +7043,39 @@ body.talapatrakFullViewMode
 
 }
 
+
+/* ============================================================
+   DESKTOP RESPONSIVE — 1280px SCREEN SUPPORT
+   SCREEN ONLY — DO NOT AFFECT PRINT / DATA / LOGIC
+============================================================ */
+
+@media screen and (min-width: 1201px) and (max-width: 1300px) {
+
+    .talapatrakEditorTopBar {
+        height: 54px !important;
+        min-height: 54px !important;
+        padding: 6px 14px !important;
+    }
+
+    .talapatrakEditorContent {
+        width: calc(100% - 16px) !important;
+        margin: 8px auto !important;
+    }
+
+    .talapatrakPage {
+        padding: 12px !important;
+        border-radius: 12px !important;
+    }
+
+    .talapatrakInfoPanel {
+        min-height: 44px !important;
+        height: 44px !important;
+        margin-bottom: 6px !important;
+        padding: 5px 9px !important;
+        gap: 7px !important;
+    }
+
+}
+
+
+@media screen and (min-width:1201px) and (max-width:1300px) { .talapatrakEditorTopBar { height:54px !important; min-height:54px !important; padding:6px 14px !important; } .talapatrakEditorContent { width:calc(100% - 16px) !important; margin:8px auto !important; } .talapatrakPage { padding:12px !important; border-radius:12px !important; } .talapatrakInfoPanel { min-height:44px !important; height:44px !important; margin-bottom:6px !important; padding:5px 9px !important; gap:7px !important; } }
