@@ -4079,53 +4079,6 @@ function formatTalapatrakInputDate(date) {
 }
 
 
-function setupIndianDatePicker() {
-
-    flatpickr(
-        ".indianDatePicker",
-        {
-            dateFormat: "d/m/Y",
-            allowInput: true,
-
-            formatDate: function (
-                date,
-                format
-            ) {
-
-                const englishDate =
-                    flatpickr.formatDate(
-                        date,
-                        format
-                    );
-
-                return convertToGujaratiDigits(
-                    englishDate
-                );
-
-            },
-
-            parseDate: function (
-                date,
-                format
-            ) {
-
-                const englishDate =
-                    convertGujaratiDigitsToEnglish(
-                        String(date)
-                    );
-
-                return flatpickr.parseDate(
-                    englishDate,
-                    format
-                );
-
-            }
-        }
-    );
-
-}
-
-
 function formatTalapatrakDecimalOnFinish(input) {
 
     if (!input) {
@@ -6932,7 +6885,9 @@ function updateTalapatrakPaginationUI() {
 
 
     const totalPages =
-        dataPages;
+        window.talapatrakTotalGenerated === true
+            ? dataPages + 4
+            : dataPages;
 
 
     const currentPage =
@@ -7162,6 +7117,7 @@ function generateTalapatrakTotalsAndSummary() {
         "TALAPATRAK TOTALS GENERATED:",
         window.talapatrakTotals
     );
+    window.talapatrakTotalGenerated = true;
 
 
     /* ========================================================
@@ -7169,6 +7125,20 @@ function generateTalapatrakTotalsAndSummary() {
     ======================================================== */
 
     renderTalapatrakGrandTotalRow();
+
+    /* ========================================================
+       4. INITIALIZE EXISTING SUMMARY PAGES
+    ======================================================== */
+
+    if (
+        typeof initializeTalapatrakSummaryPages ===
+        "function"
+    ) {
+
+        initializeTalapatrakSummaryPages();
+
+    }
+
 
 
 
@@ -7186,20 +7156,6 @@ function generateTalapatrakTotalsAndSummary() {
     }
 
 
-    window.talapatrakTotalPages =
-        (
-            Math.max(
-                1,
-                Math.ceil(
-                    window.talapatrakAllRows.length /
-                    (
-                        Number(
-                            window.talapatrakRowsPerPage
-                        ) || 20
-                    )
-                )
-            )
-        )
 
 
     console.log(
@@ -9264,10 +9220,7 @@ function goToTalapatrakPage(pageNumber) {
     }
 
 
-    const totalPages =
-        Number(
-            window.talapatrakTotalPages
-        ) || 1;
+    const totalPages = window.talapatrakTotalGenerated === true ? ((Number(window.talapatrakTotalPages) || 1) + 4) : (Number(window.talapatrakTotalPages) || 1);
 
 
     let targetPage =
@@ -9635,6 +9588,83 @@ function createTalapatrakPaginationUI() {
 
 function renderTalapatrakPage(pageNumber) {
 
+    const summaryDataPages =
+        Math.max(
+            1,
+            Math.ceil(
+                (
+                    Array.isArray(window.talapatrakAllRows)
+                        ? window.talapatrakAllRows.length
+                        : 0
+                ) /
+                (
+                    Number(window.talapatrakRowsPerPage) || 20
+                )
+            )
+        );
+
+    if (
+        window.talapatrakTotalGenerated === true &&
+        Number(pageNumber) > summaryDataPages &&
+        Number(pageNumber) <= summaryDataPages + 4
+    ) {
+
+        const summaryNumber =
+            Number(pageNumber) - summaryDataPages;
+
+        console.log(
+            "TALAPATRAK SUMMARY NAVIGATION:",
+            summaryNumber
+        );
+
+        const editorPage =
+            document.querySelector(".talapatrakPage");
+
+        const summaryMount =
+            document.getElementById("talapatrakSummaryPageMount");
+
+        const infoPanel =
+            document.querySelector(".talapatrakInfoPanel");
+
+        const tableWrapper =
+            document.querySelector(".talapatrakTableWrapper");
+
+        const dataTable =
+            document.getElementById("talapatrakTable");
+
+        if (infoPanel) {
+            infoPanel.style.display = "none";
+        }
+
+        if (dataTable) {
+            dataTable.style.display = "none";
+        }
+
+        if (editorPage && summaryMount && tableWrapper) {
+            editorPage.insertBefore(
+                summaryMount,
+                tableWrapper
+            );
+        }
+
+        showTalapatrakSummaryPage(
+            summaryNumber
+        );
+
+        window.talapatrakCurrentPage =
+            Number(pageNumber);
+
+        if (
+            typeof updateTalapatrakPaginationUI ===
+            "function"
+        ) {
+            updateTalapatrakPaginationUI();
+        }
+
+        return;
+    }
+
+
     console.log("======================================");
     console.log("TALAPATRAK PAGE RENDER");
     console.log("Requested Page:", pageNumber);
@@ -9680,7 +9710,9 @@ function renderTalapatrakPage(pageNumber) {
     ======================================================== */
 
     const totalPages =
-        dataPages;
+        window.talapatrakTotalGenerated === true
+            ? dataPages + 4
+            : dataPages;
 
 
     console.log(
@@ -9761,6 +9793,37 @@ function renderTalapatrakPage(pageNumber) {
 
         editorPage.style.opacity =
             "1";
+
+        const summaryMount =
+            document.getElementById("talapatrakSummaryPageMount");
+
+        const editorContent =
+            document.querySelector(".talapatrakEditorContent");
+
+        const infoPanel =
+            document.querySelector(".talapatrakInfoPanel");
+
+        const tableWrapper =
+            document.querySelector(".talapatrakTableWrapper");
+
+        const dataTable =
+            document.getElementById("talapatrakTable");
+
+        if (summaryMount && editorContent) {
+            editorContent.appendChild(summaryMount);
+        }
+
+        if (infoPanel) {
+            infoPanel.style.display = "";
+        }
+
+        if (tableWrapper) {
+            tableWrapper.style.display = "";
+        }
+
+        if (dataTable) {
+            dataTable.style.display = "";
+        }
 
     }
 
@@ -11035,7 +11098,7 @@ function prepareTalapatrakPrint(sourceRows) {
 
     container
         .querySelectorAll(
-            ".talapatrakPrintPage"
+            ".talapatrakPrintPage, .talapatrakSummaryPrintPage"
         )
         .forEach(
             function(page) {
@@ -11253,12 +11316,26 @@ function prepareTalapatrakPrint(sourceRows) {
 
 
     /* ========================================================
+       APPEND SUMMARY AFTER LAST DATA PAGE
+    ======================================================== */
+
+    if (
+        window.talapatrakSummary &&
+        typeof window.talapatrakSummary.createPrintPages ===
+            "function"
+    ) {
+        window.talapatrakSummary.createPrintPages(
+            container,
+            dataPages + 1
+        );
+    }
+    /* ========================================================
        COUNT FINAL PRINT PAGES
     ======================================================== */
 
     const totalPrintPages =
         container.querySelectorAll(
-            ".talapatrakPrintPage"
+            ".talapatrakPrintPage, .talapatrakSummaryPrintPage"
         ).length;
 
 
@@ -12234,7 +12311,7 @@ function printTalapatrak() {
     const pages =
         Array.from(
             printContainer.querySelectorAll(
-                ".talapatrakPrintPage"
+                ".talapatrakPrintPage, .talapatrakSummaryPrintPage"
             )
         )
         .map(function(page) {
@@ -12262,7 +12339,7 @@ function printTalapatrak() {
 
     const pageCount =
         printContainer.querySelectorAll(
-            ".talapatrakPrintPage"
+            ".talapatrakPrintPage, .talapatrakSummaryPrintPage"
         ).length;
 
 
@@ -12817,7 +12894,7 @@ if (
 ============================================================ */
 
 const TALAPATRAK_ROWS_PER_PAGE = 20;
-const TALAPATRAK_SUMMARY_COUNT = 3;
+const TALAPATRAK_SUMMARY_COUNT = 4;
 
 
 /* ============================================================
@@ -12827,7 +12904,7 @@ const TALAPATRAK_SUMMARY_COUNT = 3;
 function getTalapatrakTotalsSection() {
 
     return document.getElementById(
-        "talapatrakTotalsSection"
+        "talapatrakSummaryPageMount"
     );
 
 }
@@ -13581,7 +13658,7 @@ function initializeTalapatrakSummaryPages() {
      * Finally show Summary 1.
      */
 
-    showTalapatrakSummaryPage(1);
+    hideTalapatrakTotalsSection();
 
 
     console.log(
@@ -14390,6 +14467,15 @@ function showTalapatrakDeleteModal(record) {
     });
 
 }
+
+
+
+
+
+
+
+
+
 
 
 

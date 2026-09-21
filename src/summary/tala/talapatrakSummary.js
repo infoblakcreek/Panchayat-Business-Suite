@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    TALAPATRAK SUMMARY
    ============================================================
 
@@ -89,6 +89,104 @@
        INITIALIZATION
     ======================================================== */
 
+    /* ========================================================
+       CREATE PRINT PAGES
+    ======================================================== */
+
+    function createPrintPages(container, firstPageNumber) {
+
+        if (!container) {
+            return 0;
+        }
+
+        const editor =
+            getTalapatrakSummaryEditor();
+
+        if (!editor) {
+            console.warn(
+                "TALAPATRAK SUMMARY EDITOR NOT FOUND"
+            );
+            return 0;
+        }
+
+        const source =
+            editor.cloneNode(true);
+
+        source.removeAttribute("id");
+
+        source
+            .querySelectorAll("[id]")
+            .forEach(function (element) {
+                element.removeAttribute("id");
+            });
+
+        source
+            .querySelectorAll("button")
+            .forEach(function (button) {
+                button.remove();
+            });
+
+        source
+            .querySelectorAll(
+                "input, textarea, select"
+            )
+            .forEach(function (element) {
+
+                const value =
+                    element.value || "";
+
+                const span =
+                    document.createElement("span");
+
+                span.textContent = value;
+
+                span.className =
+                    "talapatrakSummaryPrintValue";
+
+                element.replaceWith(span);
+            });
+
+        const page =
+            document.createElement("div");
+
+        page.className =
+            "talapatrakSummaryPrintPage";
+
+        page.dataset.page =
+            firstPageNumber;
+
+        page.appendChild(source);
+
+        const footer =
+            document.createElement("div");
+
+        footer.className =
+            "talapatrakSummaryPrintFooter";
+
+        const pageNumberElement =
+            document.createElement("div");
+
+        pageNumberElement.className =
+            "talapatrakSummaryPrintPageNumber";
+
+        pageNumberElement.textContent =
+            "Page " + firstPageNumber;
+
+        footer.appendChild(
+            pageNumberElement
+        );
+
+        page.appendChild(footer);
+
+        container.appendChild(page);
+
+        console.log(
+            "TALAPATRAK SUMMARY PRINT PAGE CREATED:",
+            firstPageNumber
+        );
+
+        return 1;
+    }
     function initializeTalapatrakSummary() {
 
         const view =
@@ -136,6 +234,9 @@
         getView:
             getTalapatrakSummaryView,
 
+        createPrintPages:
+            createPrintPages,
+
         getEditor:
             getTalapatrakSummaryEditor
 
@@ -152,3 +253,5 @@
 
 
 })();
+
+

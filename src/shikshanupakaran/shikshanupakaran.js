@@ -1,4 +1,4 @@
-﻿console.log("SHIKSHANUPAKARAN JS FILE RUNNING");
+console.log("SHIKSHANUPAKARAN JS FILE RUNNING");
 
 /* ============================================================
         SHIKSHANUPAKARAN SYSTEM
@@ -3153,7 +3153,7 @@ function prepareShikshanupakaranPrint(sourceRows) {
 
     container
         .querySelectorAll(
-            ".shikshanupakaranPrintPage"
+            ".shikshanupakaranPrintPage, .shikshanupakaranSummaryPrintPage"
         )
         .forEach(function(page) {
 
@@ -4230,6 +4230,9 @@ if(printShikshanupakaranButton){
 
                 })
                 .join("");
+            const summaryPrintStyles =
+                '<link rel="stylesheet" href="summary/shik/shikshanupakaranSummary.css">';
+
 
 
             iframe.onload =
@@ -4238,7 +4241,82 @@ if(printShikshanupakaranButton){
                 setTimeout(
                     function(){
 
-                        iframe.contentWindow.focus();
+                        console.log(
+    "PRINT IFRAME SUMMARY GEOMETRY:",
+    Array.from(
+        iframe.contentDocument.querySelectorAll(
+            ".shikshanupakaranSummaryPrintPage"
+        )
+    ).map(function(page, index){
+        const rect = page.getBoundingClientRect();
+        const footer = page.querySelector(
+            ".shikshanupakaranSummaryPrintFooter"
+        );
+        const footerRect = footer
+            ? footer.getBoundingClientRect()
+            : null;
+
+        return {
+            page: index + 55,
+            height: page.offsetHeight,
+            scrollHeight: page.scrollHeight,
+            rectHeight: rect.height,
+            footerTop: footerRect ? footerRect.top : null,
+            footerBottom: footerRect ? footerRect.bottom : null,
+            pageBottom: rect.bottom,
+            children: Array.from(page.children).map(function(el, childIndex){
+                const childRect = el.getBoundingClientRect();
+
+                const nested = Array.from(
+                    el.querySelectorAll(
+                        ".shikPage2, .shikSummaryPageHeading, .shikPage2TableWrapper, .shikPage2AccountingTable, tr"
+                    )
+                ).map(function(nestedEl, nestedIndex){
+                    const nestedRect = nestedEl.getBoundingClientRect();
+                    return {
+                        index: nestedIndex,
+                        tag: nestedEl.tagName,
+                        class: nestedEl.className,
+                        height: nestedEl.offsetHeight,
+                        top: nestedRect.top,
+                        bottom: nestedRect.bottom
+                    };
+                });
+
+                if (page.querySelector(".shikPage2")) {
+                    console.log(
+                        "PAGE 56 INNER GEOMETRY:",
+                        Array.from(
+                            page.querySelectorAll(
+                                ".shikPage2, .shikSummaryPageHeading, .shikPage2TableWrapper, .shikPage2AccountingTable, .shikPage2AccountingTable thead, .shikPage2AccountingTable tbody, .shikPage2AccountingTable tr"
+                            )
+                        ).map(function(innerEl, innerIndex){
+                            const innerRect = innerEl.getBoundingClientRect();
+                            return {
+                                index: innerIndex,
+                                tag: innerEl.tagName,
+                                class: innerEl.className,
+                                height: innerEl.offsetHeight,
+                                top: innerRect.top,
+                                bottom: innerRect.bottom
+                            };
+                        })
+                    );
+                }
+
+                return {
+                    index: childIndex,
+                    class: el.className,
+                    height: el.offsetHeight,
+                    top: childRect.top,
+                    bottom: childRect.bottom,
+                    nested: nested
+                };
+            })
+        };
+    })
+);
+                iframe.contentWindow.focus();
 
                         iframe.contentWindow.print();
 
@@ -4264,7 +4342,7 @@ if(printShikshanupakaranButton){
             const printPages =
                 Array.from(
                     printContainer.querySelectorAll(
-                        ".shikshanupakaranPrintPage"
+                        ".shikshanupakaranPrintPage, .shikshanupakaranSummaryPrintPage"
                     )
                 );
             
@@ -4315,6 +4393,7 @@ if(printShikshanupakaranButton){
                 </title>
             
                 ${printStyles}
+                ${summaryPrintStyles}
             
             </head>
             
@@ -12416,7 +12495,7 @@ if (
                     typeof window.shikshanupakaranSummary.renderPage === "function"
                 ) {
 
-                    window.shikshanupakaranSummary.renderPage();
+
 
                 }
             }
@@ -12752,7 +12831,7 @@ function getShikshanupakaranNavigationTotalPages() {
         window.shikshanupakaranTotalGenerated === true;
 
     return summaryExists
-        ? dataPages + 1
+        ? dataPages + 4
         : dataPages;
 }
 
@@ -12766,12 +12845,12 @@ function isShikshanupakaranSummaryPage(page) {
 
     return (
         window.shikshanupakaranTotalGenerated === true &&
-        Number(page) === dataPages + 1
+        Number(page) > dataPages && Number(page) <= dataPages + 4
     );
 }
 
 
-function showShikshanupakaranSummaryPage() {
+function showShikshanupakaranSummaryPage(summaryPage) {
 
     const dataPage =
         Number(
@@ -12803,17 +12882,17 @@ function showShikshanupakaranSummaryPage() {
         typeof window.shikshanupakaranSummary.renderPage ===
             "function"
     ) {
-        window.shikshanupakaranSummary.renderPage();
+        window.shikshanupakaranSummary.renderPage(Number(summaryPage) - dataPage);
     }
 
     mount.style.display = "block";
 
     window.shikshanupakaranCurrentPage =
-        dataPage + 1;
+        Number(summaryPage) || dataPage + 1;
 
     console.log(
         "SHIKSHANUPAKARAN → SUMMARY PAGE:",
-        dataPage + 1
+        window.shikshanupakaranCurrentPage
     );
 
     return true;
@@ -12845,14 +12924,8 @@ function goToShikshanupakaranPage(page) {
     const totalPages =
         getShikshanupakaranNavigationTotalPages();
 
-
     let targetPage =
         Number(page) || 1;
-
-
-    /* ========================================================
-       KEEP PAGE WITHIN VALID RANGE
-    ======================================================== */
 
     targetPage =
         Math.max(
@@ -12863,7 +12936,6 @@ function goToShikshanupakaranPage(page) {
             )
         );
 
-
     console.log(
         "SHIKSHANUPAKARAN → GO TO PAGE:",
         {
@@ -12871,15 +12943,6 @@ function goToShikshanupakaranPage(page) {
             totalPages: totalPages
         }
     );
-
-
-    /* ========================================================
-       SAVE CURRENT PAGE BEFORE LEAVING IT
-       
-       IMPORTANT:
-       DOM → MEMORY only.
-       This does NOT change the page.
-    ======================================================== */
 
     if (
         typeof syncCurrentShikshanupakaranPageToMemory ===
@@ -12895,7 +12958,8 @@ function goToShikshanupakaranPage(page) {
        RENDER REQUESTED PAGE
     ======================================================== */
 
-        /* ========================================================
+
+    /* ========================================================
        SUMMARY PAGE
        Summary is NOT a data page.
     ======================================================== */
@@ -12906,16 +12970,27 @@ function goToShikshanupakaranPage(page) {
         )
     ) {
 
-        const dataPageElement =
+        const tableWrapper =
             document.querySelector(
-                ".shikshanupakaranPage"
+                ".shikshanupakaranTableWrapper"
             );
 
-        if (dataPageElement) {
-            dataPageElement.style.display = "none";
+        if (tableWrapper) {
+            tableWrapper.style.display = "none";
         }
 
-        showShikshanupakaranSummaryPage();
+        const summaryMount =
+            document.getElementById(
+                "shikshanupakaranSummaryPageMount"
+            );
+
+        if (summaryMount) {
+            summaryMount.style.display = "block";
+        }
+
+        showShikshanupakaranSummaryPage(
+            targetPage
+        );
 
         if (
             typeof updateShikshanupakaranPaginationUI ===
@@ -12932,18 +13007,28 @@ function goToShikshanupakaranPage(page) {
 
     hideShikshanupakaranSummaryPage();
 
-    const dataPageElement =
+    const tableWrapper =
         document.querySelector(
-            ".shikshanupakaranPage"
+            ".shikshanupakaranTableWrapper"
         );
 
-    if (dataPageElement) {
-        dataPageElement.style.display = "";
+    if (tableWrapper) {
+        tableWrapper.style.display = "";
+    }
+
+    const summaryMount =
+        document.getElementById(
+            "shikshanupakaranSummaryPageMount"
+        );
+
+    if (summaryMount) {
+        summaryMount.style.display = "none";
     }
 
     renderShikshanupakaranPage(
         targetPage
     );
+
 
     /* ========================================================
        UPDATE PAGINATION UI
@@ -12959,7 +13044,6 @@ function goToShikshanupakaranPage(page) {
     }
 
 }
-
 
 /* ============================================================
    TALAPATRAK SYNC CARD
@@ -15539,6 +15623,38 @@ function initializeShikshanupakaranYearChangeHandler() {
     };
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

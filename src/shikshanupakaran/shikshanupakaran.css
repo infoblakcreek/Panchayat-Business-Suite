@@ -9139,3 +9139,38 @@ body.shikshanupakaranFullViewMode
 .shikshanupakaranSummaryPageMount .summaryEditor {
     min-height: 100%;
 }
+/* TEMP — SHOW PRINT PAGES ON SCREEN */
+.shikshanupakaranPrintContainer { display: block !important; }
+
+/* PRINT PREVIEW — SHOW GENERATED DATA TABLES */
+#shikshanupakaranPrintContainer .shikshanupakaranPrintTable { display: table !important; }
+#shikshanupakaranPrintContainer .shikshanupakaranPrintTable thead { display: table-header-group !important; }
+#shikshanupakaranPrintContainer .shikshanupakaranPrintTable tbody { display: table-row-group !important; }
+
+/* PRINT CONTAINER — AVAILABLE AFTER GENERATE TOTAL */
+#shikshanupakaranPrintContainer {`r`n    display: block !important;`r`n    visibility: hidden !important;`r`n    position: fixed !important;`r`n    left: 0 !important;`r`n    top: 0 !important;`r`n    width: 0 !important;`r`n    height: 0 !important;`r`n    overflow: hidden !important;`r`n}
+
+/* ACTUAL PRINT DOCUMENT — SHOW DATA TABLES */
+.shikshanupakaranPrintPage .shikshanupakaranPrintTable { display: table !important; }
+.shikshanupakaranPrintPage .shikshanupakaranPrintTable thead { display: table-header-group !important; }
+.shikshanupakaranPrintPage .shikshanupakaranPrintTable tbody { display: table-row-group !important; }
+
+
+
+
+
+
+
+
+
+
+/* SHIKSHANUPAKARAN PRINT CONTAINER — SCREEN HIDDEN */
+#shikshanupakaranPrintContainer {
+    display: none !important;
+}
+
+
+/* SHIKSHANUPAKARAN PRINT TABLE DISPLAY */
+#shikshanupakaranPrintContainer .shikshanupakaranPrintTable { display: table !important; }
+#shikshanupakaranPrintContainer .shikshanupakaranPrintTable thead { display: table-header-group !important; }
+#shikshanupakaranPrintContainer .shikshanupakaranPrintTable tbody { display: table-row-group !important; }

@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    TALAPATRAK SUMMARY
    Blue / Indigo theme
    Light + Dark
@@ -602,3 +602,34 @@ body.dark-theme .talapatrakSummaryView,
         padding: 0;
     }
 }
+
+/* ============================================================
+   GENERATED SUMMARY PRINT PAGE
+   ============================================================ */
+
+.talapatrakSummaryPrintPage {
+    width: 100%;
+    min-height: 100%;
+    box-sizing: border-box;
+    break-after: page;
+    page-break-after: always;
+}
+
+.talapatrakSummaryPrintPage:last-child {
+    break-after: auto;
+    page-break-after: auto;
+}
+
+.talapatrakSummaryPrintValue {
+    display: inline;
+}
+
+.talapatrakSummaryPrintFooter {
+    margin-top: 8px;
+}
+
+.talapatrakSummaryPrintPageNumber {
+    text-align: right;
+    font-size: 10px;
+}
+

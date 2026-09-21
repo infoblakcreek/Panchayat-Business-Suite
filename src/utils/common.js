@@ -887,3 +887,49 @@ function formatGujaratiDate(value) {
 /* ============================================================
    END OF COMMON UTILITIES
    ============================================================ */
+function setupIndianDatePicker() {
+
+    flatpickr(
+        ".indianDatePicker",
+        {
+            dateFormat: "d/m/Y",
+            allowInput: true,
+
+            formatDate: function (
+                date,
+                format
+            ) {
+
+                const englishDate =
+                    flatpickr.formatDate(
+                        date,
+                        format
+                    );
+
+                return convertToGujaratiDigits(
+                    englishDate
+                );
+
+            },
+
+            parseDate: function (
+                date,
+                format
+            ) {
+
+                const englishDate =
+                    convertGujaratiDigitsToEnglish(
+                        String(date)
+                    );
+
+                return flatpickr.parseDate(
+                    englishDate,
+                    format
+                );
+
+            }
+        }
+    );
+
+}
+

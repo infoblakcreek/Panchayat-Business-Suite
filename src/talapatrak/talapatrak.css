@@ -4512,13 +4512,7 @@ body.dark-theme #talapatrakPageInfo,
    TALAPATRAK SUMMARY PAGE
 ============================================================ */
 
-.talapatrakEditorContent > .talapatrakSummaryPage {
-
-    display: block !important;
-
-    visibility: visible !important;
-
-    opacity: 1 !important;
+.talapatrakEditorContent > #talapatrakSummaryPageMount > .talapatrakSummaryPage {
 
     position: relative !important;
 
@@ -4526,9 +4520,9 @@ body.dark-theme #talapatrakPageInfo,
 
     min-width: 0 !important;
 
-    height: 1122px !important;
+    height: auto !important;
 
-    min-height: 1122px !important;
+    min-height: 0 !important;
 
     max-height: none !important;
 
@@ -4538,7 +4532,7 @@ body.dark-theme #talapatrakPageInfo,
 
     background: #ffffff !important;
 
-    border: 3px solid red !important;
+    border: 1px solid rgba(255, 255, 255, 0.9) !important;
 
     box-sizing: border-box !important;
 
@@ -4562,9 +4556,9 @@ body.dark-theme #talapatrakPageInfo,
 
     width: 100% !important;
 
-    height: 1122px !important;
+    height: auto !important;
 
-    min-height: 1122px !important;
+    min-height: 0 !important;
 
     max-height: none !important;
 
@@ -4588,7 +4582,7 @@ body.dark-theme #talapatrakPageInfo,
 
     width: 100% !important;
 
-    min-height: 800px !important;
+    min-height: 0 !important;
 
     height: auto !important;
 
@@ -4608,11 +4602,9 @@ body.dark-theme #talapatrakPageInfo,
 
 .talapatrakSummaryPageHeader {
 
-    display: block !important;
-
-    visibility: visible !important;
-
-    opacity: 1 !important;
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
 
     box-sizing: border-box !important;
 }
@@ -5188,11 +5180,9 @@ body.dark-theme #talapatrakPageInfo,
 
         position: relative !important;
 
-        display: block !important;
-
-        visibility: visible !important;
-
-        opacity: 1 !important;
+        display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
 
         width: 100% !important;
 
@@ -7052,3 +7042,4 @@ body.talapatrakFullViewMode
     z-index: 20;
 
 }
+
