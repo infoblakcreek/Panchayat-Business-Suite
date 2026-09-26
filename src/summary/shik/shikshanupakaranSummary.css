@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    SHIKSHANUPAKARAN SUMMARY
    Green / Emerald theme
    Light + Dark
@@ -3678,14 +3678,12 @@ body.shikshanupakaranFullViewMode
     background: #ffffff !important;
     color: #111111 !important;
 
-    border: 1.5px solid #222222 !important;
-    border-left: 1.5px solid #222222 !important;
+    border: 1.5px solid #16a34a !important;
+    border-left: 1.5px solid #16a34a !important;
     border-radius: 0 !important;
     box-shadow: none !important;
 }
 
-
-/* Official statement */
 .shikPage4 .shikPage4OfficialStatement {
     width: 100% !important;
     box-sizing: border-box !important;
@@ -3693,9 +3691,10 @@ body.shikshanupakaranFullViewMode
     margin: 0 !important;
 
     border: 0 !important;
-    border-bottom: 1px solid #222222 !important;
+    border-bottom: 1px solid #bbf7d0 !important;
 
-    background: #ffffff !important;
+    background: #ecfdf5 !important;
+    color: #16a34a !important;
 
     font-size: 14px !important;
     font-weight: 700 !important;
@@ -3703,8 +3702,6 @@ body.shikshanupakaranFullViewMode
     text-align: center !important;
 }
 
-
-/* Four signature columns */
 .shikPage4 .shikPage4SignatureArea {
     width: 100% !important;
     margin: 14px 0 0 0 !important;
@@ -3714,9 +3711,8 @@ body.shikshanupakaranFullViewMode
 
 .shikPage4 .shikPage4SignatureRow {
     display: grid !important;
-    grid-template-columns: repeat(4, 1fr) !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 10px !important;
-
     width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
@@ -3739,6 +3735,7 @@ body.shikshanupakaranFullViewMode
     line-height: 1.5 !important;
 
     white-space: nowrap !important;
+    overflow: visible !important;
 }
 
 .shikPage4 .shikPage4SignatureSpace {
@@ -3750,21 +3747,22 @@ body.shikshanupakaranFullViewMode
 .shikPage4 .shikPage4SignatureLabel {
     padding-top: 7px !important;
 
-    border-top: 1px solid #222222 !important;
+    border-top: 1px solid #16a34a !important;
+
+    color: #16a34a !important;
 
     font-size: 12px !important;
     font-weight: 700 !important;
     line-height: 1.5 !important;
 
     white-space: nowrap !important;
+    text-align: center !important;
 }
 
 .shikPage4 .shikPage4SignatureLabel br {
     display: none !important;
 }
 
-
-/* Office / register section */
 .shikPage4 .shikPage4OfficeSection {
     width: 100% !important;
     margin: 28px 0 0 0 !important;
@@ -3775,14 +3773,14 @@ body.shikshanupakaranFullViewMode
 .shikPage4 .shikPage4SectionTitle {
     width: 100% !important;
     box-sizing: border-box !important;
-
     padding: 7px 10px !important;
     margin: 0 !important;
 
-    border: 1px solid #222222 !important;
+    border: 1px solid #bbf7d0 !important;
     border-bottom: 0 !important;
 
-    background: #ffffff !important;
+    background: #ecfdf5 !important;
+    color: #16a34a !important;
 
     font-size: 14px !important;
     font-weight: 800 !important;
@@ -3795,12 +3793,12 @@ body.shikshanupakaranFullViewMode
 
     width: 100% !important;
     min-height: 42px !important;
+
     margin: 0 !important;
     padding: 8px 10px !important;
-
     box-sizing: border-box !important;
 
-    border: 1px solid #222222 !important;
+    border: 1px solid #bbf7d0 !important;
 
     font-size: 13px !important;
     font-weight: 700 !important;
@@ -3810,13 +3808,13 @@ body.shikshanupakaranFullViewMode
 .shikPage4 .shikPage4RegisterRow input {
     width: 300px !important;
     height: 28px !important;
+
     margin-left: 12px !important;
     padding: 2px 6px !important;
-
     box-sizing: border-box !important;
 
     border: 0 !important;
-    border-bottom: 1px solid #222222 !important;
+    border-bottom: 1px solid #16a34a !important;
 
     background: transparent !important;
 
@@ -3824,8 +3822,6 @@ body.shikshanupakaranFullViewMode
     color: #111111 !important;
 }
 
-
-/* Certification */
 .shikPage4 .shikPage4Certification {
     width: 100% !important;
     margin: 28px 0 0 0 !important;
@@ -3840,7 +3836,8 @@ body.shikshanupakaranFullViewMode
     padding: 14px 16px !important;
     box-sizing: border-box !important;
 
-    border: 1px solid #222222 !important;
+    border: 1px solid #bbf7d0 !important;
+
     background: #ffffff !important;
 
     font-size: 13px !important;
@@ -3849,11 +3846,9 @@ body.shikshanupakaranFullViewMode
     text-align: left !important;
 }
 
-
-/* Bottom signatures */
 .shikPage4 .shikPage4CertificationSignatures {
     display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
     gap: 40px !important;
 
     width: 100% !important;
@@ -3873,11 +3868,9 @@ body.shikshanupakaranFullViewMode
     margin: 0 0 8px 0 !important;
     box-sizing: border-box !important;
 
-    border-bottom: 1px solid #222222 !important;
+    border-bottom: 1px solid #16a34a !important;
 }
 
-
-/* Existing stamp area */
 .shikPage4 .shikPage4FinalStampArea {
     display: flex !important;
     justify-content: flex-end !important;
@@ -3903,12 +3896,6 @@ body.shikshanupakaranFullViewMode
     font-size: 11px !important;
     font-weight: 600 !important;
 }
-
-
-/* ============================================================
-   SUMMARY PRINT PAGE 3 — MATCH PAGE 2 HEADING
-   PRINT ONLY — HEADING ONLY
-   DO NOT CHANGE PAGE 3 TABLE / CONTENT
    ============================================================ */
 
 @media print {

@@ -1,15 +1,26 @@
 ﻿/* ============================================================
    TALAPATRAK SUMMARY
-   Blue / Indigo theme
+   Tala indigo / purple theme
    Light + Dark
    ============================================================ */
 
 .talapatrakSummaryView {
     --summary-primary: #6366f1;
     --summary-primary-dark: #4f46e5;
-    --summary-blue: #3b82f6;
-    --summary-purple: #8b5cf6;
-    --summary-cyan: #06b6d4;
+    --summary-green: #8b5cf6;
+    --summary-emerald: #8b5cf6;
+
+/* ------------------------------------------------------------
+   NUMBER COLUMNS — CENTER ALIGNMENT
+------------------------------------------------------------ */
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable th:first-child,
+.talaPage2 .talapatrakSummaryPage2AccountingTable td:first-child,
+.talaPage2 .talapatrakSummaryPage2AccountingTable th:nth-child(n + 4),
+.talaPage2 .talapatrakSummaryPage2AccountingTable td:nth-child(n + 4) {
+    text-align: center;
+}
+    --summary-teal: #8b5cf6;
 
     --summary-bg: #f5f7ff;
     --summary-card: #ffffff;
@@ -28,43 +39,48 @@
     --summary-soft-border: #c7d2fe;
 
     --summary-shadow:
-        0 12px 35px rgba(79, 70, 229, 0.08);
+        0 12px 35px rgba(22,163,74,0.10);
 
     width: 100%;
     min-height: 100%;
     padding: 24px;
     box-sizing: border-box;
+
     background: var(--summary-bg);
     color: var(--summary-text);
 }
 
-/* DARK THEME */
+
+/* ============================================================
+   DARK THEME
+   ============================================================ */
+
 body.dark-theme .talapatrakSummaryView,
 [data-theme="dark"] .talapatrakSummaryView {
-    --summary-primary: #8b7cff;
-    --summary-primary-dark: #6d5dfc;
-    --summary-blue: #6366f1;
-    --summary-purple: #a855f7;
-    --summary-cyan: #22d3ee;
+    --summary-primary: #6366f1;
+    --summary-primary-dark: #4f46e5;
+    --summary-green: #8b5cf6;
+    --summary-emerald: #a855f7;
+    --summary-teal: #8b5cf6;
 
     --summary-bg: #17152b;
     --summary-card: #211d3a;
-    --summary-surface: #282242;
-    --summary-text: #f8fafc;
-    --summary-muted: #b4b0c8;
-    --summary-border: rgba(167,139,250,0.20);
+    --summary-surface: #211d3a;
+    --summary-text: #f1f5f9;
+    --summary-muted: #94a3b8;
+    --summary-border: #3b3560;
 
     --summary-header-bg: linear-gradient(
         135deg,
-        #6d5dfc,
-        #a855f7
+        #6366f1,
+        #8b5cf6
     );
 
-    --summary-soft: rgba(139,124,255,0.12);
-    --summary-soft-border: rgba(167,139,250,0.30);
+    --summary-soft: rgba(99,102,241,0.10);
+    --summary-soft-border: rgba(139,92,246,0.25);
 
     --summary-shadow:
-        0 18px 45px rgba(0,0,0,0.35);
+        0 15px 40px rgba(0,0,0,0.35);
 }
 
 
@@ -87,39 +103,39 @@ body.dark-theme .talapatrakSummaryView,
     box-shadow: var(--summary-shadow);
 }
 
-.talapatrakSummaryTopBar .summaryTitleArea h1 {
+.talapatrakSummaryTopBar .talaSummaryTitleArea h1 {
     margin: 0;
     color: var(--summary-primary);
     font-size: 26px;
     font-weight: 800;
 }
 
-.talapatrakSummaryTopBar .summaryTitleArea p {
+.talapatrakSummaryTopBar .talaSummaryTitleArea p {
     margin: 5px 0 0;
     color: var(--summary-muted);
     font-size: 14px;
 }
 
-.summaryActions {
+.talapatrakSummaryView .talaSummaryActions {
     display: flex;
     align-items: flex-end;
     gap: 12px;
     flex-wrap: wrap;
 }
 
-.summarySearchGroup {
+.talapatrakSummaryView .talaSummarySearchGroup {
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
 
-.summarySearchGroup label {
+.talaSummarySearchGroup label {
     color: var(--summary-muted);
     font-size: 12px;
     font-weight: 700;
 }
 
-.summarySearchGroup input {
+.talaSummarySearchGroup input {
     width: 230px;
     min-height: 42px;
     padding: 9px 13px;
@@ -134,9 +150,9 @@ body.dark-theme .talapatrakSummaryView,
     box-sizing: border-box;
 }
 
-.summarySearchGroup input:focus {
+.talaSummarySearchGroup input:focus {
     border-color: var(--summary-primary);
-    box-shadow: 0 0 0 4px rgba(99,102,241,0.10);
+    box-shadow: 0 0 0 4px rgba(22,163,74,0.12);
 }
 
 
@@ -144,8 +160,8 @@ body.dark-theme .talapatrakSummaryView,
    BUTTONS
    ============================================================ */
 
-.summaryButton,
-.summaryAddRowButton {
+.talapatrakSummaryView .talaSummaryButton,
+.talapatrakSummaryView .talaSummaryAddRowButton {
     border: 0;
     border-radius: 10px;
     min-height: 42px;
@@ -161,32 +177,34 @@ body.dark-theme .talapatrakSummaryView,
         opacity .15s ease;
 }
 
-.summaryButton:hover,
-.summaryAddRowButton:hover {
+.talapatrakSummaryView .talaSummaryButton:hover,
+.talapatrakSummaryView .talaSummaryAddRowButton:hover {
     transform: translateY(-1px);
 }
 
-.summaryButton.primary,
-.summaryButton.generateTotal {
+.talaSummaryButton.primary,
+.talaSummaryButton.generateTotal {
     color: #ffffff;
+
     background: linear-gradient(
         135deg,
         var(--summary-primary),
-        var(--summary-purple)
+        var(--summary-emerald)
     );
 
     box-shadow:
-        0 7px 18px rgba(99,102,241,0.24);
+        0 8px 18px rgba(22,163,74,0.25);
 }
 
-.summaryButton.secondary {
+.talaSummaryButton.secondary {
     color: var(--summary-primary);
     background: var(--summary-soft);
     border: 1px solid var(--summary-soft-border);
 }
 
-.summaryAddRowButton {
+.talapatrakSummaryView .talaSummaryAddRowButton {
     margin-top: 12px;
+
     color: var(--summary-primary);
     background: var(--summary-soft);
     border: 1px solid var(--summary-soft-border);
@@ -197,12 +215,12 @@ body.dark-theme .talapatrakSummaryView,
    RECORDS
    ============================================================ */
 
-.summaryRecordsSection,
-.summaryEditor {
+.talapatrakSummaryView .talaSummaryRecordsSection,
+.talapatrakSummaryView .talaSummaryEditor {
     width: 100%;
 }
 
-.summaryRecordsSection {
+.talapatrakSummaryView .talaSummaryRecordsSection {
     padding: 22px;
     margin-bottom: 24px;
 
@@ -212,18 +230,19 @@ body.dark-theme .talapatrakSummaryView,
     box-shadow: var(--summary-shadow);
 }
 
-.summarySectionHeader h2 {
+.talaSummarySectionHeader h2 {
     margin: 0 0 16px;
+
     color: var(--summary-text);
     font-size: 20px;
 }
 
-.summaryRecordList {
+.talapatrakSummaryView .talaSummaryRecordList {
     display: grid;
     gap: 10px;
 }
 
-.summaryRecordItem {
+.talapatrakSummaryView .talaSummaryRecordItem {
     padding: 15px 17px;
 
     background: var(--summary-surface);
@@ -231,12 +250,16 @@ body.dark-theme .talapatrakSummaryView,
     border-radius: 12px;
 
     cursor: pointer;
-    transition: border-color .15s ease, box-shadow .15s ease;
+
+    transition:
+        border-color .15s ease,
+        box-shadow .15s ease;
 }
 
-.summaryRecordItem:hover {
+.talapatrakSummaryView .talaSummaryRecordItem:hover {
     border-color: var(--summary-primary);
-    box-shadow: 0 6px 18px rgba(99,102,241,0.10);
+    box-shadow:
+        0 6px 18px rgba(22,163,74,0.10);
 }
 
 
@@ -244,7 +267,7 @@ body.dark-theme .talapatrakSummaryView,
    EDITOR HEADER
    ============================================================ */
 
-.summaryEditorHeader {
+.talapatrakSummaryView .talaSummaryEditorHeader {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -260,19 +283,19 @@ body.dark-theme .talapatrakSummaryView,
     box-shadow: var(--summary-shadow);
 }
 
-.summaryEditorTitle h2 {
+.talaSummaryEditorTitle h2 {
     margin: 0;
     font-size: 22px;
 }
 
-.summaryEditorTitle span {
+.talaSummaryEditorTitle span {
     display: inline-block;
     margin-top: 5px;
     font-size: 12px;
     opacity: .85;
 }
 
-.summaryEditorActions {
+.talapatrakSummaryView .talaSummaryEditorActions {
     display: flex;
     gap: 10px;
 }
@@ -282,7 +305,7 @@ body.dark-theme .talapatrakSummaryView,
    INFO CARD
    ============================================================ */
 
-.summaryInfoCard {
+.talapatrakSummaryView .talaSummaryInfoCard {
     padding: 20px;
     margin-bottom: 20px;
 
@@ -292,30 +315,31 @@ body.dark-theme .talapatrakSummaryView,
     box-shadow: var(--summary-shadow);
 }
 
-.summaryInfoGrid {
+.talapatrakSummaryView .talaSummaryInfoGrid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 14px;
 }
 
-.summaryInfoField {
+.talapatrakSummaryView .talaSummaryInfoField {
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
 
-.summaryInfoField label {
+.talaSummaryInfoField label {
     color: var(--summary-muted);
     font-size: 12px;
     font-weight: 700;
 }
 
-.summaryInfoField input {
+.talaSummaryInfoField input {
     width: 100%;
     min-height: 40px;
     padding: 8px 11px;
 
     box-sizing: border-box;
+
     border: 1px solid var(--summary-border);
     border-radius: 9px;
 
@@ -328,7 +352,7 @@ body.dark-theme .talapatrakSummaryView,
    DOCUMENT SECTION
    ============================================================ */
 
-.summaryDocumentSection {
+.talapatrakSummaryView .talaSummaryDocumentSection {
     padding: 24px;
     margin-bottom: 24px;
 
@@ -338,16 +362,19 @@ body.dark-theme .talapatrakSummaryView,
     box-shadow: var(--summary-shadow);
 }
 
-.summaryDocumentHeader {
+.talapatrakSummaryView .talaSummaryDocumentHeader {
     margin-bottom: 18px;
     padding-bottom: 12px;
+
     border-bottom: 2px solid var(--summary-soft-border);
 }
 
-.summaryDocumentHeader h3 {
+.talaSummaryDocumentHeader h3 {
     margin: 0;
+
     color: var(--summary-primary);
     text-align: center;
+
     font-size: 19px;
     line-height: 1.5;
 }
@@ -357,19 +384,20 @@ body.dark-theme .talapatrakSummaryView,
    TABLES
    ============================================================ */
 
-.summaryTableWrapper {
+.talapatrakSummaryView .talaSummaryTableWrapper {
     width: 100%;
     overflow-x: auto;
 }
 
-.summaryTable {
+.talapatrakSummaryView .talaSummaryTable {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
+
     color: var(--summary-text);
 }
 
-.summaryTable th {
+.talaSummaryTable th {
     padding: 10px 7px;
 
     color: #ffffff;
@@ -381,7 +409,7 @@ body.dark-theme .talapatrakSummaryView,
     font-weight: 700;
 }
 
-.summaryTable td {
+.talaSummaryTable td {
     padding: 7px;
 
     background: var(--summary-surface);
@@ -391,12 +419,12 @@ body.dark-theme .talapatrakSummaryView,
     vertical-align: middle;
 }
 
-.summaryTable tbody tr:nth-child(even) td {
+.talaSummaryTable tbody tr:nth-child(even) td {
     background: var(--summary-soft);
 }
 
-.summaryTable input,
-.summaryTable textarea {
+.talaSummaryTable input,
+.talaSummaryTable textarea {
     width: 100%;
     box-sizing: border-box;
 
@@ -411,14 +439,15 @@ body.dark-theme .talapatrakSummaryView,
     font: inherit;
 }
 
-.summaryTable input:focus,
-.summaryTable textarea:focus {
+.talaSummaryTable input:focus,
+.talaSummaryTable textarea:focus {
     outline: none;
+
     border-color: var(--summary-primary);
     background: var(--summary-surface);
 }
 
-.summaryGrandTotalRow td {
+.talaSummaryGrandTotalRow td {
     background: var(--summary-soft) !important;
     color: var(--summary-primary);
     font-weight: 800;
@@ -426,38 +455,20 @@ body.dark-theme .talapatrakSummaryView,
 
 
 /* ============================================================
-   ACCOUNTING / DYNAMIC SECTIONS
+   DYNAMIC / NOTES / CERTIFICATION
    ============================================================ */
 
-.summaryAccountingSection {
-    margin-top: 22px;
-}
-
-.summaryAccountingTable td:first-child {
-    width: 72%;
-    font-weight: 600;
-}
-
-.summaryAccountingTable td:last-child {
-    width: 28%;
-}
-
-.summaryAccountingTable .sectionDivider td {
-    color: var(--summary-primary);
-    background: var(--summary-soft) !important;
-    font-weight: 800;
-}
-
-.summaryDynamicSection {
+.talapatrakSummaryView .talaSummaryDynamicSection {
     margin-top: 24px;
 }
 
-.summarySubsectionHeader {
+.talapatrakSummaryView .talaSummarySubsectionHeader {
     margin-bottom: 10px;
 }
 
-.summarySubsectionHeader h4 {
+.talaSummarySubsectionHeader h4 {
     margin: 0;
+
     color: var(--summary-primary);
     font-size: 16px;
 }
@@ -466,22 +477,37 @@ body.dark-theme .talapatrakSummaryView,
     width: 75px;
 }
 
-.summaryCertificationSection {
+.talapatrakSummaryView .talaSummaryNotesSection {
+    margin-top: 24px;
+}
+
+.talaSummaryNotesSection textarea {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 10px;
+
+    border: 1px solid var(--summary-primary);
+    border-radius: 9px;
+
+    background: var(--summary-surface);
+    color: var(--summary-text);
+
+    font: inherit;
+}
+
+.talapatrakSummaryView .talaSummaryCertificationSection {
     margin-top: 28px;
 }
 
-.summaryVerificationText {
-    color: var(--summary-muted);
-}
-
-.summarySignatureGrid {
+.talapatrakSummaryView .talaSummarySignatureGrid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 30px;
     margin-top: 35px;
 }
 
-.summarySignatureField {
+.talapatrakSummaryView .talaSummarySignatureField {
     color: var(--summary-muted);
     text-align: center;
     font-size: 13px;
@@ -493,23 +519,20 @@ body.dark-theme .talapatrakSummaryView,
     background: var(--summary-border);
 }
 
-.summaryShareSection,
-.summaryRegisterNumber {
+.talapatrakSummaryView .talaSummaryRegisterNumber {
     margin-top: 24px;
 }
 
-.summaryShareSection label,
-.summaryRegisterNumber label {
+.talaSummaryRegisterNumber label {
     display: block;
     margin-bottom: 7px;
+
     color: var(--summary-muted);
     font-size: 13px;
     font-weight: 700;
 }
 
-.summaryShareSection textarea,
-.summaryRegisterNumber input,
-.summaryNotesSection textarea {
+.talaSummaryRegisterNumber input {
     width: 100%;
     box-sizing: border-box;
 
@@ -524,8 +547,9 @@ body.dark-theme .talapatrakSummaryView,
     font: inherit;
 }
 
-.summaryCertificationParagraph {
+.talapatrakSummaryView .talaSummaryCertificationParagraph {
     margin-top: 28px;
+
     color: var(--summary-muted);
     line-height: 1.7;
 }
@@ -536,35 +560,37 @@ body.dark-theme .talapatrakSummaryView,
    ============================================================ */
 
 @media (max-width: 900px) {
+
     .talapatrakSummaryTopBar {
         flex-direction: column;
         align-items: stretch;
     }
 
-    .summaryInfoGrid {
+    .talapatrakSummaryView .talaSummaryInfoGrid {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .summarySignatureGrid {
+    .talapatrakSummaryView .talaSummarySignatureGrid {
         grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 600px) {
+
     .talapatrakSummaryView {
         padding: 12px;
     }
 
-    .summaryInfoGrid {
+    .talapatrakSummaryView .talaSummaryInfoGrid {
         grid-template-columns: 1fr;
     }
 
-    .summaryActions {
+    .talapatrakSummaryView .talaSummaryActions {
         flex-direction: column;
         align-items: stretch;
     }
 
-    .summarySearchGroup input {
+    .talaSummarySearchGroup input {
         width: 100%;
     }
 }
@@ -572,64 +598,4601 @@ body.dark-theme .talapatrakSummaryView,
 
 /* ============================================================
    PRINT
-   Editor controls disappear.
-   Summary pages themselves will be handled by JS print logic.
    ============================================================ */
 
+.talaPage1AccountingSummary .talaSummaryRowActionCell {
+    width: 70px;
+    min-width: 70px;
+    padding: 2px 3px !important;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.talaPage1AccountingSummary .talaSummaryInlineAddRowButton,
+.talaPage1AccountingSummary .talaSummaryDeleteRowButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    margin: 0 1px;
+    padding: 0;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    background: #ffffff;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 1;
+}
 @media print {
+
     .talapatrakSummaryView {
         padding: 0;
         background: #ffffff;
     }
 
-    .summaryTopBar,
-    .summaryRecordsSection,
-    .summaryEditorHeader,
-    .summaryAddRowButton,
+    .talapatrakSummaryView .talaSummaryTopBar,
+    .talapatrakSummaryView .talaSummaryRecordsSection,
+    .talapatrakSummaryView .talaSummaryEditorHeader,
+    .talapatrakSummaryView .talaSummaryAddRowButton,
     .editorOnlyColumn {
         display: none !important;
     }
 
-    .summaryEditor,
-    .summaryInfoCard,
-    .summaryDocumentSection {
+    .talapatrakSummaryView .talaSummaryEditor,
+    .talapatrakSummaryView .talaSummaryInfoCard,
+    .talapatrakSummaryView .talaSummaryDocumentSection {
         box-shadow: none !important;
         border: 0 !important;
     }
 
-    .summaryDocumentSection {
+    .talapatrakSummaryView .talaSummaryDocumentSection {
         margin: 0;
         padding: 0;
     }
 }
 
+/* ========================================================
+   TALAPATRAK GOVERNMENT SUMMARY PAGES
+   ======================================================== */
+
+.talapatrakGovernmentSummaryPage {
+    width: 100%;
+    box-sizing: border-box;
+    background: #ffffff;
+    color: #222222;
+    padding: 24px 28px;
+    font-family: inherit;
+}
+
+.talapatrakGovernmentSummaryPage h2 {
+    margin: 0 0 18px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.talapatrakGovernmentSummaryHeader {
+    margin-bottom: 18px;
+    border: 1px solid #777777;
+}
+
+.talapatrakGovernmentSummaryHeaderRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.talapatrakGovernmentSummaryHeaderCell {
+    min-height: 38px;
+    padding: 8px 10px;
+    border-right: 1px solid #777777;
+    border-bottom: 1px solid #777777;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.talapatrakGovernmentSummaryHeaderCell:nth-child(2n) {
+    border-right: 0;
+}
+
+.talapatrakGovernmentSummaryHeaderRow:last-child
+.talapatrakGovernmentSummaryHeaderCell {
+    border-bottom: 0;
+}
+
+.talapatrakGovernmentSummaryTableWrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.talapatrakGovernmentSummaryTable {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 13px;
+}
+
+.talapatrakGovernmentSummaryTable th,
+.talapatrakGovernmentSummaryTable td {
+    border: 1px solid #555555;
+    padding: 7px 6px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 1.4;
+}
+
+.talapatrakGovernmentSummaryTable th {
+    font-weight: 700;
+    background: #f5f5f5;
+}
+
+.talapatrakGovernmentSummaryTable td:nth-child(1),
+.talapatrakGovernmentSummaryTable th:nth-child(1) {
+    width: 8%;
+}
+
+.talapatrakGovernmentSummaryTable td:nth-child(2),
+.talapatrakGovernmentSummaryTable th:nth-child(2) {
+    width: 18%;
+}
+
+.talapatrakGovernmentSummaryTable td:nth-child(3),
+.talapatrakGovernmentSummaryTable th:nth-child(3) {
+    width: 16%;
+}
+
+.talapatrakGovernmentSummaryTable td:nth-child(n + 4),
+.talapatrakGovernmentSummaryTable th:nth-child(n + 4) {
+    width: 14.5%;
+}
+
+.talapatrakGovernmentSummaryTable .governmentSummaryTotalRow td {
+    font-weight: 700;
+    background: #f5f5f5;
+}
+
+.talapatrakGovernmentSummaryPage p {
+    margin: 8px 0;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+
+
+@media print {
+
+    .talapatrakGovernmentSummaryPage {
+        width: 100%;
+        min-height: 100%;
+        padding: 12mm 10mm;
+        box-sizing: border-box;
+        break-after: page;
+        page-break-after: always;
+    }
+
+    .talapatrakGovernmentSummaryPage:last-child {
+        break-after: auto;
+        page-break-after: auto;
+    }
+
+    .talapatrakGovernmentSummaryPage h2 {
+        font-size: 17px;
+        margin-bottom: 12px;
+    }
+
+    .talapatrakGovernmentSummaryHeader {
+        margin-bottom: 12px;
+    }
+
+    .talapatrakGovernmentSummaryTable {
+        font-size: 11px;
+    }
+
+    .talapatrakGovernmentSummaryTable th,
+    .talapatrakGovernmentSummaryTable td {
+        padding: 5px 4px;
+    }
+
+}
+
+
+/* =========================================================
+   TALAPATRAK PAGE 1 — NAMUNO 10 / CHALAN TARIZ
+   ========================================================= */
+
+.talaPage1 {
+    width: 100%;
+    margin: 0;
+    padding: 24px;
+    box-sizing: border-box;
+    background: #ffffff;
+    color: #1f2937;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+}
+
+.talaSummaryPageHeading {
+    margin: 0 0 18px;
+    padding: 14px 18px;
+    text-align: center;
+    background: linear-gradient(135deg, #eef2ff, #faf5ff);
+    border: 1px solid #c7d2fe;
+    border-left: 5px solid #6366f1;
+    border-radius: 10px;
+}
+
+.talaSummaryPageHeading h3 {
+    margin: 0;
+    color: #4f46e5;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.5;
+}
+
+.talaSummaryHeaderFields {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1.2fr 0.9fr;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.talaSummaryHeaderField {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+}
+
+.talaSummaryHeaderField label {
+    flex: 0 0 auto;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.talaSummaryHeaderField input {
+    width: 100%;
+    min-width: 0;
+    padding: 7px 8px;
+    box-sizing: border-box;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #1f2937;
+    font: inherit;
+}
+
+.talaSummaryHeaderField input:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.10);
+}
+
+.talaPage1TableWrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.talaPage1ChallanTable th,
+.talaPage1ChallanTable td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.talaPage1ChallanTable input {
+    text-align: center;
+}
+
+.talaPage1ChallanTable {
+    width: 100%;
+    min-width: 900px;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.talaPage1ChallanTable th {
+    padding: 9px 7px;
+    color: #ffffff;
+    background: #6366f1;
+    border: 1px solid #4f46e5;
+    font-size: 13px;
+    font-weight: 800;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.talaPage1ChallanTable td {
+    padding: 5px;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.talaPage1ChallanTable tbody tr:nth-child(even) td {
+    background: #f8f7ff;
+}
+
+.talaPage1ChallanTable .talaSummaryRowNumber {
+    width: 55px;
+    text-align: center;
+    color: #4f46e5;
+    font-weight: 800;
+}
+
+.talaPage1ChallanTable input {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 6px 7px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    background: transparent;
+    color: #1f2937;
+    font: inherit;
+}
+
+.talaPage1ChallanTable input:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    background: #faf5ff;
+    box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.12);
+}
+
+.talaPage1ChallanTable th:nth-child(1),
+.talaPage1ChallanTable td:nth-child(1) {
+    width: 55px;
+}
+
+.talaPage1ChallanTable th:nth-child(2),
+.talaPage1ChallanTable td:nth-child(2) {
+    width: 135px;
+}
+
+.talaPage1ChallanTable th:nth-child(3),
+.talaPage1ChallanTable td:nth-child(3) {
+    width: 125px;
+}
+
+.talaPage1ChallanTable th:nth-child(4),
+.talaPage1ChallanTable td:nth-child(4),
+.talaPage1ChallanTable th:nth-child(5),
+.talaPage1ChallanTable td:nth-child(5),
+.talaPage1ChallanTable th:nth-child(6),
+.talaPage1ChallanTable td:nth-child(6),
+.talaPage1ChallanTable th:nth-child(7),
+.talaPage1ChallanTable td:nth-child(7) {
+    width: 105px;
+}
+
+.talaPage1ChallanTable th:last-child,
+.talaPage1ChallanTable td:last-child {
+    width: 82px;
+}
+
+.talaPage1ChallanTable .talaSummaryGrandTotalRow td {
+    background: #f3f4f6 !important;
+    color: #4f46e5 !important;
+    font-weight: 800;
+}
+
+.talaPage1ChallanTable .talaSummaryGrandTotalRow td:first-child {
+    text-align: center;
+}
+
+.talaPage1ChallanTable .talaSummaryGrandTotalRow input {
+    font-weight: 800;
+    color: #4f46e5;
+}
+
+.talapatrakSummaryView .talaSummaryRowActionCell {
+    width: 82px;
+    text-align: center;
+}
+
+.talapatrakSummaryView .talaSummaryDeleteRowButton {
+    width: 32px;
+    height: 30px;
+    padding: 0;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    background: #fff1f2;
+    color: #b91c1c;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+}
+
+.talapatrakSummaryView .talaSummaryDeleteRowButton:hover {
+    background: #fee2e2;
+    border-color: #fca5a5;
+}
+
+.talaPage1AddRowArea {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+}
+
+.talapatrakSummaryView .talaSummaryAddRowButton {
+    padding: 8px 14px;
+    border: 1px solid #4f46e5;
+    border-radius: 7px;
+    background: #6366f1;
+    color: #ffffff;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.talapatrakSummaryView .talaSummaryAddRowButton:hover {
+    background: #4f46e5;
+}
+
+.talaPage1NotesSection {
+    margin-top: 22px;
+}
+
+.talaPage1NotesSection textarea {
+    width: 100%;
+    min-height: 72px;
+    box-sizing: border-box;
+    padding: 9px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #1f2937;
+    font: inherit;
+    resize: vertical;
+    overflow-y: hidden;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+    field-sizing: content;
+    border: 1px solid #9ca3af !important;   
+    outline: none;}
+
+.talaPage1NotesSection textarea:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.10);
+}
+/* Print: Page 1 will eventually be landscape with 20px margins. */
+
+
+
+@media print {
+
+    .talaPage1 {
+        margin: 0;
+        padding: 0;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .talaSummaryPageHeading {
+        background: #ffffff;
+        border-color: #333333;
+    }
+
+    .talaSummaryPageHeading h3 {
+        color: #111111;
+    }
+
+    .talaPage1ChallanTable th {
+        background: #e5e7eb;
+        color: #111111;
+        border-color: #333333;
+    }
+
+    .talaPage1ChallanTable td {
+        border-color: #333333;
+    }
+
+    .talaPage1AddRowArea,
+    .talapatrakSummaryView .talaSummaryDeleteRowButton {
+        display: none !important;
+    }
+
+}
+
+/* =========================================================
+   TALAPATRAK SUMMARY MOUNT — FULL WIDTH EDITOR
+   ========================================================= */
+
+.talapatrakEditorContent {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.talapatrakSummaryPageMount {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    display: block;
+}
+
+.talapatrakSummaryPageMount > #talapatrakSummaryEditor {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 28px !important;
+    box-sizing: border-box !important;
+}
+
+.talapatrakSummaryPageMount .talaPage1 {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    box-sizing: border-box !important;
+}
+
+
+/* =========================================================
+   TALAPATRAK SUMMARY — SAME GEOMETRY AS DATA TABLE AREA
+   The existing Talapatrak header and pagination remain
+   outside this area and are intentionally untouched.
+========================================================= */
+
+.talapatrakSummaryPageMount {
+    width: 100% !important;
+    height: 722px !important;
+    min-height: 722px !important;
+    max-height: 722px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    border: 1px solid #dbe2ea !important;
+    border-radius: 16px !important;
+    background: #ffffff !important;
+}
+
+.talapatrakSummaryPageMount > #talapatrakSummaryEditor {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    display: block !important;
+}
+
+.talapatrakSummaryPageMount .talaPage1 {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 12px 14px !important;
+    box-sizing: border-box !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+}
+
+.talapatrakSummaryPageMount .talaSummaryPageHeading {
+    margin: 0 0 8px !important;
+}
+
+.talapatrakSummaryPageMount .talaSummaryHeaderFields {
+    margin-bottom: 8px !important;
+}
+
+.talapatrakSummaryPageMount .talaPage1TableWrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+}
+
+.talapatrakSummaryPageMount .talaPage1ChallanTable th,
+.talaPage1ChallanTable td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+.talaPage1ChallanTable {
+    width: 100% !important;
+    min-width: 0 !important;
+    table-layout: fixed !important;
+}
+
+
+
+
+
+
+/* =========================================================
+   TALAPATRAK SUMMARY — REPLACE DATA TABLE AREA
+========================================================= */
+
+body.talapatrakFullViewMode
+#talapatrakEditorView
+.talapatrakTableWrapper:has(#talapatrakSummaryPageMount) {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+}
+
+body.talapatrakFullViewMode
+#talapatrakEditorView
+.talapatrakTableWrapper
+#talapatrakSummaryPageMount {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+}
+
 /* ============================================================
-   GENERATED SUMMARY PRINT PAGE
+   TALAPATRAK PAGE 1 ACCOUNTING SUMMARY
+   ============================================================ */
+
+.talaPage1AccountingSummary {
+    width: 100%;
+    margin-top: 10px;
+    box-sizing: border-box;
+    overflow-x: auto;
+}
+
+.talaPage1AccountingTable {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #d1d5db;
+}
+
+
+
+.talaPage1AccountingTable th,
+.talaPage1AccountingTable td {
+    border: 1px solid #d1d5db;
+    box-sizing: border-box;
+    vertical-align: middle;
+}
+
+.talaPage1AccountingTable th {
+    padding: 5px 6px;
+    background: #4f46e5;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.25;
+    text-align: center;
+}
+
+.talaPage1AccountingTable td {
+    padding: 6px 5px;
+    background: #ffffff;
+    color: #1f2937;
+    font-size: 14px;
+    line-height: 1.3;
+}
+
+.talaPage1AccountingTable tbody tr:nth-child(even):not(.talaAccountingSectionRow):not(.talaAccountingTotalRow):not(.talaAccountingFinalRow) td {
+    background: #f8fafc;
+}
+
+.talaPage1AccountingTable input {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 5px 6px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: transparent;
+    color: #1f2937;
+    font: inherit;
+    line-height: 1.25;
+}
+
+.talaPage1AccountingTable input:focus {
+    border-color: #c7d2fe;
+    outline: none;
+    background: #f0fdf4;
+}
+
+.talaPage1AccountingTable .talaAccountingSerial {
+    text-align: center;
+    font-weight: 700;
+    color: #4f46e5;
+}
+
+.talaPage1AccountingTable td:nth-child(n + 3) input {
+    text-align: right;
+}
+
+.talaPage1AccountingTable .talaAccountingSectionRow td {
+    padding: 7px 8px;
+    background: #eef2ff;
+    color: #4f46e5;
+    font-size: 15px;
+    font-weight: 800;
+    text-align: left;
+}
+
+.talaPage1AccountingTable .talaAccountingTotalRow td {
+    background: #f3f4f6 !important;
+    font-weight: 800;
+}
+
+.talaPage1AccountingTable .talaAccountingTotalRow input {
+    font-weight: 800;
+}
+
+.talaPage1AccountingTable .talaAccountingFinalRow td {
+    background: #f8fafc;
+    font-weight: 800;
+}
+
+.talaPage1AccountingTable td:nth-child(2) {
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+
+/* Print: keep the accounting summary inside Page 1.
+   Do not change @page orientation or global print margins. */
+
+
+
+@media print {
+
+    .talaPage1AccountingSummary {
+        width: 100%;
+        margin-top: 8px;
+        overflow: visible;
+    }
+
+    .talaPage1AccountingTable {
+        width: 100%;
+        border-color: #333333;
+    }
+
+    .talaPage1AccountingTable th {
+        background: #e5e7eb;
+        color: #111111;
+        border-color: #333333;
+    }
+
+    .talaPage1AccountingTable td {
+        border-color: #333333;
+    }
+
+    .talaPage1AccountingTable input {
+        border: none;
+        padding: 0;
+        background: transparent;
+        color: #111111;
+    }
+
+    .talaPage1AccountingTable .talaAccountingSectionRow td {
+        background: #f3f4f6;
+        color: #111111;
+    }
+
+    .talaPage1AccountingTable .talaAccountingTotalRow td,
+    .talaPage1AccountingTable .talaAccountingFinalRow td {
+        background: #f8f8f8 !important;
+    }
+}
+
+
+/* ============================================================
+   PAGE 1 INLINE ROW ACTION BUTTONS
+============================================================ */
+
+.talaPage1ChallanTable .talaSummaryRowActionCell {
+    width: 92px;
+    min-width: 92px;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.talaPage1ChallanTable .talaSummaryInlineAddRowButton,
+.talaPage1ChallanTable .talaSummaryDeleteRowButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    margin: 0 2px;
+    padding: 0;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    background: #ffffff;
+    cursor: pointer;
+    font-size: 17px;
+    line-height: 1;
+    transition: background-color 0.15s ease,
+                border-color 0.15s ease,
+                transform 0.15s ease;
+}
+
+.talaPage1ChallanTable .talaSummaryInlineAddRowButton {
+    color: #4f46e5;
+}
+
+.talaPage1ChallanTable .talaSummaryDeleteRowButton {
+    color: #b91c1c;
+}
+
+.talaPage1ChallanTable .talaSummaryInlineAddRowButton:hover {
+    background: #f0fdf4;
+    border-color: #c7d2fe;
+    transform: translateY(-1px);
+}
+
+.talaPage1ChallanTable .talaSummaryDeleteRowButton:hover {
+    background: #fef2f2;
+    border-color: #fca5a5;
+    transform: translateY(-1px);
+}
+
+.talaPage1ChallanTable .talaSummaryInlineAddRowButton:active,
+.talaPage1ChallanTable .talaSummaryDeleteRowButton:active {
+    transform: translateY(0);
+}
+
+
+
+
+@media print {
+    .talaPage1ChallanTable .talaSummaryRowActionCell {
+        display: none !important;
+    }
+}
+
+/* ============================================================
+   TALAPATRAK PAGE 1 ACCOUNTING TABLE — MAIN TABLE ALIGNMENT
+   ============================================================ */
+
+.talaPage1AccountingTable {
+    width: 100%;
+    min-width: 900px;
+    table-layout: fixed;
+}
+
+.talaPage1AccountingTable .talaAccountingColSerial {
+    width: 55px;
+}
+
+.talaPage1AccountingTable .talaAccountingColReceipt {
+    width: 135px;
+}
+
+.talaPage1AccountingTable .talaAccountingColDate {
+    width: 125px;
+}
+
+.talaPage1AccountingTable .talaAccountingColPrevious,
+.talaPage1AccountingTable .talaAccountingColCurrent,
+.talaPage1AccountingTable .talaAccountingColRotating,
+.talaPage1AccountingTable .talaAccountingColTotal {
+    width: 105px;
+}
+
+.talaPage1AccountingTable .talaAccountingColAction {
+    width: 82px;
+}
+
+
+
+
+/* ============================================================
+   TALAPATRAK SUMMARY — PAGE 1 ROW ACTIONS
+============================================================ */
+
+.talaPage1 .talaSummaryRowActions {
+    width: 72px;
+    padding: 4px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.talaPage1 .talaSummaryRowActionButton {
+    width: 28px;
+    height: 28px;
+    margin: 0 2px;
+    padding: 0;
+    border: 1px solid var(--summary-border);
+    border-radius: 6px;
+    background: var(--summary-surface);
+    color: var(--summary-primary);
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.talaPage1 .talaSummaryRowActionButton:hover {
+    background: var(--summary-soft);
+    border-color: var(--summary-primary);
+}
+
+.talaPage1 .talaSummaryRowDeleteButton {
+    color: var(--summary-muted);
+}
+
+@media print {
+    .talaPage1 .talaSummaryRowActions {
+        display: none;
+    }
+}
+
+/* ============================================================
+
+/* ============================================================
+
+/* ============================================================
+   TALAPATRAK SUMMARY — PAGE 2
+   Same visual system as Page 1 / editor.
+   ============================================================ */
+
+@page talaPage2Landscape {
+    size: A4 landscape;
+    margin: 20px;
+}
+
+/* ------------------------------------------------------------
+   PAGE 2 CONTAINER
+------------------------------------------------------------ */
+
+.talaPage2 {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: #1f2937;
+}
+
+/* ------------------------------------------------------------
+   PAGE 2 HEADING
+------------------------------------------------------------ */
+
+.talaPage2 .talaSummaryPageHeading {
+    width: 100%;
+    margin: 0 0 10px;
+    padding: 8px 10px;
+    box-sizing: border-box;
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    border-radius: 6px;
+}
+
+.talaPage2 .talaSummaryPageHeading h3 {
+    margin: 0;
+    padding: 0;
+    color: #4f46e5;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.3;
+    text-align: center;
+}
+
+/* ------------------------------------------------------------
+   TABLE WRAPPER
+------------------------------------------------------------ */
+
+.talaPage2 .talaPage2TableWrapper {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+}
+
+/* ------------------------------------------------------------
+   MAIN TABLE
+------------------------------------------------------------ */
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable {
+    width: 100%;
+    min-width: 900px;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+}
+
+/* ------------------------------------------------------------
+   COLUMN WIDTHS
+------------------------------------------------------------ */
+
+.talaPage2 .talaPage2ColSerial {
+    width: 7%;
+}
+
+.talaPage2 .talaPage2ColDescription {
+    width: 38%;
+}
+
+.talaPage2 .talaPage2ColDate {
+    width: 110px;
+}
+
+.talaPage2 .talaPage2ColPrevious,
+.talaPage2 .talaPage2ColCurrent,
+.talaPage2 .talaPage2ColRotating,
+.talaPage2 .talaPage2ColTotal {
+    width: 13.75%;
+}
+
+/* ------------------------------------------------------------
+   TABLE BORDERS
+------------------------------------------------------------ */
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable th,
+.talaPage2 .talapatrakSummaryPage2AccountingTable td {
+    border: 1px solid #d1d5db;
+    box-sizing: border-box;
+    vertical-align: middle;
+}
+
+/* ------------------------------------------------------------
+   MAIN HEADER
+------------------------------------------------------------ */
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable thead tr:first-child th {
+    padding: 7px 6px;
+    height: 40px;
+    background: #4f46e5;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.25;
+    text-align: center;
+}
+
+/* ------------------------------------------------------------
+   YEAR TOTAL — DIRECTLY BELOW HEADER
+------------------------------------------------------------ */
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable .talaPage2YearTotalRow td {
+    height: 38px;
+    padding: 6px 6px;
+    background: #eef2ff;
+    color: #4f46e5;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.25;
+    text-align: center;
+}
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable .talaPage2YearTotalRow td:nth-child(3) {
+    text-align: left;
+}
+
+/* ------------------------------------------------------------
+   NORMAL BODY ROWS
+------------------------------------------------------------ */
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable tbody td {
+    padding: 6px 5px;
+    background: #ffffff;
+    color: #1f2937;
+    font-size: 14px;
+    line-height: 1.3;
+}
+
+/* Alternating rows — same as Page 1 */
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable tbody tr:nth-child(even):not(.talaPage2SectionRow):not(.talaPage2TotalRow) td {
+    background: #f8fafc;
+}
+
+/* ------------------------------------------------------------
+   SERIAL COLUMN
+------------------------------------------------------------ */
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable tbody td:first-child {
+    text-align: center;
+    font-weight: 700;
+    color: #4f46e5;
+}
+
+/* ------------------------------------------------------------
+   DESCRIPTION CELLS
+------------------------------------------------------------ */
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable tbody td[colspan="2"] {
+    overflow-wrap: anywhere;
+    word-break: normal;
+    text-align: left;
+}
+
+/* ------------------------------------------------------------
+   JADE / BAAD SECTION ROWS
+------------------------------------------------------------ */
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable .talaPage2SectionRow td {
+    padding: 7px 8px;
+    background: #eef2ff;
+    color: #4f46e5;
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.25;
+    text-align: left;
+}
+
+/* ------------------------------------------------------------
+   EDITABLE INPUTS
+------------------------------------------------------------ */
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable input {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 5px 6px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: transparent;
+    color: #1f2937;
+    font: inherit;
+    line-height: 1.25;
+    text-align: right;
+}
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable input:focus {
+    border-color: #c7d2fe;
+    outline: none;
+    background: #f0fdf4;
+}
+
+/* ------------------------------------------------------------
+   TOTAL ROWS
+------------------------------------------------------------ */
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable .talaPage2TotalRow td {
+    background: #f3f4f6;
+    color: #1f2937;
+    font-weight: 800;
+}
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable .talaPage2TotalRow input {
+    font-weight: 800;
+}
+
+/* ------------------------------------------------------------
+   HEADFER / FINAL EDITABLE ROWS
+------------------------------------------------------------ */
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable tr[data-tala-page2-row="headfer"] td,
+.talaPage2 .talapatrakSummaryPage2AccountingTable tr[data-tala-page2-row="jadeFinal"] td {
+    background: #ffffff;
+}
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable tr[data-tala-page2-row="headfer"] td:first-child,
+.talaPage2 .talapatrakSummaryPage2AccountingTable tr[data-tala-page2-row="jadeFinal"] td:first-child {
+    color: #4f46e5;
+}
+
+/* ------------------------------------------------------------
+   FINAL COLLECTION
+------------------------------------------------------------ */
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable tr[data-tala-page2-total-row="finalCollection"] td {
+    background: #f8fafc;
+    color: #1f2937;
+    font-weight: 800;
+}
+
+@media print {
+
+    .talaPage2 {
+        page: talaPage2Landscape;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .talaPage2 .talaSummaryPageHeading {
+        margin: 0 0 10px;
+    }
+
+    .talaPage2 .talaPage2TableWrapper {
+        padding: 0;
+        overflow: visible;
+    }
+
+    .talaPage2 .talapatrakSummaryPage2AccountingTable {
+        width: 100%;
+        min-width: 0;
+        border-color: #333333;
+    }
+
+    .talaPage2 .talapatrakSummaryPage2AccountingTable th,
+    .talaPage2 .talapatrakSummaryPage2AccountingTable td {
+        border-color: #333333;
+    }
+
+    .talaPage2 .talapatrakSummaryPage2AccountingTable th {
+        background: #e5e7eb;
+        color: #111111;
+    }
+
+    .talaPage2 .talapatrakSummaryPage2AccountingTable input {
+        border: none;
+        background: transparent;
+        color: #111111;
+    }
+
+    .talaPage2 .talapatrakSummaryPage2AccountingTable .talaPage2SectionRow td {
+        background: #f3f4f6;
+        color: #111111;
+    }
+
+    .talaPage2 .talapatrakSummaryPage2AccountingTable .talaPage2TotalRow td,
+    .talaPage2 .talapatrakSummaryPage2AccountingTable tr[data-tala-page2-total-row="finalCollection"] td {
+        background: #f8f8f8;
+    }
+
+}
+
+/* ============================================================
+   PAGE 2 — FINAL SPACING AND ALIGNMENT
+   ============================================================ */
+
+.talaPage2 .talaPage2TableWrapper {
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable {
+    width: 100%;
+}
+
+/* All Page 2 numeric values — generated and entered */
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable td[data-tala-page2-field] {
+    text-align: center;
+}
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable td[data-tala-page2-field] input {
+    text-align: center !important;
+}
+
+/* Serial numbers */
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable tbody tr:not(.talaPage2SectionRow) > td:first-child {
+    text-align: center;
+}
+
+/* Total labels */
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable tr[data-tala-page2-total-row="jade"] > td[colspan="3"],
+.talaPage2 .talapatrakSummaryPage2AccountingTable tr[data-tala-page2-total-row="baad"] > td[colspan="3"] {
+    text-align: right;
+}
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable tr[data-tala-page2-total-row="finalCollection"] > td[colspan="3"] {
+    text-align: center;
+}
+
+@media print {
+
+    .talaPage2 .talaPage2TableWrapper {
+        padding: 0;
+    }
+
+}
+
+/* PAGE 2 — CENTER ALL ENTERED NUMBERS */
+
+.talaPage2 .talapatrakSummaryPage2AccountingTable input[data-tala-page2-field="previous"],
+.talaPage2 .talapatrakSummaryPage2AccountingTable input[data-tala-page2-field="current"],
+.talaPage2 .talapatrakSummaryPage2AccountingTable input[data-tala-page2-field="rotating"],
+.talaPage2 .talapatrakSummaryPage2AccountingTable input[data-tala-page2-field="total"] {
+    text-align: center !important;
+}
+
+
+/* ============================================================
+   TALAPATRAK SUMMARY — PAGE 3
+   ============================================================ */
+
+@page talaPage3Landscape {
+    size: A4 landscape;
+    margin: 20px;
+}
+
+.talaPage3 {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: #1f2937;
+    page: talaPage3Landscape;
+}
+
+.talaPage3 .talaSummaryPageHeading {
+    width: 100%;
+    margin: 0 0 10px;
+    padding: 8px 10px;
+    box-sizing: border-box;
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    border-radius: 6px;
+}
+
+.talaPage3 .talaSummaryPageHeading h3 {
+    margin: 0;
+    padding: 0;
+    color: #4f46e5;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.3;
+    text-align: center;
+}
+
+.talaPage3 .talaPage3InfoRow {
+    display: grid;
+    grid-template-columns: 2fr 2fr 2fr 1fr;
+    width: 100%;
+    margin: 0 0 8px;
+    padding: 7px 10px;
+    box-sizing: border-box;
+    background: #f8fafc;
+    border: 1px solid #d1d5db;
+    color: #1f2937;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.talaPage3 .talaPage3InfoRow div {
+    text-align: center;
+}
+
+.talaPage3 .talaSummaryTableWrapper {
+    width: 100%;
+    margin: 0;
+    padding: 8px;
+    box-sizing: border-box;
+    overflow-x: auto;
+}
+
+.talaPage3 .talapatrakSummaryDemandTable {
+    width: 100%;
+    min-width: 900px;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+}
+
+.talaPage3 .talaPage3ColSerial {
+    width: 70px;
+}
+
+.talaPage3 .talaPage3ColDetails {
+    width: 360px;
+}
+
+.talaPage3 .talaPage3ColPrevious,
+.talaPage3 .talaPage3ColCurrent,
+.talaPage3 .talaPage3ColRotating,
+.talaPage3 .talaPage3ColTotal {
+    width: 145px;
+}
+
+.talaPage3 .talapatrakSummaryDemandTable th,
+.talaPage3 .talapatrakSummaryDemandTable td {
+    border: 1px solid #d1d5db;
+    box-sizing: border-box;
+    vertical-align: middle;
+}
+
+.talaPage3 .talapatrakSummaryDemandTable thead th {
+    padding: 8px 6px;
+    height: 40px;
+    background: #4f46e5;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.25;
+    text-align: center;
+}
+
+.talaPage3 .talapatrakSummaryDemandTable tbody td {
+    padding: 7px 6px;
+    height: 42px;
+    background: #ffffff;
+    color: #1f2937;
+    font-size: 14px;
+    line-height: 1.3;
+}
+
+.talaPage3 .talapatrakSummaryDemandTable tbody tr:nth-child(even) td {
+    background: #f8fafc;
+}
+
+.talaPage3 .talapatrakSummaryDemandTable tbody td:first-child {
+    text-align: center;
+    font-weight: 700;
+    color: #4f46e5;
+}
+
+.talaPage3 .talapatrakSummaryDemandTable tbody td:nth-child(2) {
+    text-align: left;
+    font-weight: 700;
+}
+
+.talaPage3 .talapatrakSummaryDemandTable td[data-page3-field="total"] {
+    text-align: center;
+    font-weight: 800;
+}
+
+.talaPage3 .talapatrakSummaryDemandTable input {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 6px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: transparent;
+    color: #1f2937;
+    font: inherit;
+    line-height: 1.25;
+    text-align: center;
+}
+
+.talaPage3 .talapatrakSummaryDemandTable input:focus {
+    border-color: #c7d2fe;
+    outline: none;
+    background: #f0fdf4;
+}
+
+@media print {
+
+    .talaPage3 {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .talaPage3 .talaSummaryPageHeading {
+        margin-top: 0;
+        margin-bottom: 6px;
+        padding: 5px 8px;
+    }
+
+    .talaPage3 .talaSummaryPageHeading h3 {
+        font-size: 10px;
+    }
+
+    .talaPage3 .talaPage3InfoRow {
+        margin-bottom: 5px;
+        padding: 4px 6px;
+        font-size: 10px;
+    }
+
+    .talaPage3 .talaSummaryTableWrapper {
+        padding: 0;
+        overflow: visible;
+    }
+
+    .talaPage3 .talapatrakSummaryDemandTable {
+        width: 100%;
+        min-width: 0;
+        border-color: #333333;
+    }
+
+    .talaPage3 .talapatrakSummaryDemandTable th {
+        background: #e5e7eb;
+        color: #111111;
+        border-color: #333333;
+    }
+
+    .talaPage3 .talapatrakSummaryDemandTable td {
+        border-color: #333333;
+    }
+
+    .talaPage3 .talapatrakSummaryDemandTable input {
+        border: none;
+        padding: 0;
+        background: transparent;
+        color: #111111;
+    }
+}
+
+
+/* ============================================================
+   SUMMARY DOCUMENT PAGES — ONE PHYSICAL PAGE EACH
+   ============================================================ */
+
+@media print {
+
+        page-break-after: auto;
+}
+
+
+/* ============================================================
+   TALAPATRAK SUMMARY — PAGE 4
+   OFFICIAL CERTIFICATION / SIGNATURE PAGE
+   ============================================================ */
+
+@page talaPage4Landscape {
+    size: A4 landscape;
+    margin: 20px;
+}
+
+.talaPage4 {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 20px 24px;
+    box-sizing: border-box;
+    color: #1f2937;
+    page: talaPage4Landscape;
+    background: #ffffff;
+}
+
+@media print {
+
+    .talaPage4 {
+        width: 100%;
+        min-height: 0;
+        margin: 0;
+        padding: 8px 12px;
+        background: #ffffff;
+    }
+
+
+
+}
+
+
+/* ============================================================
+   PAGE 3 — BALANCE TABLE
+   Consolidated editor styling
+   ============================================================ */
+
+.talaPage3BalanceTableWrapper {
+    margin-top: 10px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: visible;
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+.talaPage3BalanceTable {
+    width: 50%;
+    max-width: 50%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    margin: 0;
+    font-size: 13px;
+    box-sizing: border-box;
+    background: #ffffff;
+}
+
+.talaPage3BalanceTable th,
+.talaPage3BalanceTable td {
+    border: 1px solid #4f6f52;
+    padding: 3px 6px;
+    height: 22px;
+    box-sizing: border-box;
+    text-align: center;
+    vertical-align: middle;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.talaPage3BalanceTable th:first-child,
+.talaPage3BalanceTable td:first-child,
+.talaPage3BalanceTable th:last-child,
+.talaPage3BalanceTable td:last-child {
+    width: 50%;
+}
+
+.talaPage3BalanceTable thead tr:first-child th {
+    background: #e8f1e8;
+    color: #315a36;
+    font-weight: 600;
+}
+
+.talaPage3BalanceTable thead tr:nth-child(2) th {
+    background: #f3f7f3;
+    color: #315a36;
+    font-weight: 600;
+}
+
+.talaPage3BalanceTable tbody tr:nth-child(even) td {
+    background: #f8fbf8;
+}
+
+.talaPage3BalanceTable input {
+    width: 100%;
+    height: 20px;
+    padding: 1px 4px;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    background: transparent;
+    text-align: center;
+    font: inherit;
+    color: #1f2937;
+}
+
+.talaPage3BalanceTable input:focus {
+    background: #eef7ee;
+}
+
+.talaPage3BalanceTotalRow {
+    font-weight: 600;
+}
+
+.talaPage3BalanceTotalRow td {
+    background: #e8f1e8;
+    color: #315a36;
+    font-weight: 600;
+}
+/* ============================================================
+   GENERATED SUMMARY PRINT PAGES
    ============================================================ */
 
 .talapatrakSummaryPrintPage {
-    width: 100%;
-    min-height: 100%;
-    box-sizing: border-box;
-    break-after: page;
-    page-break-after: always;
+    display: block !important;
+    position: relative !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    background: #ffffff !important;
+    color: #1f2937 !important;
+    break-after: page !important;
+    page-break-after: always !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    overflow: visible !important;
 }
 
 .talapatrakSummaryPrintPage:last-child {
-    break-after: auto;
-    page-break-after: auto;
+    break-after: auto !important;
+    page-break-after: auto !important;
 }
 
-.talapatrakSummaryPrintValue {
-    display: inline;
+.talapatrakSummaryPrintPage .talaSummaryDocumentSection {
+    display: block !important;
+    width: 100% !important;
+    visibility: visible !important;
 }
 
 .talapatrakSummaryPrintFooter {
-    margin-top: 8px;
+    display: block !important;
+    width: 100% !important;
+    text-align: right !important;
+    margin-top: 10px !important;
 }
 
 .talapatrakSummaryPrintPageNumber {
+    display: block !important;
+    font-size: 12px !important;
+    color: #111111 !important;
+}
+
+/* ============================================================
+   SUMMARY PRINT PAGE — MATCH DATA PAGE PRINT AREA
+   ============================================================ */
+
+
+.talapatrakSummaryPrintPage .talapatrakPrintInfoPanel {
+    width: 100% !important;
+    margin: 0 0 4mm 0 !important;
+    padding: 4px 20px !important;
+    box-sizing: border-box !important;
+}
+
+
+/* ============================================================
+   SUMMARY PRINT FOOTER — EXACT DATA PAGE POSITION
+   ============================================================ */
+
+.talapatrakSummaryPrintFooter {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 2mm !important;
+    width: 100% !important;
+    height: 6mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    box-sizing: border-box !important;
+}
+
+.talapatrakSummaryPrintPageNumber {
+    position: static !important;
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 10px !important;
+    font-weight: 400 !important;
+    line-height: 5mm !important;
+    color: #000 !important;
+    opacity: 1 !important;
+}
+
+
+/* SUMMARY PRINT PAGE NUMBER — BOTTOM CENTER */
+.talapatrakSummaryPrintFooter {
+    justify-content: center !important;
+}
+
+
+/* PAGE 1 — SPACE BETWEEN NOTES AND HEADING */
+.talaPage1 .talaPage1NotesSection + .talaSummaryPageHeading {
+    margin-top: 18px !important;
+}
+
+
+/* PAGE 2 — YEAR TOTAL VALUES CENTERED */
+.talaPage2YearTotalRow td:nth-child(n + 4) {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+#talapatrakSummaryPage2YearPrevious,
+#talapatrakSummaryPage2YearCurrent,
+#talapatrakSummaryPage2YearRotating,
+#talapatrakSummaryPage2YearTotal {
+    text-align: center !important;
+}
+
+
+/* ============================================================
+   PAGE 3 — EDITOR LAYOUT
+   Consolidated final values
+   ============================================================ */
+
+.talapatrakSummaryView .talaSummaryTableWrapper {
+    width: calc(100% - 48px);
+    margin: 24px 24px 0 24px !important;
+    padding: 8px;
+    box-sizing: border-box !important;
+    overflow-x: hidden;
+}
+
+.talapatrakSummaryDemandTable {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0 auto;
+    table-layout: fixed;
+    box-sizing: border-box;
+}
+
+.talaPage3ColSerial {
+    width: 7%;
+}
+
+.talaPage3ColDetails {
+    width: 35%;
+}
+
+.talaPage3ColPrevious,
+.talaPage3ColCurrent,
+.talaPage3ColRotating,
+.talaPage3ColTotal {
+    width: 14.5%;
+}
+
+.talaPage3BalanceTableWrapper {
+    width: calc(100% - 48px);
+    margin-left: 24px;
+    margin-right: 24px;
+    padding-top: 24px !important;
+    padding-left: 8px;
+    padding-right: 8px;
+    box-sizing: border-box !important;
+}
+
+.talaPage3BalanceTable {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+}
+
+
+/* ============================================================
+   PAGE 4 — EDITOR LAYOUT
+   Consolidated final values
+   ============================================================ */
+
+.talaPage4 {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 28px 32px !important;
+    box-sizing: border-box !important;
+    background: linear-gradient(180deg, #ffffff 0%, #fcfaff 100%) !important;
+    border: 1px solid #d8b4fe !important;
+    border-left: 5px solid #6366f1 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.06) !important;
+    color: #1f2937 !important;
+}
+
+
+
+
+
+/* ============================================================
+   SUMMARY PRINT PAGE 1 — PRINT ONLY
+   ============================================================ */
+
+.talapatrakSummaryPrintPage .talaPage1 {
+    margin: 0 !important;
+    padding: 16px 20px !important;
+    box-sizing: border-box !important;
+}
+
+.talapatrakSummaryPrintPage .talaPage1NotesSection textarea {
+    border: 1px solid #000 !important;
+    box-sizing: border-box !important;
+    border: 1px solid #9ca3af !important;
+    outline: none;
+}
+
+.talapatrakSummaryPrintPage .talaPage1ChallanTable th:last-child,
+.talapatrakSummaryPrintPage .talaPage1ChallanTable td:last-child {
+    display: none !important;
+}
+
+/* ============================================================
+   SUMMARY PRINT PAGE 1 — PRINT ONLY
+   ============================================================ */
+
+.talapatrakSummaryPrintPage .talaPage1 {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.talapatrakSummaryPrintPage .talaPage1 .talapatrakPrintInfoPanel {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 76px !important;
+    margin: 0 0 24px 0 !important;
+    padding: 16px 20px !important;
+    gap: 18px !important;
+    box-sizing: border-box !important;
+}
+
+.talapatrakSummaryPrintPage .talaPage1PrintNotesText {
+    display: block !important;
+    width: 100% !important;
+    min-height: 72px !important;
+    box-sizing: border-box !important;
+    padding: 9px 10px !important;
+    border: 1px solid #000 !important;
+    border-radius: 7px !important;
+    background: #ffffff !important;
+    white-space: pre-wrap !important;
+}
+
+.talapatrakSummaryPrintPage .talaPage1ChallanTable th:last-child,
+.talapatrakSummaryPrintPage .talaPage1ChallanTable td:last-child {
+    display: none !important;
+}
+
+/* ============================================================
+   SUMMARY PRINT PAGE — MATCH DATA PAGE CONTENT AREA
+   PRINT ONLY
+   ============================================================ */
+
+.talapatrakSummaryPrintPage .talaSummaryDocumentSection {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+
+@media print {
+
+    .talapatrakSummaryPrintPage:has(.talaPage1)
+    .talaPage1 .talapatrakSummaryPrintValue {
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        text-align: center !important;
+        vertical-align: middle !important;
+        white-space: nowrap !important;
+        color: #000 !important;
+        font-size: 13px !important;
+        line-height: 1.2 !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage1)
+    .talaPage1ChallanTable th,
+    .talapatrakSummaryPrintPage:has(.talaPage1)
+    .talaPage1ChallanTable td {
+        box-sizing: border-box !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage1)
+    .talaPage1ChallanTable td {
+        vertical-align: middle !important;
+        text-align: center !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage1)
+    .talaPage1ChallanTable {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 6mm 0 0 0 !important;
+        padding: 0 !important;
+        table-layout: auto !important;
+        border-collapse: collapse !important;
+        border-spacing: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+}
+/* ============================================================
+   SUMMARY PRINT PAGE NUMBER — MATCH DATA PAGE FOOTER
+   PRINT ONLY
+   ============================================================ */
+
+.talapatrakSummaryPrintPage .talapatrakSummaryPrintFooter {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 2mm !important;
+    width: 100% !important;
+    height: 6mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+    z-index: 9999 !important;
+    opacity: 1 !important;
+    filter: none !important;
+    background: transparent !important;
+    pointer-events: none !important;
+    box-sizing: border-box !important;
+}
+
+.talapatrakSummaryPrintPage .talapatrakSummaryPrintPageNumber {
+    position: static !important;
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 10px !important;
+    font-weight: 400 !important;
+    line-height: 5mm !important;
+    color: #000 !important;
+    opacity: 1 !important;
+}
+
+
+/* ============================================================
+   SUMMARY PRINT FOOTER / PAGE NUMBER
+   EXACT DATA-PAGE PRINT CSS
+   PRINT ONLY
+   ============================================================ */
+
+.talapatrakSummaryPrintPage .talapatrakSummaryPrintFooter {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 2mm !important;
+    width: 100% !important;
+    height: 6mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+    z-index: 9999 !important;
+    opacity: 1 !important;
+    filter: none !important;
+    background: transparent !important;
+    pointer-events: none !important;
+    box-sizing: border-box !important;
+}
+
+.talapatrakSummaryPrintPage .talapatrakSummaryPrintPageNumber {
+    position: static !important;
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 10px !important;
+    font-weight: 400 !important;
+    line-height: 5mm !important;
+    color: #000 !important;
+    opacity: 1 !important;
+}
+
+
+/* SUMMARY PRINT PAGE — MATCH PAGE HEIGHT FOR FOOTER */
+.talapatrakSummaryPrintPage {
+    height: 722px !important;
+    min-height: 722px !important;
+    max-height: 722px !important;
+}
+
+/* SUMMARY PRINT PAGE — SAME OUTER AREA AS DATA PRINT PAGE */
+.talapatrakSummaryPrintPage {
+    width: calc(100% - 40px) !important;
+    margin: 0 20px !important;
+    padding: 40px 40px 15mm 40px !important;
+    box-sizing: border-box !important;
+}
+
+/* PAGE 2 — GENERATED PRINT TABLE */
+.talapatrakSummaryPrintPage .talaPage2 .talapatrakSummaryPage2AccountingTable {
+    display: table !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    table-layout: auto !important;
+}
+
+.talapatrakSummaryPrintPage .talaPage2 .talapatrakSummaryPage2AccountingTable thead {
+    display: table-header-group !important;
+}
+
+.talapatrakSummaryPrintPage .talaPage2 .talapatrakSummaryPage2AccountingTable tbody {
+    display: table-row-group !important;
+}
+
+/* ============================================================
+   GENERATED SUMMARY PRINT — PAGE 2 TABLE
+   PRINT ONLY — DO NOT AFFECT EDITOR
+   ============================================================ */
+
+@media print {
+    .talapatrakSummaryPrintPage .talaPage2 {
+        display: block !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        visibility: visible !important;
+    }
+
+    .talapatrakSummaryPrintPage .talaPage2 .talaSummaryPageHeading {
+        display: block !important;
+        width: 100% !important;
+        visibility: visible !important;
+    }
+
+    .talapatrakSummaryPrintPage .talaPage2 .talaPage2TableWrapper {
+        display: block !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        box-sizing: border-box !important;
+        visibility: visible !important;
+    }
+
+    .talapatrakSummaryPrintPage .talaPage2 .talapatrakSummaryPage2AccountingTable {
+        display: table !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        border-collapse: collapse !important;
+        table-layout: fixed !important;
+        visibility: visible !important;
+    }
+
+    .talapatrakSummaryPrintPage .talaPage2 .talapatrakSummaryPage2AccountingTable thead {
+        display: table-header-group !important;
+    }
+
+    .talapatrakSummaryPrintPage .talaPage2 .talapatrakSummaryPage2AccountingTable tbody {
+        display: table-row-group !important;
+    }
+
+    .talapatrakSummaryPrintPage .talaPage2 .talapatrakSummaryPage2AccountingTable tr {
+        display: table-row !important;
+    }
+
+    .talapatrakSummaryPrintPage .talaPage2 .talapatrakSummaryPage2AccountingTable th,
+    .talapatrakSummaryPrintPage .talaPage2 .talapatrakSummaryPage2AccountingTable td {
+        display: table-cell !important;
+        box-sizing: border-box !important;
+    }
+}
+
+/* ============================================================
+   GENERATED SUMMARY PRINT — PAGE 2 TABLE AREA
+   PRINT ONLY — DO NOT AFFECT EDITOR OR PAGE 1
+   ============================================================ */
+
+@media print {
+
+    .talapatrakSummaryPrintPage .talaPage2 {
+        position: relative !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .talapatrakSummaryPrintPage .talaPage2 .talaSummaryPageHeading {
+        position: relative !important;
+        display: block !important;
+        width: 100% !important;
+        margin: 0 0 10px 0 !important;
+        padding: 8px 10px !important;
+        box-sizing: border-box !important;
+        visibility: visible !important;
+    }
+
+    .talapatrakSummaryPrintPage .talaPage2 .talaPage2TableWrapper {
+        position: relative !important;
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        box-sizing: border-box !important;
+        visibility: visible !important;
+    }
+
+    .talapatrakSummaryPrintPage .talaPage2 .talapatrakSummaryPage2AccountingTable {
+        position: relative !important;
+        display: table !important;
+        width: 100% !important;
+        height: auto !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border-collapse: collapse !important;
+        table-layout: fixed !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    .talapatrakSummaryPrintPage .talaPage2 .talapatrakSummaryPage2AccountingTable colgroup {
+        display: table-column-group !important;
+    }
+
+    .talapatrakSummaryPrintPage .talaPage2 .talapatrakSummaryPage2AccountingTable col {
+        display: table-column !important;
+    }
+
+    .talapatrakSummaryPrintPage .talaPage2 .talapatrakSummaryPage2AccountingTable thead {
+        display: table-header-group !important;
+    }
+
+    .talapatrakSummaryPrintPage .talaPage2 .talapatrakSummaryPage2AccountingTable tbody {
+        display: table-row-group !important;
+    }
+
+    .talapatrakSummaryPrintPage .talaPage2 .talapatrakSummaryPage2AccountingTable tr {
+        display: table-row !important;
+        visibility: visible !important;
+    }
+
+    .talapatrakSummaryPrintPage .talaPage2 .talapatrakSummaryPage2AccountingTable th,
+    .talapatrakSummaryPrintPage .talaPage2 .talapatrakSummaryPage2AccountingTable td {
+        display: table-cell !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        box-sizing: border-box !important;
+    }
+}
+
+
+/* GENERATED SUMMARY PRINT PAGE 2 ONLY — DO NOT AFFECT EDITOR */
+@media print {
+    .talapatrakSummaryPrintPage .talaPage2 {
+        page: auto !important;
+    }
+}
+
+/* SUMMARY PRINT PAGE 2 — YEAR TOTAL NUMBERS CENTERED ONLY */
+@media print {
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    .talaPage2YearTotalRow
+    td:nth-child(n + 4) {
+        text-align: center !important;
+        vertical-align: middle !important;
+    }
+
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    #talapatrakSummaryPage2YearPrevious,
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    #talapatrakSummaryPage2YearCurrent,
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    #talapatrakSummaryPage2YearRotating,
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    #talapatrakSummaryPage2YearTotal {
+        text-align: center !important;
+    }
+}
+
+/* SUMMARY PRINT PAGE 2 — PREVIOUS (પાછલી) NUMBERS CENTERED */
+@media print {
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    .talapatrakSummaryPage2AccountingTable
+    td:nth-child(4) {
+        text-align: center !important;
+        vertical-align: middle !important;
+    }
+}
+
+/* SUMMARY PRINT PAGE 2 — ALL PREVIOUS (પાછલી) DATA CENTERED */
+@media print {
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    td[data-tala-page2-field="previous"] {
+        text-align: center !important;
+        vertical-align: middle !important;
+    }
+
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    input[data-tala-page2-field="previous"] {
+        text-align: center !important;
+    }
+}
+
+/* SUMMARY PRINT PAGE 2 — PREVIOUS NUMBERS CENTERED */
+@media print {
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    td[data-tala-page2-field="previous"],
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    td .talapatrakSummaryPrintValue {
+        text-align: center !important;
+        vertical-align: middle !important;
+    }
+}
+
+/* SUMMARY PRINT PAGE 2 — CENTER GENERATED NUMBER SPANS */
+@media print {
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    .talapatrakSummaryPrintValue {
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        text-align: center !important;
+        vertical-align: middle !important;
+    }
+
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    td[data-tala-page2-field="previous"],
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    td[data-tala-page2-field="current"],
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    td[data-tala-page2-field="rotating"],
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    td[data-tala-page2-field="total"] {
+        text-align: center !important;
+        vertical-align: middle !important;
+    }
+
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    #talapatrakSummaryPage2YearPrevious,
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    #talapatrakSummaryPage2YearCurrent,
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    #talapatrakSummaryPage2YearRotating,
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    #talapatrakSummaryPage2YearTotal {
+        text-align: center !important;
+        vertical-align: middle !important;
+    }
+}
+
+/* SUMMARY PRINT PAGE 2 — YEAR TOTAL CELLS */
+@media print {
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    tr.talaPage2YearTotalRow
+    td[id^="talapatrakSummaryPage2Year"] {
+        text-align: center !important;
+        vertical-align: middle !important;
+    }
+}
+
+/* SUMMARY PRINT PAGE 2 — YEAR TOTAL PREVIOUS CELL */
+@media print {
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    .talaPage2YearTotalRow
+    > td:nth-child(4) {
+        text-align: center !important;
+        vertical-align: middle !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+}
+
+/* SUMMARY PRINT PAGE 2 — YEAR TOTAL VALUE CELLS */
+@media print {
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    .talaPage2YearTotalRow
+    > td:nth-child(3) {
+        text-align: center !important;
+    }
+
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    .talaPage2YearTotalRow
+    > td:nth-child(4),
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    .talaPage2YearTotalRow
+    > td:nth-child(5),
+    .talapatrakSummaryPrintPage
+    .talaPage2
+    .talaPage2YearTotalRow
+    > td:nth-child(6) {
+        text-align: center !important;
+    }
+}
+
+/* SUMMARY PRINT PAGE 2 — RESERVE SPACE ABOVE PAGE NUMBER */
+@media print {
+    .talapatrakSummaryPrintPage:has(.talaPage2) {
+        padding-bottom: 25mm !important;
+        box-sizing: border-box !important;
+    }
+}
+
+/* SUMMARY PRINT PAGE 2 — REDUCE HEADER TO HEADING GAP */
+@media print {
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talapatrakPrintInfoPanel {
+        margin-bottom: 8px !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 .talaSummaryPageHeading {
+        margin-top: 0 !important;
+    }
+}
+
+@media print {
+    .talapatrakSummaryPrintPage .talaPage3 {
+        page: auto !important;
+    }
+}
+
+/* ============================================================
+   SUMMARY PAGE 3 EDITOR — MAIN ACCOUNTING TABLE
+   Use natural table height so Baki + Leps can move up
+   and use the remaining page space
+   ============================================================ */
+
+.talaPage3 .talaSummaryTableWrapper {
+    width: calc(100% - 48px) !important;
+    margin-left: 24px !important;
+    margin-right: 24px !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    overflow-x: visible !important;
+    overflow-y: visible !important;
+}
+
+.talaPage3 .talapatrakSummaryDemandTable {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    margin: 0 !important;
+    table-layout: fixed !important;
+    box-sizing: border-box !important;
+}
+
+.talaPage3 .talapatrakSummaryDemandTable th,
+.talaPage3 .talapatrakSummaryDemandTable td {
+    box-sizing: border-box !important;
+}
+
+.talaPage3 .talapatrakSummaryDemandTable col.talaPage3ColDetails {
+    width: 35% !important;
+}
+
+.talaPage3 .talapatrakSummaryDemandTable col.talaPage3ColPrevious,
+.talaPage3 .talapatrakSummaryDemandTable col.talaPage3ColCurrent,
+.talaPage3 .talapatrakSummaryDemandTable col.talaPage3ColRotating,
+.talaPage3 .talapatrakSummaryDemandTable col.talaPage3ColTotal {
+    width: 16.25% !important;
+}
+
+
+/* ============================================================
+   PAGE 3 — BAKI + LEPS
+   ============================================================ */
+@media print {
+
+    .talapatrakSummaryPrintPage:has(.talaPage3) .talaPage3BalanceSection {
+        width: 100% !important;
+        margin-top: -20px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3) .talaPage3BalanceTablesRow {
+    display: flex;
+    width: 100%;
+    margin: -30px 0 0 0;
+    gap: 16px;
+    align-items: flex-start;
+    box-sizing: border-box;
+}
+
+    .talapatrakSummaryPrintPage:has(.talaPage3) .talaPage3BalanceTableWrapper {
+        flex: 1 1 0 !important;
+        width: 0 !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        overflow: visible !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3) .talaPage3BalanceTable {
+        display: table !important;
+        visibility: visible !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        table-layout: fixed !important;
+        border-collapse: collapse !important;
+        box-sizing: border-box !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3) .talaPage3BalanceTable th,
+    .talapatrakSummaryPrintPage:has(.talaPage3) .talaPage3BalanceTable td {
+        display: table-cell !important;
+        visibility: visible !important;
+        box-sizing: border-box !important;
+        height: 20px !important;
+        padding: 2px 5px !important;
+        overflow: hidden !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3) .talaPage3BalanceTable input {
+        display: inline-block !important;
+        visibility: visible !important;
+        width: 100% !important;
+        height: 18px !important;
+        padding: 0 !important;
+        border: none !important;
+        background: transparent !important;
+        box-sizing: border-box !important;
+    }
+}
+/* ============================================================
+   SUMMARY PRINT PAGE 4 — OFFICIAL REGISTER / CERTIFICATION
+   PRINT ONLY — DO NOT AFFECT EDITOR OR PAGES 1–3
+   ============================================================ */
+
+@media print {
+
+    /* Keep Page 4 content together with the generated summary header */
+    .talapatrakSummaryPrintPage:has(.talaPage4) .talaPage4 {
+        page: auto !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        margin: 0 !important;
+        padding: 18px 22px !important;
+        box-sizing: border-box !important;
+        background: #ffffff !important;
+
+        /* Official document border */
+        border: 1.5px solid #222222 !important;
+        border-left: 1.5px solid #222222 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+
+        color: #111111 !important;
+
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+
+}
+
+/* ============================================================
+   SUMMARY PRINT PAGE 3 — MATCH PAGE 2 HEADING
+   PRINT ONLY — HEADING ONLY
+   DO NOT CHANGE PAGE 3 TABLE / CONTENT
+   ============================================================ */
+
+@media print {
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talaSummaryPageHeading {
+        width: 100% !important;
+        margin: 0 0 10px 0 !important;
+        padding: 8px 10px !important;
+        box-sizing: border-box !important;
+
+        background: #eef2ff !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 6px !important;
+
+        display: block !important;
+        visibility: visible !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talaSummaryPageHeading h3 {
+        margin: 0 !important;
+        padding: 0 !important;
+
+        color: #4f46e5 !important;
+        font-size: 16px !important;
+        font-weight: 800 !important;
+        line-height: 1.3 !important;
+        text-align: center !important;
+    }
+
+}
+
+/* ============================================================
+   SUMMARY PRINT PAGE 3 — REMOVE EXTRA GAP ABOVE TABLE
+   PRINT ONLY — DO NOT AFFECT EDITOR
+   ============================================================ */
+
+@media print {
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talaSummaryTableWrapper {
+        padding: 0 !important;
+    }
+
+}
+/* ============================================================
+   SUMMARY PRINT PAGE 3 — MATCH PAGE 2 HEADING/TABLE GAP
+   PRINT ONLY — DO NOT AFFECT EDITOR
+   ============================================================ */
+
+@media print {
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talaSummaryPageHeading {
+        margin: 0 0 10px 0 !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talaSummaryTableWrapper {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable {
+        margin: 0 !important;
+    }
+
+}
+/* ============================================================
+   SUMMARY PRINT PAGE 3 — TABLE 1 MATCH HEADING WIDTH
+   PRINT ONLY — DO NOT AFFECT EDITOR
+   ============================================================ */
+
+@media print {
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+}
+/* ============================================================
+   SUMMARY PRINT PAGE 3 — CENTER NUMERIC COLUMNS
+   PRINT ONLY — DO NOT AFFECT EDITOR
+   ============================================================ */
+
+@media print {
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable th:nth-child(3),
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable th:nth-child(4),
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable th:nth-child(5),
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable td:nth-child(3),
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable td:nth-child(4),
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable td:nth-child(5) {
+        text-align: center !important;
+    }
+
+}
+/* ============================================================
+   SUMMARY PRINT PAGE 3 — CENTER TABLE 1
+   PRINT ONLY — DO NOT AFFECT EDITOR
+   ============================================================ */
+
+@media print {
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talaSummaryTableWrapper {
+        width: 100% !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable {
+        width: 100% !important;
+        margin: 0 auto !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+
+}
+
+/* ============================================================
+   TALA PAGE 1 — TWO COLUMN SUMMARY TABLE LAYOUT
+   ============================================================ */
+
+.talaPage1TwoColumnLayout {
+    display: grid !important;
+    grid-template-columns: 260px minmax(0, 1fr) !important;
+    gap: 18px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    align-items: start !important;
+}
+
+.talaPage1TwoColumnLayout .talaPage1TableWrapper {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    box-sizing: border-box !important;
+}
+
+.talaPage1TwoColumnLayout .talaPage1ChallanTable {
+    width: 100% !important;
+    min-width: 0 !important;
+    table-layout: fixed !important;
+}
+
+@media (max-width: 900px) {
+    .talaPage1TwoColumnLayout {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Print */
+@media print {
+
+    .talaPage1CollectionTable {
+        border: 2px solid #596850 !important;
+    }
+
+    .talaPage1CollectionTable td {
+        border: 1px solid #7d8978 !important;
+    }
+
+    .talaPage1CollectionTable tr:last-child td {
+        border-top: 2px solid #596850 !important;
+    }
+
+}
+
+
+
+/* ============================================================
+   TALAPATRAK PAGE 1 — COLLECTION TABLE
+   Clean earthy Tala theme
+============================================================ */
+
+.talaPage1CollectionTableWrapper {
+    display: block !important;
+    width: 260px !important;
+    min-width: 260px !important;
+    max-width: 260px !important;
+    margin-top: 0 !important;
+    margin-bottom: 22px;
+    box-sizing: border-box !important;
+}
+
+.talaPage1CollectionTable {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    table-layout: fixed !important;
+    border: 1px solid #4f46e5 !important;
+    background: #ffffff !important;
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.talaPage1CollectionTable td {
+    border: 1px solid #d1d5db !important;
+    padding: 9px 11px !important;
+    height: 34px;
+    vertical-align: middle;
+    box-sizing: border-box;
+}
+
+.talaPage1CollectionTable td:first-child {
+    width: 55%;
+    background: #eef2ff !important;
+    color: #1e293b !important;
+    font-weight: 700;
+    text-align: left;
+}
+
+.talaPage1CollectionTable td:last-child {
+    width: 45%;
+    background: #ffffff !important;
+    color: #1e293b !important;
+    font-weight: 600;
     text-align: right;
-    font-size: 10px;
+    font-variant-numeric: tabular-nums;
+}
+
+.talaPage1CollectionTable tr:nth-child(2) td {
+    background: #f8f7ff !important;
+}
+
+.talaPage1CollectionTable tr:last-child td {
+    background: #faf5ff !important;
+    color: #4f46e5 !important;
+    border-top: 1px solid #4f46e5 !important;
+    font-weight: 800;
+}
+
+
+
+
+/* ============================================================
+   PAGE 2 HEADER — MATCH SHIK PAGE 2 / TALA PURPLE
+============================================================ */
+
+.talaPage2 .talaSummaryDocumentHeader {
+    width: 100%;
+    margin: 0 0 10px;
+    padding: 8px 10px;
+    box-sizing: border-box;
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    border-radius: 6px;
+}
+
+.talaPage2 .talaSummaryDocumentHeader h3 {
+    margin: 0;
+    padding: 0;
+    color: #4f46e5;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.3;
+    text-align: center;
+}
+/* ============================================================
+   PAGE 3 HEADER — MATCH SHIK PAGE 2 / TALA PURPLE
+============================================================ */
+
+.talaPage3 .talaSummaryDocumentHeader {
+    width: 100%;
+    margin: 0 0 10px;
+    padding: 8px 10px;
+    box-sizing: border-box;
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    border-radius: 6px;
+}
+
+.talaPage3 .talaSummaryDocumentHeader h3 {
+    margin: 0;
+    padding: 0;
+    color: #4f46e5;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.3;
+    text-align: center;
+}
+/* ============================================================
+   TALA PAGE 4 — SAME AS SHIK / TALA PURPLE THEME
+============================================================ */
+
+.talaPage4 {
+    width: 100% !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 18px 22px !important;
+    box-sizing: border-box !important;
+
+    background: #ffffff !important;
+    color: #111111 !important;
+
+    border: 1.5px solid #4f46e5 !important;
+    border-left: 1.5px solid #4f46e5 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+.talaPage4 .talaPage4OfficialStatement {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 10px 12px !important;
+    margin: 0 !important;
+
+    border: 0 !important;
+    border-bottom: 1px solid #c7d2fe !important;
+
+    background: #eef2ff !important;
+    color: #4f46e5 !important;
+
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    line-height: 1.6 !important;
+    text-align: center !important;
+}
+
+.talaPage4 .talaPage4SignatureArea {
+    width: 100% !important;
+    margin: 14px 0 0 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.talaPage4 .talaPage4SignatureRow {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.talaPage4 .talaPage4SignatureBox {
+    min-width: 0 !important;
+    min-height: 125px !important;
+    padding: 0 2px !important;
+    box-sizing: border-box !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-end !important;
+
+    text-align: center !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    line-height: 1.5 !important;
+
+    white-space: nowrap !important;
+    overflow: visible !important;
+}
+
+.talaPage4 .talaPage4SignatureSpace {
+    height: 82px !important;
+    margin: 0 0 8px 0 !important;
+    box-sizing: border-box !important;
+}
+
+.talaPage4 .talaPage4SignatureLabel {
+    padding-top: 7px !important;
+
+    border-top: 1px solid #4f46e5 !important;
+
+    color: #4f46e5 !important;
+
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    line-height: 1.5 !important;
+
+    white-space: nowrap !important;
+    text-align: center !important;
+}
+
+.talaPage4 .talaPage4SignatureLabel br {
+    display: none !important;
+}
+
+.talaPage4 .talaPage4OfficeSection {
+    width: 100% !important;
+    margin: 28px 0 0 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.talaPage4 .talaPage4SectionTitle {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 7px 10px !important;
+    margin: 0 !important;
+
+    border: 1px solid #c7d2fe !important;
+    border-bottom: 0 !important;
+
+    background: #eef2ff !important;
+    color: #4f46e5 !important;
+
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    line-height: 1.5 !important;
+}
+
+.talaPage4 .talaPage4RegisterRow {
+    display: flex !important;
+    align-items: center !important;
+
+    width: 100% !important;
+    min-height: 42px !important;
+
+    margin: 0 !important;
+    padding: 8px 10px !important;
+    box-sizing: border-box !important;
+
+    border: 1px solid #c7d2fe !important;
+
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    line-height: 1.5 !important;
+}
+
+.talaPage4 .talaPage4RegisterRow input {
+    width: 300px !important;
+    height: 28px !important;
+
+    margin-left: 12px !important;
+    padding: 2px 6px !important;
+    box-sizing: border-box !important;
+
+    border: 0 !important;
+    border-bottom: 1px solid #4f46e5 !important;
+
+    background: transparent !important;
+
+    font-size: 13px !important;
+    color: #111111 !important;
+}
+
+.talaPage4 .talaPage4Certification {
+    width: 100% !important;
+    margin: 28px 0 0 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.talaPage4 .talaPage4CertificationText {
+    width: 100% !important;
+    min-height: 115px !important;
+
+    padding: 14px 16px !important;
+    box-sizing: border-box !important;
+
+    border: 1px solid #c7d2fe !important;
+
+    background: #ffffff !important;
+
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    line-height: 1.8 !important;
+    text-align: left !important;
+}
+
+.talaPage4 .talaPage4CertificationSignatures {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 40px !important;
+
+    width: 100% !important;
+    margin: 24px 0 0 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+
+    text-align: center !important;
+
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    line-height: 1.5 !important;
+}
+
+.talaPage4 .talaPage4BottomSpace {
+    height: 58px !important;
+    margin: 0 0 8px 0 !important;
+    box-sizing: border-box !important;
+
+    border-bottom: 1px solid #4f46e5 !important;
+}
+
+@media print {
+
+    .talaPage4 {
+        width: 100% !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: 18px 22px !important;
+
+        background: #ffffff !important;
+
+        border: 1.5px solid #4f46e5 !important;
+        border-left: 1.5px solid #4f46e5 !important;
+
+        box-shadow: none !important;
+    }
+
+    .talaPage4 .talaPage4SignatureRow {
+        display: grid !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+    }
+
+    .talaPage4 .talaPage4SignatureBox {
+        min-width: 0 !important;
+        padding: 0 2px !important;
+        white-space: nowrap !important;
+    }
+
+    .talaPage4 .talaPage4SignatureLabel {
+        white-space: nowrap !important;
+        font-size: 12px !important;
+    }
+
+    .talaPage4 .talaPage4SignatureLabel br {
+        display: none !important;
+    }
+
+    .talaPage4 .talaPage4CertificationSignatures {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 40px !important;
+    }
+}
+
+/* ============================================================
+   TALA PAGE 3 — BAKI + LEPS TABLES
+   Balanced full-width layout
+   ============================================================ */
+
+.talaPage3BalanceSection {
+    width: 100%;
+    margin-top: 10px;
+    box-sizing: border-box;
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+.talaPage3BalanceTablesRow {
+    display: flex;
+    width: 100%;
+    margin: -30px 0 0 0;
+    gap: 16px;
+    align-items: flex-start;
+    box-sizing: border-box;
+}
+
+.talaPage3BalanceTableWrapper {
+    flex: 1 1 0;
+    width: 0;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow: visible;
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+.talaPage3BalanceTable {
+    width: 100%;
+    max-width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    margin: 0;
+    font-size: 13px;
+    box-sizing: border-box;
+    background: #ffffff;
+}
+
+.talaPage3BalanceTable th,
+.talaPage3BalanceTable td {
+    border: 1px solid #4f46e5;
+    padding: 3px 6px;
+    height: 22px;
+    box-sizing: border-box;
+    text-align: center;
+    vertical-align: middle;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.talaPage3BalanceTable th:first-child,
+.talaPage3BalanceTable td:first-child,
+.talaPage3BalanceTable th:last-child,
+.talaPage3BalanceTable td:last-child {
+    width: 50%;
+}
+
+.talaPage3BalanceTable thead tr:first-child th {
+    background: #eef2ff;
+    color: #4f46e5;
+    font-weight: 600;
+}
+
+.talaPage3BalanceTable thead tr:nth-child(2) th {
+    background: #f5f7ff;
+    color: #4f46e5;
+    font-weight: 600;
+}
+
+.talaPage3BalanceTable tbody tr:nth-child(even) td {
+    background: #fafaff;
+}
+
+.talaPage3BalanceTable input {
+    width: 100%;
+    height: 18px;
+    padding: 1px 4px;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    background: transparent;
+    text-align: center;
+    font: inherit;
+    color: #1e293b;
+}
+
+.talaPage3BalanceTable input:focus {
+    background: #eef2ff;
+}
+
+.talaPage3BalanceTotalRow {
+    font-weight: 600;
+}
+
+.talaPage3BalanceTotalRow td {
+    background: #eef2ff;
+    color: #4f46e5;
+    font-weight: 600;
+}
+
+@media print {
+
+    .talaPage3BalanceSection {
+        width: 100% !important;
+        margin-top: -20px !important;
+        box-sizing: border-box !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .talaPage3BalanceTablesRow {
+    display: flex;
+    width: 100%;
+    margin: -30px 0 0 0;
+    gap: 16px;
+    align-items: flex-start;
+    box-sizing: border-box;
+}
+
+    .talaPage3BalanceTableWrapper {
+        flex: 1 1 0 !important;
+        width: 0 !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .talaPage3BalanceTable {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        font-size: 13px !important;
+        box-sizing: border-box !important;
+    }
+
+    .talaPage3BalanceTable th,
+    .talaPage3BalanceTable td {
+        height: 20px !important;
+        padding: 2px 5px !important;
+        box-sizing: border-box !important;
+    }
+
+    .talaPage3BalanceTable input {
+        width: 100% !important;
+        height: 18px !important;
+        box-sizing: border-box !important;
+    }
+}
+
+
+
+
+
+
+
+
+/* ============================================================
+   FINAL TALA SUMMARY PRINT OVERRIDES
+   PRINT ONLY — DO NOT AFFECT EDITOR
+   PAGE 1 + PAGE 3 KEEP TALA EDITOR LAYOUT
+   PAGE 2 + PAGE 4 FOLLOW SHIK PRINT DESIGN
+   ============================================================ */
+
+
+/* ============================================================
+   TALA SUMMARY PRINT — PAGE 2
+   ADAPTED FROM SHIK PAGE 2 PRINT CSS
+   ============================================================ */
+
+@media print {
+
+    .talapatrakSummaryPrintPage:has(.talaPage2) .talaPage2 {
+        display: block !important;
+        position: relative !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        box-sizing: border-box !important;
+        visibility: visible !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        page: auto !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 .talaSummaryDocumentHeader {
+        display: block !important;
+        width: 100% !important;
+        margin: 0 0 10px 0 !important;
+        padding: 8px 10px !important;
+        box-sizing: border-box !important;
+        visibility: visible !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 .talaPage2TableWrapper {
+        position: relative !important;
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        box-sizing: border-box !important;
+        visibility: visible !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 .talapatrakSummaryPage2AccountingTable {
+        position: relative !important;
+        display: table !important;
+        width: 100% !important;
+        height: auto !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border-collapse: collapse !important;
+        table-layout: fixed !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        transform: none !important;
+        box-sizing: border-box !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 .talapatrakSummaryPage2AccountingTable colgroup {
+        display: table-column-group !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 .talapatrakSummaryPage2AccountingTable col {
+        display: table-column !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 .talapatrakSummaryPage2AccountingTable thead {
+        display: table-header-group !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 .talapatrakSummaryPage2AccountingTable tbody {
+        display: table-row-group !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 .talapatrakSummaryPage2AccountingTable tr {
+        display: table-row !important;
+        visibility: visible !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 .talapatrakSummaryPage2AccountingTable th,
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 .talapatrakSummaryPage2AccountingTable td {
+        display: table-cell !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Page 2 numeric columns centered */
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 .talapatrakSummaryPage2AccountingTable
+    td[data-tala-page2-field="previous"],
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 .talapatrakSummaryPage2AccountingTable
+    td[data-tala-page2-field="current"],
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 .talapatrakSummaryPage2AccountingTable
+    td[data-tala-page2-field="rotating"],
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 .talapatrakSummaryPage2AccountingTable
+    td[data-tala-page2-field="total"] {
+        text-align: center !important;
+        vertical-align: middle !important;
+    }
+
+    /* Generated print value spans */
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 .talapatrakSummaryPrintValue {
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        text-align: center !important;
+        vertical-align: middle !important;
+    }
+
+    /* Year-total row */
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 .talaPage2YearTotalRow
+    td:nth-child(n + 3) {
+        text-align: center !important;
+        vertical-align: middle !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 .talaPage2YearTotalRow td {
+        box-sizing: border-box !important;
+    }
+
+    /* Reserve space above generated page number */
+    .talapatrakSummaryPrintPage:has(.talaPage2) {
+        padding-bottom: 25mm !important;
+        box-sizing: border-box !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talapatrakPrintInfoPanel {
+        margin-bottom: 8px !important;
+    }
+
+}
+
+
+/* ============================================================
+   TALA SUMMARY PRINT — PAGE 4
+   EXACT SHIK OFFICIAL PRINT STYLE, ADAPTED TO TALA
+   PRINT ONLY — DO NOT AFFECT EDITOR
+   ============================================================ */
+
+@media print {
+
+    .talapatrakSummaryPrintPage:has(.talaPage4) .talaPage4 {
+        page: auto !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        margin: 0 !important;
+        padding: 18px 22px !important;
+        box-sizing: border-box !important;
+        background: #ffffff !important;
+        border: 1.5px solid #222222 !important;
+        border-left: 1.5px solid #222222 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        color: #111111 !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    /* Official statement */
+    .talapatrakSummaryPrintPage:has(.talaPage4)
+    .talaPage4 .talaPage4OfficialStatement {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 10px 12px !important;
+        margin: 0 !important;
+        border: 0 !important;
+        border-bottom: 1px solid #222222 !important;
+        background: #ffffff !important;
+        color: #111111 !important;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        line-height: 1.6 !important;
+        text-align: center !important;
+    }
+
+    /* Four signature columns */
+    .talapatrakSummaryPrintPage:has(.talaPage4)
+    .talaPage4 .talaPage4SignatureArea {
+        width: 100% !important;
+        margin: 14px 0 0 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage4)
+    .talaPage4 .talaPage4SignatureRow {
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 10px !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage4)
+    .talaPage4 .talaPage4SignatureBox {
+        min-width: 0 !important;
+        min-height: 125px !important;
+        padding: 0 2px !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-end !important;
+        text-align: center !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        line-height: 1.5 !important;
+        white-space: nowrap !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage4)
+    .talaPage4 .talaPage4SignatureSpace {
+        height: 82px !important;
+        margin: 0 0 8px 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage4)
+    .talaPage4 .talaPage4SignatureLabel {
+        padding-top: 7px !important;
+        border-top: 1px solid #222222 !important;
+        color: #111111 !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        line-height: 1.5 !important;
+        white-space: nowrap !important;
+        text-align: center !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage4)
+    .talaPage4 .talaPage4SignatureLabel br {
+        display: none !important;
+    }
+
+    /* Office / register section */
+    .talapatrakSummaryPrintPage:has(.talaPage4)
+    .talaPage4 .talaPage4OfficeSection {
+        width: 100% !important;
+        margin: 28px 0 0 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage4)
+    .talaPage4 .talaPage4SectionTitle {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 7px 10px !important;
+        margin: 0 !important;
+        border: 1px solid #222222 !important;
+        border-bottom: 0 !important;
+        background: #ffffff !important;
+        color: #111111 !important;
+        font-size: 14px !important;
+        font-weight: 800 !important;
+        line-height: 1.5 !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage4)
+    .talaPage4 .talaPage4RegisterRow {
+        display: flex !important;
+        align-items: center !important;
+        width: 100% !important;
+        min-height: 42px !important;
+        margin: 0 !important;
+        padding: 8px 10px !important;
+        box-sizing: border-box !important;
+        border: 1px solid #222222 !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        line-height: 1.5 !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage4)
+    .talaPage4 .talaPage4RegisterRow input {
+        width: 300px !important;
+        height: 28px !important;
+        margin-left: 12px !important;
+        padding: 2px 6px !important;
+        box-sizing: border-box !important;
+        border: 0 !important;
+        border-bottom: 1px solid #222222 !important;
+        background: transparent !important;
+        font-size: 13px !important;
+        color: #111111 !important;
+    }
+
+    /* Certification */
+    .talapatrakSummaryPrintPage:has(.talaPage4)
+    .talaPage4 .talaPage4Certification {
+        width: 100% !important;
+        margin: 28px 0 0 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage4)
+    .talaPage4 .talaPage4CertificationText {
+        width: 100% !important;
+        min-height: 115px !important;
+        padding: 14px 16px !important;
+        box-sizing: border-box !important;
+        border: 1px solid #222222 !important;
+        background: #ffffff !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        line-height: 1.8 !important;
+        text-align: left !important;
+    }
+
+    /* Bottom signatures */
+    .talapatrakSummaryPrintPage:has(.talaPage4)
+    .talaPage4 .talaPage4CertificationSignatures {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 40px !important;
+        width: 100% !important;
+        margin: 24px 0 0 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        text-align: center !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        line-height: 1.5 !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage4)
+    .talaPage4 .talaPage4BottomSpace {
+        height: 58px !important;
+        margin: 0 0 8px 0 !important;
+        box-sizing: border-box !important;
+        border-bottom: 1px solid #222222 !important;
+    }
+
+    /* Compact signature row */
+    .talapatrakSummaryPrintPage:has(.talaPage4)
+    .talaPage4 .talaPage4SignatureArea {
+        margin-top: 14px !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage4)
+    .talaPage4 .talaPage4SignatureRow {
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 10px !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage4)
+    .talaPage4 .talaPage4SignatureBox {
+        min-width: 0 !important;
+        padding: 0 2px !important;
+        white-space: nowrap !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage4)
+    .talaPage4 .talaPage4SignatureLabel {
+        white-space: nowrap !important;
+        font-size: 12px !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage4)
+    .talaPage4 .talaPage4SignatureLabel br {
+        display: none !important;
+    }
+
+}
+
+
+/* ============================================================
+   FINAL SAFETY — PAGE 1 AND PAGE 3 KEEP TALA LAYOUT
+   PRINT ONLY
+   ============================================================ */
+
+@media print {
+
+    /* PAGE 1 — preserve left/right editor arrangement */
+    .talapatrakSummaryPrintPage:has(.talaPage1)
+    .talaPage1TwoColumnLayout {
+        display: grid !important;
+        grid-template-columns: 260px minmax(0, 1fr) !important;
+        gap: 18px !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        align-items: start !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage1)
+    .talaPage1TwoColumnLayout
+    .talaPage1CollectionTableWrapper {
+        width: 260px !important;
+        min-width: 260px !important;
+        max-width: 260px !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage1)
+    .talaPage1TwoColumnLayout
+    .talaPage1TableWrapper {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage1)
+    .talaPage1TwoColumnLayout
+    .talaPage1ChallanTable {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        table-layout: fixed !important;
+    }
+
+    /* PAGE 3 — preserve main table + left/right balance layout */
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talaPage3BalanceTablesRow {
+        display: flex !important;
+        width: 100% !important;
+        margin: -30px 0 0 0 !important;
+        gap: 16px !important;
+        align-items: flex-start !important;
+        box-sizing: border-box !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talaPage3BalanceTableWrapper {
+        flex: 1 1 0 !important;
+        width: 0 !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        overflow: visible !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talaPage3BalanceTable {
+        display: table !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        table-layout: fixed !important;
+        border-collapse: collapse !important;
+        box-sizing: border-box !important;
+    }
+
+}
+
+
+/* ============================================================
+   FINAL PRINT CSS END
+   ============================================================ */
+
+
+
+
+
+@media print {
+
+    /* ============================================================
+       PAGE 1 SUMMARY — MATCH TALAPATRAK DATA TABLE AREA
+       PRINT ONLY
+       ============================================================ */
+
+    .talapatrakSummaryPrintPage:has(.talaPage1)
+    .talaPage1ChallanTable th,
+    .talapatrakSummaryPrintPage:has(.talaPage1)
+    .talaPage1ChallanTable td {
+
+        border: 1px solid #000 !important;
+        color: #000 !important;
+        box-sizing: border-box !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage1)
+    .talaPage1ChallanTable th {
+
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
+        padding-left: 2px !important;
+        padding-right: 2px !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        line-height: 1.20 !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage1)
+    .talaPage1ChallanTable td {
+
+        padding: 5px !important;
+        font-size: 13px !important;
+        line-height: 1.20 !important;
+        vertical-align: middle !important;
+        text-align: center !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage1)
+    .talaPage1ChallanTable td
+    .talapatrakSummaryPrintValue {
+
+        display: block !important;
+        width: 100% !important;
+        text-align: center !important;
+        vertical-align: middle !important;
+        color: #000 !important;
+        white-space: nowrap !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage1)
+    .talaPage1ChallanTable tbody tr:nth-child(even) td {
+
+        background: #fff !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage1)
+    .talaPage1ChallanTable {
+
+        margin: 6mm 0 0 0 !important;
+        border: 1px solid #000 !important;
+        border-collapse: collapse !important;
+        border-spacing: 0 !important;
+    }
+
+}
+
+
+
+@media print {
+
+    /* ============================================================
+       FINAL PAGE 1 PRINT OVERRIDE
+       EXACT TALA DATA-PAGE TABLE WIDTH BEHAVIOR
+       ============================================================ */
+
+    .talapatrakSummaryPrintPage:has(.talaPage1)
+    .talaPage1ChallanTable {
+
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 6mm 0 0 0 !important;
+        padding: 0 !important;
+        table-layout: auto !important;
+        border-collapse: collapse !important;
+        border-spacing: 0 !important;
+        border: 1px solid #000 !important;
+        box-sizing: border-box !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage1)
+    .talaPage1ChallanTable th,
+    .talapatrakSummaryPrintPage:has(.talaPage1)
+    .talaPage1ChallanTable td {
+
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        box-sizing: border-box !important;
+        border: 1px solid #000 !important;
+        color: #000 !important;
+    }
+
+}
+
+
+
+
+
+/* FINAL SUMMARY PRINT CONTENT AREA — DO NOT TOUCH FOOTER */
+@media print {
+
+    .talapatrakSummaryPrintPage {
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+    .talapatrakSummaryPrintPage .talaSummaryDocumentSection {
+        max-height: calc(722px - 40px - 15mm) !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+    }
+
+    .talapatrakSummaryPrintPage .talaPage2 .talaPage2TableWrapper {
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+}
+
+
+/* FINAL PRINT VISIBILITY — TALA SUMMARY PAGE 3 + PAGE 4 ONLY */
+@media print {
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaSummaryDocumentSection.talaPage3 {
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage4)
+    .talaSummaryDocumentSection.talaPage4 {
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+}
+
+/* ============================================================
+   FINAL TALA SUMMARY PRINT — PAGE 3 ONLY
+   PRINT ONLY — DO NOT AFFECT EDITOR / OTHER SUMMARY PAGES
+   ============================================================ */
+
+@media print {
+
+    /* ---------------------------------------------------------
+       PAGE 3 CONTENT AREA
+       --------------------------------------------------------- */
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 {
+        display: block !important;
+        position: relative !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        box-sizing: border-box !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        color: #000000 !important;
+        background: #ffffff !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+
+    /* ---------------------------------------------------------
+       1. INFO HEADER → PAGE 3 TITLE
+       REDUCE GAP BY EXACTLY 5px
+       --------------------------------------------------------- */
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talapatrakPrintInfoPanel {
+        margin-bottom: calc(4mm - 5px) !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talaSummaryDocumentHeader {
+        margin-top: 0 !important;
+        margin-bottom: 10px !important;
+        padding: 8px 10px !important;
+        box-sizing: border-box !important;
+        color: #000000 !important;
+        background: #ffffff !important;
+        border: 1px solid #000000 !important;
+        border-radius: 0 !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talaSummaryDocumentHeader h3 {
+        margin: 0 !important;
+        padding: 0 !important;
+        color: #000000 !important;
+        font-size: 16px !important;
+        font-weight: 800 !important;
+        line-height: 1.3 !important;
+        text-align: center !important;
+    }
+
+
+    /* ---------------------------------------------------------
+       2. ALL PAGE 3 TEXT BLACK
+       --------------------------------------------------------- */
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3,
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 * {
+        color: #000000 !important;
+    }
+
+
+    /* ---------------------------------------------------------
+       3. MAIN DEMAND TABLE
+       --------------------------------------------------------- */
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talaPage3TableWrapper {
+        display: block !important;
+        position: relative !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        box-sizing: border-box !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable {
+        display: table !important;
+        position: relative !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 1px solid #000000 !important;
+        border-collapse: collapse !important;
+        border-spacing: 0 !important;
+        table-layout: fixed !important;
+        box-sizing: border-box !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable col.talaPage3ColDetails {
+        width: 35% !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable col.talaPage3ColPrevious,
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable col.talaPage3ColCurrent,
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable col.talaPage3ColRotating,
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable col.talaPage3ColTotal {
+        width: 16.25% !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable thead {
+        display: table-header-group !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable tbody {
+        display: table-row-group !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable tr {
+        display: table-row !important;
+        height: 24px !important;
+        visibility: visible !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable th,
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable td {
+        display: table-cell !important;
+        height: 24px !important;
+        min-height: 24px !important;
+        padding: 2px 5px !important;
+        border: 1px solid #000000 !important;
+        box-sizing: border-box !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+        text-align: center !important;
+        vertical-align: middle !important;
+        overflow: hidden !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable th:first-child,
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable td:first-child {
+        text-align: left !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable input,
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable .talapatrakSummaryPrintValue {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 18px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        outline: 0 !important;
+        background: transparent !important;
+        color: #000000 !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
+    }
+
+
+    /* ---------------------------------------------------------
+       4. LOWER TWO TABLES
+       NO NEGATIVE MARGINS — KEEP THEM BELOW TABLE 1
+       --------------------------------------------------------- */
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3BalanceSection {
+        display: block !important;
+        position: relative !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        margin: 10px 0 0 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        box-sizing: border-box !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        color: #000000 !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3BalanceTablesRow {
+        display: flex !important;
+        position: relative !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        gap: 16px !important;
+        align-items: flex-start !important;
+        box-sizing: border-box !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3BalanceTableWrapper {
+        display: block !important;
+        position: relative !important;
+        flex: 1 1 0 !important;
+        width: 0 !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        box-sizing: border-box !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+
+    /* ---------------------------------------------------------
+       5. PERFECT BORDERS FOR BOTH LOWER TABLES
+       --------------------------------------------------------- */
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3BalanceTable {
+        display: table !important;
+        position: relative !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 1px solid #000000 !important;
+        border-collapse: collapse !important;
+        border-spacing: 0 !important;
+        table-layout: fixed !important;
+        box-sizing: border-box !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3BalanceTable thead {
+        display: table-header-group !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3BalanceTable tbody {
+        display: table-row-group !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3BalanceTable tr {
+        display: table-row !important;
+        visibility: visible !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3BalanceTable th,
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3BalanceTable td {
+        display: table-cell !important;
+        height: 22px !important;
+        min-height: 22px !important;
+        padding: 2px 5px !important;
+        border: 1px solid #000000 !important;
+        box-sizing: border-box !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+        text-align: center !important;
+        vertical-align: middle !important;
+        overflow: hidden !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3BalanceTable th:first-child,
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3BalanceTable td:first-child {
+        width: 50% !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3BalanceTable th:last-child,
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3BalanceTable td:last-child {
+        width: 50% !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3BalanceTable input,
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3BalanceTable .talapatrakSummaryPrintValue {
+        display: block !important;
+        width: 100% !important;
+        height: 18px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        outline: 0 !important;
+        background: transparent !important;
+        color: #000000 !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3BalanceTable th {
+        font-weight: 700 !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3BalanceTotalRow td {
+        font-weight: 700 !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+    }
+
+}
+
+/* ============================================================
+   FINAL PAGE 3 PRINT — MATCH EDITOR TABLE ROW SIZE
+   PRINT ONLY — PAGE 3 ONLY
+   ============================================================ */
+
+@media print {
+
+    /* Main Page 3 table header — same as editor */
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable thead th {
+        height: 58px !important;
+        min-height: 58px !important;
+        padding: 10px 7px !important;
+        font-size: 12px !important;
+        font-weight: 900 !important;
+        line-height: 1.35 !important;
+        vertical-align: middle !important;
+        box-sizing: border-box !important;
+    }
+
+
+    /* Main Page 3 table body — same as editor */
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable tbody td {
+        height: 48px !important;
+        min-height: 48px !important;
+        padding: 6px !important;
+        font-size: 13px !important;
+        line-height: normal !important;
+        vertical-align: middle !important;
+        box-sizing: border-box !important;
+        border: 1px solid #000000 !important;
+        color: #000000 !important;
+        background: #ffffff !important;
+    }
+
+
+    /* Keep every main-table row at editor height */
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable tbody tr {
+        height: 48px !important;
+        min-height: 48px !important;
+    }
+
+
+    /* Page 3 inputs — same size as editor */
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable input {
+        width: 100% !important;
+        min-width: 0 !important;
+        min-height: 34px !important;
+        height: 34px !important;
+        padding: 5px 6px !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        outline: none !important;
+        background: transparent !important;
+        color: #000000 !important;
+        font-size: 12px !important;
+        text-align: center !important;
+    }
+
+
+    /* Give a clear physical gap after the main table */
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3BalanceSection {
+        margin-top: 16px !important;
+        padding-top: 0 !important;
+        clear: both !important;
+    }
+
+
+    /* Lower tables stay completely below Table 1 */
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3BalanceTablesRow {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+        gap: 16px !important;
+        clear: both !important;
+    }
+
+}
+
+/* ============================================================
+   PAGE 3 PRINT — SLIGHTLY REDUCE MAIN TABLE ROW HEIGHT
+   PRINT ONLY — PAGE 3 ONLY
+   ============================================================ */
+
+@media print {
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable tbody tr {
+        height: 44px !important;
+        min-height: 44px !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable tbody td {
+        height: 44px !important;
+        min-height: 44px !important;
+        padding: 4px 6px !important;
+        box-sizing: border-box !important;
+        vertical-align: middle !important;
+    }
+
+}
+
+/* ============================================================
+   PAGE 3 PRINT — EQUAL ROW HEIGHT + 5PX TABLE GAP
+   PRINT ONLY — PAGE 3 ONLY
+   ============================================================ */
+
+@media print {
+
+    /* Main Page 3 table — header and ALL rows same height */
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable thead tr {
+        height: 44px !important;
+        min-height: 44px !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable thead th {
+        height: 44px !important;
+        min-height: 44px !important;
+        padding: 4px 6px !important;
+        box-sizing: border-box !important;
+        vertical-align: middle !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable tbody tr {
+        height: 44px !important;
+        min-height: 44px !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable tbody td {
+        height: 44px !important;
+        min-height: 44px !important;
+        padding: 4px 6px !important;
+        box-sizing: border-box !important;
+        vertical-align: middle !important;
+    }
+
+    /* Exactly 5px between Main Table and the 2 lower tables */
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talaPage3BalanceSection {
+        margin-top: 5px !important;
+        padding-top: 0 !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talaPage3BalanceTablesRow {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+
+}
+
+/* ============================================================
+   PAGE 3 PRINT — SLIGHTLY MORE COMPACT EQUAL ROWS
+   PRINT ONLY — PAGE 3 ONLY
+   ============================================================ */
+
+@media print {
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable thead tr {
+        height: 41px !important;
+        min-height: 41px !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable thead th {
+        height: 41px !important;
+        min-height: 41px !important;
+        padding: 3px 6px !important;
+        box-sizing: border-box !important;
+        vertical-align: middle !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable tbody tr {
+        height: 41px !important;
+        min-height: 41px !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable tbody td {
+        height: 41px !important;
+        min-height: 41px !important;
+        padding: 3px 6px !important;
+        box-sizing: border-box !important;
+        vertical-align: middle !important;
+    }
+
+    /* Keep exactly 5px between the main table and lower tables */
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talaPage3BalanceSection {
+        margin-top: 5px !important;
+        padding-top: 0 !important;
+    }
+
+}
+
+/* ============================================================
+   PAGE 3 PRINT — 36PX EQUAL ROWS + 10PX TABLE GAP
+   PRINT ONLY — PAGE 3 ONLY
+   ============================================================ */
+
+@media print {
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable thead tr {
+        height: 36px !important;
+        min-height: 36px !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable thead th {
+        height: 36px !important;
+        min-height: 36px !important;
+        padding: 2px 6px !important;
+        box-sizing: border-box !important;
+        vertical-align: middle !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable tbody tr {
+        height: 36px !important;
+        min-height: 36px !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable tbody td {
+        height: 36px !important;
+        min-height: 36px !important;
+        padding: 2px 6px !important;
+        box-sizing: border-box !important;
+        vertical-align: middle !important;
+    }
+
+    /* Exactly 10px between main table and lower tables */
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talaPage3BalanceSection {
+        margin-top: 10px !important;
+        padding-top: 0 !important;
+    }
+
+}
+
+/* ============================================================
+   TALA SUMMARY PRINT — PAGE 2 BLACK ONLY
+   PRINT ONLY — DO NOT AFFECT OTHER PAGES / EDITOR
+   ============================================================ */
+
+@media print {
+
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2,
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 * {
+        color: #000000 !important;
+        background: #ffffff !important;
+        border-color: #000000 !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 input,
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 textarea,
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 select {
+        color: #000000 !important;
+        background: #ffffff !important;
+        border-color: #000000 !important;
+    }
+
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 table,
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 th,
+    .talapatrakSummaryPrintPage:has(.talaPage2)
+    .talaPage2 td {
+        color: #000000 !important;
+        background: #ffffff !important;
+        border-color: #000000 !important;
+    }
+
+}
+
+
+/* ============================================================
+   PAGE 3 PRINT — પાછલી COLUMN NORMAL NUMBER WEIGHT
+   PRINT ONLY — PAGE 3 ONLY
+   ============================================================ */
+
+@media print {
+
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable td:nth-child(2),
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable td:nth-child(2) input,
+    .talapatrakSummaryPrintPage:has(.talaPage3)
+    .talaPage3 .talapatrakSummaryDemandTable td:nth-child(2) .talapatrakSummaryPrintValue {
+        font-weight: 400 !important;
+        color: #000000 !important;
+    }
+
 }
 

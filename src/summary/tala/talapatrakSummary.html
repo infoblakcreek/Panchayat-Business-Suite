@@ -1,157 +1,69 @@
-<section id="talapatrakSummaryView" class="summaryView talapatrakSummaryView">
-
-    <!-- SUMMARY TOP BAR -->
-    <header class="summaryTopBar talapatrakSummaryTopBar">
-        <div class="summaryTitleArea">
-            <h1>તાલાપત્રક સારાંશ</h1>
-            <p>ગામવાર વસુલાત અને તારીજ</p>
-        </div>
-
-        <div class="summaryActions">
-            <div class="summarySearchGroup">
-                <label for="talapatrakSummarySearch">ગામ શોધો</label>
-                <input
-                    type="search"
-                    id="talapatrakSummarySearch"
-                    placeholder="ગામનું નામ શોધો..."
-                    autocomplete="off"
-                >
-            </div>
-
-            <button
-                type="button"
-                id="generateTalapatrakSummaryTotalButton"
-                class="summaryButton generateTotal"
-            >
-                <span>Generate Total</span>
-            </button>
-        </div>
-    </header>
-
-
-    <!-- VILLAGE RECORDS -->
-    <section
-        id="talapatrakSummaryRecords"
-        class="summaryRecordsSection"
-    >
-        <div class="summarySectionHeader">
-            <h2>ગામવાર સારાંશ</h2>
-        </div>
-
-        <div
-            id="talapatrakSummaryRecordList"
-            class="summaryRecordList"
-        >
-            <!-- Village records will be inserted here -->
-        </div>
-    </section>
+﻿<section id="talapatrakSummaryView" class="summaryView talapatrakSummaryView">
 
 
     <!-- SUMMARY EDITOR -->
     <section
         id="talapatrakSummaryEditor"
-        class="summaryEditor"
+        class="talaSummaryEditor"
         hidden
     >
+        <!-- PAGE 1 : NAMUNO 10 / CHALAN TARIZ -->
+        <section class="summaryDocumentSection talaPage1">
 
-        <!-- EDITOR HEADER -->
-        <div class="summaryEditorHeader">
+            <section class="summaryNotesSection talaPage1NotesSection">
 
-            <div class="summaryEditorTitle">
-                <h2>તાલાપત્રક સારાંશ</h2>
-                <span id="talapatrakSummaryEditorStatus">
-                    સારાંશ તૈયાર નથી
-                </span>
-            </div>
-
-            <div class="summaryEditorActions">
-                <button
-                    type="button"
-                    id="closeTalapatrakSummaryEditorButton"
-                    class="summaryButton secondary"
-                >
-                    બંધ કરો
-                </button>
-
-                <button
-                    type="button"
-                    id="printTalapatrakSummaryButton"
-                    class="summaryButton primary"
-                >
-                    Print
-                </button>
-            </div>
-
-        </div>
-
-
-        <!-- BASIC INFORMATION -->
-        <section class="summaryInfoCard">
-
-            <div class="summaryInfoGrid">
-
-                <div class="summaryInfoField">
-                    <label for="talapatrakSummaryMoje">ગામ</label>
-                    <input
-                        type="text"
-                        id="talapatrakSummaryMoje"
-                       
-                    >
+                <div class="talaSummarySubsectionHeader">
+                    <h4>શેરો / નોંધ</h4>
                 </div>
 
-                <div class="summaryInfoField">
-                    <label for="talapatrakSummaryTaluka">તાલુકો</label>
-                    <input
-                        type="text"
-                        id="talapatrakSummaryTaluka"
-                       
-                    >
-                </div>
+                <textarea
+                    id="talapatrakSummaryNotes"
+                    rows="1"
+                    placeholder="જરૂરી નોંધ લખો..."
+                ></textarea>
 
-                <div class="summaryInfoField">
-                    <label for="talapatrakSummaryJillo">જિલ્લો</label>
-                    <input
-                        type="text"
-                        id="talapatrakSummaryJillo"
-                       
-                    >
-                </div>
+            </section>
 
-                <div class="summaryInfoField">
-                    <label for="talapatrakSummaryYear">વર્ષ</label>
-                    <input
-                        type="text"
-                        id="talapatrakSummaryYear"
-                       
-                    >
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- SAMPLE 10 -->
-        <section class="summaryDocumentSection">
-
-            <div class="summaryDocumentHeader">
+            <div class="talaSummaryPageHeading">
                 <h3>
                     ગામનો નમુનો નંબર - ૧૦ ચલન (જમીન મહેસુલ) ની તારીજ
                 </h3>
             </div>
 
+            <div class="talaPage1TwoColumnLayout">
 
-            <!-- DYNAMIC CHALLAN TABLE -->
-            <div class="summaryTableWrapper">
+    <div class="talaPage1CollectionTableWrapper">
+        <table class="talaPage1CollectionTable">
+            <tbody>
+                <tr>
+                    <td>સરકારી</td>
+                    <td>0.00</td>
+                </tr>
+                <tr>
+                    <td>ખેતી સિવાય</td>
+                    <td>0.00</td>
+                </tr>
+                <tr>
+                    <td>લોકલફંડ</td>
+                    <td>0.00</td>
+                </tr>
+                <tr>
+                    <td>કુલ</td>
+                    <td>0.00</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="talaPage1TableWrapper">
 
                 <table
                     id="talapatrakSummaryChallanTable"
-                    class="summaryTable talapatrakSummaryChallanTable"
+                    class="talaPage1ChallanTable"
                 >
 
                     <thead>
                         <tr>
-                            <th>અ.નં.</th>
                             <th>ચલન નંબર</th>
                             <th>તારીખ</th>
                             <th>પાછલી</th>
@@ -163,219 +75,161 @@
                     </thead>
 
                     <tbody id="talapatrakSummaryChallanBody">
-                        <!-- Dynamic challan rows -->
+
+                        <tr class="talaSummaryDynamicRow">
+
+                            <td>
+                                <input
+                                    type="text"
+                                    data-challan-field="challanNumber"
+                                >
+                            </td>
+
+                            <td>
+                                <input
+                                    type="text"
+                                    data-challan-field="date"
+                                    class="indianDatePicker"
+                                >
+                            </td>
+
+                            <td>
+                                <input
+                                    type="text"
+                                    data-challan-field="previous"
+                                    inputmode="decimal"
+                                    value=""
+                                >
+                            </td>
+
+                            <td>
+                                <input
+                                    type="text"
+                                    data-challan-field="current"
+                                    inputmode="decimal"
+                                    value=""
+                                >
+                            </td>
+
+                            <td>
+                                <input
+                                    type="text"
+                                    data-challan-field="rotating"
+                                    inputmode="decimal"
+                                    value=""
+                                >
+                            </td>
+
+                            <td>
+                                <input
+                                    type="text"
+                                    data-challan-field="total"
+                                    inputmode="decimal"
+                                    value="૦.૦૦"
+                                    readonly
+                                >
+                            </td>
+
+                            <td class="talaSummaryRowActions editorOnlyColumn">
+
+                                <button
+                                    type="button"
+                                    class="talaSummaryRowActionButton"
+                                    data-action="add-challan-row"
+                                    aria-label="ઉમેરો"
+                                    title="ઉમેરો"
+                                >+</button>
+
+                                <button
+                                    type="button"
+                                    class="talaSummaryRowActionButton talaSummaryRowDeleteButton"
+                                    data-action="delete-challan-row"
+                                    aria-label="કાઢી નાખો"
+                                    title="કાઢી નાખો"
+                                >×</button>
+
+                            </td>
+
+                        </tr>
+
                     </tbody>
 
                     <tfoot>
-                        <tr class="summaryGrandTotalRow">
-                            <td colspan="6">કુલ</td>
+
+                        <tr class="summaryGrandTotalRow talaPage1YearTotalRow">
+
+                            <td colspan="2">વર્ષનું કુલ વસુલ</td>
+
+                            <td>
+                                <input
+                                    type="text"
+                                    id="talapatrakSummaryChallanPreviousTotal"
+                                    inputmode="decimal"
+                                >
+                            </td>
+
+                            <td>
+                                <input
+                                    type="text"
+                                    id="talapatrakSummaryChallanCurrentTotal"
+                                    inputmode="decimal"
+                                >
+                            </td>
+
+                            <td>
+                                <input
+                                    type="text"
+                                    id="talapatrakSummaryChallanRotatingTotal"
+                                    inputmode="decimal"
+                                >
+                            </td>
+
                             <td>
                                 <input
                                     type="text"
                                     id="talapatrakSummaryChallanGrandTotal"
-                                   
+                                    inputmode="decimal"
                                 >
                             </td>
+
                             <td class="editorOnlyColumn"></td>
+
                         </tr>
+
                     </tfoot>
 
                 </table>
 
             </div>
 
-            <button
-                type="button"
-                id="addTalapatrakSummaryChallanButton"
-                class="summaryAddRowButton"
-            >
-                + નવી ચલન લાઇન ઉમેરો
-            </button>
-
-
-            <!-- FIXED ACCOUNTING SECTION -->
-            <div class="summaryAccountingSection">
-
-                <table
-                    id="talapatrakSummaryAccountingTable"
-                    class="summaryTable summaryAccountingTable"
-                >
-
-                    <tbody>
-
-                        <tr>
-                            <td>વર્ષનું કુલ વસુલ</td>
-                            <td>
-                                <input
-                                    type="text"
-                                    data-summary-field="yearTotalCollection"
-                                   
-                                >
-                            </td>
-                        </tr>
-
-                        <tr class="sectionDivider">
-                            <td>***જાદે***</td>
-                            <td></td>
-                        </tr>
-
-                        <tr>
-                            <td>તાલુકે પરભાર્યું વસુલ આવેલું</td>
-                            <td>
-                                <input
-                                    type="text"
-                                    data-summary-field="talukaCollection"
-                                >
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>સાલ ગુદસ્તનું ફાજલ</td>
-                            <td>
-                                <input
-                                    type="text"
-                                    data-summary-field="previousYearSurplus"
-                                >
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>કુલ જાદે</td>
-                            <td>
-                                <input
-                                    type="text"
-                                    data-summary-field="totalJade"
-                                   
-                                >
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>કુલ એકંદરે વસુલ</td>
-                            <td>
-                                <input
-                                    type="text"
-                                    data-summary-field="grandCollection"
-                                   
-                                >
-                            </td>
-                        </tr>
-
-                        <tr class="sectionDivider">
-                            <td>***બાદ***</td>
-                            <td></td>
-                        </tr>
-
-                        <tr>
-                            <td>ઇત્તર બાબતનું વસુલ</td>
-                            <td>
-                                <input
-                                    type="text"
-                                    data-summary-field="otherCollection"
-                                >
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>બાર અગર તેથી ઓછા થતા પૈસાની રકમ લેપ્સમાં કાઢી તે</td>
-                            <td>
-                                <input
-                                    type="text"
-                                    data-summary-field="lapsAmount"
-                                >
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>આવતી સાલ મજરે આપવાનું ફાજલ વસુલ</td>
-                            <td>
-                                <input
-                                    type="text"
-                                    data-summary-field="nextYearSurplus"
-                                >
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>કુલ બાદ</td>
-                            <td>
-                                <input
-                                    type="text"
-                                    data-summary-field="totalBad"
-                                   
-                                >
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>કુલ બાદ એકંદરે</td>
-                            <td>
-                                <input
-                                    type="text"
-                                    data-summary-field="grandBad"
-                                   
-                                >
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>હેડફેર થી</td>
-                            <td>
-                                <input
-                                    type="text"
-                                    data-summary-field="headTransfer"
-                                >
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>જાદે</td>
-                            <td>
-                                <input
-                                    type="text"
-                                    data-summary-field="finalJade"
-                                   
-                                >
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>સાલ મજકુરનું અને વસુલ</td>
-                            <td>
-                                <input
-                                    type="text"
-                                    data-summary-field="yearCollectionFinal"
-                                   
-                                >
-                            </td>
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-            </div>
+        </div>
 
         </section>
 
 
-        <!-- SAMPLE 11 -->
-        <section class="summaryDocumentSection">
+        <!-- TALA SUMMARY — PAGE 2 : SAMPLE 10 ACCOUNTING -->
+        <!-- TALA SUMMARY — PAGE 2 : SAMPLE 10 ACCOUNTING -->
+        <section class="summaryDocumentSection talaPage2">
 
-            <div class="summaryDocumentHeader">
-                <h3>
-                    ગામનો નમુનો નંબર - ૧૧ ટાળા પત્રક
-                    (માંગણા વસુલ બાકીનું પત્રક) ની તારીજ
-                </h3>
+            <div class="talaSummaryDocumentHeader">
+                <h3>ગામનો નમુનો નંબર - ૧૦ ચલન (જમીન મહેસુલ) ની તારીજ</h3>
             </div>
 
-
-            <div class="summaryTableWrapper">
+            <div class="summaryTableWrapper talaPage2TableWrapper">
 
                 <table
-                    id="talapatrakSummaryDemandTable"
-                    class="summaryTable talapatrakSummaryDemandTable"
+                    id="talapatrakSummaryAccountingTable"
+                    class="summaryTable summaryAccountingTable talapatrakSummaryPage2AccountingTable"
                 >
+
+                    <colgroup>
+                        <col class="talaPage2ColSerial">
+                        <col class="talaPage2ColDescription">
+                        <col class="talaPage2ColPrevious">
+                        <col class="talaPage2ColCurrent">
+                        <col class="talaPage2ColRotating">
+                        <col class="talaPage2ColTotal">
+                    </colgroup>
 
                     <thead>
                         <tr>
@@ -386,72 +240,128 @@
                             <th>ફરતી</th>
                             <th>કુલ</th>
                         </tr>
+
+                        <tr class="talaPage2YearTotalRow">
+                            <td></td>
+                            <td>વર્ષનું કુલ વસુલ</td>
+                            <td id="talapatrakSummaryPage2YearPrevious"></td>
+                            <td id="talapatrakSummaryPage2YearCurrent"></td>
+                            <td id="talapatrakSummaryPage2YearRotating"></td>
+                            <td id="talapatrakSummaryPage2YearTotal"></td>
+                        </tr>
                     </thead>
 
                     <tbody>
 
-                        <tr>
+                        <tr class="talaPage2SectionRow">
+                            <td colspan="6">જાદે</td>
+                        </tr>
+
+                        <tr class="talaPage2EditableRow" data-tala-page2-row="jadesh1">
                             <td>૧</td>
-                            <td>માંગણું</td>
-                            <td><input type="text" data-demand="previous"></td>
-                            <td><input type="text" data-demand="current"></td>
-                            <td><input type="text" data-demand="rotating"></td>
-                            <td><input type="text" data-demand="total"></td>
+                            <td>તાલુકે પરભાર્યું વસુલ આવેલું</td>
+                            <td><input type="text" inputmode="decimal" data-tala-page2-field="previous"></td>
+                            <td><input type="text" inputmode="decimal" data-tala-page2-field="current"></td>
+                            <td><input type="text" inputmode="decimal" data-tala-page2-field="rotating"></td>
+                            <td data-tala-page2-field="total">૦.૦૦</td>
                         </tr>
 
-                        <tr>
+                        <tr class="talaPage2EditableRow" data-tala-page2-row="jadesh2">
                             <td>૨</td>
-                            <td>બાદ : છૂટ</td>
-                            <td><input type="text" data-demand="discountPrevious"></td>
-                            <td><input type="text" data-demand="discountCurrent"></td>
-                            <td><input type="text" data-demand="discountRotating"></td>
-                            <td><input type="text" data-demand="discountTotal"></td>
+                            <td>સાલ ગુદસ્તનું ફાજલ</td>
+                            <td><input type="text" inputmode="decimal" data-tala-page2-field="previous"></td>
+                            <td><input type="text" inputmode="decimal" data-tala-page2-field="current"></td>
+                            <td><input type="text" inputmode="decimal" data-tala-page2-field="rotating"></td>
+                            <td data-tala-page2-field="total">૦.૦૦</td>
                         </tr>
 
-                        <tr>
+                        <tr class="talaPage2TotalRow" data-tala-page2-total-row="jade">
+                            <td colspan="2">કુલ જાદે</td>
+                            <td data-tala-page2-field="previous">૦.૦૦</td>
+                            <td data-tala-page2-field="current">૦.૦૦</td>
+                            <td data-tala-page2-field="rotating">૦.૦૦</td>
+                            <td data-tala-page2-field="total">૦.૦૦</td>
+                        </tr>
+
+                        <tr class="talaPage2TotalRow" data-tala-page2-total-row="grandCollection">
+                            <td colspan="2">કુલ એકંદરે વસુલ</td>
+                            <td data-tala-page2-field="previous">૦.૦૦</td>
+                            <td data-tala-page2-field="current">૦.૦૦</td>
+                            <td data-tala-page2-field="rotating">૦.૦૦</td>
+                            <td data-tala-page2-field="total">૦.૦૦</td>
+                        </tr>
+
+                        <tr class="talaPage2SectionRow">
+                            <td colspan="6">બાદ</td>
+                        </tr>
+
+                        <tr class="talaPage2EditableRow" data-tala-page2-row="baad1">
+                            <td>૧</td>
+                            <td>ઇત્તર બાબતનું વસુલ</td>
+                            <td><input type="text" inputmode="decimal" data-tala-page2-field="previous"></td>
+                            <td><input type="text" inputmode="decimal" data-tala-page2-field="current"></td>
+                            <td><input type="text" inputmode="decimal" data-tala-page2-field="rotating"></td>
+                            <td data-tala-page2-field="total">૦.૦૦</td>
+                        </tr>
+
+                        <tr class="talaPage2EditableRow" data-tala-page2-row="baad2">
+                            <td>૨</td>
+                            <td>બાર અગર તેથી ઓછા થતા પૈસાની રકમ લેપ્સમાં કાઢી તે</td>
+                            <td><input type="text" inputmode="decimal" data-tala-page2-field="previous"></td>
+                            <td><input type="text" inputmode="decimal" data-tala-page2-field="current"></td>
+                            <td><input type="text" inputmode="decimal" data-tala-page2-field="rotating"></td>
+                            <td data-tala-page2-field="total">૦.૦૦</td>
+                        </tr>
+
+                        <tr class="talaPage2EditableRow" data-tala-page2-row="baad3">
                             <td>૩</td>
-                            <td>નક્કી માંગણું</td>
-                            <td><input type="text" data-demand="fixedPrevious"></td>
-                            <td><input type="text" data-demand="fixedCurrent"></td>
-                            <td><input type="text" data-demand="fixedRotating"></td>
-                            <td><input type="text" data-demand="fixedTotal"></td>
+                            <td>આવતી સાલ મજરે આપવાનું ફાજલ વસુલ</td>
+                            <td><input type="text" inputmode="decimal" data-tala-page2-field="previous"></td>
+                            <td><input type="text" inputmode="decimal" data-tala-page2-field="current"></td>
+                            <td><input type="text" inputmode="decimal" data-tala-page2-field="rotating"></td>
+                            <td data-tala-page2-field="total">૦.૦૦</td>
                         </tr>
 
-                        <tr>
-                            <td>૪</td>
-                            <td>નિવડ વસુલ</td>
-                            <td><input type="text" data-demand="collectionPrevious"></td>
-                            <td><input type="text" data-demand="collectionCurrent"></td>
-                            <td><input type="text" data-demand="collectionRotating"></td>
-                            <td><input type="text" data-demand="collectionTotal"></td>
+                        <tr class="talaPage2TotalRow" data-tala-page2-total-row="baad">
+                            <td colspan="2">કુલ બાદ</td>
+                            <td data-tala-page2-field="previous">૦.૦૦</td>
+                            <td data-tala-page2-field="current">૦.૦૦</td>
+                            <td data-tala-page2-field="rotating">૦.૦૦</td>
+                            <td data-tala-page2-field="total">૦.૦૦</td>
                         </tr>
 
-                        <tr>
-                            <td>૫</td>
-                            <td>લેવા લાયક બાકી</td>
-                            <td colspan="3"></td>
-                            <td><input type="text" data-demand="receivable"></td>
+                        <tr class="talaPage2TotalRow" data-tala-page2-total-row="grandBaad">
+                            <td colspan="2">કુલ બાદ એકંદરે</td>
+                            <td data-tala-page2-field="previous">૦.૦૦</td>
+                            <td data-tala-page2-field="current">૦.૦૦</td>
+                            <td data-tala-page2-field="rotating">૦.૦૦</td>
+                            <td data-tala-page2-field="total">૦.૦૦</td>
                         </tr>
 
-                        <tr>
-                            <td>૬</td>
-                            <td>જાદે વસુલ</td>
-                            <td colspan="3"></td>
-                            <td><input type="text" data-demand="jadeCollection"></td>
+                        <tr class="talaPage2EditableRow" data-tala-page2-row="headTransfer">
+                            <td></td>
+                            <td>હેડફેર થી</td>
+                            <td><input type="text" inputmode="decimal" data-tala-page2-field="previous"></td>
+                            <td><input type="text" inputmode="decimal" data-tala-page2-field="current"></td>
+                            <td><input type="text" inputmode="decimal" data-tala-page2-field="rotating"></td>
+                            <td><input type="text" inputmode="decimal" data-tala-page2-field="total"></td>
                         </tr>
 
-                        <tr>
-                            <td>૭</td>
-                            <td>બાદ : લેપ્સ</td>
-                            <td colspan="3"></td>
-                            <td><input type="text" data-demand="laps"></td>
+                        <tr class="talaPage2EditableRow" data-tala-page2-row="finalJade">
+                            <td></td>
+                            <td>જાદે</td>
+                            <td><input type="text" inputmode="decimal" data-tala-page2-field="previous"></td>
+                            <td><input type="text" inputmode="decimal" data-tala-page2-field="current"></td>
+                            <td><input type="text" inputmode="decimal" data-tala-page2-field="rotating"></td>
+                            <td><input type="text" inputmode="decimal" data-tala-page2-field="total"></td>
                         </tr>
 
-                        <tr>
-                            <td>૮</td>
-                            <td>આવતી સાલ મજરે આપવાનું ફાજલ</td>
-                            <td colspan="3"></td>
-                            <td><input type="text" data-demand="nextYearSurplus"></td>
+                        <tr class="talaPage2TotalRow" data-tala-page2-total-row="finalCollection">
+                            <td colspan="2">સાલ મજકુરનું અને વસુલ</td>
+                            <td data-tala-page2-field="previous">૦.૦૦</td>
+                            <td data-tala-page2-field="current">૦.૦૦</td>
+                            <td data-tala-page2-field="rotating">૦.૦૦</td>
+                            <td data-tala-page2-field="total">૦.૦૦</td>
                         </tr>
 
                     </tbody>
@@ -460,146 +370,309 @@
 
             </div>
 
-
-            <!-- BAKI NI TARIJ -->
-            <section class="summaryDynamicSection">
-
-                <div class="summarySubsectionHeader">
-                    <h4>બાકીની તારીજ</h4>
-                </div>
-
-                <table
-                    id="talapatrakSummaryRemainingTable"
-                    class="summaryTable dynamicSummaryTable"
-                >
-
-                    <thead>
-                        <tr>
-                            <th>વર્ષ</th>
-                            <th>રકમ રુ.</th>
-                            <th>ખાતા નંબર</th>
-                            <th>લેપ્સની તારીજ</th>
-                            <th>રકમ રુ.</th>
-                            <th class="editorOnlyColumn">ક્રિયા</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="talapatrakSummaryRemainingBody">
-                        <!-- Dynamic rows -->
-                    </tbody>
-
-                </table>
-
-                <button
-                    type="button"
-                    id="addTalapatrakSummaryRemainingButton"
-                    class="summaryAddRowButton"
-                >
-                    + નવી બાકી લાઇન ઉમેરો
-                </button>
-
-            </section>
-
-
-            <!-- LAPS NI TARIJ -->
-            <section class="summaryDynamicSection">
-
-                <div class="summarySubsectionHeader">
-                    <h4>લેપ્સની તારીજ</h4>
-                </div>
-
-                <table
-                    id="talapatrakSummaryLapsTable"
-                    class="summaryTable dynamicSummaryTable"
-                >
-
-                    <thead>
-                        <tr>
-                            <th>વર્ષ</th>
-                            <th>રકમ રુ.</th>
-                            <th>ખાતા નંબર</th>
-                            <th>લેપ્સની તારીજ</th>
-                            <th>રકમ રુ.</th>
-                            <th class="editorOnlyColumn">ક્રિયા</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="talapatrakSummaryLapsBody">
-                        <!-- Dynamic rows -->
-                    </tbody>
-
-                </table>
-
-                <button
-                    type="button"
-                    id="addTalapatrakSummaryLapsButton"
-                    class="summaryAddRowButton"
-                >
-                    + નવી લેપ્સ લાઇન ઉમેરો
-                </button>
-
-            </section>
-
-
-            <!-- VERIFICATION / SIGNATURES -->
-            <section class="summaryCertificationSection">
-
-                <div class="summaryVerificationText">
-                    <p>
-                        ઉપરોક્ત તારીજમાં દર્શાવેલ રકમો તથા વિગતો
-                        હિસાબ મુજબ સાચી છે.
-                    </p>
-                </div>
-
-                <div class="summarySignatureGrid">
-
-                    <div class="summarySignatureField">
-                        <span>તૈયાર કરનાર</span>
-                        <div class="signatureLine"></div>
-                    </div>
-
-                    <div class="summarySignatureField">
-                        <span>તપાસનાર</span>
-                        <div class="signatureLine"></div>
-                    </div>
-
-                    <div class="summarySignatureField">
-                        <span>મંજુર કરનાર</span>
-                        <div class="signatureLine"></div>
-                    </div>
-
-                </div>
-
-                <div class="summaryShareSection">
-                    <label for="talapatrakSummaryShare">શેરો</label>
-                    <textarea
-                        id="talapatrakSummaryShare"
-                        rows="3"
-                    ></textarea>
-                </div>
-
-                <div class="summaryRegisterNumber">
-                    <label for="talapatrakSummaryRegisterNumber">
-                        સિક્કા રજીસ્ટર નંબર :
-                    </label>
-                    <input
-                        type="text"
-                        id="talapatrakSummaryRegisterNumber"
-                    >
-                </div>
-
-                <p class="summaryCertificationParagraph">
-                    આ તારીજમાં દર્શાવેલ હિસાબ તથા વસુલાત સંબંધિત વિગતો
-                    રજીસ્ટર અને ઉપલબ્ધ રેકોર્ડના આધારે તૈયાર કરવામાં આવેલ છે.
-                </p>
-
-            </section>
+        </div>
 
         </section>
 
+
+        <section class="summaryDocumentSection talaPage3">
+
+    <div class="talaSummaryDocumentHeader">
+        <h3>
+            ગામનો નમુનો નંબર - ૧૧ ટાળા પત્રક
+            (માંગણા વસુલ બાકીનું પત્રક) ની તારીજ
+        </h3>
+    </div>
+
+    <div class="summaryTableWrapper talaPage3TableWrapper">
+
+        <table
+            id="talapatrakSummaryDemandTable"
+            class="summaryTable talapatrakSummaryDemandTable talaPage3AccountingTable"
+        >
+
+            <colgroup>
+                <col class="talaPage3ColDetails">
+                <col class="talaPage3ColPrevious">
+                <col class="talaPage3ColCurrent">
+                <col class="talaPage3ColRotating">
+                <col class="talaPage3ColTotal">
+            </colgroup>
+
+            <thead>
+                <tr>
+                    <th>વિગત</th>
+                    <th>પાછલી</th>
+                    <th>ચાલુ</th>
+                    <th>ફરતી</th>
+                    <th>કુલ</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr class="talaPage3EditableRow" data-page3-row="demand">
+                    <td>માંગણું</td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="previous"></td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="current"></td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="rotating"></td>
+                    <td data-page3-field="total">૦.૦૦</td>
+                </tr>
+
+                <tr class="talaPage3EditableRow" data-page3-row="discount">
+                    <td>બાદ : છૂટ</td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="previous"></td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="current"></td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="rotating"></td>
+                    <td data-page3-field="total">૦.૦૦</td>
+                </tr>
+
+                <tr class="talaPage3EditableRow" data-page3-row="fixedDemand">
+                    <td>નક્કી માંગણું</td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="previous"></td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="current"></td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="rotating"></td>
+                    <td data-page3-field="total">૦.૦૦</td>
+                </tr>
+
+                <tr class="talaPage3EditableRow" data-page3-row="collection">
+                    <td>નિવડ વસુલ</td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="previous"></td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="current"></td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="rotating"></td>
+                    <td data-page3-field="total">૦.૦૦</td>
+                </tr>
+
+                <tr class="talaPage3EditableRow" data-page3-row="recoverableBalance">
+                    <td>લેવા લાયક બાકી</td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="previous"></td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="current"></td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="rotating"></td>
+                    <td data-page3-field="total">૦.૦૦</td>
+                </tr>
+
+                <tr class="talaPage3EditableRow" data-page3-row="jadeCollection">
+                    <td>જાદે વસુલ</td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="previous"></td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="current"></td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="rotating"></td>
+                    <td data-page3-field="total">૦.૦૦</td>
+                </tr>
+
+                <tr class="talaPage3EditableRow" data-page3-row="laps">
+                    <td>બાદ : લેપ્સ</td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="previous"></td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="current"></td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="rotating"></td>
+                    <td data-page3-field="total">૦.૦૦</td>
+                </tr>
+
+                <tr class="talaPage3EditableRow" data-page3-row="nextYearSurplus">
+                    <td>આવતી સાલ મજરે આપવાનું ફાજલ</td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="previous"></td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="current"></td>
+                    <td><input type="text" inputmode="decimal" data-page3-field="rotating"></td>
+                    <td data-page3-field="total">૦.૦૦</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- BAKI NI TARIJ + LEPS NI TARIJ -->
+    <section class="talaPage3BalanceSection">
+
+        <div class="talaPage3BalanceTablesRow">
+
+            <!-- BAKI NI TARIJ -->
+            <div class="talaPage3BalanceTableWrapper">
+
+                <table class="talaPage3BalanceTable talaPage3BakiTable">
+
+                    <thead>
+                        <tr>
+                            <th colspan="2">બાકી ની તારીજ</th>
+                        </tr>
+
+                        <tr>
+                            <th>વર્ષ</th>
+                            <th>રકમ રુ.૫ૈ</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td><input type="text" data-tala-page3-balance="year1"></td>
+                            <td><input type="text" data-tala-page3-balance="amount1"></td>
+                        </tr>
+
+                        <tr>
+                            <td><input type="text" data-tala-page3-balance="year2"></td>
+                            <td><input type="text" data-tala-page3-balance="amount2"></td>
+                        </tr>
+
+                        <tr>
+                            <td><input type="text" data-tala-page3-balance="year3"></td>
+                            <td><input type="text" data-tala-page3-balance="amount3"></td>
+                        </tr>
+
+                        <tr class="talaPage3BalanceTotalRow">
+                            <td>કુલ</td>
+                            <td><span data-tala-page3-balance="total"></span></td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <!-- LEPS NI TARIJ -->
+            <div class="talaPage3BalanceTableWrapper">
+
+                <table class="talaPage3BalanceTable talaPage3LapsTable">
+
+                    <thead>
+                        <tr>
+                            <th colspan="2">લેપ્સની તારીજ</th>
+                        </tr>
+
+                        <tr>
+                            <th>ખાતા નંબર</th>
+                            <th>રકમ રુ.૫ૈ</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr><td><input type="text" data-tala-page3-laps="account1"></td><td><input type="text" data-tala-page3-laps="amount1"></td></tr>
+                        <tr><td><input type="text" data-tala-page3-laps="account2"></td><td><input type="text" data-tala-page3-laps="amount2"></td></tr>
+                        <tr><td><input type="text" data-tala-page3-laps="account3"></td><td><input type="text" data-tala-page3-laps="amount3"></td></tr>
+                        <tr><td><input type="text" data-tala-page3-laps="account4"></td><td><input type="text" data-tala-page3-laps="amount4"></td></tr>
+                        <tr><td><input type="text" data-tala-page3-laps="account5"></td><td><input type="text" data-tala-page3-laps="amount5"></td></tr>
+<tr><td><input type="text" data-tala-page3-laps="account6"></td><td><input type="text" data-tala-page3-laps="amount6"></td></tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
     </section>
 
+        </section>
+
+        <!-- TALA SUMMARY — PAGE 4 : VERIFICATION / SIGNATURES -->
+        <section class="summaryDocumentSection talaPage4">
+
+    <div class="talaPage4OfficialStatement">
+        તાલુકા ના નમુના નંબર -૪ સાથે મેળવણું કરતાં બરોબર છે.
+    </div>
+
+    <div class="talaPage4SignatureArea">
+
+        <div class="talaPage4SignatureRow">
+
+            <div class="talaPage4SignatureBox">
+                <div class="talaPage4SignatureSpace"></div>
+                <div class="talaPage4SignatureLabel">
+                    તલાટી કમ મંત્રી
+                </div>
+            </div>
+
+            <div class="talaPage4SignatureBox">
+                <div class="talaPage4SignatureSpace"></div>
+                <div class="talaPage4SignatureLabel">
+                    જમીન કારકુન
+                </div>
+            </div>
+
+            <div class="talaPage4SignatureBox">
+                <div class="talaPage4SignatureSpace"></div>
+                <div class="talaPage4SignatureLabel">
+                    ના.તા. વિ. અઘિ.
+                </div>
+            </div>
+
+            <div class="talaPage4SignatureBox">
+                <div class="talaPage4SignatureSpace"></div>
+                <div class="talaPage4SignatureLabel">
+                    તાલુકા વિકાસ અધિકારી
+                    <br>
+                    <span data-tala-page4-header="taluka">-</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="talaPage4OfficeSection">
+
+        <div class="talaPage4SectionTitle">
+            શેરોઃ-
+        </div>
+
+        <div class="talaPage4RegisterRow">
+            <span>સિક્કા રજીસ્ટર નંબર-</span>
+
+            <input
+                type="text"
+                id="talapatrakSummaryRegisterNumber"
+                aria-label="સિક્કા રજીસ્ટર નંબર"
+            >
+        </div>
+
+    </div>
+
+    <div class="talaPage4Certification">
+
+        <div class="talaPage4CertificationText">
+            મોજે- <span data-tala-page4-header="moje">-</span>
+            તા. <span data-tala-page4-header="taluka">-</span>
+            જી. <span data-tala-page4-header="jillo">-</span>
+            ગામના નમુના નંબર-૧૧ (ટાળા૫ત્રક) ના પાન નંબર - ૧ થી
+            <span data-tala-page4-header="last-page">-</span>
+            સુધી સને <span data-tala-page4-header="year">-</span>
+            ના વર્ષ માટે અત્રે ની કચેરીના સહી સિક્કા કરી આ૫વામાં આવ્યા.
+        </div>
+
+        <div class="talaPage4CertificationSignatures">
+
+            <div>
+                <div class="talaPage4BottomSpace"></div>
+                <div>તલાટી કમ મંત્રી</div>
+            </div>
+
+            <div>
+                <div class="talaPage4BottomSpace"></div>
+                <div>જમીન કારકુન</div>
+            </div>
+
+            <div>
+                <div class="talaPage4BottomSpace"></div>
+                <div>
+                    તાલુકા વિકાસ અધિકારી
+                    <br>
+                    <span data-tala-page4-header="taluka">-</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
 </section>
+
+    </section>
+        </section>
+
+    </section>
 
 
 

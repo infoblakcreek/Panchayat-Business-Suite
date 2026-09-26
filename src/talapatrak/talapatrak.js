@@ -5817,24 +5817,8 @@ function deleteTalapatrakRow(button) {
         );
 
 
-    /*
-        Summary pages remain part of document pagination.
-    */
-
-    const summaryPages =
-        document.querySelectorAll(
-            ".talapatrakSummaryPage"
-        );
-
-
-    const summaryPageCount =
-        summaryPages.length;
-
-
     window.talapatrakTotalPages =
-        newDataPages +
-        summaryPageCount;
-
+        newDataPages;
 
     /* ============================================================
        IF LAST DATA PAGE BECAME EMPTY
@@ -6884,10 +6868,7 @@ function updateTalapatrakPaginationUI() {
 
 
 
-    const totalPages =
-        window.talapatrakTotalGenerated === true
-            ? dataPages + 4
-            : dataPages;
+    const totalPages = getTalapatrakNavigationTotalPages();
 
 
     const currentPage =
@@ -6904,12 +6885,7 @@ function updateTalapatrakPaginationUI() {
 
     window.talapatrakCurrentPage =
         currentPage;
-
-    window.talapatrakTotalPages =
-        totalPages;
-
-
-    /* ========================================================
+/* ========================================================
        PAGE INPUT
     ======================================================== */
 
@@ -7125,21 +7101,6 @@ function generateTalapatrakTotalsAndSummary() {
     ======================================================== */
 
     renderTalapatrakGrandTotalRow();
-
-    /* ========================================================
-       4. INITIALIZE EXISTING SUMMARY PAGES
-    ======================================================== */
-
-    if (
-        typeof initializeTalapatrakSummaryPages ===
-        "function"
-    ) {
-
-        initializeTalapatrakSummaryPages();
-
-    }
-
-
 
 
     /* ========================================================
@@ -9205,6 +9166,48 @@ function initializeTalapatrakGenerateTotalButton() {
    GO TO TALAPATRAK PAGE
 ============================================================ */
 
+function hideTalapatrakSummaryPage() {
+
+    const mount =
+        document.getElementById(
+            "talapatrakSummaryPageMount"
+        );
+
+    if (mount) {
+        mount.style.display = "none";
+    }
+
+    if (
+        window.talapatrakSummary &&
+        typeof window.talapatrakSummary.hide ===
+            "function"
+    ) {
+        window.talapatrakSummary.hide();
+    }
+}
+
+function getTalapatrakNavigationTotalPages() {
+    const dataPages =
+        Number(window.talapatrakTotalPages) || 1;
+
+    const summaryExists =
+        window.talapatrakTotalGenerated === true;
+
+    return summaryExists
+        ? dataPages + 4
+        : dataPages;
+}
+
+function isTalapatrakSummaryPage(page) {
+    const dataPages =
+        Number(window.talapatrakTotalPages) || 1;
+
+    return (
+        window.talapatrakTotalGenerated === true &&
+        Number(page) > dataPages &&
+        Number(page) <= dataPages + 4
+    );
+}
 function goToTalapatrakPage(pageNumber) {
 
     if (
@@ -9220,7 +9223,7 @@ function goToTalapatrakPage(pageNumber) {
     }
 
 
-    const totalPages = window.talapatrakTotalGenerated === true ? ((Number(window.talapatrakTotalPages) || 1) + 4) : (Number(window.talapatrakTotalPages) || 1);
+    const totalPages = getTalapatrakNavigationTotalPages();
 
 
     let targetPage =
@@ -9466,10 +9469,7 @@ function createTalapatrakPaginationUI() {
                     ) || 1;
 
 
-                const total =
-                    Number(
-                        window.talapatrakTotalPages
-                    ) || 1;
+                const total = getTalapatrakNavigationTotalPages();
 
 
                 if (
@@ -9497,10 +9497,7 @@ function createTalapatrakPaginationUI() {
         last.onclick =
             function() {
 
-                const total =
-                    Number(
-                        window.talapatrakTotalPages
-                    ) || 1;
+                const total = getTalapatrakNavigationTotalPages();
 
 
                 syncCurrentTalapatrakPageToMemory();
@@ -9537,10 +9534,7 @@ function createTalapatrakPaginationUI() {
                     );
 
 
-                const total =
-                    Number(
-                        window.talapatrakTotalPages
-                    ) || 1;
+                const total = getTalapatrakNavigationTotalPages();
 
 
                 if (
@@ -9632,8 +9626,11 @@ function renderTalapatrakPage(pageNumber) {
         const dataTable =
             document.getElementById("talapatrakTable");
 
-        if (infoPanel) {
-            infoPanel.style.display = "none";
+        const rowSearch =
+            document.querySelector(".talapatrakRowSearch");
+
+        if (rowSearch) {
+            rowSearch.style.display = "none";
         }
 
         if (dataTable) {
@@ -9648,7 +9645,7 @@ function renderTalapatrakPage(pageNumber) {
         }
 
         showTalapatrakSummaryPage(
-            summaryNumber
+            pageNumber
         );
 
         window.talapatrakCurrentPage =
@@ -9664,8 +9661,16 @@ function renderTalapatrakPage(pageNumber) {
         return;
     }
 
+    hideTalapatrakSummaryPage();
 
-    console.log("======================================");
+    const rowSearch =
+        document.querySelector(".talapatrakRowSearch");
+
+    if (rowSearch) {
+        rowSearch.style.display = "";
+    }
+
+console.log("======================================");
     console.log("TALAPATRAK PAGE RENDER");
     console.log("Requested Page:", pageNumber);
 
@@ -9709,10 +9714,7 @@ function renderTalapatrakPage(pageNumber) {
        Summary pages are not part of pagination.
     ======================================================== */
 
-    const totalPages =
-        window.talapatrakTotalGenerated === true
-            ? dataPages + 4
-            : dataPages;
+    const totalPages = getTalapatrakNavigationTotalPages();
 
 
     console.log(
@@ -9749,12 +9751,7 @@ function renderTalapatrakPage(pageNumber) {
 
     window.talapatrakCurrentPage =
         pageNumber;
-
-    window.talapatrakTotalPages =
-        totalPages;
-
-
-    /* ========================================================
+/* ========================================================
        6. FIND MAIN TALAPATRAK PAGE
     ======================================================== */
 
@@ -12303,6 +12300,10 @@ function printTalapatrak() {
         })
         .join("");
 
+    const summaryPrintStyles =
+        '<link rel="stylesheet" href="summary/tala/talapatrakSummary.css">';
+
+
 
     /* ========================================================
        COLLECT GENERATED PAGES
@@ -12404,6 +12405,7 @@ function printTalapatrak() {
             </title>
 
             ${printStyles}
+            ${summaryPrintStyles}
 
             <style>
 
@@ -12602,6 +12604,56 @@ function printTalapatrak() {
 
 
             iframe.contentWindow.focus();
+            console.log(
+                "===== TALA IFRAME PRINT DIAGNOSTIC ====="
+            );
+
+            const iframeDocument =
+                iframe.contentDocument ||
+                iframe.contentWindow.document;
+
+            console.log(
+                "IFRAME SUMMARY PAGES:",
+                iframeDocument.querySelectorAll(
+                    ".talapatrakSummaryPrintPage"
+                ).length
+            );
+
+            console.log(
+                "IFRAME SUMMARY DETAILS:",
+                [...iframeDocument.querySelectorAll(
+                    ".talapatrakSummaryPrintPage"
+                )].map(function(page) {
+                    return {
+                        page: page.dataset.page,
+                        width: page.getBoundingClientRect().width,
+                        height: page.getBoundingClientRect().height,
+                        display: getComputedStyle(page).display,
+                        visibility: getComputedStyle(page).visibility,
+                        talaPages: [...page.querySelectorAll(
+                            ".talaPage1, .talaPage2, .talaPage3, .talaPage4"
+                        )].map(function(talaPage) {
+                            return {
+                                class: talaPage.className,
+                                width: talaPage.getBoundingClientRect().width,
+                                height: talaPage.getBoundingClientRect().height,
+                                display: getComputedStyle(talaPage).display,
+                                visibility: getComputedStyle(talaPage).visibility
+                            };
+                        })
+                    };
+                })
+            );
+
+            console.log(
+                "IFRAME BODY HEIGHT:",
+                iframeDocument.body.getBoundingClientRect().height
+            );
+
+            console.log(
+                "===== END TALA IFRAME PRINT DIAGNOSTIC ====="
+            );
+
 
             iframe.contentWindow.print();
 
@@ -12919,451 +12971,6 @@ function getTalapatrakTotalsSection() {
    It does NOT merely hide them.
 ============================================================ */
 
-function removeOldTalapatrakSummaryPages() {
-
-    console.log(
-        "======================================"
-    );
-
-    console.log(
-        "REMOVING OLD TALAPATRAK SUMMARY PAGES"
-    );
-
-
-    const section =
-        getTalapatrakTotalsSection();
-
-
-    if (!section) {
-
-        console.warn(
-            "⚠️ talapatrakTotalsSection NOT FOUND"
-        );
-
-        return;
-
-    }
-
-
-    /*
-     * Remove every old summary page.
-     *
-     * This catches:
-     *
-     * .talapatrakSummaryPage
-     *
-     * regardless of whether it was
-     * Summary 1, 2, or 3.
-     */
-
-    const oldPages =
-        section.querySelectorAll(
-            ".talapatrakSummaryPage"
-        );
-
-
-    console.log(
-        "OLD SUMMARY PAGES FOUND:",
-        oldPages.length
-    );
-
-
-    oldPages.forEach(
-        function(page) {
-
-            page.remove();
-
-        }
-    );
-
-
-    /*
-     * Also remove any dynamically generated
-     * summary wrappers if we created them
-     * previously.
-     */
-
-    section
-        .querySelectorAll(
-            ".talapatrakSummaryPageContainer"
-        )
-        .forEach(
-            function(element) {
-
-                element.remove();
-
-            }
-        );
-
-
-    console.log(
-        "OLD SUMMARY PAGES COMPLETELY REMOVED"
-    );
-
-}
-
-
-/* ============================================================
-   CREATE FRESH SUMMARY PAGE
-============================================================ */
-
-function createFreshTalapatrakSummaryPage(
-    summaryNumber
-) {
-
-    console.log(
-        "CREATING FRESH SUMMARY PAGE:",
-        summaryNumber
-    );
-
-
-    const section =
-        getTalapatrakTotalsSection();
-
-
-    if (!section) {
-
-        console.error(
-            "❌ talapatrakTotalsSection NOT FOUND"
-        );
-
-        return null;
-
-    }
-
-
-    /*
-     * Create a completely new page.
-     */
-
-    const page =
-        document.createElement("div");
-
-
-    page.className =
-        "talapatrakSummaryPage";
-
-
-    page.id =
-        "talapatrakSummaryPage" +
-        summaryNumber;
-
-
-    page.dataset.summaryNumber =
-        summaryNumber;
-
-
-    /*
-     * Start hidden.
-     *
-     * The controller will show the
-     * requested page afterward.
-     */
-
-    page.hidden = true;
-
-    page.style.display = "none";
-
-    page.style.visibility = "hidden";
-
-    page.style.opacity = "0";
-
-
-    /*
-     * Inner wrapper.
-     */
-
-    const inner =
-        document.createElement("div");
-
-
-    inner.className =
-        "talapatrakSummaryPageInner";
-
-
-    page.appendChild(
-        inner
-    );
-
-
-    /*
-     * IMPORTANT:
-     *
-     * We are intentionally NOT copying
-     * the old summary HTML here.
-     *
-     * The fresh page starts empty.
-     *
-     * The appropriate summary builder
-     * can populate it afterward.
-     */
-
-
-    section.appendChild(
-        page
-    );
-
-
-    console.log(
-        "FRESH SUMMARY PAGE CREATED:",
-        page.id
-    );
-
-
-    return page;
-
-}
-
-
-/* ============================================================
-   CREATE ALL THREE FRESH SUMMARY PAGES
-============================================================ */
-
-function createFreshTalapatrakSummaryPages() {
-
-    console.log(
-        "======================================"
-    );
-
-    console.log(
-        "CREATING THREE FRESH SUMMARY PAGES"
-    );
-
-
-    const section =
-        getTalapatrakTotalsSection();
-
-
-    if (!section) {
-
-        console.error(
-            "❌ talapatrakTotalsSection NOT FOUND"
-        );
-
-        return false;
-
-    }
-
-
-    /*
-     * FIRST:
-     *
-     * Completely destroy the old pages.
-     */
-
-    removeOldTalapatrakSummaryPages();
-
-
-    /*
-     * THEN:
-     *
-     * Create three brand-new pages.
-     */
-
-    for (
-        let i = 1;
-        i <= TALAPATRAK_SUMMARY_COUNT;
-        i++
-    ) {
-
-        createFreshTalapatrakSummaryPage(i);
-
-    }
-
-
-    /*
-     * Verify.
-     */
-
-    const freshPages =
-        section.querySelectorAll(
-            ".talapatrakSummaryPage"
-        );
-
-
-    console.log(
-        "FRESH SUMMARY PAGE COUNT:",
-        freshPages.length
-    );
-
-
-    if (
-        freshPages.length !==
-        TALAPATRAK_SUMMARY_COUNT
-    ) {
-
-        console.error(
-            "❌ FAILED TO CREATE ALL SUMMARY PAGES"
-        );
-
-        return false;
-
-    }
-
-
-    console.log(
-        "THREE FRESH SUMMARY PAGES CREATED SUCCESSFULLY"
-    );
-
-
-    return true;
-
-}
-
-
-/* ============================================================
-   GET SUMMARY PAGE
-============================================================ */
-
-function getTalapatrakSummaryPage(
-    summaryNumber
-) {
-
-    return document.getElementById(
-        "talapatrakSummaryPage" +
-        summaryNumber
-    );
-
-}
-
-
-/* ============================================================
-   FORCE SUMMARY SECTION VISIBLE
-============================================================ */
-
-function showTalapatrakTotalsSection() {
-
-    const section =
-        getTalapatrakTotalsSection();
-
-
-    if (!section) {
-
-        console.error(
-            "❌ talapatrakTotalsSection NOT FOUND"
-        );
-
-        return false;
-
-    }
-
-
-    section.hidden = false;
-
-    section.removeAttribute("hidden");
-
-    section.style.display = "block";
-
-    section.style.visibility = "visible";
-
-    section.style.opacity = "1";
-
-    section.style.height = "auto";
-
-    section.style.minHeight = "0";
-
-    section.style.overflow = "visible";
-
-    section.style.position = "relative";
-
-    section.style.width = "100%";
-
-
-    /*
-     * Make hidden parents visible.
-     */
-
-    let parent =
-        section.parentElement;
-
-
-    while (
-        parent &&
-        parent !== document.body
-    ) {
-
-        const computed =
-            window.getComputedStyle(parent);
-
-
-        if (
-            computed.display === "none"
-        ) {
-
-            parent.style.display =
-                "block";
-
-        }
-
-
-        if (
-            computed.visibility ===
-            "hidden"
-        ) {
-
-            parent.style.visibility =
-                "visible";
-
-        }
-
-
-        parent =
-            parent.parentElement;
-
-    }
-
-
-    return true;
-
-}
-
-
-/* ============================================================
-   HIDE ALL SUMMARY PAGES
-============================================================ */
-
-function hideAllTalapatrakSummaryPages() {
-
-    const section =
-        getTalapatrakTotalsSection();
-
-
-    if (!section) {
-
-        return;
-
-    }
-
-
-    section
-        .querySelectorAll(
-            ".talapatrakSummaryPage"
-        )
-        .forEach(
-            function(page) {
-
-                page.hidden = true;
-
-                page.setAttribute(
-                    "hidden",
-                    ""
-                );
-
-                page.style.display =
-                    "none";
-
-                page.style.visibility =
-                    "hidden";
-
-                page.style.opacity =
-                    "0";
-
-            }
-        );
-
-}
-
-
 /* ============================================================
    SHOW ONE SUMMARY PAGE
 ============================================================ */
@@ -13372,20 +12979,22 @@ function showTalapatrakSummaryPage(
     summaryNumber
 ) {
 
-    console.log(
-        "SHOW SUMMARY PAGE:",
-        summaryNumber
-    );
+    const dataPage =
+        Number(
+            window.talapatrakTotalPages
+        ) || 1;
 
 
-    const section =
-        getTalapatrakTotalsSection();
+    const mount =
+        document.getElementById(
+            "talapatrakSummaryPageMount"
+        );
 
 
-    if (!section) {
+    if (!mount) {
 
-        console.error(
-            "❌ SUMMARY SECTION DOES NOT EXIST"
+        console.warn(
+            "Talapatrak summary page mount not found."
         );
 
         return false;
@@ -13393,137 +13002,47 @@ function showTalapatrakSummaryPage(
     }
 
 
-    const page =
-        getTalapatrakSummaryPage(
-            summaryNumber
-        );
+    if (
+        window.talapatrakSummary &&
+        typeof window.talapatrakSummary.generate ===
+            "function"
+    ) {
 
-
-    if (!page) {
-
-        console.error(
-            "❌ SUMMARY PAGE DOES NOT EXIST:",
-            summaryNumber
-        );
-
-        return false;
+        window.talapatrakSummary.generate();
 
     }
 
 
-    /*
-     * Parent first.
-     */
+    if (
+        window.talapatrakSummary &&
+        typeof window.talapatrakSummary.renderPage ===
+            "function"
+    ) {
 
-    showTalapatrakTotalsSection();
+        window.talapatrakSummary.renderPage(
+            Number(summaryNumber) - dataPage
+        );
+
+    }
 
 
-    /*
-     * Hide every summary page.
-     */
-
-    hideAllTalapatrakSummaryPages();
-
-
-    /*
-     * Show requested page.
-     */
-
-    page.hidden = false;
-
-    page.removeAttribute("hidden");
-
-    page.style.display =
+    mount.style.display =
         "block";
 
-    page.style.visibility =
-        "visible";
 
-    page.style.opacity =
-        "1";
-
-    page.style.height =
-        "auto";
-
-    page.style.minHeight =
-        "0";
-
-    page.style.width =
-        "100%";
-
-    page.style.position =
-        "relative";
-
-
-    const inner =
-        page.querySelector(
-            ".talapatrakSummaryPageInner"
-        );
-
-
-    if (inner) {
-
-        inner.style.display =
-            "block";
-
-        inner.style.visibility =
-            "visible";
-
-        inner.style.opacity =
-            "1";
-
-        inner.style.height =
-            "auto";
-
-    }
+    window.talapatrakCurrentPage =
+        Number(summaryNumber) || dataPage + 1;
 
 
     console.log(
-        "SUMMARY PAGE DISPLAYED:",
-        summaryNumber
+        "TALAPATRAK → SUMMARY PAGE:",
+        window.talapatrakCurrentPage
     );
 
 
     return true;
 
 }
-
-
-/* ============================================================
-   HIDE SUMMARY SECTION
-============================================================ */
-
-function hideTalapatrakTotalsSection() {
-
-    const section =
-        getTalapatrakTotalsSection();
-
-
-    if (!section) {
-
-        return;
-
-    }
-
-
-    section.hidden = true;
-
-    section.setAttribute(
-        "hidden",
-        ""
-    );
-
-    section.style.display =
-        "none";
-
-    section.style.visibility =
-        "hidden";
-
-    section.style.opacity =
-        "0";
-
-}
-
 
 /* ============================================================
    INITIALIZE FRESH SUMMARY SYSTEM
@@ -13539,23 +13058,20 @@ function initializeTalapatrakSummaryPages() {
     );
 
     console.log(
-        "INITIALIZING FRESH TALAPATRAK SUMMARY SYSTEM"
+        "INITIALIZING TALAPATRAK SUMMARY EDITOR"
     );
 
 
-    /*
-     * Completely delete the previous
-     * summary DOM.
-     */
-
-    const created =
-        createFreshTalapatrakSummaryPages();
+    const editor =
+        document.getElementById(
+            "talapatrakSummaryEditor"
+        );
 
 
-    if (!created) {
+    if (!editor) {
 
         console.error(
-            "❌ Could not create fresh summary pages."
+            "❌ Talapatrak summary editor not found."
         );
 
         return false;
@@ -13563,113 +13079,60 @@ function initializeTalapatrakSummaryPages() {
     }
 
 
-    /*
-     * Make summary section visible.
-     */
+    if (
+        window.talapatrakSummary &&
+        typeof window.talapatrakSummary.initialize ===
+            "function"
+    ) {
 
-    showTalapatrakTotalsSection();
+        window.talapatrakSummary.initialize();
+
+    }
 
 
-    /*
-     * Get header information.
-     */
+    if (
+        window.talapatrakSummary &&
+        typeof window.talapatrakSummary.generate ===
+            "function"
+    ) {
 
-    const moje =
+        window.talapatrakSummary.generate();
+
+    }
+
+
+    const mount =
         document.getElementById(
-            "talapatrakMoje"
-        )?.value || "-";
+            "talapatrakSummaryPageMount"
+        );
 
 
-    const taluka =
-        document.getElementById(
-            "talapatrakTaluka"
-        )?.value || "-";
+    if (mount) {
+
+        mount.style.display =
+            "none";
+
+    }
 
 
-    const jillo =
-        document.getElementById(
-            "talapatrakJillo"
-        )?.value || "-";
-
-
-    const year =
-        document.getElementById(
-            "talapatrakYear"
-        )?.value || "-";
-
-
-    /*
-     * Store these values globally so
-     * newly-created summary pages can
-     * use them.
-     */
-
-    window.talapatrakSummaryHeader = {
-
-        moje,
-        taluka,
-        jillo,
-        year
-
-    };
-
-
-    console.log(
-        "FRESH SUMMARY HEADER DATA:",
-        window.talapatrakSummaryHeader
+    editor.hidden = true;
+    editor.setAttribute(
+        "hidden",
+        ""
     );
 
-
-    /*
-     * Hide all three.
-     */
-
-    hideAllTalapatrakSummaryPages();
-
-
-    /*
-     * IMPORTANT:
-     *
-     * Page-specific population functions
-     * can now build the fresh pages.
-     */
-
-    if (
-        typeof populateTalapatrakSummaryPage1 ===
-        "function"
-    ) {
-
-        populateTalapatrakSummaryPage1();
-
-    }
-
-
-    if (
-        typeof populateTalapatrakSummaryChallans ===
-        "function"
-    ) {
-
-        populateTalapatrakSummaryChallans();
-
-    }
-
-
-    /*
-     * Finally show Summary 1.
-     */
-
-    hideTalapatrakTotalsSection();
+    editor.style.display =
+        "none";
 
 
     console.log(
-        "FRESH SUMMARY SYSTEM INITIALIZED"
+        "TALAPATRAK SUMMARY EDITOR INITIALIZED"
     );
 
 
     return true;
 
 }
-
 
 /* ============================================================
    COMPATIBILITY
@@ -14467,6 +13930,23 @@ function showTalapatrakDeleteModal(record) {
     });
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
