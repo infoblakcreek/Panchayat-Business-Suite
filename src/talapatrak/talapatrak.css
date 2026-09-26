@@ -1,4 +1,4 @@
-
+﻿
 /*=========================================================================*/
 
 /* =========================================================================
@@ -4980,6 +4980,28 @@ body.dark-theme #talapatrakPageInfo,
 
 
     /* ========================================================
+       FOCUSED WORKING ROW
+       --------------------------------------------------------
+       Highlights the row containing the currently focused input.
+    ======================================================== */
+
+    .talapatrakEditorView
+    .talapatrakTable
+    tbody
+    tr.talapatrakRow:focus-within
+    td {
+
+        background: #f5f3ff !important;
+
+        box-shadow:
+            inset 0 2px 0 #8b5cf6,
+            inset 0 -2px 0 #8b5cf6;
+
+    }
+
+
+
+    /* ========================================================
        WORKING ROW INPUTS
     ======================================================== */
 
@@ -7079,3 +7101,391 @@ body.talapatrakFullViewMode
 
 
 @media screen and (min-width:1201px) and (max-width:1300px) { .talapatrakEditorTopBar { height:54px !important; min-height:54px !important; padding:6px 14px !important; } .talapatrakEditorContent { width:calc(100% - 16px) !important; margin:8px auto !important; } .talapatrakPage { padding:12px !important; border-radius:12px !important; } .talapatrakInfoPanel { min-height:44px !important; height:44px !important; margin-bottom:6px !important; padding:5px 9px !important; gap:7px !important; } }
+
+/* ============================================================
+   TALAPATRAK EDITOR — FIXED TABLE HEADER / SCROLLING DATA
+============================================================ */
+
+body.talapatrakFullViewMode
+.talapatrakEditorView
+.talapatrakTableWrapper {
+
+    max-height: calc(100vh - 300px) !important;
+
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+
+    position: relative !important;
+}
+
+
+/* TITLE ROW */
+
+body.talapatrakFullViewMode
+.talapatrakEditorView
+.talapatrakTable
+thead
+.talapatrakInfoRow
+th {
+
+    position: sticky !important;
+
+    top: 0 !important;
+
+    z-index: 30 !important;
+
+}
+
+
+/* FIRST HEADER ROW */
+
+body.talapatrakFullViewMode
+.talapatrakEditorView
+.talapatrakTable
+thead
+tr:not(.talapatrakInfoRow):nth-child(2)
+th {
+
+    position: sticky !important;
+
+    top: 30px !important;
+
+    z-index: 29 !important;
+
+}
+
+
+/* SECOND HEADER ROW */
+
+body.talapatrakFullViewMode
+.talapatrakEditorView
+.talapatrakTable
+thead
+tr:not(.talapatrakInfoRow):nth-child(3)
+th {
+
+    position: sticky !important;
+
+    top: 66px !important;
+
+    z-index: 28 !important;
+
+}
+
+
+
+
+/* ============================================================
+   TALAPATRAK NORMAL EDITOR — FIXED TABLE HEADER / SCROLLING DATA
+============================================================ */
+
+body:not(.talapatrakFullViewMode)
+.talapatrakEditorView
+.talapatrakTableWrapper {
+
+    max-height: calc(100vh - 300px) !important;
+
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+
+    position: relative !important;
+}
+
+
+/* TITLE ROW */
+
+body:not(.talapatrakFullViewMode)
+.talapatrakEditorView
+.talapatrakTable
+thead
+.talapatrakInfoRow
+th {
+
+    position: sticky !important;
+
+    top: 0 !important;
+
+    z-index: 30 !important;
+
+}
+
+
+/* FIRST HEADER ROW */
+
+body:not(.talapatrakFullViewMode)
+.talapatrakEditorView
+.talapatrakTable
+thead
+tr:not(.talapatrakInfoRow):nth-child(2)
+th {
+
+    position: sticky !important;
+
+    top: 48px !important;
+
+    z-index: 29 !important;
+
+}
+
+
+/* SECOND HEADER ROW */
+
+body:not(.talapatrakFullViewMode)
+.talapatrakEditorView
+.talapatrakTable
+thead
+tr:not(.talapatrakInfoRow):nth-child(3)
+th {
+
+    position: sticky !important;
+
+    top: 106px !important;
+
+    z-index: 28 !important;
+
+}
+
+
+/* ============================================================
+   NORMAL EDITOR — KEEP SCROLLING DATA BEHIND HEADER
+============================================================ */
+
+body:not(.talapatrakFullViewMode)
+.talapatrakEditorView
+.talapatrakTable
+thead th {
+
+    background: #f1f5ff !important;
+
+    isolation: isolate !important;
+
+}
+
+
+/* Title row must completely cover scrolling data */
+
+body:not(.talapatrakFullViewMode)
+.talapatrakEditorView
+.talapatrakTable
+thead
+.talapatrakInfoRow
+th {
+
+    background: linear-gradient(
+        135deg,
+        #eef2ff,
+        #f5f3ff
+    ) !important;
+
+    z-index: 40 !important;
+
+}
+
+
+/* Header rows stay above all table body cells */
+
+body:not(.talapatrakFullViewMode)
+.talapatrakEditorView
+.talapatrakTable
+thead
+tr:nth-child(2)
+th {
+
+    background: #f1f5ff !important;
+
+    z-index: 39 !important;
+
+}
+
+
+body:not(.talapatrakFullViewMode)
+.talapatrakEditorView
+.talapatrakTable
+thead
+tr:nth-child(3)
+th {
+
+    background: #f1f5ff !important;
+
+    z-index: 38 !important;
+
+}
+
+
+/* ============================================================
+   NORMAL EDITOR — SOLID STICKY HEADER RENDERING
+============================================================ */
+
+body:not(.talapatrakFullViewMode)
+.talapatrakEditorView
+.talapatrakTable {
+
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+
+}
+
+
+/* Completely opaque sticky header cells */
+
+body:not(.talapatrakFullViewMode)
+.talapatrakEditorView
+.talapatrakTable
+thead th {
+
+    background-color: #f1f5ff !important;
+    background-image: none !important;
+    opacity: 1 !important;
+    box-shadow: inset 0 -1px 0 #cbd5e1 !important;
+
+}
+
+
+/* Solid title row */
+
+body:not(.talapatrakFullViewMode)
+.talapatrakEditorView
+.talapatrakTable
+thead
+.talapatrakInfoRow
+th {
+
+    background-color: #eef2ff !important;
+    background-image: linear-gradient(
+        135deg,
+        #eef2ff,
+        #f5f3ff
+    ) !important;
+
+    opacity: 1 !important;
+}
+
+
+/* ============================================================
+   NORMAL EDITOR — KEEP ENTIRE HEADER AS ONE SOLID BLOCK
+============================================================ */
+
+body:not(.talapatrakFullViewMode)
+.talapatrakEditorView
+.talapatrakTable
+thead {
+
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 50 !important;
+    background: #f1f5ff !important;
+
+}
+
+body:not(.talapatrakFullViewMode)
+.talapatrakEditorView
+.talapatrakTable
+thead th {
+
+    position: static !important;
+    top: auto !important;
+    z-index: auto !important;
+    opacity: 1 !important;
+    background-color: #f1f5ff !important;
+
+}
+
+body:not(.talapatrakFullViewMode)
+.talapatrakEditorView
+.talapatrakTable
+thead
+.talapatrakInfoRow
+th {
+
+    background: linear-gradient(
+        135deg,
+        #eef2ff,
+        #f5f3ff
+    ) !important;
+
+}
+
+
+
+/* ============================================================
+   NORMAL EDITOR — CORRECT STICKY HEADER OFFSETS
+   Compact editor header:
+   Title = 30px
+   Main header = 36px
+============================================================ */
+
+body:not(.talapatrakFullViewMode)
+.talapatrakEditorView
+.talapatrakTable
+thead
+.talapatrakInfoRow
+th {
+
+    top: 0 !important;
+
+}
+
+
+body:not(.talapatrakFullViewMode)
+.talapatrakEditorView
+.talapatrakTable
+thead
+tr:not(.talapatrakInfoRow):nth-child(2)
+th {
+
+    top: 30px !important;
+
+}
+
+
+body:not(.talapatrakFullViewMode)
+.talapatrakEditorView
+.talapatrakTable
+thead
+tr:not(.talapatrakInfoRow):nth-child(3)
+th {
+
+    top: 66px !important;
+
+}
+
+
+
+/* ============================================================
+   FULL VIEW — SOLID STICKY HEADER
+============================================================ */
+
+body.talapatrakFullViewMode
+.talapatrakEditorView
+.talapatrakTable
+thead
+th {
+
+    background-color: #f1f5ff !important;
+    background-image: none !important;
+    opacity: 1 !important;
+    box-shadow: inset 0 -1px 0 #cbd5e1 !important;
+
+}
+
+body.talapatrakFullViewMode
+.talapatrakEditorView
+.talapatrakTable
+thead
+.talapatrakInfoRow
+th {
+
+    background-color: #eef2ff !important;
+    background-image: linear-gradient(
+        135deg,
+        #eef2ff,
+        #f5f3ff
+    ) !important;
+
+    opacity: 1 !important;
+
+}
+
+
+
+
