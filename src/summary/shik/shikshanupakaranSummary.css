@@ -3745,6 +3745,8 @@ body.shikshanupakaranFullViewMode
 }
 
 .shikPage4 .shikPage4SignatureLabel {
+    height: 36px !important;
+    box-sizing: border-box !important;
     padding-top: 7px !important;
 
     border-top: 1px solid #16a34a !important;
@@ -3760,7 +3762,7 @@ body.shikshanupakaranFullViewMode
 }
 
 .shikPage4 .shikPage4SignatureLabel br {
-    display: none !important;
+    display: block !important;
 }
 
 .shikPage4 .shikPage4OfficeSection {
