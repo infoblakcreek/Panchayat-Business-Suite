@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    SHIKSHANUPAKARAN SUMMARY
    ============================================================ */
 
@@ -393,7 +393,44 @@ function calculateShikshanupakaranSummaryChallanRowTotal(row) {
             }
 
             if (pageIndex === 3) {
-        setupShikshanupakaranSummaryPage3BalanceTable(); setupShikshanupakaranSummaryPage3Calculation(); calculateShikshanupakaranSummaryPage3(); } if (pageIndex === 4) { populateShikshanupakaranSummaryPage4Header(); }
+                setupShikshanupakaranSummaryPage3BalanceTable();
+                setupShikshanupakaranSummaryPage3Calculation();
+                calculateShikshanupakaranSummaryPage3();
+            }
+
+            if (pageIndex === 4) {
+                populateShikshanupakaranSummaryPage4Header();
+
+                const registerNumber =
+                    editor.querySelector(
+                        ".shikPage4 input[aria-label=\"સિક્કા રજીસ્ટર નંબર\"]"
+                    );
+
+                if (registerNumber && !registerNumber.dataset.gujaratiSetup) {
+                    registerNumber.dataset.gujaratiSetup = "true";
+
+                    registerNumber.addEventListener("input", function() {
+                        const cursorPosition = registerNumber.selectionStart;
+
+                        const englishValue =
+                            convertGujaratiDigitsToEnglish(
+                                registerNumber.value
+                            );
+
+                        registerNumber.value =
+                            convertToGujaratiDigits(
+                                englishValue
+                            );
+
+                        if (cursorPosition !== null) {
+                            registerNumber.setSelectionRange(
+                                cursorPosition,
+                                cursorPosition
+                            );
+                        }
+                    });
+                }
+            }
 
             console.log(
                 "SHIKSHANUPAKARAN EDITABLE SUMMARY PAGE RENDERED:",
@@ -547,7 +584,8 @@ function calculateShikshanupakaranSummaryChallanRowTotal(row) {
             });
     }
 
-    /* ============================================================
+
+ /* ============================================================
    SHIKSHANUPAKARAN SUMMARY — PAGE 3
    BAKI NI TARIZ TABLE CALCULATION
    ============================================================ */
@@ -596,6 +634,7 @@ function setupShikshanupakaranSummaryPage3BalanceTable() {
     calculateShikshanupakaranSummaryPage3BalanceTable();
 }
 
+
 function calculateShikshanupakaranSummaryPage3BalanceTable() {
     const page3 = document.querySelector(".shikPage3");
 
@@ -626,6 +665,8 @@ function calculateShikshanupakaranSummaryPage3BalanceTable() {
             formatShikshanupakaranSummaryPage3Number(total);
     }
 }
+
+
 function setupShikshanupakaranSummaryPage3Calculation() {
         const page3 =
             document.querySelector(".shikPage3");
