@@ -85,13 +85,42 @@ async function setInitialBillNumber() {
     if (billNo) {
 
         billNo.value =
-            billNumber;
+            normalizeGujaratiDisplayValue(billNumber);
 
     }
 
 }
 
 window.setInitialBillNumber = setInitialBillNumber;
+
+
+// ==========================================
+// MAIN BILL NUMERIC HELPERS
+// ==========================================
+
+function getMainBillNumericValue(value) {
+
+    const englishValue =
+        convertGujaratiDigitsToEnglish(value);
+
+    const number =
+        parseFloat(englishValue);
+
+    return Number.isFinite(number)
+        ? number
+        : 0;
+
+}
+
+
+function setMainBillGujaratiValue(element, value) {
+
+    if (!element) return;
+
+    element.value =
+        normalizeGujaratiDisplayValue(value);
+
+}
 
 
 // ==========================================
@@ -105,19 +134,19 @@ function calculateRow(input) {
 
 
     const pages =
-        parseFloat(
+        getMainBillNumericValue(
             row.querySelector(
                 ".pages"
             ).value
-        ) || 0;
+        );
 
 
     const price =
-        parseFloat(
+        getMainBillNumericValue(
             row.querySelector(
                 ".price"
             ).value
-        ) || 0;
+        );
 
 
     const total =
@@ -127,7 +156,9 @@ function calculateRow(input) {
     row.querySelector(
         ".total"
     ).value =
-        total.toFixed(2);
+        normalizeGujaratiDisplayValue(
+            total.toFixed(2)
+        );
 
 
     calculateGrandTotal();
@@ -156,9 +187,9 @@ function calculateGrandTotal() {
         .forEach(function(input) {
 
             sum +=
-                parseFloat(
+                getMainBillNumericValue(
                     input.value
-                ) || 0;
+                );
 
         });
 
@@ -172,7 +203,9 @@ function calculateGrandTotal() {
     if (grandTotal) {
 
         grandTotal.value =
-            sum.toFixed(2);
+            normalizeGujaratiDisplayValue(
+                sum.toFixed(2)
+            );
 
     }
 
@@ -234,7 +267,7 @@ function addItemRow() {
 
             <input
                 class="table-input srno"
-                type="number"
+                type="text"
                 readonly>
 
         </td>
@@ -253,7 +286,7 @@ function addItemRow() {
 
             <input
                 class="table-input pages"
-                type="number"
+                type="text"
                 oninput="calculateRow(this)">
 
         </td>
@@ -263,7 +296,7 @@ function addItemRow() {
 
             <input
                 class="table-input price"
-                type="number"
+                type="text"
                 step="0.01"
                 oninput="calculateRow(this)">
 
@@ -274,7 +307,7 @@ function addItemRow() {
 
             <input
                 class="table-input total"
-                type="number"
+                type="text"
                 readonly>
 
         </td>
@@ -399,7 +432,7 @@ function updateSerialNumbers() {
             if (srno) {
 
                 srno.value =
-                    index + 1;
+                    normalizeGujaratiDisplayValue(index + 1);
 
             }
 
@@ -410,8 +443,39 @@ function updateSerialNumbers() {
 
 
 // ==========================================
-// AUTO-RESIZE DESCRIPTION
-// ==========================================
+ // MAIN BILL GUJARATI NUMBER INPUT
+ // ==========================================
+
+ document.addEventListener(
+     "input",
+     function(event) {
+
+         const target =
+             event.target;
+
+         if (
+             target.matches(
+                 "#mobileNumber, .pages, .price"
+             )
+         ) {
+
+             target.value =
+                 normalizeGujaratiDisplayValue(
+                     convertGujaratiDigitsToEnglish(
+                         target.value
+                     )
+                 );
+
+         }
+
+     }
+ );
+
+
+ // ==========================================
+ // AUTO-RESIZE DESCRIPTION
+ // ==========================================
+
 
 function autoResizeDescription(textarea) {
 
@@ -603,6 +667,12 @@ function generateReceipt() {
                 .trim();
 
 
+
+        const billNoEnglish =
+            convertGujaratiDigitsToEnglish(
+                billNo
+            ).trim();
+
         const billDate =
             document
                 .getElementById(
@@ -620,7 +690,7 @@ function generateReceipt() {
                 .trim();
 
 
-        if (!billNo) {
+        if (!billNoEnglish) {
 
             alert(
                 "Please enter Bill Number first."
@@ -665,15 +735,6 @@ function generateReceipt() {
             .value =
             receiptNumber;
 
-
-        document
-            .getElementById(
-                "dPavtiDate"
-            )
-            .value =
-            formatIndianDate(
-                billDate
-            );
 
 
         /*
@@ -759,9 +820,11 @@ function generatePrintableBills() {
     document
         .getElementById("pBillNo")
         .textContent =
-        document
-            .getElementById("billNo")
-            .value;
+        normalizeGujaratiDisplayValue(
+            document
+                .getElementById("billNo")
+                .value
+        );
 
 
     document
@@ -801,9 +864,11 @@ function generatePrintableBills() {
     document
         .getElementById("pMobileNumber")
         .textContent =
-        document
-            .getElementById("mobileNumber")
-            .value;
+        normalizeGujaratiDisplayValue(
+            document
+                .getElementById("mobileNumber")
+                .value
+        );
 
 
     document
@@ -819,9 +884,11 @@ function generatePrintableBills() {
     document
         .getElementById("pGrandTotal")
         .textContent =
-        document
-            .getElementById("grandTotal")
-            .value;
+        normalizeGujaratiDisplayValue(
+            document
+                .getElementById("grandTotal")
+                .value
+        );
 
 
     document
@@ -873,9 +940,11 @@ function generatePrintableBills() {
     document
         .getElementById("dGrandTotal")
         .textContent =
-        document
-            .getElementById("grandTotal")
-            .value;
+        normalizeGujaratiDisplayValue(
+            document
+                .getElementById("grandTotal")
+                .value
+        );
 
 
     document
@@ -925,11 +994,13 @@ function generatePrintableBills() {
 
 
             const srno =
-                row
-                    .querySelector(
-                        ".srno"
-                    )
-                    .value;
+                normalizeGujaratiDisplayValue(
+                    row
+                        .querySelector(
+                            ".srno"
+                        )
+                        .value
+                );
 
 
             const description =
@@ -941,27 +1012,33 @@ function generatePrintableBills() {
 
 
             const pages =
-                row
-                    .querySelector(
-                        ".pages"
-                    )
-                    .value;
+                normalizeGujaratiDisplayValue(
+                    row
+                        .querySelector(
+                            ".pages"
+                        )
+                        .value
+                );
 
 
             const price =
-                row
-                    .querySelector(
-                        ".price"
-                    )
-                    .value;
+                normalizeGujaratiDisplayValue(
+                    row
+                        .querySelector(
+                            ".price"
+                        )
+                        .value
+                );
 
 
             const total =
-                row
-                    .querySelector(
-                        ".total"
-                    )
-                    .value;
+                normalizeGujaratiDisplayValue(
+                    row
+                        .querySelector(
+                            ".total"
+                        )
+                        .value
+                );
 
 
             printRow.innerHTML = `
@@ -1027,11 +1104,13 @@ async function saveCurrentBill() {
     const billNo =
         document
             .getElementById("billNo")
-            .value
-            .trim();
+            .value;
+
+    const billNoEnglish =
+        convertGujaratiDigitsToEnglish(billNo).trim();
 
 
-    if (!billNo) {
+    if (!billNoEnglish) {
 
         throw new Error(
             "Bill number is missing."
@@ -1065,7 +1144,7 @@ async function saveCurrentBill() {
 
 
             const pages =
-                parseFloat(
+                getMainBillNumericValue(
                     row
                         .querySelector(
                             ".pages"
@@ -1076,7 +1155,7 @@ async function saveCurrentBill() {
 
 
             const price =
-                parseFloat(
+                getMainBillNumericValue(
                     row
                         .querySelector(
                             ".price"
@@ -1087,7 +1166,7 @@ async function saveCurrentBill() {
 
 
             const total =
-                parseFloat(
+                getMainBillNumericValue(
                     row
                         .querySelector(
                             ".total"
@@ -1100,11 +1179,13 @@ async function saveCurrentBill() {
             items.push({
 
                 srno:
-                    row
-                        .querySelector(
-                            ".srno"
-                        )
-                        .value,
+                    convertGujaratiDigitsToEnglish(
+                        row
+                            .querySelector(
+                                ".srno"
+                            )
+                            .value
+                    ),
 
                 description,
 
@@ -1129,7 +1210,7 @@ async function saveCurrentBill() {
 
         billNo:
 
-            billNo,
+            billNoEnglish,
 
 
         customerName:
@@ -1174,12 +1255,13 @@ async function saveCurrentBill() {
 
         mobileNumber:
 
-            document
-                .getElementById(
-                    "mobileNumber"
-                )
-                .value
-                .trim(),
+            convertGujaratiDigitsToEnglish(
+                document
+                    .getElementById(
+                        "mobileNumber"
+                    )
+                    .value
+            ).trim(),
 
 
         billDate:
@@ -1190,6 +1272,15 @@ async function saveCurrentBill() {
                 )
                 .value,
 
+
+
+        receiptDate:
+
+            document
+                .getElementById(
+                    "dPavtiDate"
+                )
+                .value,
 
         paymentDetails:
 
@@ -1213,7 +1304,7 @@ async function saveCurrentBill() {
 
         grandTotal:
 
-            Number(
+            getMainBillNumericValue(
                 document
                     .getElementById(
                         "grandTotal"
@@ -1245,7 +1336,7 @@ async function saveCurrentBill() {
     const billReference =
         db
             .collection("bills")
-            .doc(billNo);
+            .doc(billNoEnglish);
 
 
     const existingBill =
@@ -1276,10 +1367,10 @@ async function saveCurrentBill() {
             "Bill updated",
 
         message:
-            "Bill " + billNo,
+            "Bill " + billNoEnglish,
 
         billNo:
-            billNo,
+            billNoEnglish,
 
         amount:
             billData.grandTotal,
@@ -1292,7 +1383,7 @@ async function saveCurrentBill() {
 
     console.log(
         "Bill updated successfully:",
-        billNo
+        billNoEnglish
     );
 
 }
@@ -1335,7 +1426,7 @@ async function saveCurrentBill() {
             )}`,
 
         billNo:
-            billNo,
+            billNoEnglish,
 
         amount:
             billData.grandTotal,
@@ -1348,7 +1439,7 @@ async function saveCurrentBill() {
 
     console.log(
         "New bill saved successfully:",
-        billNo
+        billNoEnglish
     );
 
 }
@@ -3511,6 +3602,36 @@ window.addEventListener(
     printWindow.document.close();
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

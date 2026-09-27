@@ -1,4 +1,4 @@
-// ==========================================
+﻿// ==========================================
 // FIREBASE CONFIGURATION
 // ==========================================
 
@@ -1341,7 +1341,7 @@ async function loadRecentBills() {
                             class="billNumber"
                         >
 
-                            ${bill.billNo || "N/A"}
+                            ${normalizeGujaratiDisplayValue(bill.billNo || "N/A")}
 
                         </strong>
 
@@ -1379,7 +1379,7 @@ async function loadRecentBills() {
 
                         <strong>
 
-                            ₹ ${billAmount}
+                            ₹ ${normalizeGujaratiDisplayValue(billAmount)}
 
                         </strong>
 
@@ -1584,7 +1584,7 @@ async function loadAllMainBills(searchTerm = "") {
                         <strong
                             class="billNumber">
 
-                            ${bill.billNo || doc.id}
+                            ${normalizeGujaratiDisplayValue(bill.billNo || doc.id)}
 
                         </strong>
 
@@ -1616,7 +1616,7 @@ async function loadAllMainBills(searchTerm = "") {
 
                         <strong>
 
-                            ₹ ${amount}
+                            ₹ ${normalizeGujaratiDisplayValue(amount)}
 
                         </strong>
 
@@ -1931,7 +1931,7 @@ async function editBill(billId) {
                 "mobileNumber"
             )
             .value =
-            bill.mobileNumber || "";
+            normalizeGujaratiDisplayValue(bill.mobileNumber || "");
 
 
         document
@@ -1939,7 +1939,7 @@ async function editBill(billId) {
                 "billNo"
             )
             .value =
-            bill.billNo || billId;
+            normalizeGujaratiDisplayValue(bill.billNo || billId);
 
 
         document
@@ -1950,6 +1950,13 @@ async function editBill(billId) {
             bill.billDate || "";
 
 
+
+        document
+            .getElementById(
+                "dPavtiDate"
+            )
+            .value =
+            bill.receiptDate || "";
         document
             .getElementById(
                 "paymentDetails"
@@ -1975,7 +1982,7 @@ async function editBill(billId) {
                 "grandTotal"
             )
             .value =
-            bill.grandTotal || 0;
+            normalizeGujaratiDisplayValue(bill.grandTotal || 0);
 
 
         /* ==============================
@@ -2064,7 +2071,7 @@ function loadBillItems(items) {
 
                     <input
                         class="table-input srno"
-                        type="number"
+                        type="text"
                         readonly
                         value="${item.srno || ""}">
 
@@ -2084,8 +2091,8 @@ function loadBillItems(items) {
 
                     <input
                         class="table-input pages"
-                        type="number"
-                        value="${item.pages || ""}"
+                        type="text"
+                        value="${normalizeGujaratiDisplayValue(item.pages || "")}"
                         oninput="calculateRow(this)">
 
                 </td>
@@ -2095,9 +2102,9 @@ function loadBillItems(items) {
 
                     <input
                         class="table-input price"
-                        type="number"
+                        type="text"
                         step="0.01"
-                        value="${item.price || ""}"
+                        value="${normalizeGujaratiDisplayValue(item.price || "")}"
                         oninput="calculateRow(this)">
 
                 </td>
@@ -2107,9 +2114,9 @@ function loadBillItems(items) {
 
                     <input
                         class="table-input total"
-                        type="number"
+                        type="text"
                         readonly
-                        value="${item.total || ""}">
+                        value="${normalizeGujaratiDisplayValue(item.total || "")}">
 
                 </td>
 
@@ -3835,3 +3842,9 @@ function showMainView(viewId) {
     }
 
 }
+
+
+
+
+
+
