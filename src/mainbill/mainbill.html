@@ -67,7 +67,19 @@
                                         </th>
                 
                                         <th>
-                                            Amount
+                                            Bill Amount
+                                        </th>
+
+                                        <th>
+                                            Paid
+                                        </th>
+
+                                        <th>
+                                            Balance
+                                        </th>
+
+                                        <th>
+                                            Status
                                         </th>
                 
                                         <th>
@@ -84,7 +96,7 @@
                                     <tr>
                 
                                         <td
-                                            colspan="6"
+                                            colspan="9"
                                             class="loadingBills">
                 
                                             Loading bills...
@@ -575,7 +587,7 @@
                           
                           <tr class="printCustomerRow">
                           
-                              <td colspan="6">
+                              <td colspan="9">
                           
                                   <table class="printCustomerDetails">
                           
@@ -583,7 +595,7 @@
                           
                                       <tr>
                           
-                                          <td colspan="6">
+                                          <td colspan="9">
                           
                                               <label>શ્રીમાન,</label>
                           
@@ -721,7 +733,7 @@
                     
                                 <tr>
         
-                                    <td colspan="6" class="printPaymentDetails">
+                                    <td colspan="9" class="printPaymentDetails">
         
                                         <strong> બેંક / ચેકની વિગત:</strong>
                                     
@@ -2238,6 +2250,151 @@ body.printingMainBill {
 
 </style>
 
+<!-- ============================================================
+     MAIN BILL PAYMENT MODAL
+============================================================ -->
+
+<div
+    id="mainBillPaymentModal" lang="gu"
+    class="mainBillPaymentModal"
+    aria-hidden="true">
+
+    <div
+        class="mainBillPaymentModalOverlay"
+        id="mainBillPaymentModalOverlay">
+    </div>
+
+    <div
+        class="mainBillPaymentModalContent"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="mainBillPaymentModalTitle">
+
+        <div class="mainBillPaymentModalHeader">
+
+            <div>
+                <h2 id="mainBillPaymentModalTitle">
+                    Payment for Bill
+                </h2>
+
+                <p id="paymentModalBillNumber">
+                    Bill #—
+                </p>
+            </div>
+
+            <button
+                type="button"
+                id="closeMainBillPaymentModal"
+                class="mainBillPaymentModalClose"
+                aria-label="Close">
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="mainBillPaymentDetails">
+
+            <div class="mainBillPaymentDetailRow">
+                <span>બિલની રકમ</span>
+
+                <strong id="paymentModalBillAmount">
+                    ₹0
+                </strong>
+            </div>
+
+
+            <div class="mainBillPaymentDetailRow">
+                <span>અગાઉ ચૂકવેલ</span>
+
+                <strong id="paymentModalPaidAmount">
+                    ₹0
+                </strong>
+            </div>
+
+
+            <div class="mainBillPaymentDetailRow balanceRow">
+                <span>બાકી રકમ</span>
+
+                <strong id="paymentModalBalanceAmount">
+                    ₹0
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div class="mainBillPaymentForm">
+
+            <div class="mainBillPaymentField">
+
+                <label for="paymentModalAmount">
+                    ચૂકવવાની રકમ દાખલ કરો
+                </label>
+
+                <div class="mainBillPaymentInputWrapper">
+
+                    <span class="mainBillPaymentCurrency">
+                        ₹
+                    </span>
+
+                    <input
+                        type="text"
+                        id="paymentModalAmount"
+                        inputmode="decimal"
+                        placeholder="૦.૦૦">
+
+                </div>
+
+            </div>
+
+
+            <div class="mainBillPaymentField">
+
+                <label for="paymentModalDate">
+                    ચૂકવણીની તારીખ
+                </label>
+
+                <input
+                    type="text"
+                    id="paymentModalDate"
+                    class="indianDatePicker"
+                    inputmode="numeric"
+                    placeholder="૨૭/૦૯/૨૦૨૬">
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="paymentModalValidationMessage"
+            class="mainBillPaymentValidationMessage"
+            role="alert">
+        </div>
+
+
+        <div class="mainBillPaymentModalActions">
+
+            <button
+                type="button"
+                id="cancelMainBillPayment"
+                class="mainBillPaymentCancelButton">
+                Cancel
+            </button>
+
+            <button
+                type="button"
+                id="saveMainBillPayment"
+                class="mainBillPaymentSaveButton">
+                Save Payment
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 
 
 
