@@ -432,6 +432,50 @@ function calculateShikshanupakaranSummaryChallanRowTotal(row) {
                 }
             }
 
+            /*
+             * Restore this record's saved summary edits AFTER
+             * generated summary values have been populated.
+             */
+            initializeShikshanupakaranSummaryPersistence().then(function() {
+
+                calculateShikshanupakaranSummaryPage2();
+
+                calculateShikshanupakaranSummaryPage3();
+
+                const page3 =
+                    editor.querySelector(".shikPage3");
+
+                if (page3) {
+
+                    const amounts =
+                        page3.querySelectorAll(
+                            '[data-page3-balance-field^="amount"]'
+                        );
+
+                    let total = 0;
+
+                    amounts.forEach(function(input) {
+                        total +=
+                            parseShikshanupakaranSummaryPage3Number(
+                                input.value
+                            );
+                    });
+
+                    const totalField =
+                        page3.querySelector(
+                            '[data-page3-balance-field="total"]'
+                        );
+
+                    if (totalField) {
+                        totalField.textContent =
+                            formatShikshanupakaranSummaryPage3Number(
+                                total
+                            );
+                    }
+
+                }
+
+            });
             console.log(
                 "SHIKSHANUPAKARAN EDITABLE SUMMARY PAGE RENDERED:",
                 pageIndex
@@ -1075,6 +1119,719 @@ function setupShikshanupakaranSummaryPage3Calculation() {
     /* ========================================================
        GENERATE SUMMARY
        ======================================================== */
+
+    /* ========================================================
+       FIRESTORE SUMMARY PERSISTENCE
+       --------------------------------------------------------
+       Saves editable summary values in the existing
+       Shikshanupakaran Firestore document.
+
+       Generated/calculated values are not saved as authoritative
+       data. They are generated first, then saved user edits are
+       restored.
+    ======================================================== */
+
+    let shikshanupakaranSummaryPersistenceRecordId = null;
+    let shikshanupakaranSummaryPersistenceLoaded = false;
+    let shikshanupakaranSummaryPersistenceLoading = false;
+    let shikshanupakaranSummaryPersistenceSaveTimer = null;
+    let shikshanupakaranSummaryPersistenceEventsReady = false;
+
+
+    function getShikshanupakaranSummaryPersistenceRecordId() {
+
+        return (
+            window.currentShikshanupakaranDocumentId ||
+            null
+        );
+
+    }
+
+
+    function getShikshanupakaranSummaryPersistenceKey(
+        element
+    ) {
+
+        if (!element) {
+            return null;
+        }
+
+
+        if (element.id) {
+            return "id:" + element.id;
+        }
+
+
+        const shikSummaryField =
+            element.getAttribute("data-shik-summary");
+
+        if (shikSummaryField) {
+            return "summary:" + shikSummaryField;
+        }
+
+
+        const challanField =
+            element.getAttribute("data-challan-field");
+
+        if (challanField) {
+
+            const row =
+                element.closest("tbody tr");
+
+            const body =
+                row?.closest("tbody");
+
+            const rowIndex =
+                row && body
+                    ? Array.from(body.rows).indexOf(row)
+                    : 0;
+
+            return (
+                "challan:" +
+                rowIndex +
+                ":" +
+                challanField
+            );
+
+        }
+
+
+        const page2Row =
+            element.closest("[data-page2-row]");
+
+        if (page2Row) {
+
+            return (
+                "page2:" +
+                page2Row.getAttribute("data-page2-row") +
+                ":" +
+                (
+                    element.getAttribute(
+                        "data-page2-field"
+                    ) || ""
+                )
+            );
+
+        }
+
+
+        const page3Row =
+            element.closest("[data-page3-row]");
+
+        if (page3Row) {
+
+            return (
+                "page3:" +
+                page3Row.getAttribute("data-page3-row") +
+                ":" +
+                (
+                    element.getAttribute(
+                        "data-page3-field"
+                    ) || ""
+                )
+            );
+
+        }
+
+
+        const balanceField =
+            element.getAttribute(
+                "data-page3-balance-field"
+            );
+
+        if (balanceField) {
+            return "balance:" + balanceField;
+        }
+
+
+        const ariaLabel =
+            element.getAttribute("aria-label");
+
+        if (ariaLabel) {
+            return "aria:" + ariaLabel;
+        }
+
+
+        const name =
+            element.getAttribute("name");
+
+        if (name) {
+            return "name:" + name;
+        }
+
+
+        return null;
+
+    }
+
+
+    function collectShikshanupakaranSummaryPersistenceData() {
+
+        const editor =
+            getShikshanupakaranSummaryEditor();
+
+        if (!editor) {
+            return {};
+        }
+
+
+        const values = {};
+
+
+        editor
+            .querySelectorAll(
+                "input, textarea, select"
+            )
+            .forEach(function(element) {
+
+                if (
+                    element.disabled ||
+                    element.readOnly
+                ) {
+                    return;
+                }
+
+
+                const key =
+                    getShikshanupakaranSummaryPersistenceKey(
+                        element
+                    );
+
+                if (!key) {
+                    return;
+                }
+
+
+                values[key] =
+                    element.value;
+
+            });
+
+
+        return values;
+
+    }
+
+
+    async function saveShikshanupakaranSummaryPersistence() {
+
+        const documentId =
+            getShikshanupakaranSummaryPersistenceRecordId();
+
+        if (!documentId) {
+            return false;
+        }
+
+
+        if (shikshanupakaranSummaryPersistenceLoading) {
+            return false;
+        }
+
+
+        if (
+            typeof db === "undefined" ||
+            !db ||
+            typeof firebase === "undefined"
+        ) {
+            console.warn(
+                "SHIKSHANUPAKARAN SUMMARY: Firestore is not available."
+            );
+            return false;
+        }
+
+
+        const values =
+            collectShikshanupakaranSummaryPersistenceData();
+
+
+        try {
+
+            await db
+                .collection("shikshanupakarans")
+                .doc(documentId)
+                .set(
+                    {
+                        summaryData: values,
+                        summaryUpdatedAt:
+                            firebase.firestore.FieldValue.serverTimestamp()
+                    },
+                    {
+                        merge: true
+                    }
+                );
+
+
+            shikshanupakaranSummaryPersistenceRecordId =
+                documentId;
+
+
+            console.log(
+                "SHIKSHANUPAKARAN SUMMARY SAVED",
+                documentId
+            );
+
+
+            return true;
+
+        } catch (error) {
+
+            console.error(
+                "SHIKSHANUPAKARAN SUMMARY SAVE FAILED:",
+                error
+            );
+
+            return false;
+
+        }
+
+    }
+
+
+    function scheduleShikshanupakaranSummaryPersistenceSave() {
+
+        if (
+            shikshanupakaranSummaryPersistenceLoading
+        ) {
+            return;
+        }
+
+
+        if (shikshanupakaranSummaryPersistenceSaveTimer) {
+
+            clearTimeout(
+                shikshanupakaranSummaryPersistenceSaveTimer
+            );
+
+        }
+
+
+        shikshanupakaranSummaryPersistenceSaveTimer =
+            setTimeout(
+                function() {
+
+                    saveShikshanupakaranSummaryPersistence();
+
+                },
+                700
+            );
+
+    }
+
+
+    async function loadShikshanupakaranSummaryPersistence() {
+
+        const documentId =
+            getShikshanupakaranSummaryPersistenceRecordId();
+
+        const editor =
+            getShikshanupakaranSummaryEditor();
+
+
+        if (
+            !documentId ||
+            !editor ||
+            typeof db === "undefined" ||
+            !db
+        ) {
+            return false;
+        }
+
+
+        if (
+            shikshanupakaranSummaryPersistenceLoaded &&
+            shikshanupakaranSummaryPersistenceRecordId ===
+                documentId
+        ) {
+            return true;
+        }
+
+
+        shikshanupakaranSummaryPersistenceLoading =
+            true;
+
+
+        try {
+
+            const snapshot =
+                await db
+                    .collection("shikshanupakarans")
+                    .doc(documentId)
+                    .get();
+
+
+            if (!snapshot.exists) {
+                return false;
+            }
+
+
+            const data =
+                snapshot.data() || {};
+
+
+            const saved =
+                data.summaryData;
+
+
+            if (
+                !saved ||
+                typeof saved !== "object"
+            ) {
+
+                shikshanupakaranSummaryPersistenceRecordId =
+                    documentId;
+
+                shikshanupakaranSummaryPersistenceLoaded =
+                    true;
+
+                return true;
+
+            }
+
+
+            Object.keys(saved)
+                .forEach(function(key) {
+
+                    let element = null;
+
+
+                    if (key.startsWith("id:")) {
+
+                        element =
+                            editor.querySelector(
+                                "#" +
+                                CSS.escape(
+                                    key.slice(3)
+                                )
+                            );
+
+                    }
+
+
+                    if (
+                        !element &&
+                        key.startsWith("summary:")
+                    ) {
+
+                        element =
+                            editor.querySelector(
+                                '[data-shik-summary="' +
+                                CSS.escape(
+                                    key.slice(8)
+                                ) +
+                                '"]'
+                            );
+
+                    }
+
+
+                    if (
+                        !element &&
+                        key.startsWith("challan:")
+                    ) {
+
+                        const parts =
+                            key.split(":");
+
+                        const rowIndex =
+                            Number(parts[1]);
+
+                        const field =
+                            parts.slice(2).join(":");
+
+                        const rows =
+                            editor.querySelectorAll(
+                                ".shikPage1 tbody tr"
+                            );
+
+                        const row =
+                            rows[rowIndex];
+
+                        if (row) {
+
+                            element =
+                                row.querySelector(
+                                    '[data-challan-field="' +
+                                    field +
+                                    '"]'
+                                );
+
+                        }
+
+                    }
+
+
+                    if (
+                        !element &&
+                        key.startsWith("page2:")
+                    ) {
+
+                        const parts =
+                            key.split(":");
+
+                        const rowName =
+                            parts[1];
+
+                        const fieldName =
+                            parts.slice(2).join(":");
+
+                        const row =
+                            editor.querySelector(
+                                '[data-page2-row="' +
+                                rowName +
+                                '"]'
+                            );
+
+                        if (row) {
+
+                            element =
+                                row.querySelector(
+                                    '[data-page2-field="' +
+                                    fieldName +
+                                    '"]'
+                                );
+
+                        }
+
+                    }
+
+
+                    if (
+                        !element &&
+                        key.startsWith("page3:")
+                    ) {
+
+                        const parts =
+                            key.split(":");
+
+                        const rowName =
+                            parts[1];
+
+                        const fieldName =
+                            parts.slice(2).join(":");
+
+                        const row =
+                            editor.querySelector(
+                                '[data-page3-row="' +
+                                rowName +
+                                '"]'
+                            );
+
+                        if (row) {
+
+                            element =
+                                row.querySelector(
+                                    '[data-page3-field="' +
+                                    fieldName +
+                                    '"]'
+                                );
+
+                        }
+
+                    }
+
+
+                    if (
+                        !element &&
+                        key.startsWith("balance:")
+                    ) {
+
+                        element =
+                            editor.querySelector(
+                                '[data-page3-balance-field="' +
+                                CSS.escape(
+                                    key.slice(8)
+                                ) +
+                                '"]'
+                            );
+
+                    }
+
+
+                    if (
+                        !element &&
+                        key.startsWith("aria:")
+                    ) {
+
+                        element =
+                            editor.querySelector(
+                                '[aria-label="' +
+                                CSS.escape(
+                                    key.slice(5)
+                                ) +
+                                '"]'
+                            );
+
+                    }
+
+
+                    if (
+                        element &&
+                        !element.readOnly &&
+                        !element.disabled
+                    ) {
+
+                        element.value =
+                            saved[key] === null ||
+                            saved[key] === undefined
+                                ? ""
+                                : String(saved[key]);
+
+                    }
+
+                });
+
+
+            shikshanupakaranSummaryPersistenceRecordId =
+                documentId;
+
+            shikshanupakaranSummaryPersistenceLoaded =
+                true;
+
+
+            console.log(
+                "SHIKSHANUPAKARAN SUMMARY RESTORED",
+                documentId
+            );
+
+
+            return true;
+
+        } catch (error) {
+
+            console.error(
+                "SHIKSHANUPAKARAN SUMMARY LOAD FAILED:",
+                error
+            );
+
+            return false;
+
+        } finally {
+
+            shikshanupakaranSummaryPersistenceLoading =
+                false;
+
+        }
+
+    }
+
+
+    function setupShikshanupakaranSummaryPersistence() {
+
+        const editor =
+            getShikshanupakaranSummaryEditor();
+
+        if (!editor) {
+            return false;
+        }
+
+
+        if (shikshanupakaranSummaryPersistenceEventsReady) {
+            return true;
+        }
+
+
+        editor.addEventListener(
+            "input",
+            function(event) {
+
+                const element =
+                    event.target.closest(
+                        "input, textarea, select"
+                    );
+
+                if (!element || element.readOnly) {
+                    return;
+                }
+
+
+                scheduleShikshanupakaranSummaryPersistenceSave();
+
+            }
+        );
+
+
+        editor.addEventListener(
+            "change",
+            function(event) {
+
+                const element =
+                    event.target.closest(
+                        "input, textarea, select"
+                    );
+
+                if (!element || element.readOnly) {
+                    return;
+                }
+
+
+                scheduleShikshanupakaranSummaryPersistenceSave();
+
+            }
+        );
+
+
+        editor.addEventListener(
+            "blur",
+            function(event) {
+
+                const element =
+                    event.target.closest(
+                        "input, textarea, select"
+                    );
+
+                if (!element || element.readOnly) {
+                    return;
+                }
+
+
+                scheduleShikshanupakaranSummaryPersistenceSave();
+
+            },
+            true
+        );
+
+
+        shikshanupakaranSummaryPersistenceEventsReady =
+            true;
+
+
+        return true;
+
+    }
+
+
+    async function initializeShikshanupakaranSummaryPersistence() {
+
+        const documentId =
+            getShikshanupakaranSummaryPersistenceRecordId();
+
+
+        if (
+            shikshanupakaranSummaryPersistenceRecordId !==
+            documentId
+        ) {
+
+            shikshanupakaranSummaryPersistenceRecordId =
+                documentId;
+
+            shikshanupakaranSummaryPersistenceLoaded =
+                false;
+
+        }
+
+
+        setupShikshanupakaranSummaryPersistence();
+
+
+        if (!documentId) {
+            return false;
+        }
+
+
+        return await loadShikshanupakaranSummaryPersistence();
+
+    }
+
 
     function generateSummary() {
 

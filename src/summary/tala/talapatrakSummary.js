@@ -413,6 +413,720 @@
        RENDER SUMMARY PAGE INSIDE TALAPATRAK PAGINATION
     ======================================================== */
 
+    /* ========================================================
+       FIRESTORE SUMMARY PERSISTENCE
+       --------------------------------------------------------
+       Saves only editable summary controls.
+
+       Generated/calculated values are intentionally NOT saved.
+       They are regenerated and then the user's saved edits are
+       restored on top.
+    ======================================================== */
+
+    let talapatrakSummaryPersistenceRecordId = null;
+    let talapatrakSummaryPersistenceLoaded = false;
+    let talapatrakSummaryPersistenceLoading = false;
+    let talapatrakSummaryPersistenceSaveTimer = null;
+    let talapatrakSummaryPersistenceEventsReady = false;
+
+
+    function getTalapatrakSummaryPersistenceRecordId() {
+
+        return (
+            window.currentTalapatrakDocumentId ||
+            (typeof currentTalapatrakDocumentId !== "undefined"
+                ? currentTalapatrakDocumentId
+                : null)
+        );
+
+    }
+
+
+    function getTalapatrakSummaryPersistenceKey(
+        element
+    ) {
+
+        if (!element) {
+            return null;
+        }
+
+
+        if (element.id) {
+            return "id:" + element.id;
+        }
+
+
+        const challanField =
+            element.getAttribute("data-challan-field");
+
+        if (challanField) {
+
+            const row =
+                element.closest("tbody tr");
+
+            const body =
+                row?.closest("tbody");
+
+            const rowIndex =
+                row && body
+                    ? Array.from(body.rows).indexOf(row)
+                    : 0;
+
+            return (
+                "challan:" +
+                rowIndex +
+                ":" +
+                challanField
+            );
+
+        }
+
+
+        const page2Row =
+            element.closest("[data-tala-page2-row]");
+
+        if (page2Row) {
+
+            return (
+                "page2:" +
+                page2Row.getAttribute("data-tala-page2-row") +
+                ":" +
+                (
+                    element.getAttribute(
+                        "data-tala-page2-field"
+                    ) || ""
+                )
+            );
+
+        }
+
+
+        const page3Row =
+            element.closest("[data-page3-row]");
+
+        if (page3Row) {
+
+            return (
+                "page3:" +
+                page3Row.getAttribute("data-page3-row") +
+                ":" +
+                (
+                    element.getAttribute(
+                        "data-page3-field"
+                    ) || ""
+                )
+            );
+
+        }
+
+
+        const balanceField =
+            element.getAttribute(
+                "data-tala-page3-balance"
+            );
+
+        if (balanceField) {
+            return "balance:" + balanceField;
+        }
+
+
+        const lapsField =
+            element.getAttribute(
+                "data-tala-page3-laps"
+            );
+
+        if (lapsField) {
+            return "laps:" + lapsField;
+        }
+
+
+        const ariaLabel =
+            element.getAttribute("aria-label");
+
+        if (ariaLabel) {
+            return "aria:" + ariaLabel;
+        }
+
+
+        const name =
+            element.getAttribute("name");
+
+        if (name) {
+            return "name:" + name;
+        }
+
+
+        return null;
+
+    }
+
+
+    function collectTalapatrakSummaryPersistenceData() {
+
+        const editor =
+            getTalapatrakSummaryEditor();
+
+        if (!editor) {
+            return {};
+        }
+
+
+        const values = {};
+
+
+        editor
+            .querySelectorAll(
+                "input, textarea, select"
+            )
+            .forEach(function(element) {
+
+                if (
+                    element.disabled ||
+                    element.readOnly
+                ) {
+                    return;
+                }
+
+
+                const key =
+                    getTalapatrakSummaryPersistenceKey(
+                        element
+                    );
+
+                if (!key) {
+                    return;
+                }
+
+
+                values[key] =
+                    element.value;
+
+            });
+
+
+        return values;
+
+    }
+
+
+    async function saveTalapatrakSummaryPersistence() {
+
+        const documentId =
+            getTalapatrakSummaryPersistenceRecordId();
+
+        if (!documentId) {
+            return false;
+        }
+
+
+        if (talapatrakSummaryPersistenceLoading) {
+            return false;
+        }
+
+
+        if (
+            typeof db === "undefined" ||
+            !db ||
+            typeof firebase === "undefined"
+        ) {
+            console.warn(
+                "TALAPATRAK SUMMARY: Firestore is not available."
+            );
+            return false;
+        }
+
+
+        const values =
+            collectTalapatrakSummaryPersistenceData();
+
+
+        try {
+
+            await db
+                .collection("talapatraks")
+                .doc(documentId)
+                .set(
+                    {
+                        summaryData: values,
+                        summaryUpdatedAt:
+                            firebase.firestore.FieldValue.serverTimestamp()
+                    },
+                    {
+                        merge: true
+                    }
+                );
+
+
+            talapatrakSummaryPersistenceRecordId =
+                documentId;
+
+
+            console.log(
+                "TALAPATRAK SUMMARY SAVED",
+                documentId
+            );
+
+
+            return true;
+
+        } catch (error) {
+
+            console.error(
+                "TALAPATRAK SUMMARY SAVE FAILED:",
+                error
+            );
+
+            return false;
+
+        }
+
+    }
+
+
+    function scheduleTalapatrakSummaryPersistenceSave() {
+
+        if (
+            talapatrakSummaryPersistenceLoading
+        ) {
+            return;
+        }
+
+
+        if (talapatrakSummaryPersistenceSaveTimer) {
+
+            clearTimeout(
+                talapatrakSummaryPersistenceSaveTimer
+            );
+
+        }
+
+
+        talapatrakSummaryPersistenceSaveTimer =
+            setTimeout(
+                function() {
+
+                    saveTalapatrakSummaryPersistence();
+
+                },
+                700
+            );
+
+    }
+
+
+    async function loadTalapatrakSummaryPersistence() {
+
+        const documentId =
+            getTalapatrakSummaryPersistenceRecordId();
+
+        const editor =
+            getTalapatrakSummaryEditor();
+
+
+        if (
+            !documentId ||
+            !editor ||
+            typeof db === "undefined" ||
+            !db
+        ) {
+            return false;
+        }
+
+
+        if (
+            talapatrakSummaryPersistenceLoaded &&
+            talapatrakSummaryPersistenceRecordId ===
+                documentId
+        ) {
+            return true;
+        }
+
+
+        talapatrakSummaryPersistenceLoading =
+            true;
+
+
+        try {
+
+            const snapshot =
+                await db
+                    .collection("talapatraks")
+                    .doc(documentId)
+                    .get();
+
+
+            if (!snapshot.exists) {
+                return false;
+            }
+
+
+            const data =
+                snapshot.data() || {};
+
+
+            const saved =
+                data.summaryData;
+
+
+            if (
+                !saved ||
+                typeof saved !== "object"
+            ) {
+                talapatrakSummaryPersistenceRecordId =
+                    documentId;
+
+                talapatrakSummaryPersistenceLoaded =
+                    true;
+
+                return true;
+            }
+
+
+            Object.keys(saved)
+                .forEach(function(key) {
+
+                    let element = null;
+
+
+                    if (key.startsWith("id:")) {
+
+                        element =
+                            editor.querySelector(
+                                "#" +
+                                CSS.escape(
+                                    key.slice(3)
+                                )
+                            );
+
+                    }
+
+
+                    if (
+                        !element &&
+                        key.startsWith("challan:")
+                    ) {
+
+                        const parts =
+                            key.split(":");
+
+                        const rowIndex =
+                            Number(parts[1]);
+
+                        const field =
+                            parts.slice(2).join(":");
+
+                        const rows =
+                            editor.querySelectorAll(
+                                ".talaPage1CollectionTable tbody tr"
+                            );
+
+                        const row =
+                            rows[rowIndex];
+
+                        if (row) {
+
+                            element =
+                                row.querySelector(
+                                    '[data-challan-field="' +
+                                    field +
+                                    '"]'
+                                );
+
+                        }
+
+                    }
+
+
+                    if (
+                        !element &&
+                        key.startsWith("page2:")
+                    ) {
+
+                        const parts =
+                            key.split(":");
+
+                        const rowName =
+                            parts[1];
+
+                        const fieldName =
+                            parts.slice(2).join(":");
+
+                        const row =
+                            editor.querySelector(
+                                '[data-tala-page2-row="' +
+                                rowName +
+                                '"]'
+                            );
+
+                        if (row) {
+
+                            element =
+                                row.querySelector(
+                                    '[data-tala-page2-field="' +
+                                    fieldName +
+                                    '"]'
+                                );
+
+                        }
+
+                    }
+
+
+                    if (
+                        !element &&
+                        key.startsWith("page3:")
+                    ) {
+
+                        const parts =
+                            key.split(":");
+
+                        const rowName =
+                            parts[1];
+
+                        const fieldName =
+                            parts.slice(2).join(":");
+
+                        const row =
+                            editor.querySelector(
+                                '[data-page3-row="' +
+                                rowName +
+                                '"]'
+                            );
+
+                        if (row) {
+
+                            element =
+                                row.querySelector(
+                                    '[data-page3-field="' +
+                                    fieldName +
+                                    '"]'
+                                );
+
+                        }
+
+                    }
+
+
+                    if (
+                        !element &&
+                        key.startsWith("balance:")
+                    ) {
+
+                        element =
+                            editor.querySelector(
+                                '[data-tala-page3-balance="' +
+                                CSS.escape(
+                                    key.slice(8)
+                                ) +
+                                '"]'
+                            );
+
+                    }
+
+
+                    if (
+                        !element &&
+                        key.startsWith("laps:")
+                    ) {
+
+                        element =
+                            editor.querySelector(
+                                '[data-tala-page3-laps="' +
+                                CSS.escape(
+                                    key.slice(5)
+                                ) +
+                                '"]'
+                            );
+
+                    }
+
+
+                    if (
+                        !element &&
+                        key.startsWith("aria:")
+                    ) {
+
+                        element =
+                            editor.querySelector(
+                                '[aria-label="' +
+                                CSS.escape(
+                                    key.slice(5)
+                                ) +
+                                '"]'
+                            );
+
+                    }
+
+
+                    if (
+                        element &&
+                        !element.readOnly &&
+                        !element.disabled
+                    ) {
+
+                        element.value =
+                            saved[key] === null ||
+                            saved[key] === undefined
+                                ? ""
+                                : String(saved[key]);
+
+                    }
+
+                });
+
+
+            talapatrakSummaryPersistenceRecordId =
+                documentId;
+
+            talapatrakSummaryPersistenceLoaded =
+                true;
+
+
+            console.log(
+                "TALAPATRAK SUMMARY RESTORED",
+                documentId
+            );
+
+
+            return true;
+
+        } catch (error) {
+
+            console.error(
+                "TALAPATRAK SUMMARY LOAD FAILED:",
+                error
+            );
+
+            return false;
+
+        } finally {
+
+            talapatrakSummaryPersistenceLoading =
+                false;
+
+        }
+
+    }
+
+
+    function setupTalapatrakSummaryPersistence() {
+
+        const editor =
+            getTalapatrakSummaryEditor();
+
+        if (!editor) {
+            return false;
+        }
+
+
+        if (talapatrakSummaryPersistenceEventsReady) {
+            return true;
+        }
+
+
+        editor.addEventListener(
+            "input",
+            function(event) {
+
+                const element =
+                    event.target.closest(
+                        "input, textarea, select"
+                    );
+
+                if (!element || element.readOnly) {
+                    return;
+                }
+
+
+                scheduleTalapatrakSummaryPersistenceSave();
+
+            }
+        );
+
+
+        editor.addEventListener(
+            "change",
+            function(event) {
+
+                const element =
+                    event.target.closest(
+                        "input, textarea, select"
+                    );
+
+                if (!element || element.readOnly) {
+                    return;
+                }
+
+
+                scheduleTalapatrakSummaryPersistenceSave();
+
+            }
+        );
+
+
+        editor.addEventListener(
+            "blur",
+            function(event) {
+
+                const element =
+                    event.target.closest(
+                        "input, textarea, select"
+                    );
+
+                if (!element || element.readOnly) {
+                    return;
+                }
+
+
+                scheduleTalapatrakSummaryPersistenceSave();
+
+            },
+            true
+        );
+
+
+        talapatrakSummaryPersistenceEventsReady =
+            true;
+
+
+        return true;
+
+    }
+
+
+    async function initializeTalapatrakSummaryPersistence() {
+
+        const documentId =
+            getTalapatrakSummaryPersistenceRecordId();
+
+
+        if (
+            talapatrakSummaryPersistenceRecordId !==
+            documentId
+        ) {
+
+            talapatrakSummaryPersistenceRecordId =
+                documentId;
+
+            talapatrakSummaryPersistenceLoaded =
+                false;
+
+        }
+
+
+        setupTalapatrakSummaryPersistence();
+
+
+        if (!documentId) {
+            return false;
+        }
+
+
+        return await loadTalapatrakSummaryPersistence();
+
+    }
+
+
     function generateSummary() {
 
         const editor =
@@ -872,6 +1586,45 @@
 
                 const rawValue = input.value;
 
+                const yearFieldName =
+                    input.getAttribute("data-tala-page3-balance");
+
+                if (
+                    yearFieldName &&
+                    yearFieldName.indexOf("year") === 0
+                ) {
+
+                    const englishYear =
+                        convertGujaratiDigitsToEnglish(
+                            rawValue
+                        ).trim();
+
+                    const financialYearMatch =
+                        englishYear.match(
+                            /^(\d{4})\s*[-\/]\s*(\d{2,4})$/
+                        );
+
+                    if (financialYearMatch) {
+
+                        input.value =
+                            convertToGujaratiDigits(
+                                financialYearMatch[1] +
+                                "-" +
+                                financialYearMatch[2].slice(-2)
+                            );
+
+                    } else {
+
+                        input.value =
+                            convertToGujaratiDigits(
+                                englishYear
+                            );
+                    }
+
+                    calculateTalapatrakSummaryPage3BalanceTable();
+                    return;
+                }
+
                 if (rawValue.trim() !== "") {
 
                     const balanceFieldName =
@@ -1110,6 +1863,18 @@
                 }
             }
 
+            /*
+             * Restore this record's saved summary edits AFTER
+             * generated summary values have been populated.
+             */
+            initializeTalapatrakSummaryPersistence().then(function() {
+
+                calculateTalapatrakSummaryPage2();
+
+                calculateTalapatrakSummaryPage3();
+                calculateTalapatrakSummaryPage3BalanceTable();
+
+            });
             console.log(
                 "TALAPATRAK EDITABLE SUMMARY PAGE RENDERED:",
                 pageIndex
