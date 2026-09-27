@@ -1402,6 +1402,19 @@ async function saveCurrentBill() {
         ...billData,
 
 
+        paidAmount:
+            0,
+
+        balanceAmount:
+            billData.grandTotal,
+
+        paymentStatus:
+            "unpaid",
+
+        payments:
+            [],
+
+
         createdAt:
 
             firebase.firestore.FieldValue
@@ -3657,6 +3670,665 @@ window.addEventListener(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ============================================================
+   MAIN BILL PAYMENT ENTRY
+   Bill Amount click handler
+============================================================ */
+
+let activePaymentBillId = null;
+
+document.addEventListener(
+    "click",
+    async function(event) {
+
+        const billAmountCell =
+            event.target.closest(
+                ".billAmountCell"
+            );
+
+        if (!billAmountCell) {
+            return;
+        }
+
+        const billId =
+            billAmountCell.dataset.billId;
+
+        if (!billId) {
+            return;
+        }
+
+        const modal =
+            document.getElementById(
+                "mainBillPaymentModal"
+            );
+
+        if (!modal) {
+            console.error(
+                "Main Bill payment modal was not found."
+            );
+            return;
+        }
+
+        try {
+
+            const billSnapshot =
+                await db
+                    .collection("bills")
+                    .doc(billId)
+                    .get();
+
+            if (!billSnapshot.exists) {
+                console.error(
+                    "Bill was not found:",
+                    billId
+                );
+                return;
+            }
+
+            const bill =
+                billSnapshot.data();
+
+            activePaymentBillId =
+                billId;
+
+
+            const billAmount =
+                Number(
+                    bill.grandTotal || 0
+                );
+
+            const paidAmount =
+                Number(
+                    bill.paidAmount || 0
+                );
+
+            const balanceAmount =
+                Math.max(
+                    0,
+                    billAmount - paidAmount
+                );
+
+
+            const formatAmount =
+                function(value) {
+                    return normalizeGujaratiDisplayValue(Number(value || 0).toLocaleString("en-IN"));
+                };
+
+
+            document.getElementById("paymentModalBillNumber").textContent = normalizeGujaratiDisplayValue("Bill #" + (bill.billNo || billId));
+
+
+            document.getElementById(
+                "paymentModalBillAmount"
+            ).textContent =
+                "₹" +
+                formatAmount(
+                    billAmount
+                );
+
+
+            document.getElementById(
+                "paymentModalPaidAmount"
+            ).textContent =
+                "₹" +
+                formatAmount(
+                    paidAmount
+                );
+
+
+            document.getElementById(
+                "paymentModalBalanceAmount"
+            ).textContent =
+                "₹" +
+                formatAmount(
+                    balanceAmount
+                );
+
+
+            const paymentAmountInput =
+                document.getElementById(
+                    "paymentModalAmount"
+                );
+
+            paymentAmountInput.value = "";
+
+            paymentAmountInput.oninput =
+                function() {
+
+                    const cursorPosition =
+                        this.selectionStart;
+
+                    const englishValue =
+                        convertGujaratiDigitsToEnglish(
+                            this.value
+                        );
+
+                    const cleanedValue =
+                        englishValue.replace(
+                            /[^0-9.]/g,
+                            ""
+                        );
+
+                    const parts =
+                        cleanedValue.split(".");
+
+                    const normalizedValue =
+                        parts.length > 1
+                            ? parts[0] +
+                              "." +
+                              parts.slice(1).join("")
+                            : cleanedValue;
+
+                    this.value =
+                        convertToGujaratiDigits(
+                            normalizedValue
+                        );
+
+                    this.setSelectionRange(
+                        cursorPosition,
+                        cursorPosition
+                    );
+                };
+
+
+            const paymentDateInput =
+                document.getElementById(
+                    "paymentModalDate"
+                );
+
+            const today =
+                new Date();
+
+            const year =
+                today.getFullYear();
+
+            const month =
+                String(
+                    today.getMonth() + 1
+                ).padStart(2, "0");
+
+            const day =
+                String(
+                    today.getDate()
+                ).padStart(2, "0");
+
+            paymentDateInput.value =
+                convertToGujaratiDigits(
+                    day +
+                    "/" +
+                    month +
+                    "/" +
+                    year
+                );
+
+
+            const validationMessage =
+                document.getElementById(
+                    "paymentModalValidationMessage"
+                );
+
+            validationMessage.textContent = "";
+
+            validationMessage.classList.remove(
+                "isVisible"
+            );
+
+
+            modal.classList.add(
+                "isOpen"
+            );
+
+            modal.setAttribute(
+                "aria-hidden",
+                "false"
+            );
+
+            document.body.style.overflow =
+                "hidden";
+
+
+            setTimeout(
+                function() {
+                    paymentAmountInput.focus();
+                },
+                50
+            );
+
+        }
+        catch (error) {
+
+            console.error(
+                "Unable to open payment modal:",
+                error
+            );
+
+        }
+
+    }
+);
+
+
+/* ============================================================
+   SAVE MAIN BILL PAYMENT
+============================================================ */
+
+document.addEventListener(
+    "click",
+    async function(event) {
+
+        const savePaymentButton =
+            event.target.closest(
+                "#saveMainBillPayment"
+            );
+
+        if (!savePaymentButton) {
+            return;
+        }
+
+        if (!activePaymentBillId) {
+            return;
+        }
+
+        const paymentAmountInput =
+            document.getElementById(
+                "paymentModalAmount"
+            );
+
+        const paymentDateInput =
+            document.getElementById(
+                "paymentModalDate"
+            );
+
+        const validationMessage =
+            document.getElementById(
+                "paymentModalValidationMessage"
+            );
+
+        const showValidation =
+            function(message) {
+
+                validationMessage.textContent =
+                    message;
+
+                validationMessage.classList.add(
+                    "isVisible"
+                );
+
+            };
+
+        const amountText =
+            convertGujaratiDigitsToEnglish(
+                String(
+                    paymentAmountInput.value || ""
+                )
+            ).trim();
+
+        const paymentAmount =
+            Number(
+                amountText
+            );
+
+        if (
+            !amountText ||
+            !Number.isFinite(paymentAmount) ||
+            paymentAmount <= 0
+        ) {
+
+            showValidation(
+                "કૃપા કરીને માન્ય ચુકવણીની રકમ દાખલ કરો."
+            );
+
+            paymentAmountInput.focus();
+
+            return;
+
+        }
+
+        const paymentDate =
+            convertGujaratiDigitsToEnglish(
+                String(
+                    paymentDateInput.value || ""
+                )
+            ).trim();
+
+        if (!paymentDate) {
+
+            showValidation(
+                "કૃપા કરીને ચુકવણીની તારીખ દાખલ કરો."
+            );
+
+            paymentDateInput.focus();
+
+            return;
+
+        }
+
+        try {
+
+            savePaymentButton.disabled =
+                true;
+
+            savePaymentButton.textContent =
+                "Saving…";
+
+
+            const billReference =
+                db
+                    .collection("bills")
+                    .doc(
+                        activePaymentBillId
+                    );
+
+
+            const billSnapshot =
+                await billReference.get();
+
+
+            if (!billSnapshot.exists) {
+
+                throw new Error(
+                    "Bill was not found."
+                );
+
+            }
+
+
+            const bill =
+                billSnapshot.data();
+
+
+            const billAmount =
+                Number(
+                    bill.grandTotal || 0
+                );
+
+
+            const existingPayments =
+                Array.isArray(
+                    bill.payments
+                )
+                    ? bill.payments
+                    : [];
+
+
+            const previousPaidAmount =
+                existingPayments.reduce(
+                    function(total, payment) {
+
+                        return total +
+                            Number(
+                                payment.amount || 0
+                            );
+
+                    },
+                    0
+                );
+
+
+            const remainingAmount =
+                Math.max(
+                    0,
+                    billAmount -
+                    previousPaidAmount
+                );
+
+
+            if (
+                paymentAmount >
+                remainingAmount
+            ) {
+
+                showValidation(
+                    "ચુકવણીની રકમ બાકી રકમ કરતાં વધારે હોઈ શકતી નથી."
+                );
+
+                paymentAmountInput.focus();
+
+                savePaymentButton.disabled =
+                    false;
+
+                savePaymentButton.textContent =
+                    "Save Payment";
+
+                return;
+
+            }
+
+
+            const savedPaymentBillId = activePaymentBillId;
+
+            const newPayment = {
+
+                amount:
+                    paymentAmount,
+
+                date:
+                    paymentDate
+
+            };
+
+
+            const updatedPayments =
+                existingPayments.concat(
+                    [newPayment]
+                );
+
+
+            const paidAmount =
+                updatedPayments.reduce(
+                    function(total, payment) {
+
+                        return total +
+                            Number(
+                                payment.amount || 0
+                            );
+
+                    },
+                    0
+                );
+
+
+            const balanceAmount =
+                Math.max(
+                    0,
+                    billAmount -
+                    paidAmount
+                );
+
+
+            let paymentStatus =
+                "unpaid";
+
+
+            if (
+                balanceAmount === 0 &&
+                paidAmount > 0
+            ) {
+
+                paymentStatus =
+                    "paid";
+
+            }
+            else if (
+                paidAmount > 0
+            ) {
+
+                paymentStatus =
+                    "partial";
+
+            }
+
+
+            await billReference.update({
+
+                payments:
+                    updatedPayments,
+
+                paidAmount:
+                    paidAmount,
+
+                balanceAmount:
+                    balanceAmount,
+
+                paymentStatus:
+                    paymentStatus,
+
+                updatedAt:
+                    firebase.firestore.FieldValue
+                        .serverTimestamp()
+
+            });
+
+
+            document.getElementById(
+                "paymentModalPaidAmount"
+            ).textContent =
+                "₹" +
+                normalizeGujaratiDisplayValue(
+                    Number(
+                        paidAmount
+                    ).toLocaleString(
+                        "en-IN"
+                    )
+                );
+
+
+            document.getElementById(
+                "paymentModalBalanceAmount"
+            ).textContent =
+                "₹" +
+                normalizeGujaratiDisplayValue(
+                    Number(
+                        balanceAmount
+                    ).toLocaleString(
+                        "en-IN"
+                    )
+                );
+
+
+            await loadAllMainBills();
+
+            closeMainBillPaymentModal();
+
+
+            console.log(
+                "Payment saved successfully:",
+                savedPaymentBillId,
+                newPayment
+            );
+
+
+        }
+        catch (error) {
+
+            console.error(
+                "Error saving payment:",
+                error
+            );
+
+            showValidation(
+                "ચુકવણી સાચવી શકાઈ નથી: " +
+                error.message
+            );
+
+        }
+        finally {
+
+            savePaymentButton.disabled =
+                false;
+
+            savePaymentButton.textContent =
+                "Save Payment";
+
+        }
+
+    }
+);
+
+/* ============================================================
+   UPDATE GUJARATI PAYMENT DATE DISPLAY
+============================================================ */
+
+
+
+
+/* ============================================================
+   CLOSE MAIN BILL PAYMENT MODAL
+============================================================ */
+
+function closeMainBillPaymentModal() {
+
+    const modal =
+        document.getElementById(
+            "mainBillPaymentModal"
+        );
+
+    if (!modal) {
+        return;
+    }
+
+    modal.classList.remove(
+        "isOpen"
+    );
+
+    modal.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+    document.body.style.overflow =
+        "";
+
+    activePaymentBillId =
+        null;
+
+}
+
+
+document.addEventListener(
+    "click",
+    function(event) {
+
+        if (
+            event.target.closest(
+                "#closeMainBillPaymentModal"
+            ) ||
+            event.target.closest(
+                "#cancelMainBillPayment"
+            ) ||
+            event.target.closest(
+                "#mainBillPaymentModalOverlay"
+            )
+        ) {
+
+
+            closeMainBillPaymentModal();
+
+        }
+
+    }
+);
 
 
 

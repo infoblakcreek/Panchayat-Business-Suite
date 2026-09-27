@@ -1,4 +1,4 @@
-﻿// ==========================================
+// ==========================================
 // FIREBASE CONFIGURATION
 // ==========================================
 
@@ -1279,7 +1279,7 @@ async function loadRecentBills() {
                 <tr>
 
                     <td
-                        colspan="6"
+                        colspan="9"
                         class="loadingBills"
                     >
 
@@ -1425,7 +1425,7 @@ async function loadRecentBills() {
             <tr>
 
                 <td
-                    colspan="6"
+                    colspan="9"
                     class="loadingBills"
                 >
 
@@ -1462,7 +1462,7 @@ async function loadAllMainBills(searchTerm = "") {
         <tr>
 
             <td
-                colspan="6"
+                colspan="9"
                 class="loadingBills">
 
                 Loading bills...
@@ -1553,16 +1553,55 @@ async function loadAllMainBills(searchTerm = "") {
 
                 const billDate =
                     bill.billDate
-                        ? formatIndianDate(
+                        ? formatGujaratiDate(
                             bill.billDate
                         )
                         : "N/A";
 
 
-                const amount =
+                const billAmount =
                     Number(
                         bill.grandTotal || 0
-                    ).toLocaleString(
+                    );
+
+                const paidAmount =
+                    Number(
+                        bill.paidAmount || 0
+                    );
+
+                const balanceAmount =
+                    Math.max(
+                        0,
+                        billAmount - paidAmount
+                    );
+
+                let paymentStatus =
+                    "unpaid";
+
+                if (
+                    billAmount > 0 &&
+                    balanceAmount === 0
+                ) {
+                    paymentStatus = "paid";
+                }
+                else if (
+                    paidAmount > 0
+                ) {
+                    paymentStatus = "partial";
+                }
+
+                const amount =
+                    billAmount.toLocaleString(
+                        "en-IN"
+                    );
+
+                const paid =
+                    paidAmount.toLocaleString(
+                        "en-IN"
+                    );
+
+                const balance =
+                    balanceAmount.toLocaleString(
                         "en-IN"
                     );
 
@@ -1612,7 +1651,7 @@ async function loadAllMainBills(searchTerm = "") {
                     </td>
 
 
-                    <td>
+                    <td class="billAmountCell" data-bill-id="${doc.id}">
 
                         <strong>
 
@@ -1621,6 +1660,31 @@ async function loadAllMainBills(searchTerm = "") {
                         </strong>
 
                     </td>
+
+
+
+                    <td>
+
+                        ₹ ${normalizeGujaratiDisplayValue(paid)}
+
+                    </td>
+
+
+
+                    <td>
+
+                        ₹ ${normalizeGujaratiDisplayValue(balance)}
+
+                    </td>
+
+
+
+                    <td class="paymentStatusCell">
+
+                        ${paymentStatus === "paid" ? "🟢 Paid" : paymentStatus === "partial" ? "🟡 Partial" : "🔴 Unpaid"}
+
+                    </td>
+
 
 
                     <td>
@@ -1643,6 +1707,25 @@ async function loadAllMainBills(searchTerm = "") {
                             </button>
 
 
+                            ${
+                                paymentStatus !== "unpaid"
+                                    ? `
+                                        <button
+                                            class="receiptBillButton"
+                                            type="button"
+                                            data-id="${doc.id}">
+
+                                            <i
+                                                class="fa-solid fa-receipt">
+
+                                            </i>
+
+                                            Receipt
+
+                                        </button>
+                                    `
+                                    : ""
+                            }
                             <button
                                 class="deleteBillButton"
                                 type="button"
@@ -1685,7 +1768,7 @@ async function loadAllMainBills(searchTerm = "") {
                 <tr>
 
                     <td
-                        colspan="6"
+                        colspan="9"
                         class="loadingBills">
 
                         No bills found for:
@@ -1723,7 +1806,7 @@ async function loadAllMainBills(searchTerm = "") {
             <tr>
 
                 <td
-                    colspan="6"
+                    colspan="9"
                     class="loadingBills">
 
                     Unable to load bills.
@@ -3842,9 +3925,3 @@ function showMainView(viewId) {
     }
 
 }
-
-
-
-
-
-
