@@ -1510,12 +1510,44 @@ if (saveBillBtn) {
         "click",
         async function() {
 
+            const saveBillText =
+                saveBillBtn.querySelector(
+                    "span"
+                );
+
             try {
+
+                saveBillBtn.disabled = true;
+
+                if (saveBillText) {
+                    saveBillText.textContent =
+                        "Saving…";
+                }
 
                 await saveCurrentBill();
 
+                if (saveBillText) {
+                    saveBillText.textContent =
+                        "Saved ✓";
+                }
+
                 alert(
                     "Bill saved successfully."
+                );
+
+                setTimeout(
+                    function() {
+
+                        saveBillBtn.disabled =
+                            false;
+
+                        if (saveBillText) {
+                            saveBillText.textContent =
+                                "Save Bill";
+                        }
+
+                    },
+                    3000
                 );
 
             }
@@ -1526,6 +1558,14 @@ if (saveBillBtn) {
                     "Error saving bill:",
                     error
                 );
+
+                saveBillBtn.disabled =
+                    false;
+
+                if (saveBillText) {
+                    saveBillText.textContent =
+                        "Save Bill";
+                }
 
                 alert(
                     "Bill could not be saved: " +
@@ -3602,6 +3642,7 @@ window.addEventListener(
     printWindow.document.close();
 
 }
+
 
 
 
