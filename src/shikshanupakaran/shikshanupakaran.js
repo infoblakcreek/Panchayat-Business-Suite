@@ -1,4 +1,4 @@
-console.log("SHIKSHANUPAKARAN JS FILE RUNNING");
+﻿console.log("SHIKSHANUPAKARAN JS FILE RUNNING");
 
 /* ============================================================
         SHIKSHANUPAKARAN SYSTEM
@@ -12975,6 +12975,14 @@ function goToShikshanupakaranPage(page) {
                 ".shikshanupakaranTableWrapper"
             );
 
+        const rowSearch =
+            document.querySelector(".shikshanupakaranRowSearch");
+
+        if (rowSearch) {
+            rowSearch.style.display = "none";
+        }
+
+
         if (tableWrapper) {
             tableWrapper.style.display = "none";
         }
@@ -13006,6 +13014,14 @@ function goToShikshanupakaranPage(page) {
 
 
     hideShikshanupakaranSummaryPage();
+
+    const rowSearch =
+        document.querySelector(".shikshanupakaranRowSearch");
+
+    if (rowSearch) {
+        rowSearch.style.display = "";
+    }
+
 
     const tableWrapper =
         document.querySelector(
