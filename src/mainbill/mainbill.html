@@ -344,7 +344,7 @@
                         
                                                         <input
                                                             class="table-input srno"
-                                                            type="number"
+                                                            type="text"
                                                             value="1">
                         
                                                     </td>
@@ -365,7 +365,7 @@
                         
                                                         <input
                                                             class="table-input pages"
-                                                            type="number"
+                                                            type="text"
                                                             oninput="calculateRow(this)">
                         
                                                     </td>
@@ -375,7 +375,7 @@
                         
                                                         <input
                                                             class="table-input price"
-                                                            type="number"
+                                                            type="text"
                                                             step="0.01"
                                                             oninput="calculateRow(this)">
                         
@@ -386,7 +386,7 @@
                         
                                                         <input
                                                             class="table-input total"
-                                                            type="number">
+                                                            type="text">
                         
                                                     </td>
                         
@@ -485,10 +485,7 @@
                                                 id="paymentDetails"
                                                 rows="2"
                                                 placeholder="બેંકનું નામ / ચેક નંબર / અન્ય ચુકવણીની વિગત">
-                                            </textarea>
-                        
-                        
-                                            <div class="generateReceiptArea">
+                                            </textarea><div class="generateReceiptArea">
                         
                                                 <button
                                                     id="generateReceiptBtn"
@@ -667,7 +664,7 @@
                           
                                           <td colspan="3">
                           
-                                              <label>તારીખ:</label>
+                                              <label>પાવતી તારીખ:</label>
                           
                                               <span id="pBillDate"></span>
                           
@@ -823,14 +820,14 @@
                                   
                                       <div>
                                   
-                                          <label>તારીખ:</label>
+                                          <label>પાવતી તારીખ:</label>
                             
                                           <input
                                               type="text"
                                               id="dPavtiDate"
-                                              readonly>
-                                          
-                                      </div>
+                                              class="indianDatePicker"
+                                              inputmode="numeric"
+                                              placeholder="DD/MM/YYYY">
                             
                                 </div>
                             
@@ -845,9 +842,6 @@
                                 </div>
                             
                             </div>
-                            
-                                <!-- CUSTOMER NAME -->
-                                <div class="duplicateCustomer">
                             
                                 <div class="duplicateAddressCell">
                             
@@ -2243,6 +2237,10 @@ body.printingMainBill {
 }
 
 </style>
+
+
+
+
 
 
 
