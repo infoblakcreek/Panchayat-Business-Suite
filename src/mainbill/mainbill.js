@@ -648,7 +648,7 @@ if (generateReceiptBtn) {
 }
 
 
-function generateReceipt() {
+function generateReceipt(paymentDateOverride = "", paymentReceiptNumberOverride = "") {
 
     try {
 
@@ -719,6 +719,7 @@ function generateReceipt() {
         */
 
         const receiptNumber =
+            paymentReceiptNumberOverride ||
             "P-" + billNo;
 
 
@@ -735,7 +736,7 @@ function generateReceipt() {
             .value =
             receiptNumber;
 
-        document.getElementById("dPavtiDate").textContent = formatGujaratiDate(billDate);
+        document.getElementById("dPavtiDate").textContent = formatGujaratiDate(typeof paymentDateOverride === "string" ? paymentDateOverride : billDate);
 
 
 
@@ -5981,23 +5982,10 @@ document.addEventListener(
                 USE PAYMENT DATE FOR RECEIPT DATE
             ==========================================
             */
-
-            if (payment.date) {
-
-                document.getElementById(
-                    "billDate"
-                ).value =
-                    payment.date;
-
-            }
-
-            /*
-            ==========================================
-                USE THE EXACT SAME RECEIPT FUNCTION
-            ==========================================
-            */
-
-            generateReceipt();
+            generateReceipt(
+                payment.date || "",
+                payment.receiptNumber || ""
+            );
 
         }
         catch(error) {
