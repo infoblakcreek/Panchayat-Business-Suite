@@ -735,6 +735,8 @@ function generateReceipt() {
             .value =
             receiptNumber;
 
+        document.getElementById("dPavtiDate").textContent = formatGujaratiDate(billDate);
+
 
 
         /*
@@ -1278,7 +1280,7 @@ async function saveCurrentBill() {
 
             document
                 .getElementById(
-                    "dPavtiDate"
+                    "billDate"
                 )
                 .value,
 
@@ -1749,12 +1751,10 @@ function printMainBillAndReceipt() {
 
     if (clonedPavtiDate) {
 
-        clonedPavtiDate.setAttribute(
-            "value",
+        clonedPavtiDate.textContent =
             document
                 .getElementById("dPavtiDate")
-                .value
-        );
+                .textContent;
 
     }
 // --------------------------------------------------------
@@ -2133,7 +2133,7 @@ body {
 .mainBillPrintArea
 .innerItemTable td:nth-child(1) {
 
-    width: 8%;
+    width: 7%;
 
     text-align: center;
 
@@ -2146,7 +2146,7 @@ body {
 .mainBillPrintArea
 .innerItemTable td:nth-child(2) {
 
-    width: 42%;
+    width: 63%;
 
     text-align: left;
 
@@ -2159,7 +2159,7 @@ body {
 .mainBillPrintArea
 .innerItemTable td:nth-child(3) {
 
-    width: 15%;
+    width: 10%;
 
     text-align: center;
 
@@ -2178,7 +2178,7 @@ body {
 .mainBillPrintArea
 .innerItemTable td:nth-child(5) {
 
-    width: 17.5%;
+    width: 10%;
 
     text-align: right;
 
@@ -2436,7 +2436,7 @@ body {
 .duplicatePrintArea
 .receiptTitle {
 
-    margin: 6px 0;
+    margin: 8px 0;
 
     text-align: center;
 
@@ -2480,9 +2480,17 @@ body {
 .duplicatePrintArea
 .duplicateReceiptHeader label {
 
-    font-size: 8px;
+    font-size: 10px;
 
     font-weight: 700;
+
+}
+.duplicatePrintArea
+.duplicateReceiptHeader label {
+
+    white-space: nowrap;
+
+    flex-shrink: 0;
 
 }
 
@@ -2500,7 +2508,23 @@ body {
 
     background: transparent;
 
-    font-size: 8px;
+    font-size: 10px;
+
+}
+.duplicatePrintArea
+.duplicateReceiptHeader span {
+
+    display: block;
+
+    width: 100%;
+
+    padding: 3px 4px;
+
+    border-bottom: 1px solid #888;
+
+    background: transparent;
+
+    font-size: 10px;
 
 }
 
@@ -2538,7 +2562,7 @@ body {
 .duplicatePrintArea
 .duplicateCustomer label {
 
-    font-size: 8px;
+    font-size: 10px;
 
     font-weight: 700;
 
@@ -2552,7 +2576,7 @@ body {
 
     padding: 2px 4px;
 
-    font-size: 8px;
+    font-size: 10px;
 
 }
 
@@ -2580,7 +2604,7 @@ body {
 
     margin: 0 0 5px;
 
-    font-size: 8px;
+    font-size: 10px;
 
     line-height: 1.5;
 
@@ -2592,7 +2616,7 @@ body {
 
     margin: 0 3px;
 
-    font-size: 10px;
+    font-size: 12px;
 
 }
 
@@ -2618,7 +2642,7 @@ body {
 .duplicatePrintArea
 .amountWordsReceipt label {
 
-    font-size: 8px;
+    font-size: 10px;
 
     font-weight: 700;
 
@@ -2636,7 +2660,7 @@ body {
 
     padding: 2px 4px;
 
-    font-size: 8px;
+    font-size: 10px;
 
 }
 
@@ -2674,7 +2698,7 @@ body {
 .duplicatePrintArea
 .paymentDetails label {
 
-    font-size: 8px;
+    font-size: 10px;
 
     font-weight: 700;
 
@@ -2690,7 +2714,7 @@ body {
 
     padding: 2px 4px;
 
-    font-size: 8px;
+    font-size: 10px;
 
 }
 
@@ -2708,7 +2732,7 @@ body {
 
     margin-top: 8px;
 
-    font-size: 8px;
+    font-size: 10px;
 
     font-weight: 600;
 
@@ -3254,7 +3278,7 @@ body {
     #generatedMainBill
     .innerItemTable td:nth-child(1) {
 
-        width: 8% !important;
+        width: 7% !important;
 
         text-align: center !important;
 
@@ -3266,7 +3290,7 @@ body {
     #generatedMainBill
     .innerItemTable td:nth-child(2) {
 
-        width: 40% !important;
+        width: 57% !important;
 
         text-align: left !important;
 
@@ -3278,7 +3302,7 @@ body {
     #generatedMainBill
     .innerItemTable td:nth-child(3) {
 
-        width: 15% !important;
+        width: 10% !important;
 
         text-align: center !important;
 
@@ -3290,7 +3314,7 @@ body {
     #generatedMainBill
     .innerItemTable td:nth-child(4) {
 
-        width: 18.5% !important;
+        width: 13% !important;
 
         text-align: right !important;
 
@@ -3302,7 +3326,7 @@ body {
     #generatedMainBill
     .innerItemTable td:nth-child(5) {
 
-        width: 18.5% !important;
+        width: 13% !important;
 
         text-align: right !important;
 
@@ -4024,6 +4048,27 @@ document.addEventListener(
 
         }
 
+        const paymentModeInput =
+            document.getElementById(
+                "paymentModalMode"
+            );
+
+        const paymentMode =
+            String(
+                paymentModeInput.value || ""
+            ).trim();
+
+        if (!paymentMode) {
+
+            showValidation(
+                "કૃપા કરીને ચુકવણીનો પ્રકાર પસંદ કરો."
+            );
+
+            paymentModeInput.focus();
+
+            return;
+
+        }
         try {
 
             savePaymentButton.disabled =
@@ -4118,13 +4163,31 @@ document.addEventListener(
 
             const savedPaymentBillId = activePaymentBillId;
 
+            const receiptYear =
+                new Date().getFullYear();
+
+            const receiptUniquePart =
+                String(Date.now()).slice(-8);
+
+            const receiptNumber =
+                "R-" +
+                receiptYear +
+                "-" +
+                receiptUniquePart;
+
             const newPayment = {
 
                 amount:
                     paymentAmount,
 
                 date:
-                    paymentDate
+                    paymentDate,
+
+                mode:
+                    paymentMode,
+
+                receiptNumber:
+                    receiptNumber
 
             };
 
@@ -4346,6 +4409,1613 @@ document.addEventListener(
 
 
 
+
+
+
+
+/* ============================================================
+   MAIN BILL PAYMENT HISTORY
+============================================================ */
+
+let activePaymentHistoryBillId = null;
+
+async function openMainBillPaymentHistory(billId) {
+
+    const modal =
+        document.getElementById(
+            "mainBillPaymentHistoryModal"
+        );
+
+    const historyBody =
+        document.getElementById(
+            "mainBillPaymentHistoryBody"
+        );
+
+    if (!modal || !historyBody || !billId) {
+        return;
+    }
+
+    activePaymentHistoryBillId =
+        billId;
+
+    historyBody.innerHTML = `
+        <tr>
+            <td colspan="5">
+                Loading payment history...
+            </td>
+        </tr>
+    `;
+
+    modal.classList.add("isOpen");
+    modal.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+    document.body.style.overflow =
+        "hidden";
+
+    try {
+
+        const billSnapshot =
+            await db
+                .collection("bills")
+                .doc(billId)
+                .get();
+
+        if (!billSnapshot.exists) {
+
+            historyBody.innerHTML = `
+                <tr>
+                    <td colspan="5">
+                        Bill not found.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+        const bill =
+            billSnapshot.data();
+
+        document.getElementById(
+            "paymentHistoryBillNumber"
+        ).textContent =
+            "Bill #" +
+            normalizeGujaratiDisplayValue(
+                bill.billNo || billId
+            );
+
+        document.getElementById(
+            "paymentHistoryCustomerName"
+        ).textContent =
+            "Customer: " +
+            (
+                bill.customerName ||
+                "—"
+            );
+
+        const payments =
+            Array.isArray(
+                bill.payments
+            )
+                ? bill.payments
+                : [];
+
+        if (!payments.length) {
+
+            historyBody.innerHTML = `
+                <tr>
+                    <td colspan="5">
+                        No payment history available.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+        historyBody.innerHTML =
+            payments
+                .map(
+                    function(payment, index) {
+
+                        const amount =
+                            Number(
+                                payment.amount || 0
+                            ).toLocaleString(
+                                "en-IN"
+                            );
+
+                        const date =
+                            payment.date
+                                ? formatGujaratiDate(
+                                    payment.date
+                                )
+                                : "—";
+
+                        const mode =
+                            payment.mode ||
+                            "—";
+
+                        const receiptNumber =
+                            payment.receiptNumber ||
+                            "—";
+
+                        return `
+                            <tr>
+
+                                <td>
+                                    ${date}
+                                </td>
+
+                                <td>
+                                    ₹ ${normalizeGujaratiDisplayValue(amount)}
+                                </td>
+
+                                <td>
+                                    ${mode}
+                                </td>
+
+                                <td>
+                                    ${receiptNumber}
+                                </td>
+
+                                <td>
+
+                                    <button
+                                        type="button"
+                                        class="mainBillPaymentViewReceiptButton"
+                                        data-bill-id="${billId}"
+                                        data-payment-index="${index}">
+                                        View / Print
+                                    </button>
+
+                                </td>
+
+                            </tr>
+                        `;
+
+                    }
+                )
+                .join("");
+
+    }
+    catch (error) {
+
+        console.error(
+            "Error loading payment history:",
+            error
+        );
+
+        historyBody.innerHTML = `
+            <tr>
+                <td colspan="5">
+                    Payment history could not be loaded.
+                </td>
+            </tr>
+        `;
+
+    }
+
+}
+
+async function openMainBillPaymentReceipt(
+    billId,
+    paymentIndex
+) {
+
+    if (
+        !billId ||
+        !Number.isInteger(paymentIndex) ||
+        paymentIndex < 0
+    ) {
+        return;
+    }
+
+    try {
+
+        const billSnapshot =
+            await db
+                .collection("bills")
+                .doc(billId)
+                .get();
+
+        if (!billSnapshot.exists) {
+            alert("Bill was not found.");
+            return;
+        }
+
+        const bill =
+            billSnapshot.data();
+
+        const payments =
+            Array.isArray(bill.payments)
+                ? bill.payments
+                : [];
+
+        const payment =
+            payments[paymentIndex];
+
+        if (!payment) {
+            alert("Payment was not found.");
+            return;
+        }
+
+        const paymentAmount =
+            Number(
+                payment.amount || 0
+            );
+
+        const paidThroughSelectedPayment =
+            payments
+                .slice(
+                    0,
+                    paymentIndex + 1
+                )
+                .reduce(
+                    function(total, item) {
+                        return total +
+                            Number(
+                                item.amount || 0
+                            );
+                    },
+                    0
+                );
+
+        const billAmount =
+            Number(
+                bill.grandTotal || 0
+            );
+
+        const remainingAmount =
+            Math.max(
+                0,
+                billAmount -
+                paidThroughSelectedPayment
+            );
+
+        const receiptNumber =
+            payment.receiptNumber || "";
+
+        const paymentDate =
+            payment.date || "";
+
+        const paymentMode =
+            payment.mode || "";
+
+        const setText =
+            function(id, value) {
+                const element =
+                    document.getElementById(id);
+
+                if (element) {
+                    element.textContent =
+                        value == null
+                            ? ""
+                            : String(value);
+                }
+            };
+
+        const formatReceiptAmount =
+            function(value) {
+                return normalizeGujaratiDisplayValue(
+                    Number(value || 0)
+                        .toLocaleString("en-IN", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        })
+                );
+            };
+
+        setText(
+            "dCustomerName",
+            bill.customerName || ""
+        );
+
+        setText(
+            "dVillage",
+            bill.village || ""
+        );
+
+        setText(
+            "dTaluka",
+            bill.taluka || ""
+        );
+
+        setText(
+            "dDistrict",
+            bill.district || ""
+        );
+
+        const receiptNumberInput =
+            document.getElementById(
+                "dPavtiNo"
+            );
+
+        if (receiptNumberInput) {
+            receiptNumberInput.value =
+                receiptNumber;
+        }
+
+        setText(
+            "dPavtiDate",
+            paymentDate
+                ? formatGujaratiDate(
+                    paymentDate
+                )
+                : ""
+        );
+
+        setText(
+            "dGrandTotal",
+            formatReceiptAmount(
+                paymentAmount
+            )
+        );
+
+        setText(
+            "dAmountWords",
+            numberToGujaratiWords(
+                paymentAmount
+            )
+        );
+
+        setText(
+            "dBaki",
+            formatReceiptAmount(
+                remainingAmount
+            )
+        );
+
+        setText(
+            "dRokada",
+            paymentMode
+                ? paymentMode
+                : ""
+        );
+
+        setText(
+            "dPaymentDetails",
+            paymentMode
+        );
+
+        document.body.classList.add(
+            "receiptGeneratedMode"
+        );
+
+        const printableBills =
+            document.getElementById(
+                "printableBills"
+            );
+
+        if (printableBills) {
+            printableBills.hidden = false;
+
+            printableBills.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        }
+
+        console.log(
+            "Payment receipt opened:",
+            receiptNumber
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Error opening payment receipt:",
+            error
+        );
+
+        alert(
+            "Error opening payment receipt: " +
+            error.message
+        );
+
+    }
+
+}
+
+function closeMainBillPaymentHistory() {
+
+    const modal =
+        document.getElementById(
+            "mainBillPaymentHistoryModal"
+        );
+
+    if (!modal) {
+        return;
+    }
+
+    modal.classList.remove(
+        "isOpen"
+    );
+
+    modal.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+    document.body.style.overflow =
+        "";
+
+    activePaymentHistoryBillId =
+        null;
+
+}
+
+document.addEventListener(
+    "click",
+    function(event) {
+
+        const historyButton =
+            event.target.closest(
+                ".paymentHistoryBillButton"
+            );
+
+        if (
+            historyButton
+        ) {
+
+            const billId =
+                historyButton.dataset.id;
+
+            openMainBillPaymentHistory(
+                billId
+            );
+
+            return;
+
+        }
+
+        const paymentReceiptButton =
+            event.target.closest(
+                ".mainBillPaymentViewReceiptButton"
+            );
+
+        if (
+            paymentReceiptButton
+        ) {
+
+            console.log(
+                "PAYMENT RECEIPT BUTTON CLICKED",
+                paymentReceiptButton.dataset
+            );
+
+            const billId =
+                paymentReceiptButton.dataset.billId;
+
+            const paymentIndex =
+                Number(
+                    paymentReceiptButton.dataset.paymentIndex
+                );
+
+            openMainBillPaymentReceipt(
+                billId,
+                paymentIndex
+            );
+
+            return;
+
+        }
+
+        if (
+            event.target.closest(
+                "#closeMainBillPaymentHistory"
+            ) ||
+            event.target.closest(
+                "#mainBillPaymentHistoryOverlay"
+            )
+        ) {
+
+            closeMainBillPaymentHistory();
+
+        }
+
+    }
+);
+
+
+
+/* ============================================================
+   ADD PAYMENT HISTORY BUTTONS TO MAIN BILLS TABLE
+============================================================ */
+
+function addMainBillPaymentHistoryButtons() {
+
+    const billsBody =
+        document.getElementById(
+            "mainBillsBody"
+        );
+
+    if (!billsBody) {
+        return;
+    }
+
+    const actionGroups =
+        billsBody.querySelectorAll(
+            ".billActionButtons"
+        );
+
+    actionGroups.forEach(
+        function(actionGroup) {
+
+            if (
+                actionGroup.querySelector(
+                    ".paymentHistoryBillButton"
+                )
+            ) {
+                return;
+            }
+
+            const editButton =
+                actionGroup.querySelector(
+                    ".editBillButton"
+                );
+
+            const billId =
+                editButton
+                    ? editButton.dataset.id
+                    : "";
+
+            if (!billId) {
+                return;
+            }
+
+            const historyButton =
+                document.createElement(
+                    "button"
+                );
+
+            historyButton.type =
+                "button";
+
+            historyButton.className =
+                "paymentHistoryBillButton";
+
+            historyButton.dataset.id =
+                billId;
+
+            historyButton.innerHTML =
+                '<i class="fa-solid fa-clock-rotate-left"></i> Payment History';
+
+            actionGroup.appendChild(
+                historyButton
+            );
+
+        }
+    );
+
+}
+
+function observeMainBillPaymentHistoryButtons() {
+
+    const billsBody =
+        document.getElementById(
+            "mainBillsBody"
+        );
+
+    if (!billsBody) {
+        return;
+    }
+
+    addMainBillPaymentHistoryButtons();
+
+    const observer =
+        new MutationObserver(
+            function() {
+
+                addMainBillPaymentHistoryButtons();
+
+            }
+        );
+
+    observer.observe(
+        billsBody,
+        {
+            childList: true,
+            subtree: true
+        }
+    );
+
+}
+
+if (
+    document.readyState ===
+    "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        observeMainBillPaymentHistoryButtons
+    );
+
+} else {
+
+    observeMainBillPaymentHistoryButtons();
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+async function loadAllMainBills(searchTerm = "") {
+
+    const mainBillsBody =
+        document.getElementById(
+            "mainBillsBody"
+        );
+
+
+    if (!mainBillsBody) return;
+
+
+    mainBillsBody.innerHTML = `
+
+        <tr>
+
+            <td
+                colspan="9"
+                class="loadingBills">
+
+                Loading bills...
+
+            </td>
+
+        </tr>
+
+    `;
+
+
+    try {
+
+    console.log("Loading all main bills from Firebase...");
+
+    const snapshot =
+        await db
+            .collection("bills")
+            .orderBy(
+                "createdAt",
+                "desc"
+            )
+            .get();
+
+    console.log("Bills loaded:", snapshot.size);
+
+
+        mainBillsBody.innerHTML = "";
+
+
+        const search =
+            searchTerm
+                .trim()
+                .toLowerCase();
+
+
+        let foundBills = 0;
+
+
+        snapshot.forEach(
+            function(doc) {
+
+                const bill =
+                    doc.data();
+
+
+                const billNumber =
+                    String(
+                        bill.billNo || ""
+                    )
+                    .toLowerCase();
+
+
+                const customerName =
+                    String(
+                        bill.customerName || ""
+                    )
+                    .toLowerCase();
+
+
+                /*
+                ==========================================
+                    SEARCH BY BILL NUMBER OR CUSTOMER NAME
+                ==========================================
+                */
+
+                if (
+
+                    search
+
+                    &&
+
+                    !billNumber.includes(search)
+
+                    &&
+
+                    !customerName.includes(search)
+
+                ) {
+
+                    return;
+
+                }
+
+
+                foundBills++;
+
+
+                const billDate =
+                    bill.billDate
+                        ? formatGujaratiDate(
+                            bill.billDate
+                        )
+                        : "N/A";
+
+
+                const billAmount =
+                    Number(
+                        bill.grandTotal || 0
+                    );
+
+                const paidAmount =
+                    Number(
+                        bill.paidAmount || 0
+                    );
+
+                const balanceAmount =
+                    Math.max(
+                        0,
+                        billAmount - paidAmount
+                    );
+
+                let paymentStatus =
+                    "unpaid";
+
+                if (
+                    billAmount > 0 &&
+                    balanceAmount === 0
+                ) {
+                    paymentStatus = "paid";
+                }
+                else if (
+                    paidAmount > 0
+                ) {
+                    paymentStatus = "partial";
+                }
+
+                const amount =
+                    billAmount.toLocaleString(
+                        "en-IN"
+                    );
+
+                const paid =
+                    paidAmount.toLocaleString(
+                        "en-IN"
+                    );
+
+                const balance =
+                    balanceAmount.toLocaleString(
+                        "en-IN"
+                    );
+
+
+                const row =
+                    document.createElement(
+                        "tr"
+                    );
+
+
+                row.dataset.billId =
+                    doc.id;
+
+
+                row.innerHTML = `
+
+                    <td>
+
+                        <strong
+                            class="billNumber">
+
+                            ${normalizeGujaratiDisplayValue(bill.billNo || doc.id)}
+
+                        </strong>
+
+                    </td>
+
+
+                    <td>
+
+                        ${bill.customerName || "N/A"}
+
+                    </td>
+
+
+                    <td>
+
+                        ${bill.village || "N/A"}
+
+                    </td>
+
+
+                    <td>
+
+                        ${billDate}
+
+                    </td>
+
+
+                    <td class="billAmountCell" data-bill-id="${doc.id}">
+
+                        <strong>
+
+                            ₹ ${normalizeGujaratiDisplayValue(amount)}
+
+                        </strong>
+
+                    </td>
+
+
+
+                    <td>
+
+                        ₹ ${normalizeGujaratiDisplayValue(paid)}
+
+                    </td>
+
+
+
+                    <td>
+
+                        ₹ ${normalizeGujaratiDisplayValue(balance)}
+
+                    </td>
+
+
+
+                    <td class="paymentStatusCell">
+
+                        ${paymentStatus === "paid" ? "🟢 Paid" : paymentStatus === "partial" ? "🟡 Partial" : "🔴 Unpaid"}
+
+                    </td>
+
+
+
+                    <td>
+
+                        <div
+                            class="billActionButtons">
+
+                            <button
+                                class="editBillButton"
+                                type="button"
+                                data-id="${doc.id}">
+
+                                <i
+                                    class="fa-solid fa-pen">
+
+                                </i>
+
+                                Edit
+
+                            </button>
+
+
+                            ${
+                                paymentStatus !== "unpaid"
+                                    ? `
+                                        <button
+                                            class="receiptBillButton"
+                                            type="button"
+                                            data-id="${doc.id}">
+
+                                            <i
+                                                class="fa-solid fa-receipt">
+
+                                            </i>
+
+                                            Receipt
+
+                                        </button>
+                                    `
+                                    : ""
+                            }
+                            <button
+                                class="deleteBillButton"
+                                type="button"
+                                data-id="${doc.id}">
+
+                                <i
+                                    class="fa-solid fa-trash">
+
+                                </i>
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </td>
+
+                `;
+
+
+                mainBillsBody.appendChild(
+                    row
+                );
+
+            }
+        );
+
+
+        /*
+        ==========================================
+                NO SEARCH RESULTS
+        ==========================================
+        */
+
+        if (foundBills === 0) {
+
+            mainBillsBody.innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="9"
+                        class="loadingBills">
+
+                        No bills found for:
+
+                        <strong>
+                            "${searchTerm}"
+                        </strong>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        attachBillActionListeners();
+
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "Error loading all bills:",
+            error
+        );
+
+
+        mainBillsBody.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="9"
+                    class="loadingBills">
+
+                    Unable to load bills.
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+}
+
+
+const mainBillSearch =
+    document.getElementById(
+        "mainBillSearch"
+    );
+
+
+if (mainBillSearch) {
+
+    mainBillSearch.addEventListener(
+        "input",
+        function() {
+
+            loadAllMainBills(
+                this.value
+            );
+
+        }
+    );
+
+}
+/* ==================================================
+        BILL ACTION BUTTONS
+================================================== */
+
+function attachBillActionListeners() {
+
+
+    document
+        .querySelectorAll(
+            ".editBillButton"
+        )
+        .forEach(
+            function(button) {
+
+                button.addEventListener(
+                    "click",
+                    function() {
+
+                        const billId =
+                            this.dataset.id;
+
+
+                        editBill(
+                            billId
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+
+    document
+        .querySelectorAll(
+            ".deleteBillButton"
+        )
+        .forEach(
+            function(button) {
+
+                button.addEventListener(
+                    "click",
+                    function() {
+
+                        const billId =
+                            this.dataset.id;
+
+
+                        deleteBill(
+                            billId
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+}
+
+
+/* ==================================================
+        EDIT BILL
+================================================== */
+
+async function editBill(billId) {
+
+    try {
+
+        const billDocument =
+            await db
+                .collection("bills")
+                .doc(billId)
+                .get();
+
+
+        if (!billDocument.exists) {
+
+            alert(
+                "Bill not found."
+            );
+
+            return;
+
+        }
+
+
+        const bill =
+            billDocument.data();
+
+
+        /* ==============================
+                OPEN BILL FORM
+        ============================== */
+
+            const mainBillsView =
+                document.getElementById(
+                    "mainBillsView"
+                );
+            
+            const invoiceView =
+                document.getElementById(
+                    "invoiceView"
+                );
+            
+            
+            if (mainBillsView) {
+            
+                mainBillsView.style.display =
+                    "none";
+            
+            }
+            
+            
+            if (invoiceView) {
+            
+                invoiceView.style.display =
+                    "block";
+            
+            }
+            
+            
+            if (mainBillNav) {
+            
+                mainBillNav.classList.remove(
+                    "active"
+                );
+            
+            }
+
+
+        /* ==============================
+                LOAD BILL DETAILS
+        ============================== */
+
+        document
+            .getElementById(
+                "customerName"
+            )
+            .value =
+            bill.customerName || "";
+
+
+        document
+            .getElementById(
+                "village"
+            )
+            .value =
+            bill.village || "";
+
+
+        document
+            .getElementById(
+                "taluka"
+            )
+            .value =
+            bill.taluka || "";
+
+
+        document
+            .getElementById(
+                "district"
+            )
+            .value =
+            bill.district || "";
+
+
+        document
+            .getElementById(
+                "mobileNumber"
+            )
+            .value =
+            normalizeGujaratiDisplayValue(bill.mobileNumber || "");
+
+
+        document
+            .getElementById(
+                "billNo"
+            )
+            .value =
+            normalizeGujaratiDisplayValue(bill.billNo || billId);
+
+
+        document
+            .getElementById(
+                "billDate"
+            )
+            .value =
+            bill.billDate || "";
+
+
+
+        document
+            .getElementById(
+                "dPavtiDate"
+            )
+                .textContent =
+                (bill.receiptDate ? formatGujaratiDate(bill.receiptDate) : "");
+        document
+            .getElementById(
+                "paymentDetails"
+            )
+            .value =
+            bill.paymentDetails || "";
+
+
+        document
+            .getElementById(
+                "numberToGujaratiWords"
+            )
+            .value =
+            bill.numberToGujaratiWords || "";
+
+
+        /* ==============================
+                LOAD GRAND TOTAL
+        ============================== */
+
+        document
+            .getElementById(
+                "grandTotal"
+            )
+            .value =
+            normalizeGujaratiDisplayValue(bill.grandTotal || 0);
+
+
+        /* ==============================
+                LOAD ITEMS
+        ============================== */
+
+        loadBillItems(
+            bill.items || []
+        );
+
+
+        calculateGrandTotal();
+
+
+        window.scrollTo(
+            0,
+            0
+        );
+
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "Error loading bill:",
+            error
+        );
+
+
+        alert(
+            "Unable to load bill."
+        );
+
+    }
+
+}
+
+/* ==================================================
+        LOAD BILL ITEMS
+================================================== */
+
+function loadBillItems(items) {
+
+    const tbody =
+        document.getElementById(
+            "itemBody"
+        );
+
+
+    if (!tbody) return;
+
+
+    tbody.innerHTML = "";
+
+
+    if (
+        !items
+        ||
+        items.length === 0
+    ) {
+
+        addItemRow();
+
+        return;
+
+    }
+
+
+    items.forEach(
+        function(item) {
+
+            const row =
+                document.createElement(
+                    "tr"
+                );
+
+
+            row.className =
+                "data-row";
+
+
+            row.innerHTML = `
+
+                <td>
+
+                    <input
+                        class="table-input srno"
+                        type="text"
+                        readonly
+                        value="${item.srno || ""}">
+
+                </td>
+
+
+                <td>
+
+                    <textarea
+                        class="description"
+                        rows="1">${item.description || ""}</textarea>
+
+                </td>
+
+
+                <td>
+
+                    <input
+                        class="table-input pages"
+                        type="text"
+                        value="${normalizeGujaratiDisplayValue(item.pages || "")}"
+                        oninput="calculateRow(this)">
+
+                </td>
+
+
+                <td>
+
+                    <input
+                        class="table-input price"
+                        type="text"
+                        step="0.01"
+                        value="${normalizeGujaratiDisplayValue(item.price || "")}"
+                        oninput="calculateRow(this)">
+
+                </td>
+
+
+                <td>
+
+                    <input
+                        class="table-input total"
+                        type="text"
+                        readonly
+                        value="${normalizeGujaratiDisplayValue(item.total || "")}">
+
+                </td>
+
+
+                <td>
+
+                    <button
+                        class="delete-btn"
+                        type="button"
+                        onclick="deleteCurrentRow(this)">
+
+                        🗑
+
+                    </button>
+
+                </td>
+
+            `;
+
+
+            tbody.appendChild(
+                row
+            );
+
+        }
+    );
+
+
+    updateSerialNumbers();
+
+
+    tbody
+        .querySelectorAll(
+            ".description"
+        )
+        .forEach(
+            autoResizeDescription
+        );
+
+}
+
+/* ==================================================
+        DELETE BILL
+================================================== */
+
+async function deleteBill(billId) {
+
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to permanently delete this bill?"
+        );
+
+
+    if (!confirmed) return;
+
+
+    try {
+
+        await db
+            .collection("bills")
+            .doc(billId)
+            .delete();
+
+
+        alert(
+            "Bill deleted successfully."
+        );
+
+
+        await loadAllMainBills();
+
+
+        await loadDashboardStats();
+
+
+        await loadRecentBills();
+
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "Error deleting bill:",
+            error
+        );
+
+
+        alert(
+            "Unable to delete bill."
+        );
+
+    }
+
+}
+
+/* ==================================================
+        MAIN BILLS TABLE RECEIPT
+   Uses the exact same generateReceipt() function.
+================================================== */
+
+document.addEventListener(
+    "click",
+    async function(event) {
+
+        const receiptButton =
+            event.target.closest(
+                ".receiptBillButton"
+            );
+
+        if (!receiptButton) {
+            return;
+        }
+
+        const billId =
+            receiptButton.dataset.id;
+
+        if (!billId) {
+            return;
+        }
+
+        try {
+
+            const billDocument =
+                await db
+                    .collection("bills")
+                    .doc(billId)
+                    .get();
+
+            if (!billDocument.exists) {
+
+                alert(
+                    "Bill not found."
+                );
+
+                return;
+            }
+
+            const bill =
+                billDocument.data();
+
+            const payments =
+                Array.isArray(bill.payments)
+                    ? bill.payments
+                    : [];
+
+            if (payments.length === 0) {
+
+                alert(
+                    "No payment found for this bill."
+                );
+
+                return;
+            }
+
+            const payment =
+                payments[payments.length - 1];
+
+            /*
+            ==========================================
+                LOAD THIS BILL USING EXISTING EDIT FLOW
+            ==========================================
+            */
+
+            await editBill(
+                billId
+            );
+
+            /*
+            ==========================================
+                USE PAYMENT DATE FOR RECEIPT DATE
+            ==========================================
+            */
+
+            if (payment.date) {
+
+                document.getElementById(
+                    "billDate"
+                ).value =
+                    payment.date;
+
+            }
+
+            /*
+            ==========================================
+                USE THE EXACT SAME RECEIPT FUNCTION
+            ==========================================
+            */
+
+            generateReceipt();
+
+        }
+        catch(error) {
+
+            console.error(
+                "Error opening Main Bills receipt:",
+                error
+            );
+
+            alert(
+                "Unable to open receipt: " +
+                error.message
+            );
+
+        }
+
+    }
+);
 
 
 

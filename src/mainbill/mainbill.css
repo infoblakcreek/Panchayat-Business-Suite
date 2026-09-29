@@ -1,4 +1,4 @@
-
+﻿
 /* ==================================================
         INVOICE / BILL FORM PAGE
 ================================================== */
@@ -2233,7 +2233,26 @@ body.receiptGeneratedMode
 /* Dotted line */
 
 .duplicateCustomer span::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-bottom: 1px dotted var(--bill-line);
+}
 
+.duplicateReceiptHeader span {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    min-width: 0;
+    padding: 7px 9px;
+    font-family: inherit;
+    font-size: 13px;
+}
+
+.duplicateReceiptHeader span::after {
     content: "";
 
     position: absolute;
@@ -2245,7 +2264,7 @@ body.receiptGeneratedMode
 
     bottom: 0;
 
-    border-bottom: 1px dotted var(--bill-line);
+    border-bottom: 1px solid var(--bill-line);
 
 }
 
@@ -2978,6 +2997,52 @@ body.receiptGeneratedMode .cutLine {
 }
 
 
+.mainBillPaymentField > select#paymentModalMode {
+    width: 100%;
+    min-height: 45px;
+    box-sizing: border-box;
+    padding: 12px 42px 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 9px;
+    background-color: #ffffff;
+    color: #111827;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.4;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image:
+        linear-gradient(45deg, transparent 50%, #6b7280 50%),
+        linear-gradient(135deg, #6b7280 50%, transparent 50%);
+    background-position:
+        calc(100% - 18px) 20px,
+        calc(100% - 13px) 20px;
+    background-size:
+        5px 5px,
+        5px 5px;
+    background-repeat: no-repeat;
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease;
+}
+
+.mainBillPaymentField > select#paymentModalMode:hover {
+    border-color: #9ca3af;
+}
+
+.mainBillPaymentField > select#paymentModalMode:focus {
+    border-color: #6b7280;
+    box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.12);
+}
+
+.mainBillPaymentField > select#paymentModalMode option {
+    color: #111827;
+    background: #ffffff;
+    font-size: 15px;
+}
 /* ------------------------------------------------------------
    VALIDATION
 ------------------------------------------------------------ */
@@ -3157,3 +3222,419 @@ body.receiptGeneratedMode .cutLine {
     }
 
 }
+
+/* ============================================================
+   MAIN BILL PAYMENT HISTORY BUTTON
+============================================================ */
+
+.mainBillsTable .paymentHistoryBillButton {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    min-height:34px;
+    padding:8px 11px;
+    border-radius:8px;
+    font-family:inherit;
+    font-size:11px;
+    font-weight:700;
+    color:#7c3aed;
+    background:#f5f3ff;
+    border:1px solid #ede9fe;
+    cursor:pointer;
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        background .2s ease,
+        border-color .2s ease;
+}
+
+.mainBillsTable .paymentHistoryBillButton:hover {
+    background:#ede9fe;
+    border-color:#ddd6fe;
+    transform:translateY(-1px);
+    box-shadow:0 4px 10px rgba(124,58,237,.10);
+}
+
+.mainBillsTable .paymentHistoryBillButton i {
+    font-size:11px;
+}
+
+
+/* ============================================================
+   MAIN BILL PAYMENT HISTORY MODAL
+============================================================ */
+
+.mainBillPaymentHistoryModal {
+    position:fixed;
+    inset:0;
+    z-index:10020;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    box-sizing:border-box;
+}
+
+.mainBillPaymentHistoryModal.isOpen {
+    display:flex;
+}
+
+.mainBillPaymentHistoryOverlay {
+    position:absolute;
+    inset:0;
+    background:rgba(17,24,39,.48);
+    backdrop-filter:blur(2px);
+}
+
+.mainBillPaymentHistoryContent {
+    position:relative;
+    z-index:1;
+    width:min(900px, 100%);
+    max-height:calc(100vh - 40px);
+    overflow:hidden;
+    background:#ffffff;
+    border:1px solid #e5e7eb;
+    border-radius:16px;
+    box-shadow:0 20px 60px rgba(17,24,39,.18);
+    display:flex;
+    flex-direction:column;
+}
+
+.mainBillPaymentHistoryHeader {
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:20px;
+    padding:22px 24px;
+    border-bottom:1px solid #e5e7eb;
+}
+
+.mainBillPaymentHistoryHeader h2 {
+    margin:0;
+    font-size:20px;
+    font-weight:700;
+    color:#111827;
+}
+
+.mainBillPaymentHistoryHeader p {
+    margin:5px 0 0;
+    font-size:13px;
+    color:#6b7280;
+}
+
+.mainBillPaymentHistoryClose {
+    flex:0 0 auto;
+    width:36px;
+    height:36px;
+    padding:0;
+    border:1px solid #e5e7eb;
+    border-radius:9px;
+    background:#ffffff;
+    color:#6b7280;
+    font-size:24px;
+    line-height:1;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.mainBillPaymentHistoryClose:hover {
+    background:#f3f4f6;
+    color:#111827;
+}
+
+.mainBillPaymentHistoryTableWrapper {
+    overflow:auto;
+    padding:20px 24px 24px;
+}
+
+.mainBillPaymentHistoryTable {
+    width:100%;
+    border-collapse:collapse;
+    min-width:650px;
+}
+
+.mainBillPaymentHistoryTable th {
+    padding:11px 12px;
+    text-align:left;
+    background:#f9fafb;
+    border-bottom:1px solid #e5e7eb;
+    color:#374151;
+    font-size:12px;
+    font-weight:700;
+}
+
+.mainBillPaymentHistoryTable td {
+    padding:13px 12px;
+    border-bottom:1px solid #f1f5f9;
+    color:#374151;
+    font-size:13px;
+    vertical-align:middle;
+}
+
+.mainBillPaymentHistoryTable tbody tr:last-child td {
+    border-bottom:none;
+}
+
+.mainBillPaymentViewReceiptButton {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:34px;
+    padding:7px 11px;
+    border:1px solid #dbeafe;
+    border-radius:8px;
+    background:#eff6ff;
+    color:#2563eb;
+    font-family:inherit;
+    font-size:11px;
+    font-weight:700;
+    cursor:pointer;
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        background .2s ease,
+        border-color .2s ease;
+}
+
+.mainBillPaymentViewReceiptButton:hover {
+    background:#dbeafe;
+    border-color:#bfdbfe;
+    transform:translateY(-1px);
+    box-shadow:0 4px 10px rgba(37,99,235,.12);
+}
+
+@media (max-width: 700px) {
+
+    .mainBillPaymentHistoryModal {
+        padding:12px;
+    }
+
+    .mainBillPaymentHistoryContent {
+        max-height:calc(100vh - 24px);
+        border-radius:13px;
+    }
+
+    .mainBillPaymentHistoryHeader {
+        padding:18px;
+    }
+
+    .mainBillPaymentHistoryTableWrapper {
+        padding:14px 18px 18px;
+    }
+
+}
+    
+
+/* ============================================================
+   MAIN BILL PAYMENT HISTORY BUTTON
+============================================================ */
+
+.mainBillsTable .paymentHistoryBillButton {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    min-height:34px;
+    padding:8px 11px;
+    border-radius:8px;
+    font-family:inherit;
+    font-size:11px;
+    font-weight:700;
+    color:#7c3aed;
+    background:#f5f3ff;
+    border:1px solid #ede9fe;
+    cursor:pointer;
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        background .2s ease,
+        border-color .2s ease;
+}
+
+.mainBillsTable .paymentHistoryBillButton:hover {
+    background:#ede9fe;
+    border-color:#ddd6fe;
+    transform:translateY(-1px);
+    box-shadow:0 4px 10px rgba(124,58,237,.10);
+}
+
+.mainBillsTable .paymentHistoryBillButton i {
+    font-size:11px;
+}
+
+
+/* ============================================================
+   MAIN BILL PAYMENT HISTORY MODAL
+============================================================ */
+
+.mainBillPaymentHistoryModal {
+    position:fixed;
+    inset:0;
+    z-index:10020;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    box-sizing:border-box;
+}
+
+.mainBillPaymentHistoryModal.isOpen {
+    display:flex;
+}
+
+.mainBillPaymentHistoryOverlay {
+    position:absolute;
+    inset:0;
+    background:rgba(17,24,39,.48);
+    backdrop-filter:blur(2px);
+}
+
+.mainBillPaymentHistoryContent {
+    position:relative;
+    z-index:1;
+    width:min(900px, 100%);
+    max-height:calc(100vh - 40px);
+    overflow:hidden;
+    background:#ffffff;
+    border:1px solid #e5e7eb;
+    border-radius:16px;
+    box-shadow:0 20px 60px rgba(17,24,39,.18);
+    display:flex;
+    flex-direction:column;
+}
+
+.mainBillPaymentHistoryHeader {
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:20px;
+    padding:22px 24px;
+    border-bottom:1px solid #e5e7eb;
+}
+
+.mainBillPaymentHistoryHeader h2 {
+    margin:0;
+    font-size:20px;
+    font-weight:700;
+    color:#111827;
+}
+
+.mainBillPaymentHistoryHeader p {
+    margin:5px 0 0;
+    font-size:13px;
+    color:#6b7280;
+}
+
+.mainBillPaymentHistoryClose {
+    flex:0 0 auto;
+    width:36px;
+    height:36px;
+    padding:0;
+    border:1px solid #e5e7eb;
+    border-radius:9px;
+    background:#ffffff;
+    color:#6b7280;
+    font-size:24px;
+    line-height:1;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.mainBillPaymentHistoryClose:hover {
+    background:#f3f4f6;
+    color:#111827;
+}
+
+.mainBillPaymentHistoryTableWrapper {
+    overflow:auto;
+    padding:20px 24px 24px;
+}
+
+.mainBillPaymentHistoryTable {
+    width:100%;
+    border-collapse:collapse;
+    min-width:650px;
+}
+
+.mainBillPaymentHistoryTable th {
+    padding:11px 12px;
+    text-align:left;
+    background:#f9fafb;
+    border-bottom:1px solid #e5e7eb;
+    color:#374151;
+    font-size:12px;
+    font-weight:700;
+}
+
+.mainBillPaymentHistoryTable td {
+    padding:13px 12px;
+    border-bottom:1px solid #f1f5f9;
+    color:#374151;
+    font-size:13px;
+    vertical-align:middle;
+}
+
+.mainBillPaymentHistoryTable tbody tr:last-child td {
+    border-bottom:none;
+}
+
+.mainBillPaymentViewReceiptButton {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:34px;
+    padding:7px 11px;
+    border:1px solid #dbeafe;
+    border-radius:8px;
+    background:#eff6ff;
+    color:#2563eb;
+    font-family:inherit;
+    font-size:11px;
+    font-weight:700;
+    cursor:pointer;
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        background .2s ease,
+        border-color .2s ease;
+}
+
+.mainBillPaymentViewReceiptButton:hover {
+    background:#dbeafe;
+    border-color:#bfdbfe;
+    transform:translateY(-1px);
+    box-shadow:0 4px 10px rgba(37,99,235,.12);
+}
+
+@media (max-width: 700px) {
+
+    .mainBillPaymentHistoryModal {
+        padding:12px;
+    }
+
+    .mainBillPaymentHistoryContent {
+        max-height:calc(100vh - 24px);
+        border-radius:13px;
+    }
+
+    .mainBillPaymentHistoryHeader {
+        padding:18px;
+    }
+
+    .mainBillPaymentHistoryTableWrapper {
+        padding:14px 18px 18px;
+    }
+
+}
+    
+
+
+
+
+
+

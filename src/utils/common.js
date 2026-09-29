@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    PANCHAYAT BUSINESS SUITE — COMMON UTILITIES
    ============================================================
 
@@ -885,6 +885,211 @@ function formatGujaratiDate(value) {
 
 
 /* ============================================================
+   GUJARATI NUMBER TO WORDS
+   Reusable utility for amounts and financial values
+   ============================================================ */
+
+function numberToGujaratiWords(value) {
+
+    const gujaratiOnes = [
+        "",
+        "એક",
+        "બે",
+        "ત્રણ",
+        "ચાર",
+        "પાંચ",
+        "છ",
+        "સાત",
+        "આઠ",
+        "નવ",
+        "દસ",
+        "અગિયાર",
+        "બાર",
+        "તેર",
+        "ચૌદ",
+        "પંદર",
+        "સોળ",
+        "સત્તર",
+        "અઢાર",
+        "ઓગણીસ"
+    ];
+
+    const gujaratiTens = [
+        "",
+        "",
+        "વીસ",
+        "ત્રીસ",
+        "ચાલીસ",
+        "પચાસ",
+        "સાઠ",
+        "સિત્તેર",
+        "એંસી",
+        "નેવું"
+    ];
+
+    function convertBelowHundred(number) {
+
+        if (number < 20) {
+            return gujaratiOnes[number];
+        }
+
+        const tens =
+            Math.floor(number / 10);
+
+        const ones =
+            number % 10;
+
+        if (ones === 0) {
+            return gujaratiTens[tens];
+        }
+
+        return (
+            gujaratiTens[tens] +
+            " " +
+            gujaratiOnes[ones]
+        );
+    }
+
+    function convertBelowThousand(number) {
+
+        if (number < 100) {
+            return convertBelowHundred(number);
+        }
+
+        const hundreds =
+            Math.floor(number / 100);
+
+        const remainder =
+            number % 100;
+
+        let result =
+            gujaratiOnes[hundreds] +
+            "સો";
+
+        if (remainder > 0) {
+            result +=
+                " " +
+                convertBelowHundred(
+                    remainder
+                );
+        }
+
+        return result;
+    }
+
+    function convertIndianNumber(number) {
+
+        if (number === 0) {
+            return "શૂન્ય";
+        }
+
+        let result = "";
+
+        const crore =
+            Math.floor(number / 10000000);
+
+        number %= 10000000;
+
+        const lakh =
+            Math.floor(number / 100000);
+
+        number %= 100000;
+
+        const thousand =
+            Math.floor(number / 1000);
+
+        number %= 1000;
+
+        const remainder =
+            number;
+
+        if (crore > 0) {
+            result +=
+                convertBelowThousand(crore) +
+                " કરોડ";
+        }
+
+        if (lakh > 0) {
+            if (result) {
+                result += " ";
+            }
+
+            result +=
+                convertBelowThousand(lakh) +
+                " લાખ";
+        }
+
+        if (thousand > 0) {
+            if (result) {
+                result += " ";
+            }
+
+            result +=
+                convertBelowThousand(thousand) +
+                " હજાર";
+        }
+
+        if (remainder > 0) {
+            if (result) {
+                result += " ";
+            }
+
+            result +=
+                convertBelowThousand(remainder);
+        }
+
+        return result;
+    }
+
+    const englishValue =
+        convertGujaratiDigitsToEnglish(
+            String(value ?? "")
+        ).replace(/,/g, "").trim();
+
+    if (!englishValue) {
+        return "";
+    }
+
+    const numericValue =
+        Number(englishValue);
+
+    if (
+        !Number.isFinite(numericValue) ||
+        numericValue < 0
+    ) {
+        return "";
+    }
+
+    const wholeNumber =
+        Math.floor(numericValue);
+
+    const paise =
+        Math.round(
+            (numericValue - wholeNumber) * 100
+        );
+
+    let result =
+        convertIndianNumber(
+            wholeNumber
+        ) +
+        " રૂપિયા";
+
+    if (paise > 0) {
+        result +=
+            " અને " +
+            convertIndianNumber(paise) +
+            " પૈસા";
+    }
+
+    return result;
+}
+
+
+/* ============================================================
+   END GUJARATI NUMBER TO WORDS
+============================================================ */
+
+/* ============================================================
    END OF COMMON UTILITIES
    ============================================================ */
 function setupIndianDatePicker() {
@@ -932,4 +1137,5 @@ function setupIndianDatePicker() {
     );
 
 }
+
 

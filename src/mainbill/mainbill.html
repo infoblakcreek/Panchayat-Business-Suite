@@ -818,74 +818,50 @@
                             
                                 <!-- RECEIPT NUMBER AND DATE -->
                                 <div class="duplicateReceiptHeader">
-                            
-                                      <div>
-                                  
-                                          <label>પાવતી નંબર:</label>
-                            
+
+                                    <div>
+                                        <label>પાવતી નંબર:</label>
                                         <input
-                                                type="text"
-                                                id="dPavtiNo"
-                                                readonly>
-                                        
-                                      </div>
-                                  
-                                      <div>
-                                  
-                                          <label>પાવતી તારીખ:</label>
-                            
-                                          <input
-                                              type="text"
-                                              id="dPavtiDate"
-                                              class="indianDatePicker"
-                                              inputmode="numeric"
-                                              placeholder="DD/MM/YYYY">
-                            
+                                            type="text"
+                                            id="dPavtiNo"
+                                            readonly>
+                                    </div>
+
+                                    <div>
+                                        <label>પાવતી તારીખ:</label>
+                                        <span id="dPavtiDate"></span>
+                                    </div>
+
                                 </div>
-                            
-                                        <div class="duplicateCustomer">
-                            
-                                <div class="fullWidth">
-                            
-                                    <label>શ્રીમાન, </label>
-                            
-                                    <span id="dCustomerName"></span>
-                            
+
+                                <!-- CUSTOMER NAME -->
+                                <div class="duplicateCustomer">
+                                    <div class="fullWidth">
+                                        <label>શ્રીમાન, </label>
+                                        <span id="dCustomerName"></span>
+                                    </div>
                                 </div>
-                            
-                            </div>
-                            
-                                <div class="duplicateAddressCell">
-                            
-                                    <label>સરનામું:</label>
-                            
-                                    <span id="dVillage"></span>
-                            
-                                    <label class="panchayatLabel">
-                                        ગ્રામ પંચાયત
-                                    </label>
-                            
+
+                                <!-- CUSTOMER ADDRESS -->
+                                <div class="duplicateCustomer">
+                                    <div class="duplicateAddressCell">
+                                        <label>સરનામું:</label>
+                                        <span id="dVillage"></span>
+                                        <label class="panchayatLabel">
+                                            ગ્રામ પંચાયત
+                                        </label>
+                                    </div>
+
+                                    <div>
+                                        <label>તાલુકો:</label>
+                                        <span id="dTaluka"></span>
+                                    </div>
+
+                                    <div>
+                                        <label>જિલ્લો:</label>
+                                        <span id="dDistrict"></span>
+                                    </div>
                                 </div>
-                            
-                            
-                                <div>
-                            
-                                    <label>તાલુકો:</label>
-                            
-                                    <span id="dTaluka"></span>
-                            
-                                </div>
-                            
-                            
-                                <div>
-                            
-                                    <label>જિલ્લો:</label>
-                            
-                                    <span id="dDistrict"></span>
-                            
-                                </div>
-                            
-                            </div>
                             
                                 <!-- RECEIPT BODY -->
                                 <div class="receiptBody">
@@ -1234,6 +1210,10 @@ body.printingMainBill {
 
     }
 
+
+    body.printingMainBill #printableBills .duplicateReceiptHeader span::after {
+        display: none !important;
+    }
 
     /* ========================================================
        MAIN BILL
@@ -2013,6 +1993,19 @@ body.printingMainBill {
     }
 
 
+    body.printingMainBill #printableBills .duplicateReceiptHeader span {
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        height: 14px !important;
+        padding: 1px 3px !important;
+        font-size: 7px !important;
+        line-height: 1 !important;
+        background: var(--bill-yellow-soft) !important;
+        border: none !important;
+        border-bottom: 1px solid var(--bill-line) !important;
+    }
+
     /* ========================================================
        DUPLICATE CUSTOMER
     ======================================================== */
@@ -2364,7 +2357,9 @@ body.printingMainBill {
 
             </div>
 
-        </div>
+        <div class="mainBillPaymentField"><label for="paymentModalMode">Payment Mode</label><select id="paymentModalMode"><option value="Cash">Cash</option><option value="UPI">UPI</option><option value="Cheque">Cheque</option><option value="Bank Transfer">Bank Transfer</option><option value="Other">Other</option></select></div>
+
+</div>
 
 
         <div
@@ -2399,6 +2394,87 @@ body.printingMainBill {
 
 
 
+
+
+
+
+
+
+<!-- ============================================================
+     MAIN BILL PAYMENT HISTORY MODAL
+============================================================ -->
+
+<div
+    id="mainBillPaymentHistoryModal"
+    class="mainBillPaymentHistoryModal"
+    aria-hidden="true">
+
+    <div
+        id="mainBillPaymentHistoryOverlay"
+        class="mainBillPaymentHistoryOverlay">
+    </div>
+
+    <div
+        class="mainBillPaymentHistoryContent"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="mainBillPaymentHistoryTitle">
+
+        <div class="mainBillPaymentHistoryHeader">
+
+            <div>
+                <h2 id="mainBillPaymentHistoryTitle">
+                    Payment History
+                </h2>
+
+                <p id="paymentHistoryBillNumber">
+                    Bill #—
+                </p>
+
+                <p id="paymentHistoryCustomerName">
+                    Customer: —
+                </p>
+            </div>
+
+            <button
+                type="button"
+                id="closeMainBillPaymentHistory"
+                class="mainBillPaymentHistoryClose"
+                aria-label="Close">
+                ×
+            </button>
+
+        </div>
+
+        <div class="mainBillPaymentHistoryTableWrapper">
+
+            <table class="mainBillPaymentHistoryTable">
+
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Mode</th>
+                        <th>Receipt Number</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="mainBillPaymentHistoryBody">
+                    <tr>
+                        <td colspan="5">
+                            No payment history available.
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
 
 
 
