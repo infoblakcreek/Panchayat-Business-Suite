@@ -97,21 +97,25 @@ window.setInitialBillNumber = setInitialBillNumber;
 // ==========================================
 // MAIN BILL NUMERIC HELPERS
 // ==========================================
-
 function getMainBillNumericValue(value) {
 
     const englishValue =
         convertGujaratiDigitsToEnglish(value);
 
+    const cleanedValue =
+        String(englishValue)
+            .replace(/₹/g, "")
+            .replace(/,/g, "")
+            .trim();
+
     const number =
-        parseFloat(englishValue);
+        parseFloat(cleanedValue);
 
     return Number.isFinite(number)
         ? number
         : 0;
 
 }
-
 
 function setMainBillGujaratiValue(element, value) {
 
@@ -176,39 +180,47 @@ window.calculateRow =
 // ==========================================
 
 function calculateGrandTotal() {
-
     let sum = 0;
 
-
     document
-        .querySelectorAll(
-            "#itemBody .total"
-        )
-        .forEach(function(input) {
-
-            sum +=
+        .querySelectorAll(".total")
+        .forEach(function(totalInput) {
+            const value =
                 getMainBillNumericValue(
-                    input.value
-                );
+                    totalInput.value
+                ) || 0;
 
+            sum += value;
         });
-
 
     const grandTotal =
         document.getElementById(
             "grandTotal"
         );
 
+    const amountWords =
+        document.getElementById(
+            "numberToGujaratiWords"
+        );
 
     if (grandTotal) {
+        const formattedAmount =
+            sum.toLocaleString("en-IN", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
 
         grandTotal.value =
+            "₹ " +
             normalizeGujaratiDisplayValue(
-                sum.toFixed(2)
+                formattedAmount
             );
-
     }
 
+    if (amountWords) {
+        amountWords.value =
+            numberToGujaratiWords(sum);
+    }
 }
 
 
@@ -734,7 +746,7 @@ function generateReceipt(paymentDateOverride = "", paymentReceiptNumberOverride 
                 "dPavtiNo"
             )
             .value =
-            receiptNumber;
+            normalizeGujaratiDisplayValue(receiptNumber);
 
         document.getElementById("dPavtiDate").textContent = formatGujaratiDate(typeof paymentDateOverride === "string" ? paymentDateOverride : billDate);
 
@@ -940,25 +952,109 @@ function generatePrintableBills() {
             .value;
 
 
-    document
-        .getElementById("dGrandTotal")
-        .textContent =
-        normalizeGujaratiDisplayValue(
-            document
-                .getElementById("grandTotal")
-                .value
-        );
 
+
+    /*
+    ==========================================
+        DUPLICATE RECEIPT PAYMENT DATA
+    ==========================================
+    */
+
+    const mainBillReceiptPayment =
+        window.mainBillReceiptPaymentData || null;
+
+    const duplicateReceiptAmount =
+        mainBillReceiptPayment
+            ? Number(
+                mainBillReceiptPayment.amount
+            ) || 0
+            : getMainBillNumericValue(
+                document
+                    .getElementById("grandTotal")
+                    .value
+            ) || 0;
+
+    const duplicateReceiptBalance =
+        mainBillReceiptPayment
+            ? Number(
+                mainBillReceiptPayment.balance
+            ) || 0
+            : 0;
+
+    const duplicateReceiptAmountFormatted =
+        "₹ " +
+        normalizeGujaratiDisplayValue(
+            duplicateReceiptAmount.toLocaleString(
+                "en-IN",
+                {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }
+            )
+        );
 
     document
         .getElementById("dAmountWords")
         .textContent =
-        document
-            .getElementById(
-                "numberToGujaratiWords"
-            )
-            .value;
+        "આપના તરફથી મળેલ રકમ : " +
+        duplicateReceiptAmountFormatted +
+        " (અંકે) — " +
+        numberToGujaratiWords(
+            duplicateReceiptAmount
+        ) +
+        ".";
 
+    if (!mainBillReceiptPayment) {
+
+        document
+            .getElementById("dAmountWords")
+            .textContent =
+            "આપના તરફથી મળેલ રકમ : આ બિલ માટે કોઈ ચુકવણી નોંધાયેલ નથી.";
+
+        document
+            .getElementById("dBaki")
+            .textContent = "";
+
+        document
+            .getElementById("dRokada")
+            .textContent = "";
+
+    } else {
+
+        const duplicateReceiptBalanceFormatted =
+            "₹ " +
+            normalizeGujaratiDisplayValue(
+                duplicateReceiptBalance.toLocaleString(
+                    "en-IN",
+                    {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }
+                )
+            );
+
+        const duplicateReceiptPaidFormatted =
+            "₹ " +
+            normalizeGujaratiDisplayValue(
+                duplicateReceiptAmount.toLocaleString(
+                    "en-IN",
+                    {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }
+                )
+            );
+
+        document
+            .getElementById("dBaki")
+            .textContent =
+            duplicateReceiptBalanceFormatted;
+
+        document
+            .getElementById("dRokada")
+            .textContent =
+            duplicateReceiptPaidFormatted;
+    }
 
     document
         .getElementById("dPaymentDetails")
@@ -1622,7 +1718,96 @@ if (printBillBtn) {
 }
 
 
-function printMainBillAndReceipt() {
+function prepareHistoricalMainBillPrint(bill) {
+    if (!bill) return;
+
+    const setPrintText = function(id, value) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.textContent = value == null ? "" : String(value);
+        }
+    };
+
+    setPrintText("pCustomerName", bill.customerName || "");
+    setPrintText("pBillNo", normalizeGujaratiDisplayValue(bill.billNo || ""));
+    setPrintText("pVillage", bill.village || "");
+    setPrintText("pTaluka", bill.taluka || "");
+    setPrintText("pDistrict", bill.district || "");
+
+    setPrintText(
+        "pBillDate",
+        bill.billDate ? formatIndianDate(bill.billDate) : ""
+    );
+
+    setPrintText(
+        "pMobileNumber",
+        normalizeGujaratiDisplayValue(bill.mobileNumber || "")
+    );
+
+    setPrintText(
+        "pAmountWords",
+        numberToGujaratiWords(Number(bill.grandTotal || 0))
+    );
+
+    setPrintText(
+        "pGrandTotal",
+        normalizeGujaratiDisplayValue(
+            Number(bill.grandTotal || 0).toLocaleString("en-IN", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            })
+        )
+    );
+
+    setPrintText("pPaymentDetails", bill.paymentDetails || "");
+
+    const printItems = document.getElementById("printMainItems");
+
+    if (!printItems) return;
+
+    printItems.innerHTML = "";
+
+    const items = Array.isArray(bill.items) ? bill.items : [];
+
+    items.forEach(function(item, index) {
+        const printRow = document.createElement("tr");
+
+        const srno = normalizeGujaratiDisplayValue(
+            item.srno == null ? index + 1 : item.srno
+        );
+
+        const description = item.description || "";
+
+        const pages = normalizeGujaratiDisplayValue(
+            item.pages == null ? "" : item.pages
+        );
+
+        const price = normalizeGujaratiDisplayValue(
+            Number(item.price || 0).toLocaleString("en-IN", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            })
+        );
+
+        const total = normalizeGujaratiDisplayValue(
+            Number(item.total || 0).toLocaleString("en-IN", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            })
+        );
+
+        printRow.innerHTML = `
+            <td>${srno}</td>
+            <td class="printDescription">${description}</td>
+            <td>${pages}</td>
+            <td>₹ ${price}</td>
+            <td>₹ ${total}</td>
+        `;
+
+        printItems.appendChild(printRow);
+    });
+}
+function printMainBillAndReceipt(useExistingReceipt = false) {
 
     console.log(
         "MAIN BILL + DUPLICATE RECEIPT PRINT"
@@ -1633,7 +1818,9 @@ function printMainBillAndReceipt() {
     // Generate the latest bill data first
     // --------------------------------------------------------
 
-    generatePrintableBills();
+    if (!useExistingReceipt) {
+        generatePrintableBills();
+    }
 
 
     // --------------------------------------------------------
@@ -4541,8 +4728,11 @@ async function openMainBillPaymentHistory(billId) {
                             "—";
 
                         const receiptNumber =
-                            payment.receiptNumber ||
-                            "—";
+    payment.receiptNumber
+        ? normalizeGujaratiDisplayValue(
+            payment.receiptNumber
+        )
+        : "—";
 
                         return `
                             <tr>
@@ -4700,15 +4890,16 @@ async function openMainBillPaymentReceipt(
             };
 
         const formatReceiptAmount =
-            function(value) {
-                return normalizeGujaratiDisplayValue(
-                    Number(value || 0)
-                        .toLocaleString("en-IN", {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                        })
-                );
-            };
+    function(value) {
+        return "₹ " +
+            normalizeGujaratiDisplayValue(
+                Number(value || 0)
+                    .toLocaleString("en-IN", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    })
+            );
+    };
 
         setText(
             "dCustomerName",
@@ -4737,7 +4928,7 @@ async function openMainBillPaymentReceipt(
 
         if (receiptNumberInput) {
             receiptNumberInput.value =
-                receiptNumber;
+                normalizeGujaratiDisplayValue(receiptNumber);
         }
 
         setText(
@@ -4756,12 +4947,23 @@ async function openMainBillPaymentReceipt(
             )
         );
 
-        setText(
-            "dAmountWords",
-            numberToGujaratiWords(
-                paymentAmount
-            )
-        );
+        const paymentAmountFormatted =
+    "₹ " +
+    normalizeGujaratiDisplayValue(
+        paymentAmount.toLocaleString("en-IN", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        })
+    );
+
+setText(
+    "dAmountWords",
+    "આપના તરફથી મળેલ રકમ : " +
+    paymentAmountFormatted +
+    " (અંકે) — " +
+    numberToGujaratiWords(paymentAmount) +
+    "."
+);
 
         setText(
             "dBaki",
@@ -4772,9 +4974,7 @@ async function openMainBillPaymentReceipt(
 
         setText(
             "dRokada",
-            paymentMode
-                ? paymentMode
-                : ""
+            formatReceiptAmount(paymentAmount)
         );
 
         setText(
@@ -4804,6 +5004,14 @@ async function openMainBillPaymentReceipt(
             "Payment receipt opened:",
             receiptNumber
         );
+
+        // Use the same print-window mechanism as Duplicate Receipt -> Print.
+        // The selected historical payment is already loaded into the receipt.
+        // Prepare the selected historical bill for the existing print page.
+        prepareHistoricalMainBillPrint(bill);
+
+        // Use the same print-window mechanism as Duplicate Receipt -> Print.
+        printMainBillAndReceipt(true);
 
     } catch (error) {
 
@@ -5958,14 +6166,50 @@ document.addEventListener(
             if (payments.length === 0) {
 
                 alert(
-                    "No payment found for this bill."
+                    "આ બિલ માટે કોઈ ચુકવણી નોંધાયેલ નથી."
                 );
 
                 return;
             }
 
+            /*
+            ==========================================
+                USE LAST PAYMENT AS RECEIPT SOURCE
+            ==========================================
+            */
+
             const payment =
                 payments[payments.length - 1];
+
+            const receiptPaymentAmount =
+    getMainBillNumericValue(
+        bill.paidAmount
+    ) || 0;
+
+            const receiptBalanceAmount =
+    getMainBillNumericValue(
+        bill.balanceAmount
+    );
+
+            /*
+            ==========================================
+                STORE PAYMENT DATA FOR DUPLICATE RECEIPT
+            ==========================================
+            */
+
+            window.mainBillReceiptPaymentData = {
+                amount: receiptPaymentAmount,
+                balance:
+                    Number.isFinite(
+                        receiptBalanceAmount
+                    )
+                        ? receiptBalanceAmount
+                        : 0,
+                date:
+                    payment.date || "",
+                receiptNumber:
+                    payment.receiptNumber || ""
+            };
 
             /*
             ==========================================
@@ -5979,9 +6223,10 @@ document.addEventListener(
 
             /*
             ==========================================
-                USE PAYMENT DATE FOR RECEIPT DATE
+                GENERATE RECEIPT USING LAST PAYMENT
             ==========================================
             */
+
             generateReceipt(
                 payment.date || "",
                 payment.receiptNumber || ""
@@ -6004,6 +6249,19 @@ document.addEventListener(
 
     }
 );
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

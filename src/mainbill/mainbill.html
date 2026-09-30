@@ -865,25 +865,11 @@
                             
                                 <!-- RECEIPT BODY -->
                                 <div class="receiptBody">
-                            
-                                    <p>
-                                        આપના તરફથી મળેલ રકમ
-                                        <strong>
-                                            <span id="dGrandTotal"></span>
-                                        </strong>
-                                        (અંકે)
-                                    </p>
-                            
-                            
-                                    <div class="amountWordsReceipt">
-                            
-                                        <label>રકમ શબ્દોમાં</label>
-                            
+
+                                    <p class="receiptPaidAmount">
                                         <span id="dAmountWords"></span>
-                            
-                                    </div>
-                            
-                            
+                                    </p>
+
                                     <div class="paymentDetails">
                             
                                         <div>
@@ -2071,6 +2057,12 @@ body.printingMainBill {
     }
 
 
+    body.printingMainBill #printableBills .receiptBody .receiptPaidAmount {
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        line-height: 1.4 !important;
+        margin: 4px 0 6px !important;
+    }
     body.printingMainBill #printableBills .receiptBody strong {
 
         margin: 0 2px !important;
@@ -2475,6 +2467,9 @@ body.printingMainBill {
     </div>
 
 </div>
+
+
+
 
 
 

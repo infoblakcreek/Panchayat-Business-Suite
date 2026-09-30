@@ -891,8 +891,8 @@ function formatGujaratiDate(value) {
 
 function numberToGujaratiWords(value) {
 
-    const gujaratiOnes = [
-        "",
+    const gujaratiNumbers = [
+        "શૂન્ય",
         "એક",
         "બે",
         "ત્રણ",
@@ -911,43 +911,109 @@ function numberToGujaratiWords(value) {
         "સોળ",
         "સત્તર",
         "અઢાર",
-        "ઓગણીસ"
+        "ઓગણીસ",
+        "વીસ",
+        "એકવીસ",
+        "બાવીસ",
+        "તેવીસ",
+        "ચોવીસ",
+        "પચ્ચીસ",
+        "છવ્વીસ",
+        "સત્તાવીસ",
+        "અઠ્ઠાવીસ",
+        "ઓગણત્રીસ",
+        "ત્રીસ",
+        "એકત્રીસ",
+        "બત્રીસ",
+        "તેત્રીસ",
+        "ચોત્રીસ",
+        "પાંત્રીસ",
+        "છત્રીસ",
+        "સડત્રીસ",
+        "અડત્રીસ",
+        "ઓગણચાલીસ",
+        "ચાલીસ",
+        "એકતાલીસ",
+        "બેતાલીસ",
+        "ત્રેતાલીસ",
+        "ચુંમાલીસ",
+        "પિસ્તાલીસ",
+        "છેતાલીસ",
+        "સુડતાલીસ",
+        "અડતાલીસ",
+        "ઓગણપચાસ",
+        "પચાસ",
+        "એકાવન",
+        "બાવન",
+        "ત્રેપન",
+        "ચોપન",
+        "પંચાવન",
+        "છપ્પન",
+        "સત્તાવન",
+        "અઠ્ઠાવન",
+        "ઓગણસાઠ",
+        "સાઠ",
+        "એકસઠ",
+        "બાસઠ",
+        "ત્રેસઠ",
+        "ચોસઠ",
+        "પાંસઠ",
+        "છાસઠ",
+        "સડસઠ",
+        "અડસઠ",
+        "અગણોસિત્તેર",
+        "સિત્તેર",
+        "એકોતેર",
+        "બોતેર",
+        "તોતેર",
+        "ચુમોતેર",
+        "પંચોતેર",
+        "છોતેર",
+        "સિત્યોતેર",
+        "અઠ્યોતેર",
+        "ઓગણએંસી",
+        "એંસી",
+        "એક્યાસી",
+        "બ્યાસી",
+        "ત્યાસી",
+        "ચોર્યાસી",
+        "પંચાસી",
+        "છ્યાસી",
+        "સિત્યાસી",
+        "અઠ્યાસી",
+        "નેવ્યાસી",
+        "નેવું",
+        "એકાણું",
+        "બાણું",
+        "ત્રાણું",
+        "ચોરાણું",
+        "પંચાણું",
+        "છન્નું",
+        "સત્તાણું",
+        "અઠ્ઠાણું",
+        "નવ્વાણું"
     ];
 
-    const gujaratiTens = [
+    const gujaratiHundreds = [
         "",
-        "",
-        "વીસ",
-        "ત્રીસ",
-        "ચાલીસ",
-        "પચાસ",
-        "સાઠ",
-        "સિત્તેર",
-        "એંસી",
-        "નેવું"
+        "એકસો",
+        "બસો",
+        "ત્રણસો",
+        "ચારસો",
+        "પાંચસો",
+        "છસો",
+        "સાતસો",
+        "આઠસો",
+        "નવસો"
     ];
 
     function convertBelowHundred(number) {
 
-        if (number < 20) {
-            return gujaratiOnes[number];
+        if (number === 0) {
+            return "";
         }
 
-        const tens =
-            Math.floor(number / 10);
-
-        const ones =
-            number % 10;
-
-        if (ones === 0) {
-            return gujaratiTens[tens];
-        }
-
-        return (
-            gujaratiTens[tens] +
-            " " +
-            gujaratiOnes[ones]
-        );
+        return gujaratiNumbers[number];
     }
 
     function convertBelowThousand(number) {
@@ -963,15 +1029,12 @@ function numberToGujaratiWords(value) {
             number % 100;
 
         let result =
-            gujaratiOnes[hundreds] +
-            "સો";
+            gujaratiHundreds[hundreds];
 
         if (remainder > 0) {
             result +=
                 " " +
-                convertBelowHundred(
-                    remainder
-                );
+                convertBelowHundred(remainder);
         }
 
         return result;
@@ -988,17 +1051,20 @@ function numberToGujaratiWords(value) {
         const crore =
             Math.floor(number / 10000000);
 
-        number %= 10000000;
+        number =
+            number % 10000000;
 
         const lakh =
             Math.floor(number / 100000);
 
-        number %= 100000;
+        number =
+            number % 100000;
 
         const thousand =
             Math.floor(number / 1000);
 
-        number %= 1000;
+        number =
+            number % 1000;
 
         const remainder =
             number;
@@ -1010,26 +1076,29 @@ function numberToGujaratiWords(value) {
         }
 
         if (lakh > 0) {
+
             if (result) {
                 result += " ";
             }
 
             result +=
-                convertBelowThousand(lakh) +
+                convertBelowHundred(lakh) +
                 " લાખ";
         }
 
         if (thousand > 0) {
+
             if (result) {
                 result += " ";
             }
 
             result +=
-                convertBelowThousand(thousand) +
+                convertBelowHundred(thousand) +
                 " હજાર";
         }
 
         if (remainder > 0) {
+
             if (result) {
                 result += " ";
             }
@@ -1044,7 +1113,10 @@ function numberToGujaratiWords(value) {
     const englishValue =
         convertGujaratiDigitsToEnglish(
             String(value ?? "")
-        ).replace(/,/g, "").trim();
+        )
+        .replace(/₹/g, "")
+        .replace(/,/g, "")
+        .trim();
 
     if (!englishValue) {
         return "";
@@ -1060,13 +1132,23 @@ function numberToGujaratiWords(value) {
         return "";
     }
 
+    /*
+       Convert everything to paise first.
+       This avoids problems such as 99.999 becoming
+       99 rupees + 100 paise.
+    */
+    const totalPaise =
+        Math.round(
+            numericValue * 100
+        );
+
     const wholeNumber =
-        Math.floor(numericValue);
+        Math.floor(
+            totalPaise / 100
+        );
 
     const paise =
-        Math.round(
-            (numericValue - wholeNumber) * 100
-        );
+        totalPaise % 100;
 
     let result =
         convertIndianNumber(
@@ -1075,16 +1157,22 @@ function numberToGujaratiWords(value) {
         " રૂપિયા";
 
     if (paise > 0) {
+
         result +=
             " અને " +
-            convertIndianNumber(paise) +
+            convertIndianNumber(
+                paise
+            ) +
             " પૈસા";
+
+    } else {
+
+        result +=
+            " પૂરા";
     }
 
     return result;
 }
-
-
 /* ============================================================
    END GUJARATI NUMBER TO WORDS
 ============================================================ */
@@ -1137,5 +1225,6 @@ function setupIndianDatePicker() {
     );
 
 }
+
 
 
