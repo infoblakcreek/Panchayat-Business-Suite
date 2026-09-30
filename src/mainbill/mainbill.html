@@ -870,19 +870,29 @@
                                         <span id="dAmountWords"></span>
                                     </p>
 
-                                    <div class="paymentDetails">
-                            
-                                        <div>
-                                            <label>બાકી</label>
-                                            <span id="dBaki"></span>
-                                        </div>
-                            
-                                        <div>
-                                            <label>રોકડા</label>
-                                            <span id="dRokada"></span>
-                                        </div>
-                            
-                                    </div>
+                                    <div class="receiptSummaryLine">
+
+    <div>
+        <label>કુલ બિલ : </label>
+        <span id="dTotalBill"></span>
+    </div>
+
+    <div>
+        <label>અગાઉ પ્રાપ્ત : </label>
+        <span id="dPreviousPaid"></span>
+    </div>
+
+    <div>
+        <label>આ ચુકવણી : </label>
+        <span id="dCurrentPayment"></span>
+    </div>
+
+    <div>
+        <label>બાકી : </label>
+        <span id="dBaki"></span>
+    </div>
+
+</div>
                             
                                       <div class="paymentDetails bankDetailsRow">
                             
@@ -895,9 +905,12 @@
                                       </div>
                                     
                             
+                                </div>                                
+                                <!-- RECEIPT PAYMENT FOOTER -->
+                                <div class="receiptPaymentFooter">
+                                    આ રસીદ ચુકવણી પ્રાપ્ત થયાનો પુરાવો છે.
                                 </div>
-                            
-                            
+
                                 <!-- DUPLICATE FOOTER -->
                                 <div class="duplicateFooter">
                             
@@ -2109,10 +2122,164 @@ body.printingMainBill {
 
         background: var(--bill-yellow-soft) !important;
 
-    }
-
-
+    }    
     /* ========================================================
+   RECEIPT SUMMARY LINE — SCREEN
+======================================================== */
+
+.receiptSummaryLine {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin-top: 2px !important;
+    white-space: nowrap !important;
+}
+
+.receiptSummaryLine > div {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 3px !important;
+    white-space: nowrap !important;
+    flex: 0 0 auto !important;
+}
+
+.receiptSummaryLine label {
+    white-space: nowrap !important;
+}
+
+.receiptSummaryLine span {
+    white-space: nowrap !important;
+    border-bottom: 1px dotted var(--bill-ink) !important;
+    padding-bottom: 2px !important;
+}
+
+
+/* ========================================================
+   RECEIPT SUMMARY LINE
+======================================================== */
+
+
+body.printingMainBill #printableBills .receiptSummaryLine {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin-top: 2px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.receiptSummaryLine > div {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    align-items: center !important;
+    gap: 2px !important;
+    white-space: nowrap !important;
+}
+
+body.printingMainBill #printableBills .receiptSummaryLine > div {
+    display: flex !important;
+    align-items: center !important;
+    gap: 2px !important;
+    white-space: nowrap !important;
+}
+
+body.printingMainBill #printableBills .receiptSummaryLine label {
+    white-space: nowrap !important;
+}
+
+.receiptSummaryLine span {
+    white-space: nowrap !important;
+    border-bottom: 1px dotted var(--bill-ink) !important;
+    padding-bottom: 2px !important;
+}
+
+
+/* ========================================================
+   FINAL PRINT OVERRIDE — FOUR RECEIPT AMOUNTS IN ONE LINE
+======================================================== */
+
+body.printingMainBill #printableBills .receiptSummaryLine {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    margin: 2px 0 !important;
+    padding: 0 !important;
+    gap: 3px !important;
+    white-space: nowrap !important;
+}
+
+body.printingMainBill #printableBills .receiptSummaryLine > div {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 25% !important;
+    min-width: 0 !important;
+    max-width: 25% !important;
+    flex: 0 0 25% !important;
+    gap: 2px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+}
+
+body.printingMainBill #printableBills .receiptSummaryLine > div label {
+    display: inline !important;
+    width: auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 6px !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    flex: 0 0 auto !important;
+}
+
+body.printingMainBill #printableBills .receiptSummaryLine > div span {
+    display: inline-block !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 1px 2px !important;
+    font-size: 6px !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    flex: 0 1 auto !important;
+    border-bottom: 1px dotted var(--bill-ink) !important;
+    background: transparent !important;
+}
+
+
+/* ========================================================
+   END FINAL PRINT OVERRIDE
+======================================================== */
+body.printingMainBill #printableBills .receiptPaymentFooter {
+    margin-top: 3px !important;
+    font-size: 7px !important;
+    line-height: 1 !important;
+    text-align: center !important;
+    color: var(--bill-ink) !important;
+}
+
+/* ========================================================
        PAYMENT DETAILS
     ======================================================== */
 
@@ -2232,6 +2399,87 @@ body.printingMainBill {
     }
 
 }
+
+/* ========================================================
+   RECEIPT SUMMARY — FINAL PRINT FIX
+======================================================== */
+
+@media print {
+
+    body.printingMainBill #printableBills .receiptSummaryLine {
+        display: grid !important;
+        grid-template-columns: repeat(4, max-content) !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+
+        width: 100% !important;
+        margin: 2px 0 !important;
+        padding: 0 !important;
+
+        gap: 4px !important;
+
+        white-space: nowrap !important;
+        box-sizing: border-box !important;
+    }
+
+    body.printingMainBill #printableBills .receiptSummaryLine > div {
+        display: inline-flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+
+        width: max-content !important;
+        min-width: max-content !important;
+        max-width: none !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        gap: 2px !important;
+
+        white-space: nowrap !important;
+        box-sizing: border-box !important;
+    }
+
+    body.printingMainBill #printableBills .receiptSummaryLine label {
+        display: inline !important;
+
+        width: auto !important;
+        min-width: 0 !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        font-size: 6px !important;
+        line-height: 1 !important;
+
+        white-space: nowrap !important;
+    }
+
+    body.printingMainBill #printableBills .receiptSummaryLine span {
+        display: inline !important;
+
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: none !important;
+
+        margin: 0 !important;
+        padding: 0 1px 2px !important;
+
+        font-size: 6px !important;
+        line-height: 1 !important;
+
+        white-space: nowrap !important;
+
+        border-bottom: 1px dotted var(--bill-ink) !important;
+        background: transparent !important;
+    }
+
+}
+
+/* ========================================================
+   END RECEIPT SUMMARY — FINAL PRINT FIX
+======================================================== */
 
 </style>
 
@@ -2467,6 +2715,21 @@ body.printingMainBill {
     </div>
 
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -963,16 +963,30 @@ function generatePrintableBills() {
     const mainBillReceiptPayment =
         window.mainBillReceiptPaymentData || null;
 
-    const duplicateReceiptAmount =
+    const duplicateReceiptTotalBill =
         mainBillReceiptPayment
             ? Number(
-                mainBillReceiptPayment.amount
+                mainBillReceiptPayment.totalBill
             ) || 0
             : getMainBillNumericValue(
                 document
                     .getElementById("grandTotal")
                     .value
             ) || 0;
+
+    const duplicateReceiptTotalReceived =
+        mainBillReceiptPayment
+            ? Number(
+                mainBillReceiptPayment.amount
+            ) || 0
+            : 0;
+
+    const duplicateReceiptCurrentPayment =
+        mainBillReceiptPayment
+            ? Number(
+                mainBillReceiptPayment.currentPayment
+            ) || 0
+            : 0;
 
     const duplicateReceiptBalance =
         mainBillReceiptPayment
@@ -981,28 +995,73 @@ function generatePrintableBills() {
             ) || 0
             : 0;
 
+    const duplicateReceiptPreviousPaid =
+        Math.max(
+            0,
+            duplicateReceiptTotalReceived -
+            duplicateReceiptCurrentPayment
+        );
+
+    const formatDuplicateReceiptAmount =
+        function(value) {
+            return "₹ " +
+                normalizeGujaratiDisplayValue(
+                    Number(value || 0)
+                        .toLocaleString(
+                            "en-IN",
+                            {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            }
+                        )
+                );
+        };
+
     const duplicateReceiptAmountFormatted =
-        "₹ " +
-        normalizeGujaratiDisplayValue(
-            duplicateReceiptAmount.toLocaleString(
-                "en-IN",
-                {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                }
-            )
+        formatDuplicateReceiptAmount(
+            duplicateReceiptTotalReceived
         );
 
     document
         .getElementById("dAmountWords")
-        .textContent =
+        .innerHTML =
         "આપના તરફથી મળેલ રકમ : " +
+        '<strong class="receiptAmountNumber">' +
         duplicateReceiptAmountFormatted +
+        "</strong>" +
         " (અંકે) — " +
         numberToGujaratiWords(
-            duplicateReceiptAmount
+            duplicateReceiptTotalReceived
         ) +
         ".";
+
+    document
+        .getElementById("dTotalBill")
+        .textContent =
+        formatDuplicateReceiptAmount(
+            duplicateReceiptTotalBill
+        );
+
+    document
+        .getElementById("dPreviousPaid")
+        .textContent =
+        formatDuplicateReceiptAmount(
+            duplicateReceiptPreviousPaid
+        );
+
+    document
+        .getElementById("dCurrentPayment")
+        .textContent =
+        formatDuplicateReceiptAmount(
+            duplicateReceiptCurrentPayment
+        );
+
+    document
+        .getElementById("dBaki")
+        .textContent =
+        formatDuplicateReceiptAmount(
+            duplicateReceiptBalance
+        );
 
     if (!mainBillReceiptPayment) {
 
@@ -1012,48 +1071,16 @@ function generatePrintableBills() {
             "આપના તરફથી મળેલ રકમ : આ બિલ માટે કોઈ ચુકવણી નોંધાયેલ નથી.";
 
         document
-            .getElementById("dBaki")
+            .getElementById("dPreviousPaid")
             .textContent = "";
 
         document
-            .getElementById("dRokada")
+            .getElementById("dCurrentPayment")
             .textContent = "";
-
-    } else {
-
-        const duplicateReceiptBalanceFormatted =
-            "₹ " +
-            normalizeGujaratiDisplayValue(
-                duplicateReceiptBalance.toLocaleString(
-                    "en-IN",
-                    {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                    }
-                )
-            );
-
-        const duplicateReceiptPaidFormatted =
-            "₹ " +
-            normalizeGujaratiDisplayValue(
-                duplicateReceiptAmount.toLocaleString(
-                    "en-IN",
-                    {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                    }
-                )
-            );
 
         document
             .getElementById("dBaki")
-            .textContent =
-            duplicateReceiptBalanceFormatted;
-
-        document
-            .getElementById("dRokada")
-            .textContent =
-            duplicateReceiptPaidFormatted;
+            .textContent = "";
     }
 
     document
@@ -2438,6 +2465,112 @@ body {
 
 
 /* ============================================================
+   RECEIPT SUMMARY LINE
+   FOUR VALUES — ONE LINE
+============================================================ */
+
+.duplicatePrintArea
+.receiptSummaryLine {
+
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(4, max-content) !important;
+
+    justify-content: flex-start !important;
+
+    align-items: center !important;
+
+    gap: 45px !important;
+
+    width: 100% !important;
+
+    margin: 4px 0 8px !important;
+
+    padding: 0 !important;
+
+    white-space: nowrap !important;
+
+    box-sizing: border-box !important;
+
+}
+
+
+.duplicatePrintArea
+.receiptSummaryLine > div {
+
+    display: inline-flex !important;
+
+    flex-direction: row !important;
+
+    align-items: center !important;
+
+    gap: 3px !important;
+
+    width: max-content !important;
+
+    min-width: max-content !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    white-space: nowrap !important;
+
+}
+
+
+.duplicatePrintArea
+.receiptSummaryLine label {
+
+    display: inline !important;
+
+    width: auto !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    font-size: 9px !important;
+
+    line-height: 1.2 !important;
+
+    font-weight: 700 !important;
+
+    white-space: nowrap !important;
+
+}
+
+
+.duplicatePrintArea
+.receiptSummaryLine span {
+
+    display: inline-block !important;
+
+    width: auto !important;
+
+    min-width: 0 !important;
+
+    max-width: none !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    font-size: 10px !important;
+
+    line-height: 1.2 !important;
+
+    white-space: nowrap !important;
+
+    border-bottom: none !important;
+
+    background: transparent !important;
+
+}
+
+
+/* ============================================================
    PAYMENT
 ============================================================ */
 
@@ -2822,7 +2955,7 @@ body {
 
     gap: 7px;
 
-    margin-bottom: 5px;
+    margin-bottom: 8px;
 
 }
 
@@ -2830,7 +2963,7 @@ body {
 .duplicatePrintArea
 .amountWordsReceipt label {
 
-    font-size: 10px;
+    font-size: 9px;
 
     font-weight: 700;
 
@@ -2854,6 +2987,112 @@ body {
 
 
 /* ============================================================
+   RECEIPT SUMMARY LINE
+   FOUR VALUES — ONE LINE
+============================================================ */
+
+.duplicatePrintArea
+.receiptSummaryLine {
+
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(4, max-content) !important;
+
+    justify-content: flex-start !important;
+
+    align-items: center !important;
+
+    gap: 45px !important;
+
+    width: 100% !important;
+
+    margin: 4px 0 8px !important;
+
+    padding: 0 !important;
+
+    white-space: nowrap !important;
+
+    box-sizing: border-box !important;
+
+}
+
+
+.duplicatePrintArea
+.receiptSummaryLine > div {
+
+    display: inline-flex !important;
+
+    flex-direction: row !important;
+
+    align-items: center !important;
+
+    gap: 3px !important;
+
+    width: max-content !important;
+
+    min-width: max-content !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    white-space: nowrap !important;
+
+}
+
+
+.duplicatePrintArea
+.receiptSummaryLine label {
+
+    display: inline !important;
+
+    width: auto !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    font-size: 10px !important;
+
+    line-height: 1.2 !important;
+
+    font-weight: 700 !important;
+
+    white-space: nowrap !important;
+
+}
+
+
+.duplicatePrintArea
+.receiptSummaryLine span {
+
+    display: inline-block !important;
+
+    width: auto !important;
+
+    min-width: 0 !important;
+
+    max-width: none !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    font-size: 10px !important;
+
+    line-height: 1.2 !important;
+
+    white-space: nowrap !important;
+
+    border-bottom: none !important;
+
+    background: transparent !important;
+
+}
+
+
+/* ============================================================
    PAYMENT
 ============================================================ */
 
@@ -2866,7 +3105,7 @@ body {
 
     gap: 15px;
 
-    margin-top: 5px;
+    margin-top: 8px;
 
 }
 
@@ -2886,7 +3125,7 @@ body {
 .duplicatePrintArea
 .paymentDetails label {
 
-    font-size: 10px;
+    font-size: 9px;
 
     font-weight: 700;
 
@@ -2902,7 +3141,7 @@ body {
 
     padding: 2px 4px;
 
-    font-size: 10px;
+    font-size: 9px;
 
 }
 
@@ -2911,6 +3150,17 @@ body {
    FOOTER
 ============================================================ */
 
+/* RECEIPT PAYMENT FOOTER */
+.duplicatePrintArea
+.receiptPaymentFooter {
+
+    font-size: 9px !important;
+
+    line-height: 1.3 !important;
+
+    text-align: center !important;
+
+}
 .duplicatePrintArea
 .duplicateFooter {
 
@@ -6181,15 +6431,25 @@ document.addEventListener(
             const payment =
                 payments[payments.length - 1];
 
-            const receiptPaymentAmount =
-    getMainBillNumericValue(
-        bill.paidAmount
-    ) || 0;
+            const receiptTotalReceived =
+                getMainBillNumericValue(
+                    bill.paidAmount
+                ) || 0;
+
+            const receiptCurrentPayment =
+                getMainBillNumericValue(
+                    payment.amount
+                ) || 0;
 
             const receiptBalanceAmount =
-    getMainBillNumericValue(
-        bill.balanceAmount
-    );
+                getMainBillNumericValue(
+                    bill.balanceAmount
+                );
+
+            const receiptTotalBill =
+                getMainBillNumericValue(
+                    bill.grandTotal
+                ) || 0;
 
             /*
             ==========================================
@@ -6198,15 +6458,25 @@ document.addEventListener(
             */
 
             window.mainBillReceiptPaymentData = {
-                amount: receiptPaymentAmount,
+                amount:
+                    receiptTotalReceived,
+
+                currentPayment:
+                    receiptCurrentPayment,
+
+                totalBill:
+                    receiptTotalBill,
+
                 balance:
                     Number.isFinite(
                         receiptBalanceAmount
                     )
                         ? receiptBalanceAmount
                         : 0,
+
                 date:
                     payment.date || "",
+
                 receiptNumber:
                     payment.receiptNumber || ""
             };
@@ -6249,6 +6519,29 @@ document.addEventListener(
 
     }
 );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
