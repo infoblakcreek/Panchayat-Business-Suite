@@ -591,6 +591,135 @@ formFields.forEach(
 
 
 // ==========================================
+// ==========================================
+// RESET MAIN BILL FOR A FRESH BILL
+// ==========================================
+
+function resetMainBillForm() {
+
+    const fieldIds = [
+        "customerName",
+        "village",
+        "taluka",
+        "district",
+        "mobileNumber",
+        "billDate",
+        "paymentDetails",
+        "grandTotal",
+        "numberToGujaratiWords"
+    ];
+
+    fieldIds.forEach(function(id) {
+
+        const field =
+            document.getElementById(id);
+
+        if (field) {
+            field.value = "";
+        }
+
+    });
+
+
+    // Reset item table to exactly one clean row.
+    const tbody =
+        document.getElementById("itemBody");
+
+    if (tbody) {
+
+        tbody.innerHTML = `
+            <tr
+                class="data-row"
+                style="height:auto;">
+
+                <td>
+                    <input
+                        class="table-input srno"
+                        type="text"
+                        value="1">
+                </td>
+
+                <td>
+                    <textarea
+                        class="description"
+                        rows="1"
+                        oninput="autoGrow(this)"></textarea>
+                </td>
+
+                <td>
+                    <input
+                        class="table-input pages"
+                        type="text"
+                        oninput="calculateRow(this)">
+                </td>
+
+                <td>
+                    <input
+                        class="table-input price"
+                        type="text"
+                        step="0.01"
+                        oninput="calculateRow(this)">
+                </td>
+
+                <td>
+                    <input
+                        class="table-input total"
+                        type="text">
+                </td>
+
+                <td>
+                    <button
+                        class="delete-btn"
+                        onclick="deleteCurrentRow(this)">
+                        🗑
+                    </button>
+                </td>
+
+            </tr>
+        `;
+
+    }
+
+
+    const limitMessage =
+        document.getElementById(
+            "mainBillRowLimitMessage"
+        );
+
+    if (limitMessage) {
+        limitMessage.textContent = "";
+        limitMessage.classList.remove("show");
+    }
+
+
+    window.mainBillReceiptPaymentData = null;
+
+
+    document.body.classList.remove(
+        "receiptGeneratedMode"
+    );
+
+
+    updateSerialNumbers();
+
+
+    setInitialBillNumber();
+
+
+    const customerName =
+        document.getElementById(
+            "customerName"
+        );
+
+    if (customerName) {
+        customerName.focus();
+    }
+
+}
+
+window.resetMainBillForm =
+    resetMainBillForm;
+
 // INITIALIZE FORM
 // ==========================================
 

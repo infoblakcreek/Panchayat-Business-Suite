@@ -1,13 +1,24 @@
-console.log("Main Bill loader loaded");
+﻿console.log("Main Bill loader loaded");
 
 
 // ==========================================
 // LOAD MAIN BILL HTML
 // ==========================================
 
-fetch("mainbill/mainbill.html")
+window.mainBillReadyPromise = fetch("mainbill/mainbill.html")
 
-    .then(response => response.text())
+    .then(response => {
+
+        if (!response.ok) {
+            throw new Error(
+                "Main Bill HTML failed to load: " +
+                response.status
+            );
+        }
+
+        return response.text();
+
+    })
 
     .then(html => {
 
@@ -45,69 +56,83 @@ fetch("mainbill/mainbill.html")
         // LOAD MAIN BILL JS
         // ==========================================
 
-        const script =
-            document.createElement("script");
+        return new Promise(function(resolve, reject) {
 
-        script.src =
-            "mainbill/mainbill.js";
+            const script =
+                document.createElement("script");
 
-        script.onload = function () {
-            console.log(
-                "Main Bill JS loaded successfully"
-            );
+            script.src =
+                "mainbill/mainbill.js";
 
-            function initializeMainBillDatePicker() {
+            script.onload = function () {
 
-                if (
-                    typeof setupIndianDatePicker === "function"
-                ) {
+                console.log(
+                    "Main Bill JS loaded successfully"
+                );
 
-                    setupIndianDatePicker();
+                function initializeMainBillDatePicker() {
 
-                    console.log(
-                        "Main Bill date picker initialized"
-                    );
+                    if (
+                        typeof setupIndianDatePicker === "function"
+                    ) {
 
-                    return true;
+                        setupIndianDatePicker();
+
+                        console.log(
+                            "Main Bill date picker initialized"
+                        );
+
+                        return true;
+                    }
+
+                    return false;
                 }
 
-                return false;
-            }
+                let datePickerAttempts = 0;
 
-            let datePickerAttempts = 0;
+                const datePickerTimer =
+                    setInterval(
+                        function() {
 
-            const datePickerTimer =
-                setInterval(
-                    function() {
+                            datePickerAttempts++;
 
-                        datePickerAttempts++;
+                            if (
+                                initializeMainBillDatePicker()
+                                ||
+                                datePickerAttempts >= 40
+                            ) {
 
-                        if (
-                            initializeMainBillDatePicker()
-                            ||
-                            datePickerAttempts >= 40
-                        ) {
+                                clearInterval(
+                                    datePickerTimer
+                                );
 
-                            clearInterval(
-                                datePickerTimer
-                            );
+                            }
 
-                        }
+                        },
+                        50
+                    );
 
-                    },
-                    50
+                resolve();
+
+            };
+
+            script.onerror = function () {
+
+                console.error(
+                    "Main Bill JS failed to load"
                 );
-        };
 
-        script.onerror = function () {
+                reject(
+                    new Error(
+                        "Main Bill JS failed to load"
+                    )
+                );
 
-            console.error(
-                "Main Bill JS failed to load"
-            );
+            };
 
-        };
+            document.body.appendChild(script);
 
-        document.body.appendChild(script);
+        });
 
     })
 
@@ -117,5 +142,7 @@ fetch("mainbill/mainbill.html")
             "Main Bill loading error:",
             error
         );
+
+        throw error;
 
     });

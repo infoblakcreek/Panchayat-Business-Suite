@@ -1651,8 +1651,16 @@ if (createBillButton) {
 
 
             // ==========================================
-            // OPEN MAIN BILL
             // ==========================================
+            // ==========================================
+            // OPEN MAIN BILL EDITOR
+            // ==========================================
+
+            const mainBillsView =
+                document.getElementById(
+                    "mainBillsView"
+                );
+
 
             const invoiceView =
                 document.getElementById(
@@ -1661,7 +1669,7 @@ if (createBillButton) {
 
 
             console.log(
-                "INVOICE VIEW AFTER CLICK:",
+                "MAIN BILL EDITOR AFTER CREATE BILL CLICK:",
                 invoiceView
             );
 
@@ -1673,6 +1681,14 @@ if (createBillButton) {
                 );
 
                 return;
+
+            }
+
+
+            if (mainBillsView) {
+
+                mainBillsView.style.display =
+                    "none";
 
             }
 
@@ -1704,13 +1720,24 @@ if (createBillButton) {
 
 
             // ==========================================
-            // NEW BILL NUMBER
+            // RESET TO A FRESH MAIN BILL
             // ==========================================
 
-            setInitialBillNumber();
+            if (
+                typeof window.resetMainBillForm === "function"
+            ) {
+
+                window.resetMainBillForm();
+
+            } else {
+
+                console.error(
+                    "Main Bill reset function is not available"
+                );
+
+            }
 
 
-            // ==========================================
             // SCROLL TOP
             // ==========================================
 
@@ -2860,7 +2887,7 @@ if (mainBillSystemCard) {
         function () {
 
             console.log(
-                "MAIN BILL CARD → OPENING MAIN BILLS"
+                "MAIN BILL CARD → OPENING FRESH MAIN BILL"
             );
 
 
@@ -2874,8 +2901,45 @@ if (mainBillSystemCard) {
             );
 
 
-            showMainView(
-                "mainBillsView"
+            const mainBillReady =
+                window.mainBillReadyPromise &&
+                typeof window.mainBillReadyPromise.then === "function"
+                    ? window.mainBillReadyPromise
+                    : Promise.resolve();
+
+
+            mainBillReady.then(
+                function () {
+
+                    showMainView(
+                        "mainBillsView"
+                    );
+
+
+                    if (
+                        typeof window.resetMainBillForm === "function"
+                    ) {
+
+                        window.resetMainBillForm();
+
+                    } else {
+
+                        console.error(
+                            "Main Bill reset function is not available"
+                        );
+
+                    }
+
+                }
+            ).catch(
+                function (error) {
+
+                    console.error(
+                        "Main Bill failed to open:",
+                        error
+                    );
+
+                }
             );
 
         }
