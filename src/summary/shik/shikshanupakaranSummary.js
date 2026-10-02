@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    SHIKSHANUPAKARAN SUMMARY
    ============================================================ */
 
@@ -600,11 +600,11 @@ function calculateShikshanupakaranSummaryChallanRowTotal(row) {
             };
 
         const demandPrevious =
-            Number(totals.C || 0);
-
+            Number(totals.C || 0) +
+            Number(totals.D || 0);
         const demandCurrent =
-            Number(totals.E || 0);
-
+            Number(totals.E || 0) +
+            Number(totals.F || 0);
         const demandRotating =
             Number(totals.F || 0);
 
