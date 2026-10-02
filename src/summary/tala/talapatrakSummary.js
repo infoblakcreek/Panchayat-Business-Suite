@@ -1324,47 +1324,78 @@
     function calculateTalapatrakSummaryPage3() {
         const page3 =
             document.querySelector(".talaPage3");
-
         if (!page3) {
             return;
         }
-
         const totals = window.talapatrakTotals || {};
-
         const setPage3Value = function(rowName, fieldName, value) {
-
             const input =
                 page3.querySelector(
                     'tr[data-page3-row="' + rowName + '"] [data-page3-field="' + fieldName + '"]'
                 );
-
             if (input) {
-
                 const numericValue =
                     Number(value || 0);
-
                 input.value =
                     convertToGujaratiDigits(
                         numericValue.toFixed(2)
                     );
             }
         };
-
-        setPage3Value("demand", "previous", totals.C);
-        setPage3Value("demand", "current", totals.E);
-        setPage3Value("demand", "rotating", totals.F);
-
+        const getPage3Value = function(rowName, fieldName) {
+            const input =
+                page3.querySelector(
+                    'tr[data-page3-row="' + rowName + '"] [data-page3-field="' + fieldName + '"]'
+                );
+            return parseTalapatrakSummaryPage3Number(
+                input?.value
+            );
+        };
+        /* ========================================================
+           ???????
+           Generated Talapatrak totals
+        ======================================================== */
+        const demandPrevious =
+            Number(totals.C || 0);
+        const demandCurrent =
+            Number(totals.E || 0);
+        const demandRotating =
+            Number(totals.F || 0);
+        setPage3Value(
+            "demand",
+            "previous",
+            demandPrevious
+        );
+        setPage3Value(
+            "demand",
+            "current",
+            demandCurrent
+        );
+        setPage3Value(
+            "demand",
+            "rotating",
+            demandRotating
+        );
+        /* ========================================================
+           PAGE 2 GENERATED TOTALS
+        ======================================================== */
         const page2 =
             document.querySelector(".talaPage2");
-
         const finalCollectionRow =
             page2?.querySelector(
                 'tr[data-tala-page2-total-row="finalCollection"]'
             );
-
+        const jadeRowPage2 =
+            page2?.querySelector(
+                'tr[data-tala-page2-total-row="jade"]'
+            );
+        /* ========================================================
+           ???? ????
+           = ??? ???????? ??? ????
+        ======================================================== */
         if (finalCollectionRow) {
             setPage3Value(
-                "fixedDemand",
+                "collection",
                 "previous",
                 parseTalapatrakSummaryNumber(
                     finalCollectionRow.querySelector(
@@ -1372,9 +1403,8 @@
                     )?.textContent
                 )
             );
-
             setPage3Value(
-                "fixedDemand",
+                "collection",
                 "current",
                 parseTalapatrakSummaryNumber(
                     finalCollectionRow.querySelector(
@@ -1382,9 +1412,8 @@
                     )?.textContent
                 )
             );
-
             setPage3Value(
-                "fixedDemand",
+                "collection",
                 "rotating",
                 parseTalapatrakSummaryNumber(
                     finalCollectionRow.querySelector(
@@ -1393,17 +1422,115 @@
                 )
             );
         }
-
+        /* ========================================================
+           ????? ???????
+           = ??????? - ??? : ???
+        ======================================================== */
+        const discountPrevious =
+            getPage3Value(
+                "discount",
+                "previous"
+            );
+        const discountCurrent =
+            getPage3Value(
+                "discount",
+                "current"
+            );
+        const discountRotating =
+            getPage3Value(
+                "discount",
+                "rotating"
+            );
+        const fixedDemandPrevious =
+            demandPrevious -
+            discountPrevious;
+        const fixedDemandCurrent =
+            demandCurrent -
+            discountCurrent;
+        const fixedDemandRotating =
+            demandRotating -
+            discountRotating;
+        setPage3Value(
+            "fixedDemand",
+            "previous",
+            fixedDemandPrevious
+        );
+        setPage3Value(
+            "fixedDemand",
+            "current",
+            fixedDemandCurrent
+        );
+        setPage3Value(
+            "fixedDemand",
+            "rotating",
+            fixedDemandRotating
+        );
+        /* ========================================================
+           ???? ???? ????
+           = ????? ??????? - ???? ????
+        ======================================================== */
+        const collectionPrevious =
+            getPage3Value(
+                "collection",
+                "previous"
+            );
+        const collectionCurrent =
+            getPage3Value(
+                "collection",
+                "current"
+            );
+        const collectionRotating =
+            getPage3Value(
+                "collection",
+                "rotating"
+            );
+        setPage3Value(
+            "recoverableBalance",
+            "previous",
+            fixedDemandPrevious -
+            collectionPrevious
+        );
+        setPage3Value(
+            "recoverableBalance",
+            "current",
+            fixedDemandCurrent -
+            collectionCurrent
+        );
+        setPage3Value(
+            "recoverableBalance",
+            "rotating",
+            fixedDemandRotating -
+            collectionRotating
+        );
+        /* ========================================================
+           ???? ????
+           ???? = Page 2 ??? ???? total
+        ======================================================== */
+        if (jadeRowPage2) {
+            const jadeTotal =
+                parseTalapatrakSummaryNumber(
+                    jadeRowPage2.querySelector(
+                        '[data-tala-page2-field="total"]'
+                    )?.textContent
+                );
+            setPage3Value(
+                "jadeCollection",
+                "current",
+                jadeTotal
+            );
+        }
+        /* ========================================================
+           ???? ??? ???? ??????? ????
+           = ???? ???? - ??? : ?????
+        ======================================================== */
         const jadeRow =
             page3.querySelector(
                 'tr[data-page3-row="jadeCollection"]'
             );
-
         const lapsRow =
             page3.querySelector(
                 'tr[data-page3-row="laps"]'
             );
-
         if (jadeRow && lapsRow) {
             setPage3Value(
                 "nextYearSurplus",
@@ -1419,7 +1546,6 @@
                     )?.value
                 )
             );
-
             setPage3Value(
                 "nextYearSurplus",
                 "current",
@@ -1434,7 +1560,6 @@
                     )?.value
                 )
             );
-
             setPage3Value(
                 "nextYearSurplus",
                 "rotating",
@@ -1450,41 +1575,37 @@
                 )
             );
         }
-
+        /* ========================================================
+           UPDATE ROW TOTALS
+        ======================================================== */
         page3
             .querySelectorAll(".talaPage3EditableRow")
             .forEach(function(row) {
-
                 const previous =
                     parseTalapatrakSummaryPage3Number(
                         row.querySelector(
                             '[data-page3-field="previous"]'
                         )?.value
                     );
-
                 const current =
                     parseTalapatrakSummaryPage3Number(
                         row.querySelector(
                             '[data-page3-field="current"]'
                         )?.value
                     );
-
                 const rotating =
                     parseTalapatrakSummaryPage3Number(
                         row.querySelector(
                             '[data-page3-field="rotating"]'
                         )?.value
                     );
-
                 const totalCell =
                     row.querySelector(
                         '[data-page3-field="total"]'
                     );
-
                 if (!totalCell) {
                     return;
                 }
-
                 totalCell.textContent =
                     formatTalapatrakSummaryPage3Number(
                         previous +
@@ -1492,9 +1613,7 @@
                         rotating
                     );
             });
-    }
-
-    function setupTalapatrakSummaryPage3InputHandler() {
+    }    function setupTalapatrakSummaryPage3InputHandler() {
 
         const page3 =
             document.querySelector(".talaPage3");
@@ -2897,5 +3016,4 @@
 
 
 })();
-
 
