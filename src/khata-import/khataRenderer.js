@@ -1704,7 +1704,12 @@ async function mapKhataRecordsToEditor(
 
             createKhataTalapatrakRow(
                 khata.khataNumber,
-                khata.name
+                khata.name,
+                khata.rawText ||
+                    (
+                        khata.source &&
+                        khata.source.rawText
+                    )
             );
 
         }
@@ -2138,7 +2143,12 @@ async function mapParsedKhataToEditorProgressive(
             row =
                 createKhataTalapatrakRow(
                     khata.khataNumber,
-                    khata.name
+                    khata.name,
+                    khata.rawText ||
+                    (
+                        khata.source &&
+                        khata.source.rawText
+                    )
                 );
 
         }
@@ -2355,9 +2365,61 @@ async function mapParsedKhataToEditorProgressive(
    CREATE TALAPATRAK KHATA ROW
 ============================================================ */
 
+function extractKhataGovernmentValue(
+    rawText
+) {
+
+    if (!rawText) {
+
+        return "";
+
+    }
+
+    const text =
+        String(rawText);
+
+    const labelMatch =
+        text.match(
+            /કુલ\s*(?:સરવે|સર્વે)\s*નંબર(?:ો)?\s*[:：]?/i
+        );
+
+    if (!labelMatch) {
+
+        return "";
+
+    }
+
+    const afterLabel =
+        text.slice(
+            labelMatch.index +
+            labelMatch[0].length
+        );
+
+    const firstLine =
+        afterLabel
+            .split(/\r?\n/, 1)[0];
+
+    const numbers =
+        firstLine.match(
+            /[૦-૯0-9]+(?:[.,][૦-૯0-9]+)?/g
+        );
+
+    if (
+        !numbers ||
+        numbers.length === 0
+    ) {
+
+        return "";
+
+    }
+
+    return numbers[numbers.length - 1];
+
+}
 function createKhataTalapatrakRow(
     khataNumber,
-    name
+    name,
+    rawText
 ) {
 
     if (
@@ -2386,14 +2448,20 @@ function createKhataTalapatrakRow(
         );
 
 
-    const row =
+
+        const row =
         window.createTalapatrakRow({
     
             A:
                 finalKhataNumber,
     
             B:
-                finalName
+                finalName,
+
+            D:
+                extractKhataGovernmentValue(
+                    rawText
+                )
     
         });
     
