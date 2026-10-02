@@ -604,6 +604,18 @@
             });
 
 
+        const challanBody =
+            editor.querySelector(
+                "#talapatrakSummaryChallanBody"
+            );
+
+        if (challanBody) {
+            values["challanRowCount"] =
+                challanBody.querySelectorAll(
+                    "tr.talaSummaryDynamicRow"
+                ).length;
+        }
+
         return values;
 
     }
@@ -782,6 +794,32 @@
             }
 
 
+            const savedChallanRowCount =
+                Number(saved.challanRowCount || 0);
+
+            if (savedChallanRowCount > 0) {
+
+                const challanBody =
+                    editor.querySelector(
+                        "#talapatrakSummaryChallanBody"
+                    );
+
+                if (challanBody) {
+
+                    while (
+                        challanBody.querySelectorAll(
+                            "tr.talaSummaryDynamicRow"
+                        ).length <
+                        savedChallanRowCount
+                    ) {
+                        addTalapatrakSummaryChallanRow();
+                    }
+
+                }
+
+            }
+
+
             Object.keys(saved)
                 .forEach(function(key) {
 
@@ -817,7 +855,7 @@
 
                         const rows =
                             editor.querySelectorAll(
-                                ".talaPage1CollectionTable tbody tr"
+                                ".talaPage1ChallanTable tbody tr"
                             );
 
                         const row =
@@ -973,6 +1011,18 @@
                     }
 
                 });
+
+
+            const challanRows =
+                editor.querySelectorAll(
+                    "#talapatrakSummaryChallanBody tr.talaSummaryDynamicRow"
+                );
+
+            challanRows.forEach(function(row) {
+                calculateTalapatrakSummaryChallanRowTotal(row);
+            });
+
+            updateTalapatrakSummaryChallanYearTotals();
 
 
             talapatrakSummaryPersistenceRecordId =
