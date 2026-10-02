@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    SHIKSHANUPAKARAN SUMMARY
    ============================================================ */
 
@@ -549,44 +549,311 @@ function calculateShikshanupakaranSummaryChallanRowTotal(row) {
         );
     }
 
+
+
     function calculateShikshanupakaranSummaryPage3() {
         const page3 =
             document.querySelector(".shikPage3");
-
         if (!page3) {
             return;
         }
 
-        const totals = window.shikshanupakaranTotals || {};
+        const totals =
+            window.shikshanupakaranTotals || {};
 
-        const setPage3Value = function(rowName, fieldName, value) {
-            const input = page3.querySelector('tr[data-page3-row="' + rowName + '"] [data-page3-field="' + fieldName + '"]');
-            if (input) {
-                input.value = formatShikshanupakaranSummaryPage3Number(Number(value || 0));
-            }
-        };
+        const setPage3Value =
+            function(rowName, fieldName, value) {
+                const input =
+                    page3.querySelector(
+                        'tr[data-page3-row="' +
+                        rowName +
+                        '"] [data-page3-field="' +
+                        fieldName +
+                        '"]'
+                    );
 
-        setPage3Value("demand", "previous", totals.C);
-        setPage3Value("demand", "current", totals.E);
-        setPage3Value("demand", "rotating", totals.F);
+                if (input) {
+                    const numericValue =
+                        Number(value || 0);
 
-        const page2 = document.querySelector(".shikPage2");
-        const finalCollectionRow = page2?.querySelector('tr[data-page2-total-row="finalCollection"]');
+                    input.value =
+                        convertToGujaratiDigits(
+                            numericValue.toFixed(2)
+                        );
+                }
+            };
+
+        const getPage3Value =
+            function(rowName, fieldName) {
+                const input =
+                    page3.querySelector(
+                        'tr[data-page3-row="' +
+                        rowName +
+                        '"] [data-page3-field="' +
+                        fieldName +
+                        '"]'
+                    );
+
+                return parseShikshanupakaranSummaryPage3Number(
+                    input?.value
+                );
+            };
+
+        const demandPrevious =
+            Number(totals.C || 0);
+
+        const demandCurrent =
+            Number(totals.E || 0);
+
+        const demandRotating =
+            Number(totals.F || 0);
+
+        setPage3Value(
+            "demand",
+            "previous",
+            demandPrevious
+        );
+
+        setPage3Value(
+            "demand",
+            "current",
+            demandCurrent
+        );
+
+        setPage3Value(
+            "demand",
+            "rotating",
+            demandRotating
+        );
+
+        const page2 =
+            document.querySelector(".shikPage2");
+
+        const finalCollectionRow =
+            page2?.querySelector(
+                'tr[data-page2-total-row="finalCollection"]'
+            );
+
+        const jadeRowPage2 =
+            page2?.querySelector(
+                'tr[data-page2-total-row="jade"]'
+            );
 
         if (finalCollectionRow) {
-            setPage3Value("fixedDemand", "previous", parseShikshanupakaranSummaryNumber(finalCollectionRow.querySelector('[data-page2-field="previous"]')?.textContent));
-            setPage3Value("fixedDemand", "current", parseShikshanupakaranSummaryNumber(finalCollectionRow.querySelector('[data-page2-field="current"]')?.textContent));
-            setPage3Value("fixedDemand", "rotating", parseShikshanupakaranSummaryNumber(finalCollectionRow.querySelector('[data-page2-field="rotating"]')?.textContent));
+            setPage3Value(
+                "collection",
+                "previous",
+                parseShikshanupakaranSummaryNumber(
+                    finalCollectionRow.querySelector(
+                        '[data-page2-field="previous"]'
+                    )?.textContent
+                )
+            );
+
+            setPage3Value(
+                "collection",
+                "current",
+                parseShikshanupakaranSummaryNumber(
+                    finalCollectionRow.querySelector(
+                        '[data-page2-field="current"]'
+                    )?.textContent
+                )
+            );
+
+            setPage3Value(
+                "collection",
+                "rotating",
+                parseShikshanupakaranSummaryNumber(
+                    finalCollectionRow.querySelector(
+                        '[data-page2-field="rotating"]'
+                    )?.textContent
+                )
+            );
         }
 
-        const jadeRow = page3.querySelector('tr[data-page3-row="jadeCollection"]');
-        const lapsRow = page3.querySelector('tr[data-page3-row="laps"]');
+        const demandRow =
+            page3.querySelector(
+                'tr[data-page3-row="demand"]'
+            );
+
+        const discountRow =
+            page3.querySelector(
+                'tr[data-page3-row="discount"]'
+            );
+
+        if (demandRow && discountRow) {
+            const fixedDemandPrevious =
+                getPage3Value(
+                    "demand",
+                    "previous"
+                ) -
+                getPage3Value(
+                    "discount",
+                    "previous"
+                );
+
+            const fixedDemandCurrent =
+                getPage3Value(
+                    "demand",
+                    "current"
+                ) -
+                getPage3Value(
+                    "discount",
+                    "current"
+                );
+
+            const fixedDemandRotating =
+                getPage3Value(
+                    "demand",
+                    "rotating"
+                ) -
+                getPage3Value(
+                    "discount",
+                    "rotating"
+                );
+
+            setPage3Value(
+                "fixedDemand",
+                "previous",
+                fixedDemandPrevious
+            );
+
+            setPage3Value(
+                "fixedDemand",
+                "current",
+                fixedDemandCurrent
+            );
+
+            setPage3Value(
+                "fixedDemand",
+                "rotating",
+                fixedDemandRotating
+            );
+        }
+
+        const fixedDemandPrevious =
+            getPage3Value(
+                "fixedDemand",
+                "previous"
+            );
+
+        const fixedDemandCurrent =
+            getPage3Value(
+                "fixedDemand",
+                "current"
+            );
+
+        const fixedDemandRotating =
+            getPage3Value(
+                "fixedDemand",
+                "rotating"
+            );
+
+        const collectionPrevious =
+            getPage3Value(
+                "collection",
+                "previous"
+            );
+
+        const collectionCurrent =
+            getPage3Value(
+                "collection",
+                "current"
+            );
+
+        const collectionRotating =
+            getPage3Value(
+                "collection",
+                "rotating"
+            );
+
+        setPage3Value(
+            "recoverableBalance",
+            "previous",
+            fixedDemandPrevious -
+            collectionPrevious
+        );
+
+        setPage3Value(
+            "recoverableBalance",
+            "current",
+            fixedDemandCurrent -
+            collectionCurrent
+        );
+
+        setPage3Value(
+            "recoverableBalance",
+            "rotating",
+            fixedDemandRotating -
+            collectionRotating
+        );
+
+        if (jadeRowPage2) {
+            const jadeTotal =
+                parseShikshanupakaranSummaryNumber(
+                    jadeRowPage2.querySelector(
+                        '[data-page2-field="total"]'
+                    )?.textContent
+                );
+
+            setPage3Value(
+                "jadeCollection",
+                "current",
+                jadeTotal
+            );
+        }
+
+        const jadeRow =
+            page3.querySelector(
+                'tr[data-page3-row="jadeCollection"]'
+            );
+
+        const lapsRow =
+            page3.querySelector(
+                'tr[data-page3-row="laps"]'
+            );
 
         if (jadeRow && lapsRow) {
-            setPage3Value("nextYearSurplus", "previous", parseShikshanupakaranSummaryPage3Number(jadeRow.querySelector('[data-page3-field="previous"]')?.value) - parseShikshanupakaranSummaryPage3Number(lapsRow.querySelector('[data-page3-field="previous"]')?.value));
-            setPage3Value("nextYearSurplus", "current", parseShikshanupakaranSummaryPage3Number(jadeRow.querySelector('[data-page3-field="current"]')?.value) - parseShikshanupakaranSummaryPage3Number(lapsRow.querySelector('[data-page3-field="current"]')?.value));
-            setPage3Value("nextYearSurplus", "rotating", parseShikshanupakaranSummaryPage3Number(jadeRow.querySelector('[data-page3-field="rotating"]')?.value) - parseShikshanupakaranSummaryPage3Number(lapsRow.querySelector('[data-page3-field="rotating"]')?.value));
+            setPage3Value(
+                "nextYearSurplus",
+                "previous",
+                getPage3Value(
+                    "jadeCollection",
+                    "previous"
+                ) -
+                getPage3Value(
+                    "laps",
+                    "previous"
+                )
+            );
+
+            setPage3Value(
+                "nextYearSurplus",
+                "current",
+                getPage3Value(
+                    "jadeCollection",
+                    "current"
+                ) -
+                getPage3Value(
+                    "laps",
+                    "current"
+                )
+            );
+
+            setPage3Value(
+                "nextYearSurplus",
+                "rotating",
+                getPage3Value(
+                    "jadeCollection",
+                    "rotating"
+                ) -
+                getPage3Value(
+                    "laps",
+                    "rotating"
+                )
+            );
         }
+
         page3
             .querySelectorAll(".shikPage3EditableRow")
             .forEach(function(row) {
@@ -623,10 +890,13 @@ function calculateShikshanupakaranSummaryChallanRowTotal(row) {
 
                 totalCell.textContent =
                     formatShikshanupakaranSummaryPage3Number(
-                        previous + current + rotating
+                        previous +
+                        current +
+                        rotating
                     );
             });
     }
+
 
 
  /* ============================================================
