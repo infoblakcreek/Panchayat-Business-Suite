@@ -1579,6 +1579,18 @@ function setupShikshanupakaranSummaryPage3Calculation() {
             });
 
 
+        const challanBody =
+            editor.querySelector(
+                "#shikshanupakaranSummaryChallanBody"
+            );
+
+        if (challanBody) {
+            values["challanRowCount"] =
+                challanBody.querySelectorAll(
+                    "tr.shikSummaryDynamicRow"
+                ).length;
+        }
+
         return values;
 
     }
@@ -1759,6 +1771,32 @@ function setupShikshanupakaranSummaryPage3Calculation() {
             }
 
 
+            const savedChallanRowCount =
+                Number(saved.challanRowCount || 0);
+
+            if (savedChallanRowCount > 0) {
+
+                const challanBody =
+                    editor.querySelector(
+                        "#shikshanupakaranSummaryChallanBody"
+                    );
+
+                if (challanBody) {
+
+                    while (
+                        challanBody.querySelectorAll(
+                            "tr.shikSummaryDynamicRow"
+                        ).length <
+                        savedChallanRowCount
+                    ) {
+                        addShikshanupakaranSummaryChallanRow();
+                    }
+
+                }
+
+            }
+
+
             Object.keys(saved)
                 .forEach(function(key) {
 
@@ -1811,7 +1849,7 @@ function setupShikshanupakaranSummaryPage3Calculation() {
 
                         const rows =
                             editor.querySelectorAll(
-                                ".shikPage1 tbody tr"
+                                ".shikPage1ChallanTable tbody tr"
                             );
 
                         const row =
@@ -1950,6 +1988,16 @@ function setupShikshanupakaranSummaryPage3Calculation() {
                     }
 
                 });
+
+
+            const challanRows =
+                editor.querySelectorAll(
+                    "#shikshanupakaranSummaryChallanBody tr.shikSummaryDynamicRow"
+                );
+
+            challanRows.forEach(function(row) {
+                calculateShikshanupakaranSummaryChallanRowTotal(row);
+            });
 
 
             shikshanupakaranSummaryPersistenceRecordId =
