@@ -788,18 +788,19 @@ function calculateShikshanupakaranSummaryChallanRowTotal(row) {
             collectionRotating
         );
 
-        if (jadeRowPage2) {
-            const jadeTotal =
-                parseShikshanupakaranSummaryNumber(
-                    jadeRowPage2.querySelector(
-                        '[data-page2-field="total"]'
-                    )?.textContent
-                );
+        const generatedTotals =
+            window.shikshanupakaranTotals;
 
+        if (
+            generatedTotals &&
+            typeof generatedTotals.P !== "undefined"
+        ) {
             setPage3Value(
                 "jadeCollection",
                 "current",
-                jadeTotal
+                parseShikshanupakaranSummaryNumber(
+                    generatedTotals.P
+                )
             );
         }
 

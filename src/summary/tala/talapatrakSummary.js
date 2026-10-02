@@ -1506,17 +1506,19 @@
            ???? ????
            ???? = Page 2 ??? ???? total
         ======================================================== */
-        if (jadeRowPage2) {
-            const jadeTotal =
-                parseTalapatrakSummaryNumber(
-                    jadeRowPage2.querySelector(
-                        '[data-tala-page2-field="total"]'
-                    )?.textContent
-                );
+        const generatedTotals =
+            window.talapatrakTotals;
+
+        if (
+            generatedTotals &&
+            typeof generatedTotals.R !== "undefined"
+        ) {
             setPage3Value(
                 "jadeCollection",
                 "current",
-                jadeTotal
+                parseTalapatrakSummaryNumber(
+                    generatedTotals.R
+                )
             );
         }
         /* ========================================================
