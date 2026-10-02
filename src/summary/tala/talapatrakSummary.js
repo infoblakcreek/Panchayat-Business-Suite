@@ -1357,10 +1357,20 @@
         ======================================================== */
         const demandPrevious =
             Number(totals.C || 0);
+
         const demandCurrent =
-            Number(totals.E || 0);
-        const demandRotating =
+            Number(totals.D || 0) +
+            Number(totals.E || 0) +
             Number(totals.F || 0);
+
+        const demandRotating =
+            Number(totals.G || 0);
+
+        setPage3Value(
+            "discount",
+            "current",
+            Number(totals.I || 0)
+        );
         setPage3Value(
             "demand",
             "previous",
