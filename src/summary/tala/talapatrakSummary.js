@@ -1194,8 +1194,16 @@
             convertToGujaratiDigits(Number(totals.F || 0).toFixed(2));
 
         /* H → કુલ */
+        /* કુલ = સરકારી + ખેતી સિવાય + લોકલફંડ */
+        const page1CollectionTotal =
+            Number(totals.D || 0) +
+            Number(totals.E || 0) +
+            Number(totals.F || 0);
+
         rows[3].cells[1].textContent =
-            convertToGujaratiDigits(Number(totals.H || 0).toFixed(2));
+            convertToGujaratiDigits(
+                page1CollectionTotal.toFixed(2)
+            );
 
         console.log(
             "TALAPATRAK PAGE 1 COLLECTION TOTALS FILLED:",
