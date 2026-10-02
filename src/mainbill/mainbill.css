@@ -1,4 +1,4 @@
-﻿
+
 /* ==================================================
         INVOICE / BILL FORM PAGE
 ================================================== */
@@ -2528,8 +2528,7 @@ body.receiptGeneratedMode
 
     flex: 1;
 
-    min-height: 27px;
-
+    line-height: 1.2;
 }
 
 

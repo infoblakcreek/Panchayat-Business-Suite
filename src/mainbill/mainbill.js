@@ -1,4 +1,4 @@
-﻿// ==========================================================================//
+// ==========================================================================//
 
 
 
@@ -3273,6 +3273,85 @@ body {
     font-size: 9px;
 
 }
+
+
+/* BANK / CHEQUE DETAILS — ONE LINE */
+.duplicatePrintArea
+.bankDetailsRow {
+
+    flex-wrap: nowrap !important;
+
+    width: 100% !important;
+
+    gap: 4px !important;
+
+}
+
+
+.duplicatePrintArea
+.bankDetailsRow label {
+
+    flex-shrink: 0 !important;
+
+    white-space: nowrap !important;
+
+}
+
+
+.duplicatePrintArea
+.bankDetailsRow span {
+
+    flex: 1 1 auto !important;
+
+    min-width: 0 !important;
+
+    white-space: nowrap !important;
+
+}
+
+
+/* FORCE BANK / CHEQUE LABEL + VALUE ON SAME LINE */
+.duplicatePrintArea
+.bankDetailsRow {
+
+    display: flex !important;
+
+    flex-direction: row !important;
+
+    align-items: center !important;
+
+    flex-wrap: nowrap !important;
+
+}
+
+
+.duplicatePrintArea
+.bankDetailsRow label {
+
+    display: inline-block !important;
+
+    white-space: nowrap !important;
+
+    line-height: 1 !important;
+
+    vertical-align: middle !important;
+
+}
+
+
+.duplicatePrintArea
+.bankDetailsRow span {
+
+    display: inline-block !important;
+
+    white-space: nowrap !important;
+
+    line-height: 1 !important;
+
+    vertical-align: middle !important;
+
+}
+
 
 
 /* ============================================================
