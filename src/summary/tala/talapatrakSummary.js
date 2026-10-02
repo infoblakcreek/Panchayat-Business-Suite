@@ -1665,6 +1665,39 @@
                 calculateTalapatrakSummaryPage3();
             }
         );
+
+        page3.addEventListener(
+            "blur",
+            function(event) {
+
+                const input =
+                    event.target.closest(
+                        'input[data-page3-field]'
+                    );
+
+                if (!input) {
+                    return;
+                }
+
+                const numericValue =
+                    Number.parseFloat(
+                        convertGujaratiDigitsToEnglish(
+                            input.value
+                        )
+                    );
+
+                input.value =
+                    convertToGujaratiDigits(
+                        (
+                            Number.isFinite(numericValue)
+                                ? numericValue
+                                : 0
+                        ).toFixed(2)
+                    );
+
+                calculateTalapatrakSummaryPage3();
+            }
+        , true);
     }
 
     function setupTalapatrakSummaryPage3BalanceTable() {
