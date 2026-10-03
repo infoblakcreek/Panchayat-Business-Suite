@@ -5844,14 +5844,6 @@ snapshot.forEach(
         }
 
 
-        if (
-            balanceAmount > 0
-        ) {
-
-            summaryOutstandingBills++;
-            summaryOutstandingAmount += balanceAmount;
-
-        }
 
     }
 );
@@ -6280,6 +6272,66 @@ if (
             "Error loading all bills:",
             error
         );
+
+
+        /*
+        ============================================================
+            FIRESTORE RETRY
+        ============================================================
+        */
+
+        const retryCount =
+            Number(
+                mainBillsBody.dataset.firestoreRetryCount || 0
+            );
+
+
+        if (retryCount < 3) {
+
+            mainBillsBody.dataset.firestoreRetryCount =
+                String(retryCount + 1);
+
+
+            mainBillsBody.innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="9"
+                        class="loadingBills">
+
+                        Connecting to bills database...
+
+                    </td>
+
+                </tr>
+
+            `;
+
+
+            console.log(
+                "Retrying Main Bills Firestore load:",
+                retryCount + 1,
+                "of 3"
+            );
+
+
+            setTimeout(
+                function() {
+
+                    loadAllMainBills(searchTerm);
+
+                },
+                2000
+            );
+
+
+            return;
+
+        }
+
+
+        mainBillsBody.dataset.firestoreRetryCount = "0";
 
 
         mainBillsBody.innerHTML = `
