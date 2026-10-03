@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    SHIKSHANUPAKARAN SUMMARY
    ============================================================ */
 
@@ -620,11 +620,21 @@ function calculateShikshanupakaranSummaryChallanRowTotal(row) {
             demandCurrent
         );
 
-        setPage3Value(
-            "demand",
-            "rotating",
-            demandRotating
-        );
+        const demandRotatingInput =
+            page3.querySelector(
+                'tr[data-page3-row="demand"] [data-page3-field="rotating"]'
+            );
+
+        if (
+            demandRotatingInput &&
+            demandRotatingInput.value.trim() === ""
+        ) {
+            setPage3Value(
+                "demand",
+                "rotating",
+                demandRotating
+            );
+        }
 
         const page2 =
             document.querySelector(".shikPage2");
