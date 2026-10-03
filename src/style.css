@@ -1,4 +1,4 @@
-/* ==================================================
+﻿/* ==================================================
         RESET
 ================================================== */
 
@@ -4157,3 +4157,9 @@ body[data-theme="dark"] #khataScanProgressPage {
         rgba(96, 165, 250, 0.25);
 
 }
+
+/* MAIN BILLS TABLE WRAPPER — KEEP PADDING INSIDE CARD WIDTH */
+#mainBillsView .mainBillsTableWrapper {
+    box-sizing: border-box;
+}
+
