@@ -1,4 +1,5 @@
 
+﻿
 /* ==================================================
         INVOICE / BILL FORM PAGE
 ================================================== */
@@ -2744,6 +2745,301 @@ body.receiptGeneratedMode .cutLine {
 }
 
 
+
+/* ============================================================
+   MAIN BILL SUMMARY CARDS
+   Figma-style compact financial summary
+============================================================ */
+
+#mainBillsView .mainBillSummaryCards {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 16px;
+
+    width: 100%;
+
+    margin: 0 0 22px 0;
+
+}
+
+
+#mainBillsView .mainBillSummaryCard {
+
+    appearance: none;
+
+    width: 100%;
+
+    min-width: 0;
+
+    min-height: 112px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 18px;
+
+    border-radius: 14px;
+
+    border: 1px solid transparent;
+
+    background: #ffffff;
+
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.05);
+
+    text-align: left;
+
+    font-family: inherit;
+
+    cursor: pointer;
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        border-color .18s ease;
+
+}
+
+
+#mainBillsView .mainBillSummaryCard:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 22px rgba(15, 23, 42, 0.09);
+
+}
+
+
+#mainBillsView .mainBillSummaryCard:focus-visible {
+
+    outline: 3px solid rgba(37, 99, 235, 0.18);
+
+    outline-offset: 2px;
+
+}
+
+
+/* ICON */
+
+#mainBillsView .mainBillSummaryIcon {
+
+    flex: 0 0 48px;
+
+    width: 48px;
+
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    font-size: 19px;
+
+}
+
+
+#mainBillsView .mainBillSummaryContent {
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+}
+
+
+#mainBillsView .mainBillSummaryLabel {
+
+    margin-bottom: 4px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    color: #64748b;
+
+}
+
+
+#mainBillsView .mainBillSummaryCount {
+
+    display: block;
+
+    font-size: 18px;
+
+    line-height: 1.25;
+
+    font-weight: 800;
+
+    color: #172033;
+
+}
+
+
+#mainBillsView .mainBillSummaryAmount {
+
+    display: block;
+
+    margin-top: 3px;
+
+    font-size: 13px;
+
+    line-height: 1.2;
+
+    font-weight: 700;
+
+    color: #64748b;
+
+}
+
+
+/* TOTAL */
+
+#mainBillsView .mainBillSummaryCard.total {
+
+    background: #fffaf3;
+
+    border-color: #f6c98b;
+
+}
+
+
+#mainBillsView .mainBillSummaryCard.total
+.mainBillSummaryIcon {
+
+    color: #d97706;
+
+    background: #ffedd5;
+
+}
+
+
+/* PAID */
+
+#mainBillsView .mainBillSummaryCard.paid {
+
+    background: #f3fbf7;
+
+    border-color: #9fdfbf;
+
+}
+
+
+#mainBillsView .mainBillSummaryCard.paid
+.mainBillSummaryIcon {
+
+    color: #16a34a;
+
+    background: #dcfce7;
+
+}
+
+
+/* UNPAID */
+
+#mainBillsView .mainBillSummaryCard.unpaid {
+
+    background: #fffdf1;
+
+    border-color: #ead98a;
+
+}
+
+
+#mainBillsView .mainBillSummaryCard.unpaid
+.mainBillSummaryIcon {
+
+    color: #ca8a04;
+
+    background: #fef3c7;
+
+}
+
+
+/* OUTSTANDING */
+
+#mainBillsView .mainBillSummaryCard.outstanding {
+
+    background: #fff7f7;
+
+    border-color: #f2b4b4;
+
+}
+
+
+#mainBillsView .mainBillSummaryCard.outstanding
+.mainBillSummaryIcon {
+
+    color: #dc2626;
+
+    background: #fee2e2;
+
+}
+
+
+/* ACTIVE CARD */
+
+#mainBillsView .mainBillSummaryCard.active {
+
+    box-shadow:
+        0 0 0 2px rgba(37, 99, 235, 0.14),
+        0 8px 22px rgba(15, 23, 42, 0.09);
+
+    transform: translateY(-1px);
+
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+
+    #mainBillsView .mainBillSummaryCards {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    #mainBillsView .mainBillSummaryCards {
+
+        grid-template-columns: 1fr;
+
+        gap: 12px;
+
+    }
+
+
+    #mainBillsView .mainBillSummaryCard {
+
+        min-height: 96px;
+
+        padding: 15px;
+
+    }
+
+}
+
+
 /* ============================================================
    MAIN BILL TABLE ACTION BUTTONS
 ============================================================ */
@@ -3170,7 +3466,10 @@ body.receiptGeneratedMode .cutLine {
 
 @media (max-width: 520px) {
 
-    /* ============================================================
+
+
+
+/* ============================================================
    MAIN BILL TABLE ACTION BUTTONS
 ============================================================ */
 
@@ -3677,12 +3976,3 @@ body.receiptGeneratedMode .cutLine {
     }
 
 }
-    
-
-
-
-
-
-
-
-
