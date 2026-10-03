@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    TALAPATRAK SUMMARY
    Tala indigo / purple theme
    Light + Dark
@@ -4330,6 +4330,12 @@ body.talapatrakFullViewMode
         table-layout: fixed !important;
     }
 
+    /* PAGE 1 — lift only the challan table */
+    .talapatrakSummaryPrintPage:has(.talaPage1)
+    .talaPage1TwoColumnLayout
+    .talaPage1TableWrapper {
+        transform: translateY(-22px) !important;
+    }
     /* PAGE 3 — preserve main table + left/right balance layout */
     .talapatrakSummaryPrintPage:has(.talaPage3)
     .talaPage3 .talaPage3BalanceTablesRow {
