@@ -4057,3 +4057,19 @@ body.receiptGeneratedMode .cutLine {
 
 }
 
+/* MAIN BILLS INNER CONTENT — MATCH TALAPATRAK FLOATING INSET */
+#mainBillsView > #mainBillSummaryCards,
+#mainBillsView > .allBillsCard {
+    width: calc(100% - 40px);
+    margin-left: 20px;
+    margin-right: 20px;
+    box-sizing: border-box;
+}
+
+
+
+/* MAIN BILLS CARD — ALLOW TABLE SCROLLING ON NARROW SCREENS */
+#mainBillsView > .allBillsCard {
+    overflow: visible;
+}
+
