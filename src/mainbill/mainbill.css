@@ -1,4 +1,4 @@
-
+﻿
 ﻿
 /* ==================================================
         INVOICE / BILL FORM PAGE
@@ -2762,7 +2762,7 @@ body.receiptGeneratedMode .cutLine {
 
     width: 100%;
 
-    margin: 0 0 22px 0;
+    margin: 24px 0 22px 0;
 
 }
 
@@ -2949,49 +2949,129 @@ body.receiptGeneratedMode .cutLine {
 }
 
 
-/* UNPAID */
+/* ============================================================
+   MAIN BILL SUMMARY CARD PALETTE
+   ============================================================ */
 
-#mainBillsView .mainBillSummaryCard.unpaid {
+/* TOTAL BILLS — SOFT BLUE */
 
-    background: #fffdf1;
+#mainBillsView .mainBillSummaryCard.total {
 
-    border-color: #ead98a;
+    background: #f5f9ff;
+
+    border-color: #c9dcf5;
 
 }
 
-
-#mainBillsView .mainBillSummaryCard.unpaid
+#mainBillsView .mainBillSummaryCard.total
 .mainBillSummaryIcon {
 
-    color: #ca8a04;
+    color: #2563eb;
 
-    background: #fef3c7;
+    background: #e8f1ff;
 
 }
 
 
-/* OUTSTANDING */
+/* PAID BILLS — SOFT GREEN */
+
+#mainBillsView .mainBillSummaryCard.paid {
+
+    background: #f4fbf7;
+
+    border-color: #c8e6d3;
+
+}
+
+#mainBillsView .mainBillSummaryCard.paid
+.mainBillSummaryIcon {
+
+    color: #15803d;
+
+    background: #e5f6eb;
+
+}
+
+
+/* OUTSTANDING AMOUNT — SOFT WARM CREAM */
 
 #mainBillsView .mainBillSummaryCard.outstanding {
 
-    background: #fff7f7;
+    background: #fff9e6;
 
-    border-color: #f2b4b4;
+    border-color: #f1d77a;
 
 }
-
 
 #mainBillsView .mainBillSummaryCard.outstanding
 .mainBillSummaryIcon {
 
-    color: #dc2626;
+    color: #c58a00;
 
-    background: #fee2e2;
+    background: #fff0b8;
 
 }
 
 
+/* UNPAID BILLS — SOFT RED */
+
+#mainBillsView .mainBillSummaryCard.unpaid {
+
+    background: #fff7f7;
+
+    border-color: #efcaca;
+
+}
+
+#mainBillsView .mainBillSummaryCard.unpaid
+.mainBillSummaryIcon {
+
+    color: #dc2626;
+
+    background: #fdeaea;
+
+}
+
+
+/* OUTSTANDING CARD — SAME TYPOGRAPHY AS OTHER SUMMARY CARDS */
+
+#mainBillsView .mainBillSummaryCard.outstanding
+.outstandingMainAmount {
+
+
+    display: block;
+
+    font-size: 18px;
+
+    line-height: 1.25;
+
+    font-weight: 800;
+
+    color: #172033;
+
+
+}
+
+#mainBillsView .mainBillSummaryCard.outstanding
+.outstandingBillCount {
+
+
+    display: block;
+
+    margin-top: 3px;
+
+    font-size: 13px;
+
+    line-height: 1.2;
+
+    font-weight: 700;
+
+    color: #64748b;
+
+
+}
 /* ACTIVE CARD */
+
 
 #mainBillsView .mainBillSummaryCard.active {
 
@@ -3976,3 +4056,4 @@ body.receiptGeneratedMode .cutLine {
     }
 
 }
+
