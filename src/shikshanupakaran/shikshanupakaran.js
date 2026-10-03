@@ -1,4 +1,4 @@
-﻿console.log("SHIKSHANUPAKARAN JS FILE RUNNING");
+console.log("SHIKSHANUPAKARAN JS FILE RUNNING");
 
 /* ============================================================
         SHIKSHANUPAKARAN SYSTEM
@@ -2920,18 +2920,19 @@ function startNewShikshanupakaran(){
 
     /*
     ============================================================
-        8. DO NOT CREATE INITIAL ROW
+        8. CLEAR PREVIOUS CARD ROWS
     ============================================================
 
-        No clearShikshanupakaranRows()
-        No addInitialShikshanupakaranRow()
-        No autosave initialization
-        No Firestore document creation
-        No card creation
+        Clear the visible table so rows from the
+        previously opened card do not remain.
 
+        Do not create an initial row here.
         Row creation happens later through the
         normal editor flow.
     */
+
+    clearShikshanupakaranRows();
+    addInitialShikshanupakaranRow();
 
 
     console.log(
@@ -7142,6 +7143,7 @@ async function openShikshanupakaranRecord(
         ======================================================== */
 
         clearShikshanupakaranRows();
+    addInitialShikshanupakaranRow();
 
 
         console.log(
