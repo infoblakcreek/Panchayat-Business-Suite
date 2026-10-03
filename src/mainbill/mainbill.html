@@ -10,6 +10,155 @@
                    
                 
                 
+                    <!-- ==================================================
+                         MAIN BILL SUMMARY CARDS
+                    ================================================== -->
+
+                    <div
+                        class="mainBillSummaryCards"
+                        id="mainBillSummaryCards">
+
+                        <!-- TOTAL BILLS -->
+
+                        <button
+                            type="button"
+                            class="mainBillSummaryCard total"
+                            id="mainBillSummaryTotal"
+                            data-main-bill-filter="all">
+
+                            <div class="mainBillSummaryIcon">
+                                <i class="fa-solid fa-file-invoice"></i>
+                            </div>
+
+                            <div class="mainBillSummaryContent">
+
+                                <span class="mainBillSummaryLabel">
+                                    Total Bills
+                                </span>
+
+                                <strong
+                                    class="mainBillSummaryCount"
+                                    id="mainBillsTotalCount">
+                                    0 Bills
+                                </strong>
+
+                                <span
+                                    class="mainBillSummaryAmount"
+                                    id="mainBillsTotalAmount">
+                                    ₹ 0
+                                </span>
+
+                            </div>
+
+                        </button>
+
+
+                        <!-- PAID -->
+
+                        <button
+                            type="button"
+                            class="mainBillSummaryCard paid"
+                            id="mainBillSummaryPaid"
+                            data-main-bill-filter="paid">
+
+                            <div class="mainBillSummaryIcon">
+                                <i class="fa-solid fa-circle-check"></i>
+                            </div>
+
+                            <div class="mainBillSummaryContent">
+
+                                <span class="mainBillSummaryLabel">
+                                    Paid
+                                </span>
+
+                                <strong
+                                    class="mainBillSummaryCount"
+                                    id="mainBillsPaidCount">
+                                    0 Bills
+                                </strong>
+
+                                <span
+                                    class="mainBillSummaryAmount"
+                                    id="mainBillsPaidAmount">
+                                    ₹ 0
+                                </span>
+
+                            </div>
+
+                        </button>
+
+
+                        <!-- UNPAID / OUTSTANDING -->
+
+                        <button
+                            type="button"
+                            class="mainBillSummaryCard unpaid"
+                            id="mainBillSummaryUnpaid"
+                            data-main-bill-filter="unpaid">
+
+                            <div class="mainBillSummaryIcon">
+                                <i class="fa-solid fa-clock"></i>
+                            </div>
+
+                            <div class="mainBillSummaryContent">
+
+                                <span class="mainBillSummaryLabel">
+                                    Unpaid
+                                </span>
+
+                                <strong
+                                    class="mainBillSummaryCount"
+                                    id="mainBillsUnpaidCount">
+                                    0 Bills
+                                </strong>
+
+                                <span
+                                    class="mainBillSummaryAmount"
+                                    id="mainBillsUnpaidAmount">
+                                    ₹ 0
+                                </span>
+
+                            </div>
+
+                        </button>
+
+
+                        <!-- OUTSTANDING -->
+
+                        <button
+                            type="button"
+                            class="mainBillSummaryCard outstanding"
+                            id="mainBillSummaryOutstanding"
+                            data-main-bill-filter="outstanding">
+
+                            <div class="mainBillSummaryIcon">
+                                <i class="fa-solid fa-indian-rupee-sign"></i>
+                            </div>
+
+                            <div class="mainBillSummaryContent">
+
+                                <span class="mainBillSummaryLabel">
+                                    Outstanding
+                                </span>
+
+                                <strong
+                                    class="mainBillSummaryCount"
+                                    id="mainBillsOutstandingCount">
+                                    0 Bills
+                                </strong>
+
+                                <span
+                                    class="mainBillSummaryAmount"
+                                    id="mainBillsOutstandingAmount">
+                                    ₹ 0
+                                </span>
+
+                            </div>
+
+                        </button>
+
+                    </div>
+
                     <section class="dashboardCard allBillsCard">
                 
                         <div class="cardHeader">
@@ -2715,26 +2864,3 @@ body.printingMainBill #printableBills .receiptPaymentFooter {
     </div>
 
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

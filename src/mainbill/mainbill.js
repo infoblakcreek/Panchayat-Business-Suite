@@ -1,4 +1,4 @@
-// ==========================================================================//
+﻿// ==========================================================================//
 
 
 
@@ -5720,6 +5720,8 @@ if (
 
 
 
+let mainBillActiveFilter = "all";
+
 async function loadAllMainBills(searchTerm = "") {
 
     const mainBillsBody =
@@ -5760,6 +5762,172 @@ async function loadAllMainBills(searchTerm = "") {
                 "desc"
             )
             .get();
+
+
+/*
+============================================================
+    MAIN BILL SUMMARY CARD CALCULATIONS
+============================================================
+*/
+
+let summaryTotalBills = 0;
+let summaryTotalAmount = 0;
+
+let summaryPaidBills = 0;
+let summaryPaidAmount = 0;
+
+let summaryUnpaidBills = 0;
+let summaryUnpaidAmount = 0;
+
+let summaryOutstandingBills = 0;
+let summaryOutstandingAmount = 0;
+
+
+snapshot.forEach(
+    function(doc) {
+
+        const bill =
+            doc.data();
+
+
+        const billAmount =
+            Number(
+                bill.grandTotal || 0
+            );
+
+
+        const paidAmount =
+            Number(
+                bill.paidAmount || 0
+            );
+
+
+        const balanceAmount =
+            Math.max(
+                0,
+                billAmount - paidAmount
+            );
+
+
+        summaryTotalBills++;
+        summaryTotalAmount += billAmount;
+
+
+        if (
+            billAmount > 0 &&
+            balanceAmount === 0
+        ) {
+
+            summaryPaidBills++;
+            summaryPaidAmount += paidAmount;
+
+        }
+
+
+        if (
+            paidAmount === 0
+        ) {
+
+            summaryUnpaidBills++;
+            summaryUnpaidAmount += billAmount;
+
+        }
+
+
+        if (
+            balanceAmount > 0
+        ) {
+
+            summaryOutstandingBills++;
+            summaryOutstandingAmount += balanceAmount;
+
+        }
+
+
+        if (
+            balanceAmount > 0
+        ) {
+
+            summaryOutstandingBills++;
+            summaryOutstandingAmount += balanceAmount;
+
+        }
+
+    }
+);
+
+
+function updateMainBillSummaryCard(
+    countId,
+    amountId,
+    count,
+    amount
+) {
+
+    const countElement =
+        document.getElementById(
+            countId
+        );
+
+
+    const amountElement =
+        document.getElementById(
+            amountId
+        );
+
+
+    if (countElement) {
+
+        countElement.textContent =
+            `${count} Bill${count === 1 ? "" : "s"}`;
+
+    }
+
+
+    if (amountElement) {
+
+        amountElement.textContent =
+            "₹ " +
+            amount.toLocaleString(
+                "en-IN"
+            );
+
+    }
+
+}
+
+
+updateMainBillSummaryCard(
+    "mainBillsTotalCount",
+    "mainBillsTotalAmount",
+    summaryTotalBills,
+    summaryTotalAmount
+);
+
+
+updateMainBillSummaryCard(
+    "mainBillsPaidCount",
+    "mainBillsPaidAmount",
+    summaryPaidBills,
+    summaryPaidAmount
+);
+
+
+updateMainBillSummaryCard(
+    "mainBillsUnpaidCount",
+    "mainBillsUnpaidAmount",
+    summaryUnpaidBills,
+    summaryUnpaidAmount
+);
+
+
+updateMainBillSummaryCard(
+    "mainBillsOutstandingCount",
+    "mainBillsOutstandingAmount",
+    summaryOutstandingBills,
+    summaryOutstandingAmount
+);
+
 
     console.log("Bills loaded:", snapshot.size);
 
@@ -5848,6 +6016,45 @@ async function loadAllMainBills(searchTerm = "") {
                         0,
                         billAmount - paidAmount
                     );
+
+
+/*
+============================================================
+    MAIN BILL SUMMARY CARD FILTER
+============================================================
+*/
+
+if (
+    mainBillActiveFilter === "paid"
+    &&
+    !(
+        billAmount > 0 &&
+        balanceAmount === 0
+    )
+) {
+    return;
+}
+
+
+if (
+    mainBillActiveFilter === "unpaid"
+    &&
+    paidAmount !== 0
+) {
+    return;
+}
+
+
+if (
+    mainBillActiveFilter === "outstanding"
+    &&
+    balanceAmount <= 0
+) {
+    return;
+}
+
+
+
 
                 let paymentStatus =
                     "unpaid";
@@ -6729,40 +6936,71 @@ document.addEventListener(
 );
 
 
+/*
+============================================================
+    MAIN BILL SUMMARY CARD CLICK HANDLERS
+============================================================
+*/
+
+document.addEventListener(
+    "click",
+    function(event) {
+
+        const card =
+            event.target.closest(
+                "#mainBillsView [data-main-bill-filter]"
+            );
 
 
+        if (!card) return;
 
 
+        const filter =
+            card.getAttribute(
+                "data-main-bill-filter"
+            );
 
 
+        if (!filter) return;
 
 
+        mainBillActiveFilter =
+            filter;
 
 
+        document
+            .querySelectorAll(
+                "#mainBillsView [data-main-bill-filter]"
+            )
+            .forEach(
+                function(item) {
+
+                    item.classList.toggle(
+                        "active",
+                        item === card
+                    );
+
+                }
+            );
 
 
+        const searchInput =
+            document.getElementById(
+                "mainBillSearch"
+            );
 
 
+        const currentSearch =
+            searchInput
+                ? searchInput.value
+                : "";
 
 
+        loadAllMainBills(
+            currentSearch
+        );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }
+);
 
 
