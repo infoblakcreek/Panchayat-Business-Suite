@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    SHIKSHANUPAKARAN SUMMARY
    ============================================================ */
 
@@ -2173,6 +2173,45 @@ function setupShikshanupakaranSummaryPage3Calculation() {
         }
 
 
+        const generatedTotals =
+            window.shikshanupakaranTotals;
+
+        if (
+            generatedTotals &&
+            typeof generatedTotals.P !== "undefined"
+        ) {
+            const page2 =
+                document.querySelector(".shikPage2");
+
+            if (page2) {
+                const jadesh2 =
+                    page2.querySelector(
+                        'tr[data-page2-row="jadesh2"] [data-page2-field="current"]'
+                    );
+
+                const baad3 =
+                    page2.querySelector(
+                        'tr[data-page2-row="baad3"] [data-page2-field="current"]'
+                    );
+
+                if (jadesh2) {
+                    jadesh2.value =
+                        convertToGujaratiDigits(
+                            Number(generatedTotals.L || 0).toFixed(2)
+                        );
+                }
+
+                if (baad3) {
+                    baad3.value =
+                        convertToGujaratiDigits(
+                            Number(generatedTotals.P || 0).toFixed(2)
+                        );
+                }
+
+                calculateShikshanupakaranSummaryPage2();
+            }
+        }
+
         console.log(
             "SHIKSHANUPAKARAN SUMMARY GENERATED"
         );
@@ -3607,12 +3646,5 @@ document.addEventListener("input", function(event) {
         notes.scrollHeight + "px";
 
 });
-
-
-
-
-
-
-
 
 
