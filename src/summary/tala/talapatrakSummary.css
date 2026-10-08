@@ -1627,7 +1627,12 @@ body.talapatrakFullViewMode
 }
 
 .talaPage2 .talaPage2ColDescription {
-    width: 38%;
+    width: 19%;
+}
+
+
+.talaPage2 .talaPage2ColSubDescription {
+    width: 19%;
 }
 
 .talaPage2 .talaPage2ColDate {
@@ -5203,5 +5208,7 @@ body.talapatrakFullViewMode
     }
 
 }
+
+
 
 
