@@ -2819,6 +2819,56 @@
             );
         };
 
+        /* ========================================================
+           GENERATED TALAPATRAK TOTALS → SUMMARY PAGE 2
+
+           Column K total → જadesh2 / ચાલુ
+           Column R total → baad3 / ચાલુ
+
+           Only apply after Generate Total has completed.
+        ======================================================== */
+
+        if (
+            window.talapatrakTotalGenerated === true &&
+            window.talapatrakTotals &&
+            typeof window.talapatrakTotals === "object"
+        ) {
+
+            const generatedK =
+                Number(window.talapatrakTotals.K) || 0;
+
+            const generatedR =
+                Number(window.talapatrakTotals.R) || 0;
+
+            const jadesh2Current =
+                getRow("jadesh2")?.querySelector(
+                    '[data-tala-page2-field="current"]'
+                );
+
+            const baad3Current =
+                getRow("baad3")?.querySelector(
+                    '[data-tala-page2-field="current"]'
+                );
+
+            if (jadesh2Current) {
+                jadesh2Current.value =
+                    money(generatedK);
+            }
+
+            if (baad3Current) {
+                baad3Current.value =
+                    money(generatedR);
+            }
+
+            console.log(
+                "TALAPATRAK GENERATED PAGE 2 VALUES:",
+                {
+                    K: generatedK,
+                    R: generatedR
+                }
+            );
+        }
+
         const editableRows = [
             "jadesh1",
             "jadesh2",
