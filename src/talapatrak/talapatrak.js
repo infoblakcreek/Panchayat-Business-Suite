@@ -1,4 +1,4 @@
-﻿console.log("TALAPATRAK JS FILE RUNNING");
+console.log("TALAPATRAK JS FILE RUNNING");
 
 
 
@@ -4331,11 +4331,24 @@ function createTalapatrakRow(
             ? String(rowData.C)
             : "";
 
-    const valueD =
+    const rawValueD =
         rowData.D !== undefined &&
         rowData.D !== null
-            ? String(rowData.D)
+            ? String(rowData.D).trim()
             : "";
+
+    let valueD = rawValueD;
+
+    if (rawValueD !== "") {
+        const englishValueD =
+            convertGujaratiDigitsToEnglish(rawValueD).replace(/,/g, "");
+
+        const numericValueD = Number(englishValueD);
+
+        if (Number.isFinite(numericValueD)) {
+            valueD = convertToGujaratiDigits(numericValueD.toFixed(2));
+        }
+    }
 
     const valueE =
         rowData.E !== undefined &&
