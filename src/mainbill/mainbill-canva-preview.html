@@ -1,0 +1,1023 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Main Bill - Yellow Invoice Preview</title>
+<style>
+    * { box-sizing: border-box; }
+
+    body {
+        margin: 0;
+        padding: 30px 16px;
+        background: #e9e9e9;
+        color: #202020;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .page {
+        position: relative;
+        width: 210mm;
+        min-height: 297mm;
+        max-width: 100%;
+        margin: auto;
+        padding: 17mm 16mm;
+        background: white;
+        overflow: hidden;
+        box-shadow: 0 5px 28px #00000018;
+    }
+
+    .top-accent {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 72%;
+        height: 155px;
+        background: #f5c928;
+        clip-path: polygon(17% 0, 100% 0, 100% 100%, 0 64%);
+    }
+
+    .accent-cut {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 48%;
+        height: 105px;
+        background: #f9df72;
+        clip-path: polygon(35% 0, 100% 0, 100% 100%, 0 45%);
+    }
+
+    .header {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        min-height: 135px;
+        gap: 20px;
+    }
+
+    .brand {
+        max-width: 58%;
+        padding-top: 12px;
+    }
+
+    .eyebrow {
+        margin-bottom: 12px;
+        color: #68604a;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+    }
+
+    .company {
+        margin: 0 0 8px;
+        font-size: 24px;
+        line-height: 1.15;
+        font-weight: 800;
+    }
+
+    .gujarati-label {
+        flex: 0 0 auto;
+        margin-right: 0;
+        padding: 3px 0;
+        color: #8b7623;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .muted {
+        color: #666;
+        font-size: 11px;
+        line-height: 1.7;
+    }
+
+    .preview-field {
+        min-width: 0;
+        max-width: 100%;
+        padding: 2px 1px;
+        border: 0;
+        border-bottom: 1px dashed #bca85c;
+        border-radius: 0;
+        outline: none;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+    }
+
+    .preview-field:focus {
+        border-bottom: 2px solid #b38b00;
+        background: #fff9df;
+    }
+
+    .customer-field {
+        width: min(100%, 260px);
+        font-size: 11px;
+        font-weight: 400;
+        color: #777064;
+    }
+
+    .address-line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 4px;
+        margin-bottom: 7px;
+    }
+
+    .village-field {
+        width: 120px;
+    }
+
+    .location-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-top: 5px;
+    }
+
+    .location-item {
+        display: flex;
+        align-items: baseline;
+        gap: 5px;
+        min-width: 0;
+    }
+
+    .location-item label {
+        white-space: nowrap;
+    }
+
+    .location-field {
+        width: 100%;
+    }
+
+    .invoice-title {
+        padding-top: 24px;
+        text-align: right;
+        font-size: clamp(25px, 5vw, 43px);
+        line-height: 1;
+        font-weight: 900;
+        letter-spacing: 2px;
+    }
+
+    .invoice-number {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 5px;
+        margin-top: 10px;
+        color: #777064;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0;
+    }
+
+    .invoice-number .preview-field {
+        flex: 0 1 82px;
+        width: 82px !important;
+        padding: 2px 0;
+        color: #777064 !important;
+        font-size: 11px;
+        font-weight: 400 !important;
+        text-align: left !important;
+    }
+
+    .rule {
+        height: 3px;
+        margin: 8px 0 28px;
+        background: #242424;
+    }
+
+    .details {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 35px;
+        margin-bottom: 36px;
+    }
+
+    .label {
+        margin-bottom: 10px;
+        color: #8b7623;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    .detail-main {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        min-width: 0;
+        margin-bottom: 5px;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .customer-field {
+        flex: 1 1 180px;
+        min-width: 0;
+    }
+
+    .meta-row {
+        display: grid;
+        grid-template-columns: 82px minmax(0, 1fr);
+        align-items: center;
+        gap: 8px;
+        padding: 8px 0;
+        border-bottom: 1px solid #e7e2d5;
+        font-size: 11px;
+    }
+
+    .meta-row span:first-child {
+        color: #666;
+        white-space: nowrap;
+    }
+
+    .meta-row .preview-field {
+        width: 100% !important;
+        min-width: 0;
+        padding: 2px 0;
+        color: #777064 !important;
+        font-size: 11px;
+        font-weight: 400 !important;
+        text-align: left !important;
+        border-bottom-color: #d8cfb5;
+    }
+
+    .preview-field::placeholder {
+        color: #aaa397;
+        opacity: 1;
+        font-weight: 400;
+    }
+
+    .meta-row strong { text-align: right; }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 11px;
+    }
+
+    thead {
+        background: #f5c928;
+        text-align: left;
+    }
+
+    th {
+        padding: 13px 10px;
+        font-size: 10px;
+        letter-spacing: .5px;
+    }
+
+    td {
+        padding: 15px 10px;
+        border-bottom: 1px solid #e7e7e7;
+    }
+
+    th:last-child, td:last-child { text-align: right; }
+
+    .totals {
+        width: 58%;
+        margin: 24px 0 0 auto;
+    }
+
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+
+    .grand-total {
+        margin-top: 5px;
+        padding: 15px 12px;
+        background: #f5c928;
+        font-size: 15px;
+        font-weight: 900;
+    }
+
+    .brand-mark {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 26px;
+        color: #282820;
+        font-size: 27px;
+        font-weight: 800;
+        letter-spacing: -0.7px;
+    }
+
+    .brand-mark-icon {
+        display: inline-flex;
+        width: 42px;
+        height: 42px;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #d4bd78;
+        border-radius: 12px;
+        background: #fbf7e9;
+        font-size: 23px;
+    }
+
+    .footer {
+        margin-top: 26px;
+        padding-top: 15px;
+        border-top: 1.5px solid #c7b26a;
+        color: #777064;
+        font-size: 10px;
+        line-height: 1.65;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    .footer-top {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 24px;
+        padding-bottom: 15px;
+    }
+
+    .footer-thanks-title {
+        margin-bottom: 3px;
+        color: #8b7623;
+        font-size: 19px;
+        font-weight: 800;
+    }
+
+    .footer-signature {
+        display: flex;
+        min-width: 150px;
+        flex-direction: column;
+        gap: 15px;
+        color: #777064;
+        text-align: center;
+    }
+
+    .signature-line {
+        display: block;
+        width: 100%;
+        border-bottom: 1px solid #a9a08b;
+    }
+
+    .footer-contact {
+        padding-top: 12px;
+        border-top: 1px solid #e6dfcc;
+        text-align: center;
+    }
+
+    .footer-brand {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin-bottom: 5px;
+        color: #343329;
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+    }
+
+    .footer-logo {
+        font-size: 15px;
+    }
+
+    .footer-owner {
+        color: #514a3a;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .footer-services {
+        margin-top: 3px;
+        color: #8b7623;
+        font-weight: 600;
+    }
+
+    @media (max-width: 600px) {
+        .brand-mark {
+            margin-top: 20px;
+            gap: 6px;
+            font-size: 20px;
+        }
+
+        .brand-mark-icon {
+            width: 34px;
+            height: 34px;
+            font-size: 19px;
+        }
+
+        .footer-top {
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        .footer-signature {
+            min-width: 115px;
+        }
+    }
+
+    @media (max-width: 600px) {
+        body { padding: 0; }
+        .page { padding: 25px 20px; }
+        .header { min-height: 125px; gap: 8px; }
+        .brand { max-width: 55%; }
+        .company { font-size: 18px; }
+        .preview-field {
+        min-width: 0;
+        max-width: 100%;
+        padding: 2px 1px;
+        border: 0;
+        border-bottom: 1px dashed #bca85c;
+        border-radius: 0;
+        outline: none;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+    }
+
+    .preview-field:focus {
+        border-bottom: 2px solid #b38b00;
+        background: #fff9df;
+    }
+
+    .customer-field {
+        width: min(100%, 260px);
+        font-size: 11px;
+        font-weight: 400;
+        color: #777064;
+    }
+
+    .address-line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 4px;
+        margin-bottom: 7px;
+    }
+
+    .village-field {
+        width: 120px;
+    }
+
+    .location-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-top: 5px;
+    }
+
+    .location-item {
+        display: flex;
+        align-items: baseline;
+        gap: 5px;
+        min-width: 0;
+    }
+
+    .location-item label {
+        white-space: nowrap;
+    }
+
+    .location-field {
+        width: 100%;
+    }
+
+    .invoice-title { font-size: 27px; }
+        .details { gap: 18px; }
+        .meta-row {
+            grid-template-columns: 92px minmax(0, 1fr);
+            gap: 6px;
+        }
+        .totals { width: 75%; }
+        th, td { padding: 10px 5px; }
+    }
+
+    @media print {
+        @page { size: A4 portrait; margin: 0; }
+        body { padding: 0; background: white; }
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            max-width: none;
+            margin: 0;
+            box-shadow: none;
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+        }
+    }
+    /* Refined two-column invoice closing */
+    .footer {
+        margin-top: 25px;
+        padding-top: 14px;
+        border-top: 2px solid #bda45b;
+        color: #6f6a5e;
+        font-size: 10px;
+        line-height: 1.75;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    .footer-top {
+        display: grid;
+        grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.5fr);
+        align-items: stretch;
+        gap: 25px;
+        padding-bottom: 4px;
+    }
+
+    .footer-thanks {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 8px 20px 8px 4px;
+        border-right: 1px solid #e5dcc1;
+        text-align: left;
+    }
+
+    .thanks-ornament {
+        margin-bottom: 5px;
+        color: #b59a4a;
+        font-size: 10px;
+        letter-spacing: 2px;
+    }
+
+    .footer-thanks-title {
+        margin-bottom: 7px;
+        color: #8b7623;
+        font-size: 27px;
+        line-height: 1.25;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+    }
+
+    .footer-thanks-message {
+        color: #777064;
+        font-size: 11px;
+        line-height: 1.9;
+    }
+
+    .thanks-accent {
+        width: 42px;
+        margin-top: 10px;
+        border-bottom: 2px solid #c7b26a;
+    }
+
+    .footer-contact {
+        min-width: 0;
+        padding: 5px 2px 8px 0;
+        border-top: 0;
+        text-align: right;
+    }
+
+    .footer-brand {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-bottom: 5px;
+        color: #29291f;
+        font-size: 19px;
+        font-weight: 800;
+        letter-spacing: -0.3px;
+    }
+
+    .footer-logo {
+        display: inline-flex;
+        width: 27px;
+        height: 27px;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #d8c58c;
+        border-radius: 7px;
+        background: #fbf7e9;
+        font-size: 15px;
+    }
+
+    .footer-owner {
+        margin-bottom: 3px;
+        color: #4b4639;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .footer-address {
+        color: #777064;
+        font-size: 10px;
+        line-height: 1.8;
+    }
+
+    .footer-services {
+        display: inline-block;
+        margin-top: 6px;
+        padding: 3px 8px;
+        border-right: 3px solid #bda45b;
+        background: #f8f4e8;
+        color: #776323;
+        font-size: 10px;
+        font-weight: 700;
+    }
+
+    @media (max-width: 600px) {
+        .footer-top {
+            grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+            gap: 12px;
+        }
+
+        .footer-thanks {
+            padding-right: 10px;
+        }
+
+        .footer-thanks-title {
+            font-size: 22px;
+        }
+
+        .footer-thanks-message,
+        .footer-address,
+        .footer-services {
+            font-size: 9px;
+        }
+
+        .footer-brand {
+            font-size: 16px;
+        }
+
+        .footer-owner {
+            font-size: 11px;
+        }
+    }
+    .footer-phone {
+        margin: 2px 0 4px;
+        color: #776323;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    /* Elegant Moontime thank-you lettering */
+    .footer-thanks-title {
+        font-family: "Moontime", "Brush Script MT", cursive !important;
+        font-size: 70.3px !important;
+        font-weight: 400 !important;
+        line-height: 1.15;
+        color: #8b7623;
+        letter-spacing: 0;
+        white-space: nowrap;
+    }
+    /* Footer finishing adjustments */
+    .footer-thanks {
+        border-right: none !important;
+    }
+
+    .footer-thanks-title {
+        color: #000000 !important;
+        font-weight: 400 !important;
+    }
+
+    .footer-thanks-message {
+        white-space: nowrap;
+    }
+
+    /* Clean invoice closing summary */
+    .invoice-summary {
+        width: 100%;
+        margin-top: 14px;
+        border-collapse: collapse;
+        table-layout: fixed;
+        font-size: 11px;
+    }
+
+    .invoice-summary td {
+        border: 1px solid #ded8c5;
+        padding: 12px;
+        vertical-align: middle;
+        line-height: 1.6;
+    }
+
+    .invoice-summary td:first-child {
+        width: 65%;
+        text-align: left;
+    }
+
+    .invoice-summary .grand-total {
+        width: 35%;
+        background: #f5c928 !important;
+        color: #17150e;
+        border: 1px solid #d8b52c;
+        padding: 12px;
+        text-align: left;
+        vertical-align: middle;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .invoice-summary .grand-total-value {
+        float: right;
+        white-space: nowrap;
+        margin-left: 8px;
+        font-size: 14px;
+        font-weight: 800;
+    }
+
+    #pPaymentDetails {
+        display: inline !important;
+        min-height: 0;
+        outline: none;
+        overflow-wrap: anywhere;
+    }
+
+    @media print {
+        .invoice-summary .grand-total {
+            background: #f5c928 !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+    }
+    /* Anchor footer to the bottom of the A4 page */
+    .page {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .page > .footer {
+        margin-top: auto !important;
+        flex-shrink: 0;
+    }
+
+    /* Refined summary sections: warm ivory and subtle gold accents */
+    .invoice-summary .amount-words-cell {
+        border: none !important;
+        border-left: 4px solid #bda45b !important;
+        border-radius: 4px;
+        background: #faf7ed !important;
+        padding: 14px 16px !important;
+        color: #29251b;
+        line-height: 1.9;
+    }
+
+    .invoice-summary .payment-details-cell {
+        border: none !important;
+        border-left: 4px solid #bda45b !important;
+        background: #f7f4eb !important;
+        padding: 13px 16px !important;
+        color: #29251b;
+        line-height: 1.9;
+    }
+
+    .invoice-summary .amount-words-label,
+    .invoice-summary .payment-details-label {
+        display: inline-block;
+        margin-right: 8px;
+        color: #756025 !important;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.1px;
+        border: none !important;
+        background: transparent !important;
+    }
+
+    #pAmountWords,
+    #pPaymentDetails {
+        color: #29251b;
+        font-size: 11px;
+        font-weight: 500;
+    }
+
+    @media print {
+        .invoice-summary .amount-words-cell,
+        .invoice-summary .payment-details-cell {
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+    }
+</style>
+</head>
+<body>
+<main class="page">
+    <div class="top-accent"></div>
+    <div class="accent-cut"></div>
+
+    <header class="header">
+        <div class="brand">
+            <div class="brand-mark">
+                <span class="brand-mark-icon" aria-hidden="true">🧾</span>
+                <span>GramSetu</span>
+            </div>
+        </div>
+
+        <div>
+            <div class="invoice-title">INVOICE</div>
+            <div class="invoice-number">બિલ નં. <input class="preview-field" id="previewBillNumber" type="text" placeholder="બિલ નંબર" aria-label="બિલ નંબર" style="width:82px;text-align:left;font-weight:400;color:#777064;"></div>
+        </div>
+    </header>
+
+    <div class="rule"></div>
+
+    <section class="details">
+        <div>
+            <div class="label">Bill to</div>
+            <div class="detail-main">
+                <label class="gujarati-label" for="previewCustomerName">શ્રીમાન,</label>
+                <input class="preview-field customer-field" id="previewCustomerName"
+                       type="text" placeholder="ગ્રાહકનું નામ લખો" aria-label="Customer name">
+            </div>
+            <div class="muted">
+                <div class="address-line">
+                    <strong>સરનામું:</strong>
+                    <input class="preview-field village-field" id="previewVillage"
+                           type="text" placeholder="ગામનું નામ" aria-label="Village">
+                    <span>ગ્રામ પંચાયત</span>
+                </div>
+                <div class="location-row">
+                    <div class="location-item">
+                        <label for="previewTaluka"><strong>તાલુકો:</strong></label>
+                        <input class="preview-field location-field" id="previewTaluka"
+                               type="text" placeholder="તાલુકો" aria-label="Taluka">
+                    </div>
+                    <div class="location-item">
+                        <label for="previewDistrict"><strong>જિલ્લો:</strong></label>
+                        <input class="preview-field location-field" id="previewDistrict"
+                               type="text" placeholder="જિલ્લો" aria-label="District">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="meta-row">
+                <span>બિલ તારીખ</span>
+                <input class="preview-field" id="previewBillDate" type="text" placeholder="DD / MM / YYYY" aria-label="બિલ તારીખ" style="width:125px;text-align:right;">
+            </div>
+            <div class="meta-row">
+                <span>મોબાઇલ નંબર</span>
+                <input class="preview-field" id="previewReference" type="text" placeholder="મોબાઇલ નંબર" aria-label="મોબાઇલ નંબર" style="width:125px;text-align:right;">
+            </div>
+            <div class="meta-row">
+                <span>સ્થિતિ</span>
+                <input class="preview-field" id="previewStatus" type="text" placeholder="બાકી" aria-label="બિલ સ્થિતિ" style="width:125px;text-align:right;">
+            </div>
+        </div>
+    </section>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 7%">ક્રમ</th>
+                <th style="width: 57%">વિગત</th>
+                <th style="width: 10%; text-align: center;">પાનાં</th>
+                <th style="width: 13%; text-align: right;">ભાવ (₹)</th>
+                <th style="width: 13%; text-align: right;">રકમ (₹)</th>
+            </tr>
+        </thead>
+        <tbody id="previewItems"></tbody>
+    </table>
+
+    <table class="invoice-summary" style="width:100%;margin-top:14px;border-collapse:collapse;table-layout:fixed;">
+        <tbody>
+            <tr>
+                <td class="amount-words-cell" style="width:65%;padding:12px;vertical-align:top;">
+                    <strong class="amount-words-label">રકમ શબ્દોમાં:</strong>
+                    <span id="pAmountWords" contenteditable="true" style="display:inline-block;min-width:120px;outline:none;"></span>
+                </td>
+                <td class="grand-total" style="width:35%;border:1px solid #d8d8d8;padding:15px 12px;vertical-align:top;text-align:left;">
+                    <strong>કુલ રકમ:</strong>
+                    <strong class="grand-total-value" style="float:right;white-space:nowrap;"><span id="pGrandTotal"></span></strong>
+                </td>
+            </tr>
+            <tr>
+                <td class="payment-details-cell" style="padding:12px;vertical-align:top;text-align:left;" colspan="2">
+                    <strong class="payment-details-label">બેંક / ચેકની વિગત:</strong>
+                    <span id="pPaymentDetails" contenteditable="true" style="display:inline;min-height:0;outline:none;"></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="footer-thanks">
+                <div class="thanks-ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
+                <div class="footer-thanks-title">Thank You</div>
+                <div class="footer-thanks-message">
+                    આપનો વિશ્વાસ અમારે માટે મૂલ્યવાન છે.
+                </div>
+                <div class="thanks-accent"></div>
+            </div>
+
+            <div class="footer-contact">
+                <div class="footer-brand">
+                    <span class="footer-logo" aria-hidden="true">🧾</span>
+                    <span>GramSetu</span>
+                </div>
+                <div class="footer-owner">બીપીનભાઈ ઈશ્વરલાલ પટેલ</div>
+                <div class="footer-phone">📞 +91 99980 10986</div>
+                <div class="footer-address">
+                    ૧૧૪/ નાના પ્લોટ, વિનાયક ટ્રેડિંગ કંપની ની બાજુ માં,<br>
+                    નવા ગંજ બજાર, પાટણ -૩૮૪૨૬૫
+                </div>
+                <div class="footer-services">
+                    પંચાયત તથા રેવન્યુનું કોમ્પ્યુટરાઇઝ્ડ કામકાજ કરી આપનાર
+                </div>
+            </div>
+        </div>
+    </footer>
+</main>
+<script>
+(function () {
+    "use strict";
+
+    function setValue(id, value) {
+        const element = document.getElementById(id);
+        if (element) element.value = value == null ? "" : String(value);
+    }
+
+    function setText(id, value) {
+        const element = document.getElementById(id);
+        if (element) element.textContent = value == null ? "" : String(value);
+    }
+
+    function renderBill(data) {
+        setValue("previewCustomerName", data.customerName);
+        setValue("previewBillNumber", data.billNo);
+        setValue("previewVillage", data.village);
+        setValue("previewTaluka", data.taluka);
+        setValue("previewDistrict", data.district);
+        setValue("previewBillDate", data.billDate);
+        setValue("previewReference", data.mobileNumber);
+        setValue("previewStatus", data.status);
+
+        setText("pAmountWords", data.amountWords);
+        setText("pGrandTotal", data.grandTotal);
+        setText("pPaymentDetails", data.paymentDetails);
+
+        const tbody = document.getElementById("previewItems");
+        if (!tbody) return;
+
+        tbody.replaceChildren();
+
+        (Array.isArray(data.items) ? data.items : []).forEach(function (item) {
+            const row = document.createElement("tr");
+
+            [item.srno, item.description, item.pages,
+             "₹ " + (item.price || "0.00"),
+             "₹ " + (item.total || "0.00")].forEach(function (value, index) {
+                const cell = document.createElement("td");
+                cell.textContent = value == null ? "" : String(value);
+
+                if (index === 2) cell.style.textAlign = "center";
+                if (index === 3 || index === 4) cell.style.textAlign = "right";
+                if (index === 1) cell.style.whiteSpace = "pre-wrap";
+
+                row.appendChild(cell);
+            });
+
+            tbody.appendChild(row);
+        });
+    }
+
+    window.addEventListener("message", function (event) {
+        if (event.source !== window.opener) return;
+        if (event.origin !== window.location.origin) return;
+
+        const data = event.data;
+        if (!data || data.type !== "GRAMSETU_MAINBILL_PREVIEW") return;
+
+        renderBill(data.bill || {});
+    });
+
+    // Tell the opener that the preview is ready to receive bill data.
+    if (window.opener) {
+        window.opener.postMessage(
+            { type: "GRAMSETU_MAINBILL_PREVIEW_READY" },
+            window.location.origin
+        );
+    }
+})();
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
