@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Main Bill - Yellow Invoice Preview</title>
+<title>invoice</title>
 <style>
     * { box-sizing: border-box; }
 
@@ -60,6 +60,19 @@
     .brand {
         max-width: 58%;
         padding-top: 12px;
+    }
+
+    .brand-owner {
+        margin-top: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.5;
+    }
+
+    .brand-phone {
+        margin-top: 3px;
+        font-size: 11px;
+        line-height: 1.5;
     }
 
     .eyebrow {
@@ -804,6 +817,8 @@
                 <span class="brand-mark-icon" aria-hidden="true">🧾</span>
                 <span>GramSetu</span>
             </div>
+            <div class="brand-owner">બીપીનભાઈ ઈશ્વરલાલ પટેલ</div>
+            <div class="brand-phone">📞 +91 99980 10986</div>
         </div>
 
         <div>
@@ -927,9 +942,24 @@
 (function () {
     "use strict";
 
+    function updateBillTitle() {
+        const field = document.getElementById("previewBillNumber");
+        const number = field ? field.value.trim() : "";
+        document.title = number
+            ? "Invoice - " + number
+            : "Main Bill - Yellow Invoice Preview";
+    }
+
+    document.addEventListener("input", function (event) {
+        if (event.target && event.target.id === "previewBillNumber") {
+            updateBillTitle();
+        }
+    });
+
     function setValue(id, value) {
         const element = document.getElementById(id);
         if (element) element.value = value == null ? "" : String(value);
+        if (id === "previewBillNumber") updateBillTitle();
     }
 
     function setText(id, value) {
@@ -985,6 +1015,8 @@
 
         renderBill(data.bill || {});
     });
+
+    updateBillTitle();
 
     // Tell the opener that the preview is ready to receive bill data.
     if (window.opener) {

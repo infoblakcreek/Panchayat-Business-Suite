@@ -909,6 +909,113 @@ function openCanvaPreviewFromEditor() {
         document.baseURI
     ).href;
 }
+function openReceiptCanvaPreviewFromEditor() {
+    const getValue = (id) => {
+        const element = document.getElementById(id);
+        return element ? element.value : "";
+    };
+
+    const billNo = getValue("billNo").trim();
+    const customerName = getValue("customerName").trim();
+
+    if (!convertGujaratiDigitsToEnglish(billNo).trim()) {
+        alert("Please enter a bill number before generating the receipt.");
+        return;
+    }
+
+    if (!customerName) {
+        alert("Please enter a customer name before generating the receipt.");
+        return;
+    }
+
+    const payment = window.mainBillReceiptPaymentData || null;
+
+    const totalBill = payment
+        ? Number(payment.totalBill) || 0
+        : getMainBillNumericValue(getValue("grandTotal")) || 0;
+
+    const totalReceived = payment
+        ? Number(payment.amount) || 0
+        : 0;
+
+    const currentPayment = payment
+        ? Number(payment.currentPayment) || 0
+        : 0;
+
+    const balance = payment
+        ? Number(payment.balance) || 0
+        : 0;
+
+    const previousPaid = Math.max(0, totalReceived - currentPayment);
+
+    const formatAmount = (value) =>
+        "₹ " + normalizeGujaratiDisplayValue(
+            Number(value || 0).toLocaleString("en-IN", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            })
+        );
+
+    const receipt = {
+        receiptNumber: normalizeGujaratiDisplayValue(
+            payment && payment.receiptNumber
+                ? payment.receiptNumber
+                : "P-" + billNo
+        ),
+        billNumber: normalizeGujaratiDisplayValue(billNo),
+        mobileNumber: getValue("mobileNumber").trim(),
+        receiptDate: formatGujaratiDate(
+            payment && payment.date
+                ? payment.date
+                : getValue("billDate")
+        ),
+        customerName: customerName,
+        village: getValue("village").trim(),
+        taluka: getValue("taluka").trim(),
+        district: getValue("district").trim(),
+        paymentDetails: getValue("paymentDetails").trim(),
+        hasPayment: Boolean(payment),
+        receivedAmount: formatAmount(totalReceived),
+        amountWords: numberToGujaratiWords(totalReceived),
+        totalBill: formatAmount(totalBill),
+        previousPaid: payment ? formatAmount(previousPaid) : "",
+        currentPayment: payment ? formatAmount(currentPayment) : "",
+        balance: payment ? formatAmount(balance) : "",
+        noPaymentText: "આ બિલ માટે કોઈ ચુકવણી નોંધાયેલ નથી."
+    };
+
+    const previewWindow = window.open("about:blank", "_blank");
+
+    if (!previewWindow) {
+        alert("Please allow pop-ups for this site to open the receipt preview.");
+        return;
+    }
+
+    const previewOrigin = window.location.origin;
+
+    function handleReceiptPreviewReady(event) {
+        if (event.source !== previewWindow) return;
+        if (event.origin !== previewOrigin) return;
+        if (!event.data || event.data.type !== "GRAMSETU_RECEIPT_PREVIEW_READY") return;
+
+        window.removeEventListener("message", handleReceiptPreviewReady);
+
+        previewWindow.postMessage(
+            {
+                type: "GRAMSETU_RECEIPT_PREVIEW",
+                receipt: receipt
+            },
+            previewOrigin
+        );
+    }
+
+    window.addEventListener("message", handleReceiptPreviewReady);
+
+    previewWindow.location.href = new URL(
+        "mainbill/mainbill-receipt-canva-preview.html",
+        document.baseURI
+    ).href;
+}
 function generateReceipt(paymentDateOverride = "", paymentReceiptNumberOverride = "") {
 
     try {
@@ -7114,10 +7221,7 @@ document.addEventListener(
             ==========================================
             */
 
-            generateReceipt(
-                payment.date || "",
-                payment.receiptNumber || ""
-            );
+            openReceiptCanvaPreviewFromEditor();
 
         }
         catch(error) {
