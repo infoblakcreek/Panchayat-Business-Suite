@@ -1,4 +1,4 @@
-﻿
+
 ﻿
 /* ==================================================
         INVOICE / BILL FORM PAGE
@@ -892,6 +892,41 @@
 /* ==================================================
         RESPONSIVE
 ================================================== */
+
+/* Save Bill button beside Generate Receipt */
+.generateReceiptArea {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+#saveBillEditorBtn {
+    min-height: 42px;
+    padding: 0 16px;
+    border: none;
+    border-radius: 9px;
+    background: #16a34a;
+    color: white;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 5px 14px rgba(22, 163, 74, .25);
+    transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+
+#saveBillEditorBtn:hover {
+    background: #15803d;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(22, 163, 74, .32);
+}
+
+#saveBillEditorBtn:disabled {
+    opacity: .7;
+    cursor: wait;
+    transform: none;
+}
 
 @media (max-width: 900px) {
 

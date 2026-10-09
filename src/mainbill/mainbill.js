@@ -1,4 +1,4 @@
-﻿// ==========================================================================//
+// ==========================================================================//
 
 
 
@@ -778,17 +778,137 @@ const generateReceiptBtn =
         "generateReceiptBtn"
     );
 
-
 if (generateReceiptBtn) {
-
     generateReceiptBtn.addEventListener(
         "click",
-        generateReceipt
+        openCanvaPreviewFromEditor
     );
-
 }
 
 
+function openCanvaPreviewFromEditor() {
+    const getValue = (id) => {
+        const element = document.getElementById(id);
+        return element ? element.value : "";
+    };
+
+    const billNo = getValue("billNo").trim();
+    const customerName = getValue("customerName").trim();
+
+    if (!convertGujaratiDigitsToEnglish(billNo).trim()) {
+        alert("Please enter a bill number before generating the receipt.");
+        return;
+    }
+
+    if (!customerName) {
+        alert("Please enter a customer name before generating the receipt.");
+        return;
+    }
+
+    function formatPreviewMoney(value) {
+        const raw = convertGujaratiDigitsToEnglish(
+            String(value ?? "")
+        ).trim();
+
+        if (!raw) return "";
+
+        const number = Number(raw.replace(/,/g, ""));
+        if (!Number.isFinite(number)) {
+            return normalizeGujaratiDisplayValue(raw);
+        }
+
+        return normalizeGujaratiDisplayValue(
+            number.toLocaleString("en-IN", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            })
+        );
+    }
+
+    const items = Array.from(
+        document.querySelectorAll("#itemBody tr")
+    ).reduce((result, row, index) => {
+        const readCell = (selector) => {
+            const element = row.querySelector(selector);
+            return element ? element.value.trim() : "";
+        };
+
+        const description = readCell(".description");
+        const pages = readCell(".pages");
+        const price = readCell(".price");
+        const total = readCell(".total");
+
+        // Ignore blank editor rows, even if the serial number is prefilled.
+        if (![description, pages, price, total].some(Boolean)) {
+            return result;
+        }
+
+        result.push({
+            srno: normalizeGujaratiDisplayValue(
+                readCell(".srno") || String(index + 1)
+            ),
+            description: description,
+            pages: normalizeGujaratiDisplayValue(pages),
+            price: formatPreviewMoney(price),
+            total: formatPreviewMoney(total)
+        });
+
+        return result;
+    }, []);
+
+    const bill = {
+        customerName: customerName,
+        billNo: normalizeGujaratiDisplayValue(billNo),
+        village: getValue("village").trim(),
+        taluka: getValue("taluka").trim(),
+        district: getValue("district").trim(),
+        billDate: getValue("billDate")
+            ? formatIndianDate(getValue("billDate"))
+            : "",
+        mobileNumber: normalizeGujaratiDisplayValue(
+            getValue("mobileNumber").trim()
+        ),
+        status: "",
+        amountWords: getValue("numberToGujaratiWords").trim(),
+        grandTotal: normalizeGujaratiDisplayValue(
+            getValue("grandTotal").trim()
+        ),
+        paymentDetails: getValue("paymentDetails").trim(),
+        items: items
+    };
+
+    const previewWindow = window.open("about:blank", "_blank");
+
+    if (!previewWindow) {
+        alert("Please allow pop-ups for this site to open the receipt preview.");
+        return;
+    }
+
+    const previewOrigin = window.location.origin;
+
+    function handlePreviewReady(event) {
+        if (event.source !== previewWindow) return;
+        if (event.origin !== previewOrigin) return;
+        if (!event.data || event.data.type !== "GRAMSETU_MAINBILL_PREVIEW_READY") return;
+
+        window.removeEventListener("message", handlePreviewReady);
+
+        previewWindow.postMessage(
+            {
+                type: "GRAMSETU_MAINBILL_PREVIEW",
+                bill: bill
+            },
+            previewOrigin
+        );
+    }
+
+    window.addEventListener("message", handlePreviewReady);
+
+    previewWindow.location.href = new URL(
+        "mainbill/mainbill-canva-preview.html",
+        document.baseURI
+    ).href;
+}
 function generateReceipt(paymentDateOverride = "", paymentReceiptNumberOverride = "") {
 
     try {
@@ -1852,6 +1972,36 @@ if (saveBillBtn) {
 
 
 // ============================================================
+// SAVE BILL BUTTON IN MAIN EDITOR
+const saveBillEditorBtn = document.getElementById("saveBillEditorBtn");
+
+if (saveBillEditorBtn) {
+    saveBillEditorBtn.addEventListener("click", async function () {
+        const buttonText = saveBillEditorBtn.querySelector("span");
+
+        try {
+            saveBillEditorBtn.disabled = true;
+            if (buttonText) buttonText.textContent = "Saving…";
+
+            await saveCurrentBill();
+
+            if (buttonText) buttonText.textContent = "Saved ✓";
+            alert("Bill saved successfully.");
+
+            setTimeout(function () {
+                saveBillEditorBtn.disabled = false;
+                if (buttonText) buttonText.textContent = "Save Bill";
+            }, 3000);
+        } catch (error) {
+            console.error("Error saving bill from editor:", error);
+
+            saveBillEditorBtn.disabled = false;
+            if (buttonText) buttonText.textContent = "Save Bill";
+
+            alert("Bill could not be saved: " + error.message);
+        }
+    });
+}
 // MAIN BILL + DUPLICATE RECEIPT PRINT
 // IMPORTANT:
 // This creates a completely separate print document.
@@ -7054,5 +7204,3 @@ document.addEventListener(
 
     }
 );
-
-
