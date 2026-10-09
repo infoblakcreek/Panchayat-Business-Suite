@@ -2413,7 +2413,12 @@ function extractKhataGovernmentValue(
 
     }
 
-    return numbers[numbers.length - 1];
+    const rawValue = convertGujaratiDigitsToEnglish(numbers[numbers.length - 1].replace(",", "."));
+    const numericValue = Number(rawValue);
+    if (!Number.isFinite(numericValue)) {
+        return numbers[numbers.length - 1];
+    }
+    return convertToGujaratiDigits(numericValue.toFixed(2));
 
 }
 function createKhataTalapatrakRow(
